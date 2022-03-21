@@ -1,7 +1,15 @@
 import NablaUtils
 
 public struct NablaCore {
-    public private(set) var text = "Hello, World!" + "\n" + NablaUtils().text
+    // MARK: - Public
+
+    public var text: String {
+        "Hello, World!" + "\n" + utils.text
+    }
 
     public init() {}
+
+    // MARK: - Internal
+
+    @Inject var utils: NablaUtils
 }
