@@ -14,7 +14,18 @@
 		E41EC27627E37CB500748029 /* NablaCore in Resources */ = {isa = PBXBuildFile; fileRef = E41EC27527E37CB500748029 /* NablaCore */; };
 		E41EC27927E37CCA00748029 /* NablaCore in Frameworks */ = {isa = PBXBuildFile; productRef = E41EC27827E37CCA00748029 /* NablaCore */; };
 		E41EC27D27E381E200748029 /* NablaUIMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E41EC27C27E381E200748029 /* NablaUIMessaging */; };
+		E445E3D727EA259100A86BBE /* PlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E445E3D627EA259100A86BBE /* PlaygroundTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E445E3D827EA259100A86BBE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E41EC25527E3797300748029 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E41EC25C27E3797300748029;
+			remoteInfo = Playground;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		E41EC25D27E3797400748029 /* Playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Playground.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -26,6 +37,8 @@
 		E41EC27527E37CB500748029 /* NablaCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NablaCore; sourceTree = "<group>"; };
 		E41EC27A27E37E4A00748029 /* NablaUtils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NablaUtils; sourceTree = "<group>"; };
 		E41EC27B27E3816D00748029 /* NablaUIMessaging */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NablaUIMessaging; sourceTree = "<group>"; };
+		E445E3D427EA259100A86BBE /* PlaygroundTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlaygroundTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E445E3D627EA259100A86BBE /* PlaygroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +51,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E445E3D127EA259100A86BBE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -46,6 +66,7 @@
 			children = (
 				E41EC27427E37CB500748029 /* packages */,
 				E41EC25F27E3797400748029 /* Playground */,
+				E445E3D527EA259100A86BBE /* PlaygroundTests */,
 				E41EC25E27E3797400748029 /* Products */,
 				E41EC27727E37CCA00748029 /* Frameworks */,
 			);
@@ -55,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				E41EC25D27E3797400748029 /* Playground.app */,
+				E445E3D427EA259100A86BBE /* PlaygroundTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -89,6 +111,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E445E3D527EA259100A86BBE /* PlaygroundTests */ = {
+			isa = PBXGroup;
+			children = (
+				E445E3D627EA259100A86BBE /* PlaygroundTests.swift */,
+			);
+			path = PlaygroundTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -113,6 +143,24 @@
 			productReference = E41EC25D27E3797400748029 /* Playground.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E445E3D327EA259100A86BBE /* PlaygroundTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E445E3DC27EA259100A86BBE /* Build configuration list for PBXNativeTarget "PlaygroundTests" */;
+			buildPhases = (
+				E445E3D027EA259100A86BBE /* Sources */,
+				E445E3D127EA259100A86BBE /* Frameworks */,
+				E445E3D227EA259100A86BBE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E445E3D927EA259100A86BBE /* PBXTargetDependency */,
+			);
+			name = PlaygroundTests;
+			productName = PlaygroundTests;
+			productReference = E445E3D427EA259100A86BBE /* PlaygroundTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -125,6 +173,10 @@
 				TargetAttributes = {
 					E41EC25C27E3797300748029 = {
 						CreatedOnToolsVersion = 13.2.1;
+					};
+					E445E3D327EA259100A86BBE = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = E41EC25C27E3797300748029;
 					};
 				};
 			};
@@ -142,6 +194,7 @@
 			projectRoot = "";
 			targets = (
 				E41EC25C27E3797300748029 /* Playground */,
+				E445E3D327EA259100A86BBE /* PlaygroundTests */,
 			);
 		};
 /* End PBXProject section */
@@ -157,6 +210,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E445E3D227EA259100A86BBE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -169,7 +229,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E445E3D027EA259100A86BBE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E445E3D727EA259100A86BBE /* PlaygroundTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E445E3D927EA259100A86BBE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E41EC25C27E3797300748029 /* Playground */;
+			targetProxy = E445E3D827EA259100A86BBE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		E41EC26B27E3797400748029 /* LaunchScreen.storyboard */ = {
@@ -353,6 +429,42 @@
 			};
 			name = Release;
 		};
+		E445E3DA27EA259100A86BBE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabla.sdk.PlaygroundTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Playground.app/Playground";
+			};
+			name = Debug;
+		};
+		E445E3DB27EA259100A86BBE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabla.sdk.PlaygroundTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Playground.app/Playground";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -370,6 +482,15 @@
 			buildConfigurations = (
 				E41EC27227E3797400748029 /* Debug */,
 				E41EC27327E3797400748029 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E445E3DC27EA259100A86BBE /* Build configuration list for PBXNativeTarget "PlaygroundTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E445E3DA27EA259100A86BBE /* Debug */,
+				E445E3DB27EA259100A86BBE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
