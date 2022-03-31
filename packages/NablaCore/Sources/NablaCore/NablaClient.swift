@@ -35,6 +35,8 @@ public class NablaClient {
         let assembler = Assembler(assemblies: [
             AuthenticationAssembly(),
             RepositoryAssembly(),
+            InteractorAssembly(),
+            HelperAssembly(),
         ])
         assembler.assemble()
         return NablaClient()

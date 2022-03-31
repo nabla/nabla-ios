@@ -23,12 +23,12 @@ public class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
 
-        let label = UILabel()
-        label.text = NablaCore().text
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.sizeToFit()
-        view.addSubview(label)
-        label.center = view.center
+        let view = NablaViewFactory().createConversationListView(delegate: self)
+        self.view.addSubview(view)
+        view.pinToSuperView()
     }
+}
+
+extension ViewController: ConversationListViewDelegate {
+    // MARK: - ConversationListViewDelegate
 }
