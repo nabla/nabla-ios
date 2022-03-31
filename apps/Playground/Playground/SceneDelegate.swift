@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  Playground
-//
-//  Created by Tanguy Helesbeux on 17/03/2022.
-//
-
 import NablaUIMessaging
 import UIKit
 

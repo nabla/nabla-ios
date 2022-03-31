@@ -1,10 +1,3 @@
-//
-//  ResolverTests.swift
-//
-//
-//  Created by Tanguy Helesbeux on 21/03/2022.
-//
-
 @testable import NablaUtils
 import XCTest
 

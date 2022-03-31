@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  Playground
-//
-//  Created by Tanguy Helesbeux on 17/03/2022.
-//
-
 import NablaCore
 import NablaUtils
 import UIKit
@@ -19,6 +12,7 @@ public class ViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

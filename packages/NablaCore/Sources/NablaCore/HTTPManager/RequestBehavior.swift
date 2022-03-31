@@ -36,13 +36,13 @@ public struct CombinedRequestBehavior: RequestBehavior {
     }
 
     public func modify(request: HTTPRequest) -> HTTPRequest {
-        behaviors.reduce(request) { (resultRequest, behavior) -> HTTPRequest in
+        behaviors.reduce(request) { resultRequest, behavior -> HTTPRequest in
             behavior.modify(request: resultRequest)
         }
     }
 
     public func modify(request: HTTPRequest, response: JSONResponse) -> JSONResponse {
-        behaviors.reduce(response) { (resultResponse, behavior) -> JSONResponse in
+        behaviors.reduce(response) { resultResponse, behavior -> JSONResponse in
             behavior.modify(request: request, response: resultResponse)
         }
     }

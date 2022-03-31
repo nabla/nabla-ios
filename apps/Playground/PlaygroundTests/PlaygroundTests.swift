@@ -1,10 +1,3 @@
-//
-//  PlaygroundTests.swift
-//  PlaygroundTests
-//
-//  Created by Tanguy Helesbeux on 22/03/2022.
-//
-
 import XCTest
 
 class PlaygroundTests: XCTestCase {
