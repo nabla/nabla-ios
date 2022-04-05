@@ -1,15 +1,24 @@
 import Foundation
 import NablaCore
+import UIKit
 
-public struct NablaViewFactory {
-    public func createConversationListView(delegate: ConversationListViewDelegate) -> ConversationListView {
+public enum NablaViewFactory {
+    public static func createConversationListView(delegate: ConversationListDelegate) -> ConversationListView {
         let view = ConversationListView(frame: .zero)
-        view.delegate = delegate
         let presenter = ConversationListPresenterImpl(
             viewContract: view,
+            delegate: delegate,
             client: NablaClient.shared
         )
         view.presenter = presenter
         return view
+    }
+
+    public static func createConversationViewController() -> UIViewController {
+        let viewController = ConversationViewController()
+        viewController.presenter = ConversationPresenterImpl(
+            view: viewController
+        )
+        return viewController
     }
 }

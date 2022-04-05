@@ -1,10 +1,3 @@
-//
-//  FontDescription.swift
-//  ADUtils
-//
-//  Created by Benjamin Lavialle on 20/10/2017.
-//
-
 import Foundation
 import UIKit
 

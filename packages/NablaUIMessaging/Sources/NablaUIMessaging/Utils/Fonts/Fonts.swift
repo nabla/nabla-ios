@@ -1,10 +1,3 @@
-//
-//  File.swift
-//
-//
-//  Created by Thibault Tourailles on 23/03/2022.
-//
-
 import Foundation
 import UIKit
 

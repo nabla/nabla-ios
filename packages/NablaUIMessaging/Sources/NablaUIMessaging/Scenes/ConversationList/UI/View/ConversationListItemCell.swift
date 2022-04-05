@@ -46,7 +46,7 @@ class ConversationListItemCell: UITableViewCell, Reusable {
 
     private func setUp() {
         contentView.addSubview(avatarView)
-        avatarView.pinToSuperView(edges: .left, insets: .all(16))
+        avatarView.pinToSuperView(edges: .leading, insets: .only(leading: 16))
         avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         avatarView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 16).isActive = true
 
@@ -64,12 +64,12 @@ class ConversationListItemCell: UITableViewCell, Reusable {
         stackView.bottomAnchor.constraint(greaterThanOrEqualTo: contentView.bottomAnchor, constant: -16).isActive = true
 
         contentView.addSubview(timeLabel)
-        timeLabel.pinToSuperView(edges: [.top, .right], insets: .all(16))
+        timeLabel.pinToSuperView(edges: [.top, .trailing], insets: .all(16))
 
         timeLabel.leadingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
 
         contentView.addSubview(unreadIndicatorView)
-        unreadIndicatorView.pinToSuperView(edges: .right, insets: .all(16))
+        unreadIndicatorView.pinToSuperView(edges: .trailing, insets: .only(trailing: 16))
         unreadIndicatorView.centerYAnchor.constraint(equalTo: subtitleLabel.centerYAnchor).isActive = true
     }
 

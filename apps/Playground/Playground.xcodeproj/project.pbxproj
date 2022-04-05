@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CBC0AE040ACF7113E55BBCFE /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC0A82EB1B49597FC902B40 /* InboxViewController.swift */; };
 		E41EC26127E3797400748029 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41EC26027E3797400748029 /* AppDelegate.swift */; };
 		E41EC26327E3797400748029 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41EC26227E3797400748029 /* SceneDelegate.swift */; };
 		E41EC26A27E3797400748029 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E41EC26927E3797400748029 /* Assets.xcassets */; };
 		E41EC26D27E3797400748029 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E41EC26B27E3797400748029 /* LaunchScreen.storyboard */; };
 		E41EC27627E37CB500748029 /* NablaCore in Resources */ = {isa = PBXBuildFile; fileRef = E41EC27527E37CB500748029 /* NablaCore */; };
 		E41EC27927E37CCA00748029 /* NablaCore in Frameworks */ = {isa = PBXBuildFile; productRef = E41EC27827E37CCA00748029 /* NablaCore */; };
-		E41EC27D27E381E200748029 /* NablaUIMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E41EC27C27E381E200748029 /* NablaUIMessaging */; };
 		E445E3D727EA259100A86BBE /* PlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E445E3D627EA259100A86BBE /* PlaygroundTests.swift */; };
+		FF59C50B27FAEC3300119C23 /* NablaUIMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = FF59C50A27FAEC3300119C23 /* NablaUIMessaging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CBC0A82EB1B49597FC902B40 /* InboxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InboxViewController.swift; sourceTree = "<group>"; };
 		E41EC25D27E3797400748029 /* Playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Playground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E41EC26027E3797400748029 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E41EC26227E3797400748029 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -46,7 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E41EC27D27E381E200748029 /* NablaUIMessaging in Frameworks */,
+				FF59C50B27FAEC3300119C23 /* NablaUIMessaging in Frameworks */,
 				E41EC27927E37CCA00748029 /* NablaCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,6 +91,7 @@
 				E41EC26927E3797400748029 /* Assets.xcassets */,
 				E41EC26B27E3797400748029 /* LaunchScreen.storyboard */,
 				E41EC26E27E3797400748029 /* Info.plist */,
+				CBC0A82EB1B49597FC902B40 /* InboxViewController.swift */,
 			);
 			path = Playground;
 			sourceTree = "<group>";
@@ -137,7 +140,7 @@
 			name = Playground;
 			packageProductDependencies = (
 				E41EC27827E37CCA00748029 /* NablaCore */,
-				E41EC27C27E381E200748029 /* NablaUIMessaging */,
+				FF59C50A27FAEC3300119C23 /* NablaUIMessaging */,
 			);
 			productName = Playground;
 			productReference = E41EC25D27E3797400748029 /* Playground.app */;
@@ -226,6 +229,7 @@
 			files = (
 				E41EC26127E3797400748029 /* AppDelegate.swift in Sources */,
 				E41EC26327E3797400748029 /* SceneDelegate.swift in Sources */,
+				CBC0AE040ACF7113E55BBCFE /* InboxViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,7 +506,7 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = NablaCore;
 		};
-		E41EC27C27E381E200748029 /* NablaUIMessaging */ = {
+		FF59C50A27FAEC3300119C23 /* NablaUIMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NablaUIMessaging;
 		};

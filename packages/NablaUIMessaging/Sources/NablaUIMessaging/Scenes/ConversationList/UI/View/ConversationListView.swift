@@ -4,8 +4,6 @@ import UIKit
 public class ConversationListView: UIView, ConversationListViewContract {
     // MARK: - Public
 
-    public weak var delegate: ConversationListViewDelegate?
-
     var presenter: ConversationListPresenter?
 
     // MARK: - Initializer
@@ -72,7 +70,9 @@ extension ConversationListView: UITableViewDataSource {
 extension ConversationListView: UITableViewDelegate {
     // MARK: - UITableViewDelegate
 
-    public func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         // Notify presenter
+        presenter?.didSelectConversation(at: indexPath)
     }
 }
