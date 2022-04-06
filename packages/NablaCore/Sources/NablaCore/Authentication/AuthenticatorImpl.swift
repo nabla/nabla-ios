@@ -105,6 +105,6 @@ class AuthenticatorImpl: Authenticator {
     }
 
     private func fetchTokens(refreshToken _: String, completion _: (Result<Tokens, AuthenticationError>) -> Void) {
-        // TODO: HttpManager
+        // TODO: @tgy HttpManager
     }
 }

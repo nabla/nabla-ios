@@ -8,5 +8,8 @@ class HelperAssembly: Assembly {
         resolver.register(type: URLCache.self) {
             URLCacheImplementation()
         }
+        resolver.register(type: Environment.self) {
+            EnvironmentImpl()
+        }
     }
 }

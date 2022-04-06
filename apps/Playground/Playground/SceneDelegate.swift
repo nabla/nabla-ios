@@ -1,3 +1,4 @@
+import NablaCore
 import NablaUIMessaging
 import UIKit
 
@@ -13,6 +14,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = UINavigationController(rootViewController: InboxViewController())
         window.makeKeyAndVisible()
         self.window = window
+        
+        NablaClient.shared.addRefetchTriggers(
+            NotificationRefetchTrigger(name: UIApplication.willEnterForegroundNotification)
+        )
     }
 
     func sceneDidDisconnect(_: UIScene) {

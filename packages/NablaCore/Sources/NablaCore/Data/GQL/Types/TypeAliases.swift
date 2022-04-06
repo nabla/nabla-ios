@@ -1,7 +1,7 @@
 import Apollo
 
-public typealias GraphQLQuery = Apollo.GraphQLQuery
-public typealias GraphQLMutation = Apollo.GraphQLMutation
-public typealias GraphQLSubscription = Apollo.GraphQLSubscription
-public typealias GraphQLFragment = Apollo.GraphQLFragment
+public typealias GQLQuery = Apollo.GraphQLQuery
+public typealias GQLMutation = Apollo.GraphQLMutation
+public typealias GQLSubscription = Apollo.GraphQLSubscription
+public typealias GQLFragment = Apollo.GraphQLFragment
 public typealias CachePolicy = Apollo.CachePolicy

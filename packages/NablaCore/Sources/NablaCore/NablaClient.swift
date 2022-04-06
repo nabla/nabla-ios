@@ -25,11 +25,16 @@ public class NablaClient {
     }
 
     public func getMessages(conversationUUID _: UUID, block _: () -> [Int]) {}
+    
+    public func addRefetchTriggers(_ triggers: RefetchTrigger...) {
+        gqlClient.addRefetchTriggers(triggers)
+    }
 
     // MARK: - Private
 
     @Inject private var authenticator: Authenticator
     @Inject private var getConversationListInteractor: GetConversationListInteractor
+    @Inject private var gqlClient: GQLClient
 
     private static func initialize() -> NablaClient {
         let assembler = Assembler(assemblies: [
@@ -37,6 +42,7 @@ public class NablaClient {
             RepositoryAssembly(),
             InteractorAssembly(),
             HelperAssembly(),
+            GQLAssembly(),
         ])
         assembler.assemble()
         return NablaClient()
