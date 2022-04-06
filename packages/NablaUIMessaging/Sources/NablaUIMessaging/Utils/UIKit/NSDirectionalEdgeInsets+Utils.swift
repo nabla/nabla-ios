@@ -1,6 +1,6 @@
 import UIKit
 
-public extension NSDirectionalEdgeInsets {
+extension NSDirectionalEdgeInsets {
     static func all(_ value: CGFloat) -> NSDirectionalEdgeInsets {
         .init(all: value)
     }

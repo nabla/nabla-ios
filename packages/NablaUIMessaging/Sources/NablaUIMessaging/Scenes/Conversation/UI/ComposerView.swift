@@ -11,9 +11,10 @@ final class ComposerView: UIView {
         super.init(frame: .zero)
 
         backgroundColor = CoreAssets.Colors.tint.color
-        let field = UITextField()
         field.constraintHeight(44)
         addSubview(field)
         field.pinToSuperView(insets: .init(horizontal: 20, vertical: 4))
     }
+
+    private let field: UITextField = .init().withInteractiveDismiss().prepareForAutoLayout()
 }

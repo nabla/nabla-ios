@@ -1,6 +1,8 @@
 import Foundation
 
 final class ConversationPresenterImpl: ConversationPresenter {
+    private var items = [ConversationViewItem]()
+
     // MARK: Init
 
     init(view: ConversationViewContract) {
@@ -20,8 +22,12 @@ final class ConversationPresenterImpl: ConversationPresenter {
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.view?.configure(withState: .empty)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
-            self.view?.configure(withState: .loaded(items: [.text]))
+
+        for i in 1 ... 4 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(7 + i * 2)) {
+                self.items.append(ConversationViewItem(content: DateSeparatorItemContent(text: Date().description)))
+                self.view?.configure(withState: .loaded(items: self.items))
+            }
         }
     }
 
