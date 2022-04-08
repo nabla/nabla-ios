@@ -26,11 +26,12 @@ struct SwiftScript: ParsableCommand {
             let fileStructure = try FileStructure()
             CodegenLogger.log("File structure: \(fileStructure)")
 
-            // Input and output paths should be kept in sync with ios/Packages/GQLCore/build.sh
-
             let folderForInputs = fileStructure.sourceRootURL
                 .apollo.childFolderURL(folderName: "Sources")
-                .apollo.childFolderURL(folderName: "GraphQL")
+                .apollo.childFolderURL(folderName: "NablaCore")
+                .apollo.childFolderURL(folderName: "Data")
+                .apollo.childFolderURL(folderName: "GQL")
+                .apollo.childFolderURL(folderName: "Schema")
 
             let folderForXPlatformSchema = fileStructure.sourceRootURL
                 .apollo.parentFolderURL() // Packages folder
@@ -38,27 +39,26 @@ struct SwiftScript: ParsableCommand {
                 .apollo.parentFolderURL() // sdk folder
                 .apollo.parentFolderURL() // health folder
                 .apollo.childFolderURL(folderName: "graphql")
+                .apollo.childFolderURL(folderName: "sdk")
 
             let folderForOutputs = fileStructure.sourceRootURL
                 .apollo.childFolderURL(folderName: "Sources")
                 .apollo.childFolderURL(folderName: "NablaCore")
+                .apollo.childFolderURL(folderName: "Data")
+                .apollo.childFolderURL(folderName: "GQL")
                 .apollo.childFolderURL(folderName: "Generated")
 
             let authenticatedOutputFile = ApolloCodegenOptions.OutputFormat.multipleFiles(
-                inFolderAtURL: folderForOutputs.apollo.childFolderURL(folderName: "authenticated")
+                inFolderAtURL: folderForOutputs
             )
 
             let authenticatedCodegenOptions = ApolloCodegenOptions(
-                includes: "\(folderForInputs.path)/authenticated/**/*.graphql",
+                includes: "\(folderForInputs.path)/**/*.graphql",
                 mergeInFieldsFromFragmentSpreads: false,
                 namespace: "GQL",
                 outputFormat: authenticatedOutputFile,
                 customScalarFormat: .passthroughWithPrefix("GQL."),
-                urlToSchemaFile: .multiple([
-                    "\(folderForXPlatformSchema.path)/core.graphql",
-                    "\(folderForXPlatformSchema.path)/authenticated/shared.graphql",
-                    "\(folderForXPlatformSchema.path)/authenticated/patient/patient.graphql",
-                ])!
+                urlToSchemaFile: folderForXPlatformSchema.appendingPathComponent("patient.graphql")
             )
 
             try ApolloCodegen.run(from: fileStructure.sourceRootURL,

@@ -33,6 +33,9 @@ let package = Package(
                 "NablaUtils",
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloWebSocket", package: "apollo-ios"),
+            ],
+            exclude: [
+                "Data/GQL/Schema",
             ]
         ),
         .executableTarget(

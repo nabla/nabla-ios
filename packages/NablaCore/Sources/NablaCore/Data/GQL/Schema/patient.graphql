@@ -1,10 +1,10 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # Queries
 
-query TestQuery {
-    me {
-        patient {
-            uuid
+query TestQuery($id: UUID!) {
+    conversation(id: $id) {
+        conversation {
+            id
         }
     }
 }
