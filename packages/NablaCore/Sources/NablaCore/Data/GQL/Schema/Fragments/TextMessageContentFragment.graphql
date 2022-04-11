@@ -1,0 +1,3 @@
+fragment TextMessageContentFragment on TextMessageContent {
+    text
+}

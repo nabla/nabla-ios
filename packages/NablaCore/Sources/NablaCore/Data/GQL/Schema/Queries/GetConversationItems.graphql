@@ -1,0 +1,16 @@
+query GetConversationItems($id: UUID!, $page: OpaqueCursorPage!) {
+    conversation(id: $id) {
+        conversation {
+            id
+            items(page: $page) {
+                hasMore
+                nextCursor
+                data {
+                    ... on Message {
+                        ...MessageFragment
+                    }
+                }
+            }
+        }
+    }
+}

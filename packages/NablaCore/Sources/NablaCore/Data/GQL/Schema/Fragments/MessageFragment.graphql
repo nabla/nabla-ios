@@ -1,0 +1,10 @@
+fragment MessageFragment on Message {
+    id
+    clientId
+    createdAt
+    content {
+        ... on TextMessageContent {
+            ...TextMessageContentFragment
+        }
+    }
+}

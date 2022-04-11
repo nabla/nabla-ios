@@ -15,7 +15,7 @@ protocol GQLClient {
     func watch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
-        completion: @escaping (Result<Query.Data, GQLError>) -> Void
+        callback: @escaping (Result<Query.Data, GQLError>) -> Void
     ) -> GQLWatcher<Query>
     
     func addRefetchTriggers(_ triggers: [RefetchTrigger])

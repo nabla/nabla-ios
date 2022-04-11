@@ -8,5 +8,8 @@ class RepositoryAssembly: Assembly {
         resolver.register(type: ConversationRepository.self) {
             ConversationRepositoryImpl()
         }
+        resolver.register(type: ConversationItemRepository.self) {
+            ConversationItemRepositoryImpl()
+        }
     }
 }

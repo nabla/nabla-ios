@@ -29,11 +29,11 @@ class GQLClientImpl: GQLClient {
     func watch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
-        completion: @escaping (Result<Query.Data, GQLError>) -> Void
+        callback: @escaping (Result<Query.Data, GQLError>) -> Void
     ) -> GQLWatcher<Query> {
         let apolloWatcher = apollo.watch(query: query, cachePolicy: cachePolicy) { response in
             let result = Self.parseApolloResponse(response)
-            completion(result)
+            callback(result)
         }
         // TODO: @tgy configure server url
         return GQLWatcher(apolloWatcher)

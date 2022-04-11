@@ -1,7 +1,7 @@
 import Apollo
 import Foundation
 
-class GQLWatcher<Query: GraphQLQuery> {
+class GQLWatcher<Query: GQLQuery>: Cancellable {
     // MARK: Interface
     
     init(_ apollo: GraphQLQueryWatcher<Query>) {

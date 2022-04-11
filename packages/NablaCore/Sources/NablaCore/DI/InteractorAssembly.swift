@@ -8,5 +8,8 @@ class InteractorAssembly: Assembly {
         resolver.register(type: GetConversationListInteractor.self) {
             GetConversationListInteractorImpl()
         }
+        resolver.register(type: ObserveConversationItemsInteractor.self) {
+            ObserveConversationItemsInteractorImpl()
+        }
     }
 }

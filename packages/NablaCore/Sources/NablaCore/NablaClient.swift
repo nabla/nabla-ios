@@ -19,26 +19,26 @@ public class NablaClient {
     public func logOut() {
         authenticator.logOut()
     }
-
-    public func getConversations(block _: ([Int]) -> Void) {
-        getConversationListInteractor.execute(conversationUuid: .init())
-    }
-
-    public func getMessages(conversationUUID _: UUID, block _: () -> [Int]) {}
     
     public func addRefetchTriggers(_ triggers: RefetchTrigger...) {
         gqlClient.addRefetchTriggers(triggers)
+    }
+    
+    public func observeItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationItems, Error>) -> Void) -> Cancellable {
+        observeConversationItemsInteractor.execute(conversationId: conversationId, callback: callback)
     }
 
     // MARK: - Private
 
     @Inject private var authenticator: Authenticator
-    @Inject private var getConversationListInteractor: GetConversationListInteractor
     @Inject private var gqlClient: GQLClient
+    @Inject private var getConversationListInteractor: GetConversationListInteractor
+    @Inject private var observeConversationItemsInteractor: ObserveConversationItemsInteractor
 
     private static func initialize() -> NablaClient {
         let assembler = Assembler(assemblies: [
             AuthenticationAssembly(),
+            DataSourceAssembly(),
             RepositoryAssembly(),
             InteractorAssembly(),
             HelperAssembly(),
