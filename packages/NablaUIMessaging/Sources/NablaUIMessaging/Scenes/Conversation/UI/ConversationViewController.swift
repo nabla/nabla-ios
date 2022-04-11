@@ -1,14 +1,9 @@
 import Foundation
+import NablaCore
+import NablaUtils
 import UIKit
 
 final class ConversationViewController: UIViewController, ConversationViewContract {
-    enum Section {
-        case main
-    }
-
-    typealias DataSource = UICollectionViewDiffableDataSource<Section, ConversationViewItem>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, ConversationViewItem>
-
     // MARK: - Init
 
     init(providers: [ConversationCellProvider]) {
@@ -21,7 +16,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: Lifecycle
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +25,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         presenter.start()
     }
 
-    // MARK: Internal
+    // MARK: - Internal
 
     var presenter: ConversationPresenter!
+
+    // MARK: - ConversationViewContract
 
     func configure(withState state: ConversationViewState) {
         self.state = state
@@ -40,6 +37,14 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     // MARK: Private
 
+    private enum Section {
+        case main
+    }
+
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, ConversationViewItem>
+    private typealias DataSource = UICollectionViewDiffableDataSource<Section, ConversationViewItem>
+
+    @Inject private var logger: Logger
     private let providers: [ConversationCellProvider]
     private var state: ConversationViewState = .loading {
         didSet {
@@ -56,10 +61,10 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private let loadedView: UIView = .init().prepareForAutoLayout()
     private let emptyView: EmptyView = .init().prepareForAutoLayout()
 
-    private lazy var collectionView: UICollectionView = createCollectionView()
+    private lazy var collectionView: UICollectionView = makeCollectionView()
     private let composerView: ComposerView = .init().prepareForAutoLayout()
 
-    private func createCollectionView() -> UICollectionView {
+    private func makeCollectionView() -> UICollectionView {
         let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
         let item = NSCollectionLayoutItem(layoutSize: layoutSize)
         let group: NSCollectionLayoutGroup = .vertical(layoutSize: layoutSize, subitems: [item])
@@ -80,16 +85,18 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         indexPath: IndexPath,
         item: ConversationViewItem
     ) -> UICollectionViewCell? {
-        for plugin in providers { // TODO: @ams Switch to [type:plugin] dictionary
-            if let cell = plugin.provideCell(
+        for provider in providers { // TODO: @ams Switch to [type:plugin] dictionary
+            if let cell = provider.provideCell(
                 collectionView: collectionView,
                 indexPath: indexPath,
-                item: item
+                id: item.id,
+                content: item.content,
+                delegate: self
             ) {
                 return cell
             }
         }
-        print("no plugin provided the cell for \(item)") // TODO: @ams Replace with logger
+        logger.warning(message: "no plugin provided the cell for \(type(of: item.content))")
         return nil
     }
 
@@ -100,20 +107,20 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     // - Loaded -> [emptyView | collectionView] + composerView
     private func updateLayoutAfterStateChange(oldValue: ConversationViewState) {
         switch (state, oldValue) {
-        case (.loading, _):
-            switchToLoadingLayout()
-            loadingView.startAnimating()
-        case (.error, _):
-            switchToErrorLayout()
-        case (.empty, _):
-            switchToLoadedLayout(with: emptyView)
+        case (.empty, .loaded):
+            switchLoadedLayout(from: collectionView, to: emptyView)
+        case let (.loaded(items), .loaded):
+            applySnapshot(items: items)
         case let (.loaded(items), .empty):
             switchLoadedLayout(from: emptyView, to: collectionView)
             applySnapshot(items: items)
-        case let (.loaded(items), .loaded):
-            applySnapshot(items: items)
-        case (.empty, .loaded):
-            switchLoadedLayout(from: collectionView, to: emptyView)
+        case (.loading, _):
+            switchToLoadingLayout()
+            loadingView.startAnimating()
+        case (.empty, _):
+            switchToLoadedLayout(with: emptyView)
+        case (.error, _):
+            switchToErrorLayout()
         case let (.loaded(items), _):
             switchToLoadedLayout(with: collectionView)
             applySnapshot(items: items)
@@ -158,10 +165,25 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
         snapshot.appendItems(items)
-        dataSource.apply(snapshot, animatingDifferences: animatingDifferences) {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.collectionView.updateInsets()
-            })
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+    }
+
+    private func reconfigure(item: ConversationViewItem) {
+        var snapshot = dataSource.snapshot()
+        if #available(iOS 15.0, *) {
+            snapshot.reconfigureItems([item])
+        } else {
+            snapshot.reloadItems([item])
         }
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+extension ConversationViewController: ConversationCellPresenterDelegate {
+    func didUpdateState(forItemWithId id: UUID) {
+        dataSource.snapshot()
+            .itemIdentifiers
+            .first { $0.id == id }
+            .map(reconfigure)
     }
 }

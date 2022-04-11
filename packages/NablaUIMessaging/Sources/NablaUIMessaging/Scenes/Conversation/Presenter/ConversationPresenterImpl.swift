@@ -12,20 +12,28 @@ final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
 
     func start() {
-        view?.configure(withState: .loading)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.view?.configure(withState: .error)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-            self.view?.configure(withState: .loading)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.view?.configure(withState: .empty)
-        }
+//        view?.configure(withState: .loading)
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            self.view?.configure(withState: .error)
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+//            self.view?.configure(withState: .loading)
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//            self.view?.configure(withState: .empty)
+//        }
 
-        for i in 1 ... 4 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(7 + i * 2)) {
-                self.items.append(ConversationViewItem(content: DateSeparatorItemContent(text: Date().description)))
+        for i in 0 ... 4 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(1 + i * 2)) {
+                self.items.append(ConversationViewItem(
+                    content: DateSeparatorItemContent(
+                        text: """
+                        === \(i) START ===
+                        \(Date().description)
+                        === \(i) END ===
+                        """)
+                )
+                )
                 self.view?.configure(withState: .loaded(items: self.items))
             }
         }

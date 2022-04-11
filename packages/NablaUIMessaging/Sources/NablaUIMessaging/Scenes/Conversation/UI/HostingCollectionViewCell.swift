@@ -1,9 +1,9 @@
 import UIKit
 
 protocol ReusableView: UIView {
-    associatedtype Data
+    associatedtype Presenter
 
-    func configure(with data: Data)
+    func configure(presenter: Presenter)
     func prepareForReuse()
 }
 
@@ -24,8 +24,10 @@ final class HostingCollectionViewCell<HostedView: ReusableView>: UICollectionVie
 
     // MARK: - Internal
 
-    func configure(with data: HostedView.Data) {
-        hostedView.configure(with: data)
+    let hostedView: HostedView = .init().prepareForAutoLayout()
+
+    func configure(presenter: HostedView.Presenter) {
+        hostedView.configure(presenter: presenter)
     }
 
     override func prepareForReuse() {
@@ -33,8 +35,4 @@ final class HostingCollectionViewCell<HostedView: ReusableView>: UICollectionVie
 
         hostedView.prepareForReuse()
     }
-    
-    // MARK: - Private
-
-    private let hostedView: HostedView = .init().prepareForAutoLayout()
 }

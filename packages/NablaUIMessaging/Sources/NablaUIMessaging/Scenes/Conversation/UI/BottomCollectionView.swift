@@ -1,6 +1,15 @@
 import UIKit
 
 final class BottomCollectionView: UICollectionView {
+    private var size: CGSize? {
+        didSet {
+            if let size = size, let oldValue = oldValue, size != oldValue {
+                contentOffset.y -= size.height - oldValue.height
+                updateInsets()
+            }
+        }
+    }
+
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
 
@@ -15,25 +24,40 @@ final class BottomCollectionView: UICollectionView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        updateInsets()
+        size = bounds.size
     }
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-
         updateInsets()
     }
 
-    // MARK: - Private
+    override func performBatchUpdates(_ updates: (() -> Void)?, completion: ((Bool) -> Void)?) {
+        let isAtBottomBeforeUpdates = isAtBottom()
+        super.performBatchUpdates(updates) { completed in
+            completion?(completed)
+            if isAtBottomBeforeUpdates {
+                self.scrollToBottom()
+            }
+        }
+    }
 }
 
-extension UICollectionView {
+private extension UICollectionView {
     func updateInsets() {
         if bounds.height > contentSize.height {
-            contentInset = .only(top: bounds.height - contentSize.height)
+            contentInset.top = bounds.height - contentSize.height
         } else {
-            contentInset = .zero
+            contentInset.top = 0
         }
+    }
+
+    func isAtBottom() -> Bool {
+        (contentOffset.y + contentInset.top) >= contentSize.height - bounds.height
+    }
+
+    func scrollToBottom(animated: Bool = true) {
+        let indexPath = IndexPath(item: numberOfItems(inSection: 0) - 1, section: 0)
+        scrollToItem(at: indexPath, at: .bottom, animated: animated)
     }
 }

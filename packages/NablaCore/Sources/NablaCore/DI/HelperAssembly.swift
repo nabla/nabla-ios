@@ -11,5 +11,6 @@ class HelperAssembly: Assembly {
         resolver.register(type: Environment.self) {
             EnvironmentImpl()
         }
+        resolver.register(type: Logger.self, ConsoleLogger())
     }
 }
