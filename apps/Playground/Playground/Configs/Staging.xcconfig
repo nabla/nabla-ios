@@ -1,0 +1,3 @@
+#include "Playground/Configs/Common.xcconfig"
+
+PLAYGROUND_API_DOMAIN = staging.api.iap2.nabla.com

@@ -1,0 +1,3 @@
+#include "Playground/Configs/Common.xcconfig"
+
+PLAYGROUND_API_DOMAIN = api.nabla.com

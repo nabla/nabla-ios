@@ -4,9 +4,21 @@ import NablaUtils
 public class NablaClient {
     // MARK: - Public
 
-    public static var shared: NablaClient = initialize()
-
-    public var apiKey: String?
+    public static var shared: NablaClient {
+        guard let shared = _shared else {
+            fatalError("NablaClient.initialize(configuration:) must be called before accessing NablaClient.shared")
+        }
+        return shared
+    }
+    
+    public static func initialize(configuration: Configuration? = nil) {
+        guard _shared == nil else {
+            assertionFailure("NablaClient.initialize(configuration:) can only be called once")
+            return
+        }
+        assemble(configuration: configuration ?? DefaultConfiguration())
+        _shared = NablaClient()
+    }
 
     public func authenticate(
         userID: UUID,
@@ -34,17 +46,18 @@ public class NablaClient {
     @Inject private var gqlClient: GQLClient
     @Inject private var getConversationListInteractor: GetConversationListInteractor
     @Inject private var observeConversationItemsInteractor: ObserveConversationItemsInteractor
+    
+    private static var _shared: NablaClient?
 
-    private static func initialize() -> NablaClient {
+    private static func assemble(configuration: Configuration = DefaultConfiguration()) {
         let assembler = Assembler(assemblies: [
             AuthenticationAssembly(),
             DataSourceAssembly(),
             RepositoryAssembly(),
             InteractorAssembly(),
-            HelperAssembly(),
+            HelperAssembly(configuration: configuration),
             GQLAssembly(),
         ])
         assembler.assemble()
-        return NablaClient()
     }
 }

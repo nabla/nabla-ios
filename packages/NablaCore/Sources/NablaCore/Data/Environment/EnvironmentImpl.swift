@@ -2,8 +2,11 @@ import Foundation
 
 class EnvironmentImpl: Environment {
     var serverUrl: URL {
+        var components = URLComponents()
+        components.host = configuration.domain
+        components.scheme = configuration.scheme
         // swiftlint:disable:next force_unwrapping
-        URL(string: "https://api.nabla.com")!
+        return components.url!
     }
     
     var packageName: String {
@@ -30,4 +33,14 @@ class EnvironmentImpl: Environment {
 
         return version
     }
+    
+    init(
+        configuration: Configuration
+    ) {
+        self.configuration = configuration
+    }
+
+    // MARK: - Private
+    
+    private let configuration: Configuration
 }
