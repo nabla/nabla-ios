@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+// TODO: Factorize shared code between the different ConversationCellProviders
 protocol ConversationCellProvider {
     func prepare(collectionView: UICollectionView)
 

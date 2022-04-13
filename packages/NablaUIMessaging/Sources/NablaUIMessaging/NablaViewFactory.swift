@@ -18,6 +18,8 @@ public enum NablaViewFactory {
         let viewController = ConversationViewController(
             providers: [
                 DateSeparatorCellProvider(),
+                EventCellProvider(),
+                TextMessageCellProvider(),
             ]
         )
         viewController.presenter = ConversationPresenterImpl(

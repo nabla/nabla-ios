@@ -10,6 +10,7 @@ final class DateSeparatorPresenter: Presenter {
         self.id = id
         self.delegate = delegate
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.localText = "\nline 2"
             self.delegate?.didUpdateState(forItemWithId: self.id)
         }
     }
@@ -22,17 +23,18 @@ final class DateSeparatorPresenter: Presenter {
 
     // MARK: - Internal
 
-    func attachView(_ view: DateSeparatorViewContract) {
+    func attachView(_ view: EventCellContract) {
         self.view = view
     }
 
     func updateView() {
-        view?.configure(content: content)
+        view?.configure(with: .init(message: content.text + (localText ?? "")))
     }
 
     // MARK: - Private
 
     private let id: UUID
+    private var localText: String?
     private weak var delegate: ConversationCellPresenterDelegate?
-    private weak var view: DateSeparatorViewContract?
+    private weak var view: EventCellContract?
 }
