@@ -21,6 +21,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        collectionView.backgroundColor = .clear
         providers.forEach { $0.prepare(collectionView: collectionView) }
         presenter.start()
     }
@@ -33,6 +34,10 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     func configure(withState state: ConversationViewState) {
         self.state = state
+    }
+
+    func emptyComposer() {
+        composerView.text = nil
     }
 
     // MARK: Private
@@ -62,7 +67,14 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private let emptyView: EmptyView = .init().prepareForAutoLayout()
 
     private lazy var collectionView: UICollectionView = makeCollectionView()
-    private let composerView: ComposerView = .init().prepareForAutoLayout()
+    private lazy var composerView: ComposerView = makeComposerView()
+
+    private func makeComposerView() -> ComposerView {
+        let composerView = ComposerView().prepareForAutoLayout()
+        composerView.placeHolder = L10n.conversationComposerPlaceholder
+        composerView.delegate = self
+        return composerView
+    }
 
     private func makeCollectionView() -> UICollectionView {
         let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
@@ -186,4 +198,13 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
             .first { $0.id == id }
             .map(reconfigure)
     }
+}
+
+extension ConversationViewController: ComposerViewDelegate {
+    func composerViewDidTapOnSend(_ composerView: ComposerView) {
+        guard let text = composerView.text else { return }
+        presenter.send(text: text)
+    }
+
+    func composerViewDidTapOnAddMedia(_: ComposerView) {}
 }

@@ -32,4 +32,5 @@ struct ConversationViewItem: Hashable {
 
 protocol ConversationViewContract: AnyObject {
     func configure(withState state: ConversationViewState)
+    func emptyComposer()
 }

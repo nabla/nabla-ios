@@ -53,6 +53,12 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
     }
 
+    func send(text: String) {
+        items.append(.init(content: TextMessageItemContent(text: text)))
+        view?.configure(withState: .loaded(items: items))
+        view?.emptyComposer()
+    }
+
     // MARK: - Private
 
     private weak var view: ConversationViewContract?

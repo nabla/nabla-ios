@@ -5,7 +5,7 @@ extension UIEdgeInsets {
         self.init(top: top, left: left, bottom: bottom, right: right)
     }
 
-    init(all value: CGFloat) {
+    static func all(_ value: CGFloat) -> Self {
         self.init(top: value, left: value, bottom: value, right: value)
     }
 

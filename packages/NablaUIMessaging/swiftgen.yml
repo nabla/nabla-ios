@@ -13,8 +13,8 @@ strings:
     - templateName: structured-swift5
       output: Strings+Generated.swift
       params:
-        enumName: CoreL10n
-        publicAccess: true
+        enumName: L10n
+        publicAccess: false
 
 ## Generate constants for your Assets Catalogs, including constants for images, colors, ARKit resources, etc.
 ##   This example also shows how to provide additional parameters to your template to customise the output.

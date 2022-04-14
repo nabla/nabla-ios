@@ -27,7 +27,8 @@ final class TextMessagePresenter:
     private static func transform(textMessageItemContent: TextMessageItemContent)
         -> ConversationMessageViewModel<TextMessageContentView.ContentViewModel> {
         .init(
-            sender: .them(.init(author: "Dr. John Doe", avatar: .init(url: nil, text: "JD"), displaySenderNameAndAvatar: true)),
+            //            sender: .them(.init(author: "Dr. John Doe", avatar: .init(url: nil, text: "JD"), displaySenderNameAndAvatar: true)),
+            sender: .me,
             footer: nil,
             content: .init(
                 text: textMessageItemContent.text

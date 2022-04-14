@@ -1,3 +1,5 @@
 import Foundation
 
-protocol ConversationPresenter: Presenter {}
+protocol ConversationPresenter: Presenter {
+    func send(text: String)
+}

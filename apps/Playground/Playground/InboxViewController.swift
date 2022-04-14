@@ -22,7 +22,13 @@ final class InboxViewController: UIViewController {
 
         let view = NablaViewFactory.createConversationListView(delegate: self)
         self.view.addSubview(view)
-        view.pinToSuperView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            view.topAnchor.constraint(equalTo: self.view.topAnchor),
+            view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
     }
 }
 

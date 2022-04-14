@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-extension UITextField {
+extension UITextView {
     func withInteractiveDismiss() -> Self {
         assert(inputAccessoryView == nil, "Not supported yet")
         inputAccessoryView = InputView()

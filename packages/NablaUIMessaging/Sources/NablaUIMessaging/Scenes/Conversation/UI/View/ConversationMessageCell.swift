@@ -4,7 +4,7 @@ private enum Constants {
     static let avatarSize: CGFloat = 28
     static let bodyMaxWidth: CGFloat = 300
     static let spacing: CGFloat = 8
-    static let messagePadding = UIEdgeInsets(all: 4)
+    static let messagePadding: UIEdgeInsets = .all(4)
     static let systemPadding = UIEdgeInsets(horizontal: 0, vertical: 6)
     static let padding = UIEdgeInsets(horizontal: 10, vertical: 1)
     static let authorFontSize: CGFloat = 14

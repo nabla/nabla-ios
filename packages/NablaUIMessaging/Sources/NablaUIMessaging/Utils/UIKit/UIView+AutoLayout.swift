@@ -1,6 +1,23 @@
 import UIKit
 
-public extension UIView {
+enum Relation {
+    case equal, greaterThanOrEqual, lessThanOrEqual
+}
+
+extension NSLayoutDimension {
+    func constraint(toConstant constant: CGFloat, relation: Relation = .equal) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return constraint(equalToConstant: constant)
+        case .greaterThanOrEqual:
+            return constraint(greaterThanOrEqualToConstant: constant)
+        case .lessThanOrEqual:
+            return constraint(lessThanOrEqualToConstant: constant)
+        }
+    }
+}
+
+extension UIView {
     @discardableResult
     func prepareForAutoLayout() -> Self {
         translatesAutoresizingMaskIntoConstraints = false
@@ -30,19 +47,23 @@ public extension UIView {
     }
 
     func constraintToSize(_ size: CGSize) {
-        prepareForAutoLayout()
+        constraintHeight(size.height)
+        constraintWidth(size.width)
+    }
 
+    func constraintHeight(_ height: CGFloat, relation: Relation = .equal) {
+        prepareForAutoLayout()
+        
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: size.height),
-            widthAnchor.constraint(equalToConstant: size.width),
+            heightAnchor.constraint(toConstant: height, relation: relation),
         ])
     }
 
-    func constraintHeight(_ height: CGFloat) {
+    func constraintWidth(_ width: CGFloat, relation _: Relation = .equal) {
         prepareForAutoLayout()
 
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: height),
+            widthAnchor.constraint(equalToConstant: width),
         ])
     }
 }
