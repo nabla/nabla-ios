@@ -57,7 +57,27 @@ class ResolverTests: XCTestCase {
 
         // THEN
         XCTAssertEqual(resolved1.value, 1)
-        XCTAssertEqual(resolved2.value, 2)
+        XCTAssertEqual(resolved2.value, 1)
+    }
+    
+    func testRegsiterClosureAndResolveMultipleInstancesSeparately() {
+        // GIVEN
+        let sut = Resolver()
+        var counter = 0
+
+        // WHEN
+        sut.register(type: SomeClass.self) { () -> SomeClass in
+            counter += 1
+            return SomeClass(value: counter)
+        }
+        var resolved1: SomeClass? = sut.resolve(SomeClass.self)
+        let resolvedValue1 = resolved1?.value
+        resolved1 = nil
+        let resolved2 = sut.resolve(SomeClass.self)
+
+        // THEN
+        XCTAssertEqual(resolvedValue1, 1)
+        XCTAssertEqual(resolved2.value, 1)
     }
 
     func testRegisterSubclassAndResolveInstance() {
