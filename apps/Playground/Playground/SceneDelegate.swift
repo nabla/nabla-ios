@@ -1,3 +1,4 @@
+import IAP
 import NablaCore
 import NablaUIMessaging
 import UIKit
@@ -11,13 +12,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = UINavigationController(rootViewController: InboxViewController())
         window.makeKeyAndVisible()
         self.window = window
         
         NablaClient.shared.addRefetchTriggers(
             NotificationRefetchTrigger(name: UIApplication.willEnterForegroundNotification)
         )
+        
+        switch XCConfig().env {
+        case .development, .staging:
+            openIAP()
+        case .production:
+            openApp()
+        }
     }
 
     func sceneDidDisconnect(_: UIScene) {
@@ -46,5 +53,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+    }
+    
+    private func openApp() {
+        window?.rootViewController = UINavigationController(rootViewController: InboxViewController())
+    }
+    
+    private func openIAP() {
+        let config = XCConfig()
+        window?.rootViewController = IAPViewController(
+            configuration: .init(
+                clientId: config.iapClientId,
+                serverId: config.iapServerId
+            ),
+            delegate: self
+        )
+    }
+}
+
+extension SceneDelegate: IAPViewControllerDelegate {
+    func iapViewController(_: IAPViewController, didSucceedWithToken token: String) {
+        print(token)
+        openApp()
     }
 }
