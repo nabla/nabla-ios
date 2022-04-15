@@ -5,9 +5,10 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
-        NablaClient.initialize(configuration: XCConfig())
+        NablaClient.initialize(configuration: XCConfig.current)
+        NablaClient.shared.addRefetchTriggers(
+            NotificationRefetchTrigger(name: UIApplication.willEnterForegroundNotification)
+        )
         return true
     }
 

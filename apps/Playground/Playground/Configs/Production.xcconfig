@@ -3,3 +3,4 @@
 PLAYGROUND_ENV = production
 
 PLAYGROUND_API_DOMAIN = api.nabla.com
+PLAYGROUND_API_TOKEN = 

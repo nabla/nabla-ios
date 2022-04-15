@@ -3,7 +3,9 @@
 PLAYGROUND_ENV = staging
 
 PLAYGROUND_API_DOMAIN = staging.api.iap2.nabla.com
+PLAYGROUND_API_TOKEN = eyJ2YWx1ZSI6Ind0d3NnOGZocjhwcmQ3dXE4YWlrczQzNHNkM2VocXV4ZmJsc2tydGYxMXo3MG5hNjZ2eHpva3F1NnJyY2prMHQiLCJzZWNyZXQiOiJ2MDMycGsxZzIweGNyajQyNm1oejc5dGRwOTJtNmV2cG03ODYwZHdjMmxzd3EwNDVubGpwcmxjMXd2cjRtYmxkIn0=
 
+PLAYGROUND_IAP_REQUIRED = true
 PLAYGROUND_IAP_URL_SCHEME = com.googleusercontent.apps.549132816401-qgvgg9v3q99d82k8il9t2carrbpiccv8
 PLAYGROUND_IAP_CLIENT_ID = 549132816401-qgvgg9v3q99d82k8il9t2carrbpiccv8.apps.googleusercontent.com
 PLAYGROUND_IAP_SERVER_ID = 549132816401-n21dhj7esfj7im9k1lstqt9g7c7gshbl.apps.googleusercontent.com

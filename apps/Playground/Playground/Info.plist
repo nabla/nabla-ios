@@ -21,10 +21,14 @@
 	<string>$(PLAYGROUND_API_PORT)</string>
 	<key>PLAYGROUND_API_SCHEME</key>
 	<string>$(PLAYGROUND_API_SCHEME)</string>
+	<key>PLAYGROUND_API_TOKEN</key>
+	<string>$(PLAYGROUND_API_TOKEN)</string>
 	<key>PLAYGROUND_ENV</key>
 	<string>$(PLAYGROUND_ENV)</string>
 	<key>PLAYGROUND_IAP_CLIENT_ID</key>
 	<string>$(PLAYGROUND_IAP_CLIENT_ID)</string>
+	<key>PLAYGROUND_IAP_REQUIRED</key>
+	<string>$(PLAYGROUND_IAP_REQUIRED)</string>
 	<key>PLAYGROUND_IAP_SERVER_ID</key>
 	<string>$(PLAYGROUND_IAP_SERVER_ID)</string>
 	<key>UIApplicationSceneManifest</key>

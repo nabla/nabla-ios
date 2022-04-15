@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		CBC0AE040ACF7113E55BBCFE /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC0A82EB1B49597FC902B40 /* InboxViewController.swift */; };
+		E407346F2808C470000880A6 /* Networking in Frameworks */ = {isa = PBXBuildFile; productRef = E407346E2808C470000880A6 /* Networking */; };
 		E41EC26127E3797400748029 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41EC26027E3797400748029 /* AppDelegate.swift */; };
 		E41EC26327E3797400748029 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41EC26227E3797400748029 /* SceneDelegate.swift */; };
 		E41EC26A27E3797400748029 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E41EC26927E3797400748029 /* Assets.xcassets */; };
 		E41EC26D27E3797400748029 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E41EC26B27E3797400748029 /* LaunchScreen.storyboard */; };
 		E41EC27627E37CB500748029 /* NablaCore in Resources */ = {isa = PBXBuildFile; fileRef = E41EC27527E37CB500748029 /* NablaCore */; };
 		E41EC27927E37CCA00748029 /* NablaCore in Frameworks */ = {isa = PBXBuildFile; productRef = E41EC27827E37CCA00748029 /* NablaCore */; };
+		E4428BC9280881A600BF4875 /* UserPicker in Frameworks */ = {isa = PBXBuildFile; productRef = E4428BC8280881A600BF4875 /* UserPicker */; };
 		E445E3D727EA259100A86BBE /* PlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E445E3D627EA259100A86BBE /* PlaygroundTests.swift */; };
 		E44A3F442805C3DF009C25D1 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A3F432805C3DF009C25D1 /* XCConfig.swift */; };
 		E4997D5828082760003A9BC5 /* IAP in Frameworks */ = {isa = PBXBuildFile; productRef = E4997D5728082760003A9BC5 /* IAP */; };
@@ -32,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		CBC0A82EB1B49597FC902B40 /* InboxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InboxViewController.swift; sourceTree = "<group>"; };
+		E407346D2808C33E000880A6 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
 		E41EC25D27E3797400748029 /* Playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Playground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E41EC26027E3797400748029 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E41EC26227E3797400748029 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,6 +44,7 @@
 		E41EC27527E37CB500748029 /* NablaCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NablaCore; sourceTree = "<group>"; };
 		E41EC27A27E37E4A00748029 /* NablaUtils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NablaUtils; sourceTree = "<group>"; };
 		E41EC27B27E3816D00748029 /* NablaUIMessaging */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NablaUIMessaging; sourceTree = "<group>"; };
+		E4428BC72808817600BF4875 /* UserPicker */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UserPicker; sourceTree = "<group>"; };
 		E445E3D427EA259100A86BBE /* PlaygroundTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlaygroundTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E445E3D627EA259100A86BBE /* PlaygroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundTests.swift; sourceTree = "<group>"; };
 		E44A3F332805BD2A009C25D1 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
@@ -60,6 +64,8 @@
 				E4997D5828082760003A9BC5 /* IAP in Frameworks */,
 				FF59C50B27FAEC3300119C23 /* NablaUIMessaging in Frameworks */,
 				E41EC27927E37CCA00748029 /* NablaCore in Frameworks */,
+				E407346F2808C470000880A6 /* Networking in Frameworks */,
+				E4428BC9280881A600BF4875 /* UserPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,7 +106,6 @@
 				E44A3F322805BD0F009C25D1 /* Configs */,
 				E41EC26027E3797400748029 /* AppDelegate.swift */,
 				E41EC26227E3797400748029 /* SceneDelegate.swift */,
-				E44A3F432805C3DF009C25D1 /* XCConfig.swift */,
 				E41EC26927E3797400748029 /* Assets.xcassets */,
 				E41EC26B27E3797400748029 /* LaunchScreen.storyboard */,
 				E41EC26E27E3797400748029 /* Info.plist */,
@@ -143,6 +148,7 @@
 				E44A3F342805BD35009C25D1 /* Staging.xcconfig */,
 				E44A3F352805BD3D009C25D1 /* Development.xcconfig */,
 				E44A3F362805BD45009C25D1 /* Production.xcconfig */,
+				E44A3F432805C3DF009C25D1 /* XCConfig.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -150,6 +156,8 @@
 		E4997D55280825EA003A9BC5 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				E407346D2808C33E000880A6 /* Networking */,
+				E4428BC72808817600BF4875 /* UserPicker */,
 				E4997D5628082639003A9BC5 /* IAP */,
 			);
 			path = Packages;
@@ -175,6 +183,8 @@
 				E41EC27827E37CCA00748029 /* NablaCore */,
 				FF59C50A27FAEC3300119C23 /* NablaUIMessaging */,
 				E4997D5728082760003A9BC5 /* IAP */,
+				E4428BC8280881A600BF4875 /* UserPicker */,
+				E407346E2808C470000880A6 /* Networking */,
 			);
 			productName = Playground;
 			productReference = E41EC25D27E3797400748029 /* Playground.app */;
@@ -969,9 +979,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E407346E2808C470000880A6 /* Networking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Networking;
+		};
 		E41EC27827E37CCA00748029 /* NablaCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NablaCore;
+		};
+		E4428BC8280881A600BF4875 /* UserPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserPicker;
 		};
 		E4997D5728082760003A9BC5 /* IAP */ = {
 			isa = XCSwiftPackageProductDependency;

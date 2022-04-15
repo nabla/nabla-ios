@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "ADCoordinator",
+        "repositoryURL": "https://github.com/faberNovel/Coordinator",
+        "state": {
+          "branch": null,
+          "revision": "9e545e3f4d866db7b51863a1fc0ba0fee45a265d",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "GoogleSignIn",
         "repositoryURL": "https://github.com/google/GoogleSignIn-iOS",
         "state": {

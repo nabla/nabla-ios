@@ -1,2 +1,7 @@
 PLAYGROUND_API_DOMAIN = <nickname>.tunnel.dev.nabla.com
 PLAYGROUND_API_SCHEME = https
+PLAYGROUND_API_PORT =
+PLAYGROUND_API_PATH = /
+PLAYGROUND_API_TOKEN = <genertate_one_from_admin_panel>
+
+PLAYGROUND_IAP_REQUIRED = true

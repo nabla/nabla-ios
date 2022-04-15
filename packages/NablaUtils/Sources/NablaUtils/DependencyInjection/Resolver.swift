@@ -19,11 +19,11 @@ public class Resolver {
 
     public func resolve<T>(_ type: T.Type) -> T {
         guard let factory = factories[key(for: type)] else {
-            fatalError("Could not resolve any \(type)")
+            fatalError("Could not resolve any \(String(reflecting: type))")
         }
         let component = factory.get(resolver: self)
         guard let typeSafeComponent = component as? T else {
-            fatalError("Tried to resolve \(type) but found \(component)")
+            fatalError("Tried to resolve \(String(reflecting: type)) but found \(String(reflecting: component))")
         }
         return typeSafeComponent
     }
@@ -33,7 +33,7 @@ public class Resolver {
     private var factories: [String: Factory] = [:]
 
     private func key<T>(for type: T.Type) -> String {
-        String(describing: type.self)
+        String(reflecting: type.self)
     }
 }
 
