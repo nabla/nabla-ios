@@ -18,15 +18,17 @@ public class HTTPManager {
     @discardableResult
     public func fetch<Resource: Decodable>(_ type: Resource.Type,
                                            associatedTo request: HTTPRequest,
-                                           completion: @escaping (Result<Resource, Error>) -> Void) -> String {
+                                           completion: @escaping (Result<Resource, HTTPError>) -> Void) -> String {
         fetch(request) { response in
             switch response.result {
             case let .success(data):
                 do {
-                    let value = try JSONDecoder().decode(type, from: data)
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = request.keyDecodingStrategy
+                    let value = try decoder.decode(type, from: data)
                     completion(.success(value))
                 } catch {
-                    completion(.failure(error))
+                    completion(.failure(.decodingError(error)))
                 }
             case let .failure(error):
                 completion(.failure(error))

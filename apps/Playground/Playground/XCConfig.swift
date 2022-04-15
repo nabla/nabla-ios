@@ -8,35 +8,63 @@ enum Env: String {
 }
 
 class XCConfig: Configuration {
-    @Property(key: "PLAYGROUND_ENV")
-    private var rawEnv: String
+    // MARK: - Internal
     
     var env: Env {
         Env(rawValue: rawEnv) ?? .development
     }
     
-    @Property(key: "PLAYGROUND_API_DOMAIN")
+    @StringValue(key: "PLAYGROUND_API_DOMAIN")
     var domain: String
     
-    @Property(key: "PLAYGROUND_API_SCHEME")
+    @StringValue(key: "PLAYGROUND_API_SCHEME")
     var scheme: String
     
-    @Property(key: "PLAYGROUND_IAP_CLIENT_ID")
+    @IntValue(key: "PLAYGROUND_API_PORT")
+    var port: Int?
+    
+    @StringValue(key: "PLAYGROUND_API_PATH")
+    var path: String
+    
+    @StringValue(key: "PLAYGROUND_IAP_CLIENT_ID")
     var iapClientId: String
     
-    @Property(key: "PLAYGROUND_IAP_SERVER_ID")
+    @StringValue(key: "PLAYGROUND_IAP_SERVER_ID")
     var iapServerId: String
     
+    // MARK: - Private
+    
+    @StringValue(key: "PLAYGROUND_ENV")
+    private var rawEnv: String
+    
     @propertyWrapper
-    struct Property<T> {
+    struct StringValue {
         let key: String
 
-        var wrappedValue: T {
+        var wrappedValue: String {
             guard let rawValue = Bundle.main.object(forInfoDictionaryKey: key) else {
                 fatalError("Missing \(key) key in bundle.")
             }
-            guard let value = rawValue as? T else {
-                fatalError("Unexpected bundle value for key \(key). Expected \(T.self), found \(type(of: rawValue)).")
+            guard let value = rawValue as? String else {
+                fatalError("Cannot convert \(rawValue) to `String`.")
+            }
+            return value
+        }
+    }
+    
+    @propertyWrapper
+    struct IntValue {
+        let key: String
+
+        var wrappedValue: Int? {
+            guard let rawValue = Bundle.main.object(forInfoDictionaryKey: key) as? String else {
+                fatalError("Missing \(key) key in bundle.")
+            }
+            if rawValue.isEmpty {
+                return nil
+            }
+            guard let value = Int(rawValue) else {
+                fatalError("Cannot convert \(rawValue) to `Int`.")
             }
             return value
         }

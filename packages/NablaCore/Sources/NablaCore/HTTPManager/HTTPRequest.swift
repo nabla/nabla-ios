@@ -19,16 +19,21 @@ public struct HTTPRequest {
     private(set) var endPoint: String
     private(set) var parameters: [String: Any]
     private(set) var headers: [String: String]
+    private(set) var keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy
 
-    public init(method: Method = .get,
-                endPoint: String,
-                parameters: [String: Any] = [:],
-                headers: [String: String] = [:],
-                requestId: String? = nil) {
+    public init(
+        method: Method = .get,
+        endPoint: String,
+        parameters: [String: Any] = [:],
+        headers: [String: String] = [:],
+        keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase,
+        requestId: String? = nil
+    ) {
         self.method = method
         self.endPoint = endPoint
         self.parameters = parameters
         self.headers = headers
+        self.keyDecodingStrategy = keyDecodingStrategy
         id = requestId ?? UUID().uuidString
     }
 

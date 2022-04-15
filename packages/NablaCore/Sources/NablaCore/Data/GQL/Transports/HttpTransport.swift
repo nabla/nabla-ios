@@ -15,7 +15,7 @@ class HttpTransport {
     private func makeApolloTransport() -> UploadingNetworkTransport {
         RequestChainNetworkTransport(
             interceptorProvider: interceptorProvider,
-            endpointURL: environment.serverUrl,
+            endpointURL: environment.serverUrl.appendingPathComponent(environment.graphqlPath),
             additionalHeaders: [:],
             autoPersistQueries: false,
             requestBodyCreator: ApolloRequestBodyCreator(),

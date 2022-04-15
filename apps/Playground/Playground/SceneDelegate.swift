@@ -25,7 +25,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         case .production:
             openApp()
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            NablaClient.shared.authenticate(userID: UUID(), provider: self) { result in
+                print("auth \(result)")
+                
+                // swiftlint:disable:next force_unwrapping
+                self.cancellable = NablaClient.shared.observeItems(ofConversationWithId: UUID(uuidString: "63206A0E-0487-4425-96FB-AAE662985BA2")!) { result in
+                    print("gql \(result)")
+                }
+            }
+        }
     }
+    
+    var cancellable: Cancellable?
 
     func sceneDidDisconnect(_: UIScene) {
         // Called as the scene is being released by the system.
@@ -73,7 +86,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate: IAPViewControllerDelegate {
     func iapViewController(_: IAPViewController, didSucceedWithToken token: String) {
-        print(token)
+        NablaClient.shared.addHTTPHeader(name: "Authorization", value: "Bearer \(token)")
         openApp()
+    }
+}
+
+extension SceneDelegate: NablaAuthenticationProvider {
+    func provideTokens(completion: (Tokens?) -> Void) {
+        let tokens = Tokens(
+            accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiOTRiMmQwMi1iNWY4LTQ2ODYtOWI5Zi1lNDk4OWE2Yzc5ODkiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY0OTk0Mzg3OSwic2Vzc2lvbl91dWlkIjoiZDY2Mjc4YzMtZjlmNi00ODRiLTg0OWMtNGI4NDE5NmNhMjQwIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.KmS5TctsE-74m1vSNwbj0XJdmu10RQDBUh390Uczz7Q",
+            refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiOTRiMmQwMi1iNWY4LTQ2ODYtOWI5Zi1lNDk4OWE2Yzc5ODkiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjE2NTc3MTk1NzksInNlc3Npb25fdXVpZCI6ImQ2NjI3OGMzLWY5ZjYtNDg0Yi04NDljLTRiODQxOTZjYTI0MCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.q8HXs-fnF8XTpU9XuYRgtrvFFkl_CN0jVAMBOs3bcFo"
+        )
+        completion(tokens)
     }
 }

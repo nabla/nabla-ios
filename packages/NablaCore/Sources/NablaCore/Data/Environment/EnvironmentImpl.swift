@@ -5,8 +5,14 @@ class EnvironmentImpl: Environment {
         var components = URLComponents()
         components.host = configuration.domain
         components.scheme = configuration.scheme
+        components.port = configuration.port
+        components.path = configuration.path
         // swiftlint:disable:next force_unwrapping
         return components.url!
+    }
+    
+    var graphqlPath: String {
+        "v1/patient/graphql/sdk/authenticated"
     }
     
     var packageName: String {

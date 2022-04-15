@@ -8,8 +8,8 @@ struct URLRequestMapper {
     }
 
     func map(httpRequest: HTTPRequest) -> URLRequest? {
-        let urlString = baseUrlProvider.baseURL + httpRequest.endPoint
-        guard var urlComponents = URLComponents(string: urlString) else { return nil }
+        let endpointUrl = baseUrlProvider.baseURL.appendingPathComponent(httpRequest.endPoint)
+        guard var urlComponents = URLComponents(url: endpointUrl, resolvingAgainstBaseURL: false) else { return nil }
 
         var request: URLRequest
         switch httpRequest.method.parametersEncoding {
@@ -32,8 +32,8 @@ struct URLRequestMapper {
         request.httpMethod = httpRequest.method.rawValue
 
         var headers = [
-            "Accept": "application/json",
-        ]
+            HTTPHeaders.Accept: "application/json",
+        ].merging(HTTPHeaders.extra, uniquingKeysWith: { lhs, _ in lhs })
 
         for (key, value) in httpRequest.headers {
             headers.updateValue(value, forKey: key)

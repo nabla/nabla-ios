@@ -6,7 +6,7 @@ final class SharedTask<T> {
     typealias Completion = (T) -> Void
     typealias Resolver = (T) -> Void
 
-    init(asyncTask: @escaping (_ resolver: Resolver) -> Void) {
+    init(asyncTask: @escaping (_ resolver: @escaping Resolver) -> Void) {
         self.asyncTask = asyncTask
     }
 
@@ -32,7 +32,7 @@ final class SharedTask<T> {
 
     // MARK: - Private
 
-    private let asyncTask: (Resolver) -> Void
+    private let asyncTask: (@escaping Resolver) -> Void
     private var completions = [Completion]()
 
     private var resumed: Bool = false

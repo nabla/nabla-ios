@@ -17,18 +17,18 @@ extension URLSession {
                 completion(jsonResponse)
                 return
             }
-            let result: Result<Data, Error>
+            let result: Result<Data, HTTPError>
             switch response.statusCode {
             case 200 ..< 300:
                 result = .success(data)
             case 401:
-                result = .failure(APIError.unauthorized)
+                result = .failure(.serverError(.unauthorized))
             case 404:
-                result = .failure(APIError.notFound)
+                result = .failure(.serverError(.notFound))
             case 500 ..< 600:
-                result = .failure(APIError.unavailableService(error))
+                result = .failure(.serverError(.unavailableService(error)))
             default:
-                result = .failure(APIError.generic(error))
+                result = .failure(.serverError(.generic(error)))
             }
 
             let jsonResponse = JSONResponse(
@@ -42,9 +42,9 @@ extension URLSession {
         return task
     }
 
-    private func resultError(from error: Error?) -> Result<Data, Error> {
-        guard let error = error else { return .failure(APIError.generic(error)) }
-        var customError: APIError = .generic(error)
+    private func resultError(from error: Error?) -> Result<Data, HTTPError> {
+        guard let error = error else { return .failure(.transportError(.generic(error))) }
+        var customError: TransportError = .generic(error)
         let nsError = error as NSError
         if nsError.domain == NSURLErrorDomain {
             if nsError.code == NSURLErrorCancelled {
@@ -53,6 +53,6 @@ extension URLSession {
                 customError = .unreachableService
             }
         }
-        return .failure(customError)
+        return .failure(.transportError(customError))
     }
 }

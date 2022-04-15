@@ -51,6 +51,8 @@ class AuthenticatorImpl: Authenticator {
     }
 
     // MARK: - Private
+    
+    @Inject private var httpManager: HTTPManager
 
     private var provider: NablaAuthenticationProvider?
     private var session: Session?
@@ -81,7 +83,7 @@ class AuthenticatorImpl: Authenticator {
         return renewTask
     }
 
-    private func renewTokens(_ tokens: Tokens, completion: (Result<Tokens, AuthenticationError>) -> Void) {
+    private func renewTokens(_ tokens: Tokens, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
         if !isExpired(tokens.refreshToken) {
             fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
             return
@@ -104,7 +106,37 @@ class AuthenticatorImpl: Authenticator {
         }
     }
 
-    private func fetchTokens(refreshToken _: String, completion _: (Result<Tokens, AuthenticationError>) -> Void) {
-        // TODO: @tgy HttpManager
+    private func fetchTokens(refreshToken: String, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
+        let request = RefreshTokenEndpoint.request(refreshToken: refreshToken)
+        httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request) { result in
+            switch result {
+            case let .failure(error):
+                if Self.isAuthorizationError(error) {
+                    completion(.failure(.authorizationDenied(error)))
+                } else {
+                    completion(.failure(.failedToRefreshTokens(error)))
+                }
+            case let .success(response):
+                let tokens = Tokens(
+                    accessToken: response.accessToken,
+                    refreshToken: response.refreshToken
+                )
+                completion(.success(tokens))
+            }
+        }
+    }
+    
+    private static func isAuthorizationError(_ error: HTTPError) -> Bool {
+        switch error {
+        case .transportError, .decodingError:
+            return false
+        case let .serverError(serverError):
+            switch serverError {
+            case .unauthorized:
+                return true
+            case .generic, .notFound, .unavailableService:
+                return false
+            }
+        }
     }
 }

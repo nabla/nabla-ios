@@ -23,7 +23,7 @@ public class NablaClient {
     public func authenticate(
         userID: UUID,
         provider: NablaAuthenticationProvider,
-        completion: (Result<Void, AuthenticationError>) -> Void
+        completion: @escaping (Result<Void, AuthenticationError>) -> Void
     ) {
         authenticator.authenticate(userID: userID, provider: provider, completion: completion)
     }
@@ -34,6 +34,10 @@ public class NablaClient {
     
     public func addRefetchTriggers(_ triggers: RefetchTrigger...) {
         gqlClient.addRefetchTriggers(triggers)
+    }
+    
+    public func addHTTPHeader(name: String, value: String) {
+        HTTPHeaders.extra[name] = value
     }
     
     public func observeItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationItems, Error>) -> Void) -> Cancellable {
@@ -56,6 +60,7 @@ public class NablaClient {
             RepositoryAssembly(),
             InteractorAssembly(),
             HelperAssembly(configuration: configuration),
+            NetworkAssembly(),
             GQLAssembly(),
         ])
         assembler.assemble()

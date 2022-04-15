@@ -15,6 +15,10 @@
 	</array>
 	<key>PLAYGROUND_API_DOMAIN</key>
 	<string>$(PLAYGROUND_API_DOMAIN)</string>
+	<key>PLAYGROUND_API_PATH</key>
+	<string>$(PLAYGROUND_API_PATH)</string>
+	<key>PLAYGROUND_API_PORT</key>
+	<string>$(PLAYGROUND_API_PORT)</string>
 	<key>PLAYGROUND_API_SCHEME</key>
 	<string>$(PLAYGROUND_API_SCHEME)</string>
 	<key>PLAYGROUND_ENV</key>

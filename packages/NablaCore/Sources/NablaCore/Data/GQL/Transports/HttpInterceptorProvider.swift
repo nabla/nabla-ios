@@ -6,8 +6,9 @@ class HttpInterceptorProvider: InterceptorProvider {
     // MARK: - Internal
     
     func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation: GraphQLOperation {
-        let interceptors = defaultProvider.interceptors(for: operation)
-        // TODO: @tgy add auth interceptor
+        var interceptors = defaultProvider.interceptors(for: operation)
+        interceptors.insert(RequestHeadersInterceptor(), at: 0)
+        interceptors.insert(AuthorizationInterceptor(), at: 0)
         return interceptors
     }
     
