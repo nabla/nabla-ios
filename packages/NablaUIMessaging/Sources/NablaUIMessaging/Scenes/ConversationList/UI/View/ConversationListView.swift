@@ -75,4 +75,10 @@ extension ConversationListView: UITableViewDelegate {
         // Notify presenter
         presenter?.didSelectConversation(at: indexPath)
     }
+
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y + scrollView.frame.size.height > scrollView.contentSize.height * 0.9 {
+            presenter?.didScrollToBottom()
+        }
+    }
 }

@@ -1,5 +1,5 @@
 import Foundation
 
 protocol ConversationRepository {
-    func getList(_ completion: ([Int]) -> Void)
+    func watch(callback: @escaping (Result<ConversationList, GQLError>) -> Void) -> PaginatedWatcher
 }

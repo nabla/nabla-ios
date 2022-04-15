@@ -18,6 +18,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     // MARK: - ConversationListPresenter
 
     func start() {
+        watcher = client.watchConversationList(callback: handle)
         viewContract?.configure(with: ConversationListViewModelMapper().stubs())
     }
 
@@ -25,8 +26,24 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         delegate?.conversationList(didSelectConversationWithId: UUID())
     }
 
+    func didScrollToBottom() {
+        guard !isLoading else { return }
+        isLoading = true
+        watcher?.loadMore { [weak self] _ in
+            self?.isLoading = false
+            // Do something if error
+        }
+    }
+
     // MARK: - Private
 
     private let client: NablaClient
     private weak var viewContract: ConversationListViewContract?
+
+    private var watcher: PaginatedWatcher?
+    private var isLoading = false
+
+    private func handle(result _: Result<ConversationList, GQLError>) {
+        // Display list or error
+    }
 }

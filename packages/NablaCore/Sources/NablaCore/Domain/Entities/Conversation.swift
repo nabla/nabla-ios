@@ -1,3 +1,3 @@
 import Foundation
 
-struct Conversation {}
+public struct Conversation {}

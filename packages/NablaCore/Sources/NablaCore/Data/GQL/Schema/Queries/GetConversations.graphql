@@ -1,0 +1,20 @@
+query GetConversations($page: OpaqueCursorPage!) {
+    conversations(page: $page) {
+        conversations {
+            id
+            title
+            description
+            lastMessagePreview
+            unreadMessageCount
+            providers {
+                provider {
+                    avatarUrl {
+                        url
+                    }
+                }
+            }
+        }
+        nextCursor
+        hasMore
+    }
+}
