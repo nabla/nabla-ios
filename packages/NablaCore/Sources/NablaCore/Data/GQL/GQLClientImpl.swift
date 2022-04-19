@@ -9,21 +9,23 @@ class GQLClientImpl: GQLClient {
         query: Query,
         cachePolicy: CachePolicy,
         completion: @escaping (Result<Query.Data, GQLError>) -> Void
-    ) {
+    ) -> Cancellable {
         apollo.fetch(query: query, cachePolicy: cachePolicy) { response in
             let result = Self.parseApolloResponse(response)
             completion(result)
         }
+        .toNablaCancellable()
     }
     
     func perform<Mutation: GQLMutation>(
         mutation: Mutation,
         completion: @escaping (Result<Mutation.Data, GQLError>) -> Void
-    ) {
+    ) -> Cancellable {
         apollo.perform(mutation: mutation) { response in
             let result = Self.parseApolloResponse(response)
             completion(result)
         }
+        .toNablaCancellable()
     }
     
     func watch<Query: GQLQuery>(

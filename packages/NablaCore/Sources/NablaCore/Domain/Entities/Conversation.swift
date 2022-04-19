@@ -1,3 +1,5 @@
 import Foundation
 
-public struct Conversation {}
+public struct Conversation {
+    public init() {}
+}

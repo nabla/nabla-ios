@@ -29,9 +29,9 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     func didScrollToBottom() {
         guard !isLoading else { return }
         isLoading = true
-        watcher?.loadMore { [weak self] _ in
+        loadMoreAction = watcher?.loadMore { [weak self] _ in
             self?.isLoading = false
-            // Do something if error
+            // TODO: @ThibaultTourailles Do something if error
         }
     }
 
@@ -41,6 +41,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     private weak var viewContract: ConversationListViewContract?
 
     private var watcher: PaginatedWatcher?
+    private var loadMoreAction: Cancellable?
     private var isLoading = false
 
     private func handle(result _: Result<ConversationList, GQLError>) {

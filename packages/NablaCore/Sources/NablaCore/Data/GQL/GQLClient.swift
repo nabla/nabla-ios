@@ -5,12 +5,12 @@ protocol GQLClient {
         query: Query,
         cachePolicy: CachePolicy,
         completion: @escaping (Result<Query.Data, GQLError>) -> Void
-    )
+    ) -> Cancellable
     
     func perform<Mutation: GQLMutation>(
         mutation: Mutation,
         completion: @escaping (Result<Mutation.Data, GQLError>) -> Void
-    )
+    ) -> Cancellable
     
     func watch<Query: GQLQuery>(
         query: Query,

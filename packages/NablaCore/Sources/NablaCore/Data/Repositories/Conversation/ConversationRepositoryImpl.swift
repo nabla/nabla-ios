@@ -2,14 +2,22 @@ import Foundation
 import NablaUtils
 
 class ConversationRepositoryImpl: ConversationRepository {
+    // MARK: - Internal
+    
     func watch(callback: @escaping (Result<ConversationList, GQLError>) -> Void) -> PaginatedWatcher {
         ConversationListWatcher(
             query: GQL.GetConversationsQuery(page: .init(cursor: nil, numberOfItems: nil)),
             callback: callback
         )
     }
+    
+    func createConversation(completion: @escaping (Result<Conversation, Error>) -> Void) -> Cancellable {
+        remoteDataSource.createConversation(completion: completion)
+    }
+    
+    // MARK: - Private
 
-    @Inject private var gqlClient: GQLClient
+    @Inject private var remoteDataSource: ConversationRemoteDataSource
 }
 
 private class ConversationListWatcher: PaginatedWatcher {
@@ -43,7 +51,7 @@ private class ConversationListWatcher: PaginatedWatcher {
         cancellable?.cancel()
     }
 
-    func loadMore(completion: @escaping (Result<Void, GQLError>) -> Void) {
+    func loadMore(completion: @escaping (Result<Void, GQLError>) -> Void) -> Cancellable {
         gqlClient
             .fetch(
                 query: GQL.GetConversationsQuery(page: .init(cursor: cursor, numberOfItems: nil)),

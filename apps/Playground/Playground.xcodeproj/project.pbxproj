@@ -18,7 +18,11 @@
 		E4428BC9280881A600BF4875 /* UserPicker in Frameworks */ = {isa = PBXBuildFile; productRef = E4428BC8280881A600BF4875 /* UserPicker */; };
 		E445E3D727EA259100A86BBE /* PlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E445E3D627EA259100A86BBE /* PlaygroundTests.swift */; };
 		E44A3F442805C3DF009C25D1 /* XCConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A3F432805C3DF009C25D1 /* XCConfig.swift */; };
+		E492B3D42809A8B800096BEC /* ConversationsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E492B3D32809A8B800096BEC /* ConversationsCoordinator.swift */; };
+		E492B3D62809B39C00096BEC /* UIImage+SystemIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = E492B3D52809B39C00096BEC /* UIImage+SystemIcon.swift */; };
 		E4997D5828082760003A9BC5 /* IAP in Frameworks */ = {isa = PBXBuildFile; productRef = E4997D5728082760003A9BC5 /* IAP */; };
+		E4D993E828099B0B00337ADB /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D993E728099B0B00337ADB /* LoadingButton.swift */; };
+		E4D993EA28099B1E00337ADB /* InboxPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D993E928099B1E00337ADB /* InboxPresenter.swift */; };
 		FF59C50B27FAEC3300119C23 /* NablaUIMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = FF59C50A27FAEC3300119C23 /* NablaUIMessaging */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +57,11 @@
 		E44A3F362805BD45009C25D1 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
 		E44A3F432805C3DF009C25D1 /* XCConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCConfig.swift; sourceTree = "<group>"; };
 		E44A3F482805CD63009C25D1 /* User.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = User.xcconfig; sourceTree = "<group>"; };
+		E492B3D32809A8B800096BEC /* ConversationsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsCoordinator.swift; sourceTree = "<group>"; };
+		E492B3D52809B39C00096BEC /* UIImage+SystemIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SystemIcon.swift"; sourceTree = "<group>"; };
 		E4997D5628082639003A9BC5 /* IAP */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = IAP; sourceTree = "<group>"; };
+		E4D993E728099B0B00337ADB /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
+		E4D993E928099B1E00337ADB /* InboxPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +117,7 @@
 				E41EC26927E3797400748029 /* Assets.xcassets */,
 				E41EC26B27E3797400748029 /* LaunchScreen.storyboard */,
 				E41EC26E27E3797400748029 /* Info.plist */,
-				CBC0A82EB1B49597FC902B40 /* InboxViewController.swift */,
+				E492B3D22809A89C00096BEC /* Conversations */,
 			);
 			path = Playground;
 			sourceTree = "<group>";
@@ -153,6 +161,15 @@
 			path = Configs;
 			sourceTree = "<group>";
 		};
+		E492B3D22809A89C00096BEC /* Conversations */ = {
+			isa = PBXGroup;
+			children = (
+				E4D993E628099AF800337ADB /* Inbox */,
+				E492B3D32809A8B800096BEC /* ConversationsCoordinator.swift */,
+			);
+			path = Conversations;
+			sourceTree = "<group>";
+		};
 		E4997D55280825EA003A9BC5 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +178,17 @@
 				E4997D5628082639003A9BC5 /* IAP */,
 			);
 			path = Packages;
+			sourceTree = "<group>";
+		};
+		E4D993E628099AF800337ADB /* Inbox */ = {
+			isa = PBXGroup;
+			children = (
+				CBC0A82EB1B49597FC902B40 /* InboxViewController.swift */,
+				E4D993E928099B1E00337ADB /* InboxPresenter.swift */,
+				E4D993E728099B0B00337ADB /* LoadingButton.swift */,
+				E492B3D52809B39C00096BEC /* UIImage+SystemIcon.swift */,
+			);
+			path = Inbox;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -275,8 +303,12 @@
 			files = (
 				E41EC26127E3797400748029 /* AppDelegate.swift in Sources */,
 				E41EC26327E3797400748029 /* SceneDelegate.swift in Sources */,
+				E4D993E828099B0B00337ADB /* LoadingButton.swift in Sources */,
 				E44A3F442805C3DF009C25D1 /* XCConfig.swift in Sources */,
 				CBC0AE040ACF7113E55BBCFE /* InboxViewController.swift in Sources */,
+				E492B3D62809B39C00096BEC /* UIImage+SystemIcon.swift in Sources */,
+				E4D993EA28099B1E00337ADB /* InboxPresenter.swift in Sources */,
+				E492B3D42809A8B800096BEC /* ConversationsCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

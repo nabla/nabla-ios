@@ -1,4 +1,3 @@
-import ADCoordinator
 import IAP
 import NablaCore
 import NablaUIMessaging
@@ -86,8 +85,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func openApp(user _: User) {
-        window?.rootViewController = UINavigationController(rootViewController: InboxViewController())
-        rootCoordinator = nil
+        let navigationController = UINavigationController()
+        let coordinator = ConversationsCoordinator(navigationController: navigationController)
+        coordinator.start(animated: false)
+        window?.rootViewController = navigationController
+        rootCoordinator = coordinator
     }
     
     private func assemble() {
@@ -143,3 +145,5 @@ extension SceneDelegate: NablaAuthenticationProvider {
         completion(patientTokens)
     }
 }
+
+extension UserPickerCoordinator: Coordinator {}

@@ -5,6 +5,9 @@ class DataSourceAssembly: Assembly {
     // MARK: - Assembly
 
     func assemble(resolver: Resolver) {
+        resolver.register(type: ConversationRemoteDataSource.self) {
+            ConversationRemoteDataSourceImpl()
+        }
         resolver.register(type: ConversationItemRemoteDataSource.self) {
             ConversationItemRemoteDataSourceImpl()
         }
