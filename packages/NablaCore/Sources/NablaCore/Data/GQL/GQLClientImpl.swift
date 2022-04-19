@@ -55,10 +55,12 @@ class GQLClientImpl: GQLClient {
     private var refetchTrrigers = [RefetchTrigger]()
     
     private func makeApolloClient() -> ApolloClient {
-        ApolloClient(
+        let apollo = ApolloClient(
             networkTransport: transport.apollo,
             store: store.apollo
         )
+        apollo.cacheKeyForObject = Normalization.cacheKey(for:)
+        return apollo
     }
     
     private static func parseApolloResponse<Data>(_ response: Result<GraphQLResult<Data>, Error>) -> Result<Data, GQLError> {

@@ -7,7 +7,7 @@ class GQLAssembly: Assembly {
     
     func assemble(resolver: Resolver) {
         resolver.register(type: GQLStore.self) {
-            GQLStore()
+            GQLStoreImpl()
         }
         
         resolver.register(type: InterceptorProvider.self) {
