@@ -38,7 +38,7 @@ private class ConversationListWatcher: PaginatedWatcher {
                 callback(result.map { data in
                     // TODO: (tgy) - Update cache
                     ConversationList(
-                        conversations: data.conversations.conversations.map { _ in Conversation() },
+                        conversations: data.conversations.conversations.map(Self.transform),
                         hasMore: data.conversations.hasMore
                     )
                 })
@@ -59,7 +59,7 @@ private class ConversationListWatcher: PaginatedWatcher {
             ) { [weak self] result in
                 self?.cursor = result.value?.conversations.nextCursor
                 // TODO: (tgy) - Update cache
-                
+
                 completion(result.map { _ in () })
             }
     }
@@ -71,10 +71,14 @@ private class ConversationListWatcher: PaginatedWatcher {
     // MARK: - Private
 
     private let query: GQL.GetConversationsQuery
+
     private let callback: (Result<ConversationList, GQLError>) -> Void
-
     private var cancellable: Cancellable?
-    private var cursor: String?
 
+    private var cursor: String?
     @Inject private var gqlClient: GQLClient
+
+    private static func transform(data: GQL.GetConversationsQuery.Data.Conversation.Conversation) -> Conversation {
+        .init(id: data.id)
+    }
 }

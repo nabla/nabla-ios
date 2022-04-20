@@ -7,7 +7,7 @@ final class TextMessageContentView: UIView, MessageContentView {
     init() {
         super.init(frame: .zero)
         addSubview(label)
-        label.pinToSuperView(insets: .all(8))
+        label.pinToSuperView(insets: .init(horizontal: 16, vertical: 8))
     }
 
     @available(*, unavailable)

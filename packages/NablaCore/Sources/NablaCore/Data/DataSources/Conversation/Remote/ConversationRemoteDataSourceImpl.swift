@@ -9,14 +9,17 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
             switch result {
             case let .failure(error):
                 completion(.failure(error))
-            case let .success(response):
-                print(response)
-                completion(.success(Conversation()))
+            case let .success(data):
+                completion(.success(Self.transform(data: data)))
             }
         }
     }
-    
+
     // MARK: - Private
-    
+
     @Inject private var gqlClient: GQLClient
+
+    private static func transform(data: GQL.CreateConversationMutation.Data) -> Conversation {
+        .init(id: data.createConversation.conversation.id)
+    }
 }

@@ -1,0 +1,7 @@
+mutation SendMessage($conversationId: UUID!, $content: SendMessageContentInput!, $clientId: UUID!) {
+    sendMessage(conversationId: $conversationId, content: $content, clientId: $clientId) {
+        message {
+            ...MessageFragment
+        }
+    }
+}

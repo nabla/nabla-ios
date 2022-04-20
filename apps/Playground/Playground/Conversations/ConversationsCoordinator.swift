@@ -25,8 +25,8 @@ final class ConversationsCoordinator: Coordinator {
     
     private unowned var navigationController: UINavigationController
     
-    private func navigateToConversation(_: Conversation) {
-        let viewController = NablaViewFactory.createConversationViewController()
+    private func navigateToConversation(_ conversation: Conversation) {
+        let viewController = NablaViewFactory.createConversationViewController(conversation)
         navigationController.pushViewController(viewController, animated: true)
     }
 }

@@ -15,6 +15,24 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             callback: callback
         )
     }
+
+    func send(
+        localMessageClientId: UUID,
+        remoteMessageInput: GQL.SendMessageContentInput,
+        conversationId: UUID,
+        callback: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable {
+        gqlClient.perform(
+            mutation: GQL.SendMessageMutation(
+                conversationId: conversationId,
+                content: remoteMessageInput,
+                clientId: localMessageClientId
+            ),
+            completion: { result in
+                callback(result.map { _ in () }.mapError { $0 as Error })
+            }
+        )
+    }
     
     // MARK: - Private
     

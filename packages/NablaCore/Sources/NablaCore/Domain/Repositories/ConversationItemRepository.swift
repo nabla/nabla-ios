@@ -5,4 +5,10 @@ protocol ConversationItemRepository {
         ofConversationWithId: UUID,
         callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> Cancellable
+
+    func sendMessage(
+        _ message: MessageInput,
+        conversationId: UUID,
+        callback: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable
 }

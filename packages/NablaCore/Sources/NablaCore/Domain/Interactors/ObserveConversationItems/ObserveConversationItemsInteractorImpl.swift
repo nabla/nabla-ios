@@ -8,10 +8,10 @@ class ObserveConversationItemsInteractorImpl: ObserveConversationItemsInteractor
         conversationId: UUID,
         callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> Cancellable {
-        conversationItemRespository.observeConversationItems(ofConversationWithId: conversationId, callback: callback)
+        conversationItemRepository.observeConversationItems(ofConversationWithId: conversationId, callback: callback)
     }
     
     // MARK: - Private
     
-    @Inject private var conversationItemRespository: ConversationItemRepository
+    @Inject private var conversationItemRepository: ConversationItemRepository
 }

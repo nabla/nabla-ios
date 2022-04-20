@@ -127,7 +127,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         view.addSubview(content)
-        content.pinToSuperView(insets: .all(8))
+        content.pinToSuperView()
         NSLayoutConstraint.activate([
             view.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.bodyMaxWidth),
         ])

@@ -9,6 +9,7 @@ public protocol ConversationItem {
 
 public enum ConversationItemSender {
     case system
+    case me
     case user(UUID)
 }
 

@@ -14,7 +14,7 @@ public enum NablaViewFactory {
         return view
     }
 
-    public static func createConversationViewController() -> UIViewController {
+    public static func createConversationViewController(_ conversation: Conversation) -> UIViewController {
         let viewController = ConversationViewController(
             providers: [
                 DateSeparatorCellProvider(),
@@ -23,7 +23,9 @@ public enum NablaViewFactory {
             ]
         )
         viewController.presenter = ConversationPresenterImpl(
-            view: viewController
+            conversation: conversation,
+            view: viewController,
+            client: NablaClient.shared
         )
         return viewController
     }
