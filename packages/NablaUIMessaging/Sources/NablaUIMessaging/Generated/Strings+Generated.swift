@@ -12,6 +12,12 @@ import Foundation
 internal enum L10n {
     /// Type your message
     internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
+    /// Retry
+    internal static let conversationListButtonRetry = L10n.tr("Localizable", "conversation_list_button_retry")
+    /// New conversation
+    internal static let conversationListEmptyPreview = L10n.tr("Localizable", "conversation_list_empty_preview")
+    /// Yesterday
+    internal static let conversationListLastMessageYesterday = L10n.tr("Localizable", "conversation_list_last_message_yesterday")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

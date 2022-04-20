@@ -1,5 +1,6 @@
 import Foundation
+import NablaCore
 
 public protocol ConversationListDelegate: AnyObject {
-    func conversationList(didSelectConversationWithId conversationId: UUID)
+    func conversationList(didSelect conversation: Conversation)
 }

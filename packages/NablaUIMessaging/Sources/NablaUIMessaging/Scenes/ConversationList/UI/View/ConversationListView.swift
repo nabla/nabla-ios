@@ -27,20 +27,52 @@ public class ConversationListView: UIView, ConversationListViewContract {
 
     // MARK: - ConversationListViewContract
 
-    func configure(with viewModel: ConversationListViewModel) {
-        self.viewModel = viewModel
-        tableView.reload(animated: true)
+    func configure(with state: ConversationListViewState) {
+        switch state {
+        case let .loaded(viewModel):
+            self.viewModel = viewModel
+            tableView.reload(animated: true)
+            loadingIndicator.isHidden = true
+            errorView.isHidden = true
+            tableView.isHidden = false
+        case let .error(errorViewModel):
+            errorView.configure(with: errorViewModel)
+            loadingIndicator.isHidden = true
+            errorView.isHidden = false
+            tableView.isHidden = true
+        case .loading:
+            loadingIndicator.isHidden = false
+            errorView.isHidden = true
+            tableView.isHidden = true
+        }
+    }
+
+    func displayLoadingMore() {
+        tableView.tableFooterView = loadingFooterView
+        let bottomOffset = CGPoint(x: 0, y: tableView.contentSize.height - tableView.bounds.size.height)
+        tableView.setContentOffset(bottomOffset, animated: true)
+    }
+
+    func hideLoadingMore() {
+        tableView.tableFooterView = nil
     }
 
     // MARK: - Private
 
     private lazy var tableView: UITableView = createTableView()
+    private lazy var loadingIndicator: UIActivityIndicatorView = createLoadingIndicator()
+    private lazy var errorView: ErrorView = createErrorView()
+    private lazy var loadingFooterView: LoadingFooterView = createLoadingFooterView()
 
     private var viewModel: ConversationListViewModel = .empty
 
     private func setUp() {
         addSubview(tableView)
         tableView.pinToSuperView()
+        addSubview(loadingIndicator)
+        loadingIndicator.centerInSuperView()
+        addSubview(errorView)
+        errorView.pinToSuperView()
     }
 
     private func createTableView() -> UITableView {
@@ -50,6 +82,24 @@ public class ConversationListView: UIView, ConversationListViewContract {
         tableView.register(ConversationListItemCell.self)
         tableView.separatorInset = .only(left: 70)
         return tableView
+    }
+
+    private func createLoadingIndicator() -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView(style: .large)
+        view.startAnimating()
+        return view
+    }
+
+    private func createErrorView() -> ErrorView {
+        let view = ErrorView()
+        view.delegate = self
+        return view
+    }
+
+    private func createLoadingFooterView() -> LoadingFooterView {
+        let footerView = LoadingFooterView()
+        footerView.sizeToFit()
+        return footerView
     }
 }
 
@@ -80,5 +130,13 @@ extension ConversationListView: UITableViewDelegate {
         if scrollView.contentOffset.y + scrollView.frame.size.height > scrollView.contentSize.height * 0.9 {
             presenter?.didScrollToBottom()
         }
+    }
+}
+
+extension ConversationListView: ErrorViewDelegate {
+    // MARK: - ErrorViewDelegate
+
+    func errorViewDidTapButton(_: ErrorView) {
+        presenter?.didTapRetry()
     }
 }

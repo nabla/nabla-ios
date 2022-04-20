@@ -48,16 +48,16 @@ public class NablaClient {
         observeConversationItemsInteractor.execute(conversationId: conversationId, callback: callback)
     }
 
+    public func watchConversationList(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
+        watchConversationListInteractor.execute(callback: callback)
+    }
+
     public func sendMessage(
         _ message: MessageInput,
         inConversationWithId conversationId: UUID,
         callback: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
         sendMessageInteractor.execute(message: message, conversationId: conversationId, callback: callback)
-    }
-
-    public func watchConversationList(callback: @escaping (Result<ConversationList, GQLError>) -> Void) -> PaginatedWatcher {
-        watchConversationListInteractor.execute(callback: callback)
     }
 
     // MARK: - Private

@@ -46,6 +46,12 @@ extension UIView {
         ])
     }
 
+    func centerInSuperView() {
+        guard let superview = superview else { return }
+
+        center(in: superview)
+    }
+
     func constraintToSize(_ size: CGSize) {
         constraintHeight(size.height)
         constraintWidth(size.width)

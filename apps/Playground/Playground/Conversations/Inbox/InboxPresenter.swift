@@ -44,6 +44,7 @@ class InboxPresenter {
         createConversationAction = NablaClient.shared.createConversation { [weak self] result in
             guard let self = self else { return }
             self.view?.set(loading: false)
+            self.createConversationAction = nil
             switch result {
             case let .failure(error):
                 self.view?.display(error: error.localizedDescription)

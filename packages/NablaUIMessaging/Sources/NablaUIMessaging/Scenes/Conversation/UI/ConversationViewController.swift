@@ -131,8 +131,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             loadingView.startAnimating()
         case (.empty, _):
             switchToLoadedLayout(with: emptyView)
-        case (.error, _):
-            switchToErrorLayout()
+        case let (.error(viewModel), _):
+            switchToErrorLayout(viewModel: viewModel)
         case let (.loaded(items), _):
             switchToLoadedLayout(with: collectionView)
             applySnapshot(items: items)
@@ -145,10 +145,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         loadingView.pinToSuperView()
     }
 
-    private func switchToErrorLayout() {
+    private func switchToErrorLayout(viewModel: ErrorViewModel) {
         view.removeSubviews()
         view.addSubview(errorView)
         errorView.pinToSuperView()
+        errorView.configure(with: viewModel)
     }
 
     private func switchToLoadedLayout(with containedView: UIView) {

@@ -57,8 +57,9 @@ final class InboxViewController: UIViewController, InboxViewContract {
 }
 
 extension InboxViewController: ConversationListDelegate {
-    func conversationList(didSelectConversationWithId conversationId: UUID) {
-        // TODO: Return a Conversation directly instead
-        presenter?.userDidSelectConversation(Conversation(id: conversationId))
+    // MARK: - ConversationListDelegate
+
+    func conversationList(didSelect conversation: Conversation) {
+        presenter?.userDidSelectConversation(conversation)
     }
 }

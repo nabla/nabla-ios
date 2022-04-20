@@ -20,6 +20,14 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     @Inject private var gqlClient: GQLClient
 
     private static func transform(data: GQL.CreateConversationMutation.Data) -> Conversation {
-        .init(id: data.createConversation.conversation.id)
+        Conversation(
+            id: data.createConversation.conversation.id,
+            avatarURL: nil,
+            initials: nil,
+            title: nil,
+            lastMessagePreview: nil,
+            lastUpdatedTime: Date(),
+            isUnread: false
+        )
     }
 }
