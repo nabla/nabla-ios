@@ -1,17 +1,16 @@
 import Foundation
 
 final class DateSeparatorPresenter: Presenter {
-    var content: DateSeparatorItemContent
+    var item: DateSeparatorViewItem
 
     // MARK: - Init
 
-    init(delegate: ConversationCellPresenterDelegate, id: UUID, content: DateSeparatorItemContent) {
-        self.content = content
-        self.id = id
+    init(delegate: ConversationCellPresenterDelegate, item: DateSeparatorViewItem) {
+        self.item = item
         self.delegate = delegate
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.localText = "\nline 2"
-            self.delegate?.didUpdateState(forItemWithId: self.id)
+            self.delegate?.didUpdateState(forItemWithId: item.id)
         }
     }
 
@@ -28,12 +27,11 @@ final class DateSeparatorPresenter: Presenter {
     }
 
     func updateView() {
-        view?.configure(with: .init(message: content.text + (localText ?? "")))
+        view?.configure(with: .init(message: item.text + (localText ?? "")))
     }
 
     // MARK: - Private
 
-    private let id: UUID
     private var localText: String?
     private weak var delegate: ConversationCellPresenterDelegate?
     private weak var view: EventCellContract?

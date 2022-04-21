@@ -9,7 +9,7 @@ private enum Constants {
 class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     // MARK: - Internal
     
-    func observeConversationItems(
+    func watchConversationItems(
         ofConversationWithId conversationId: UUID,
         callback: @escaping ([LocalConversationItem]) -> Void
     ) -> Cancellable {

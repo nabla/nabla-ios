@@ -5,22 +5,27 @@ class ConversationItemsMerger: Cancellable {
     // MARK: - Internal
     
     func resume() {
-        remoteSubscription = remoteDataSource.observeConversationItems(ofConversationWithId: conversationId) { [weak self] result in
+        remoteSubscription = remoteDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] result in
             guard let self = self else { return }
             self.remoteData = result
             self.notifyNewValues()
         }
         
-        localSubscription = localDataSource.observeConversationItems(ofConversationWithId: conversationId) { [weak self] items in
+        localSubscription = localDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] items in
             guard let self = self else { return }
             self.localData = items
             self.notifyNewValues()
         }
     }
     
+    func hold(_ cancellables: Cancellable...) {
+        otherCancellables.append(contentsOf: cancellables)
+    }
+    
     func cancel() {
         localSubscription?.cancel()
         remoteSubscription?.cancel()
+        otherCancellables.forEach { $0.cancel() }
     }
     
     init(
@@ -45,6 +50,7 @@ class ConversationItemsMerger: Cancellable {
     
     private var remoteSubscription: Cancellable?
     private var localSubscription: Cancellable?
+    private var otherCancellables = [Cancellable]()
     
     private var remoteData: Result<GQL.GetConversationItemsQuery.Data, GQLError>?
     private var localData: [LocalConversationItem]?

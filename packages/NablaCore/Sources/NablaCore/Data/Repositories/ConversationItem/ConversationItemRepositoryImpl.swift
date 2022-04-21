@@ -2,12 +2,16 @@ import Foundation
 import NablaUtils
 
 class ConversationItemRepositoryImpl: ConversationItemRepository {
-    func observeConversationItems(
+    func watchConversationItems(
         ofConversationWithId conversationId: UUID,
         callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> Cancellable {
         let merger = ConversationItemsMerger(conversationId: conversationId, callback: callback)
         merger.resume()
+        
+        let eventsSubscription = makeOrReuseConversationEventsSubscription(for: conversationId)
+        merger.hold(eventsSubscription)
+        
         return merger
     }
 
@@ -18,7 +22,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             localConversationItem = LocalTextMessageItem(
                 clientId: UUID(),
                 date: Date(),
-                sender: .me,
+                sender: .patient,
                 state: .sending,
                 content: content
             )
@@ -36,11 +40,27 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     
     @Inject private var remoteDataSource: ConversationItemRemoteDataSource
     @Inject private var localDataSource: ConversationItemLocalDataSource
-
+    
+    private var conversationEventsSubscriptions = [UUID: WeakCancellable]()
+    
+    private func makeOrReuseConversationEventsSubscription(for conversationId: UUID) -> Cancellable {
+        if let subscription = conversationEventsSubscriptions[conversationId]?.value {
+            return subscription
+        }
+        
+        let subscription = remoteDataSource.subscribeToConversationItemsEvents(ofConversationWithId: conversationId) { _ in }
+        conversationEventsSubscriptions[conversationId] = WeakCancellable(value: subscription)
+        return subscription
+    }
+    
     private static func transform(_ messageInput: MessageInput) -> GQL.SendMessageContentInput {
         switch messageInput {
         case let .text(content):
             return .init(textInput: .init(text: content))
         }
     }
+}
+
+private struct WeakCancellable {
+    weak var value: Cancellable?
 }

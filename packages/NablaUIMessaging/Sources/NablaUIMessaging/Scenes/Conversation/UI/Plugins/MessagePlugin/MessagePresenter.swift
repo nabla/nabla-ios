@@ -2,23 +2,22 @@ import Foundation
 
 class MessagePresenter<
     ContentView,
-    ContentItem: ConversationViewItemContent,
+    Item: ConversationViewMessageItem,
     MessageCellContract: ConversationMessageCellContract
 >: Presenter where MessageCellContract.ContentView == ContentView {
     typealias Cell = ConversationMessageCell<ContentView>
 
-    var content: ContentItem
+    var item: Item
 
     // MARK: - Init
 
     init(
         delegate _: ConversationCellPresenterDelegate,
-        id _: UUID,
-        content: ContentItem,
-        transform: @escaping (ContentItem) -> ConversationMessageViewModel<ContentView.ContentViewModel>
+        item: Item,
+        transformContent: @escaping (Item) -> ContentView.ContentViewModel
     ) {
-        self.content = content
-        self.transform = transform
+        self.item = item
+        self.transformContent = transformContent
     }
 
     // MARK: - Presenter
@@ -36,9 +35,33 @@ class MessagePresenter<
     // MARK: - Private
 
     private weak var view: MessageCellContract?
-    private let transform: (ContentItem) -> ConversationMessageViewModel<ContentView.ContentViewModel>
+    private let transformContent: (Item) -> ContentView.ContentViewModel
+
+    private func transformSender() -> ConversationMessageSender {
+        switch item.sender {
+        case let .provider(_, avatarURL):
+            return .them(.init(author: "Provider", avatar: .init(url: avatarURL, text: nil), displaySenderNameAndAvatar: true))
+        case .patient:
+            return .me
+        }
+    }
 
     private func updateView() {
-        view?.configure(with: transform(content))
+        view?.configure(with: .init(
+            sender: transformSender(),
+            footer: transformFooter(),
+            content: transformContent(item)
+        ))
+    }
+
+    private func transformFooter() -> ConversationMessageFooterViewModel? {
+        switch item.state {
+        case .sending:
+            return .init(text: "Sending", color: .lightGray)
+        case .sent:
+            return nil
+        case .failed:
+            return .init(text: "Failed", color: .red)
+        }
     }
 }

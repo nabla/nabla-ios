@@ -15,6 +15,20 @@ class EnvironmentImpl: Environment {
         "v1/patient/graphql/sdk/authenticated"
     }
     
+    var graphqlHttpUrl: URL {
+        serverUrl.appendingPathComponent(graphqlPath)
+    }
+    
+    var graphqlWebSocketUrl: URL {
+        var components = URLComponents()
+        components.host = configuration.domain
+        components.scheme = configuration.scheme == "https" ? "wss" : "ws"
+        components.port = configuration.port
+        components.path = configuration.path
+        // swiftlint:disable:next force_unwrapping
+        return components.url!.appendingPathComponent(graphqlPath)
+    }
+    
     var packageName: String {
         "nabla-ios-sdk"
     }

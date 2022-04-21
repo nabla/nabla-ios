@@ -44,8 +44,8 @@ public class NablaClient {
         createConversationInteractor.execute(completion: completion)
     }
     
-    public func observeItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationItems, Error>) -> Void) -> Cancellable {
-        observeConversationItemsInteractor.execute(conversationId: conversationId, callback: callback)
+    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationItems, Error>) -> Void) -> Cancellable {
+        watchConversationItemsInteractor.execute(conversationId: conversationId, callback: callback)
     }
 
     public func watchConversationList(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
@@ -66,7 +66,7 @@ public class NablaClient {
     @Inject private var gqlClient: GQLClient
     @Inject private var createConversationInteractor: CreateConversationInteractor
     @Inject private var getConversationListInteractor: GetConversationListInteractor
-    @Inject private var observeConversationItemsInteractor: ObserveConversationItemsInteractor
+    @Inject private var watchConversationItemsInteractor: WatchConversationItemsInteractor
     @Inject private var sendMessageInteractor: SendMessageInteractor
     @Inject private var watchConversationListInteractor: WatchConversationListInteractor
     

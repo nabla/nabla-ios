@@ -1,7 +1,10 @@
 import Foundation
 
 public enum GQLError: Error {
+    case unknownError
     case emptyServerResponse
+    case entityNotFound(path: [String])
+    case internalServerError(message: String?)
     case cacheError(CacheError)
     
     public enum CacheError: Error {

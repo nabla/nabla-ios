@@ -1,0 +1,4 @@
+fragment EphemeralUrlFragment on EphemeralUrl {
+    expiresAt
+    url
+}

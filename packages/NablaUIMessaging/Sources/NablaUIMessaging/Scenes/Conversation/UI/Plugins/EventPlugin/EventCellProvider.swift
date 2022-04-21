@@ -13,18 +13,16 @@ final class EventCellProvider: ConversationCellProvider {
     func provideCell(
         collectionView: UICollectionView,
         indexPath: IndexPath,
-        id: UUID,
-        content: ConversationViewItemContent,
+        item: ConversationViewItem,
         delegate: ConversationCellPresenterDelegate
     ) -> UICollectionViewCell? {
-        guard let content = content as? EventItemContent else {
+        guard let item = item as? EventViewItem else {
             return nil
         }
 
         let cell = collectionView.dequeueReusableCell(ofClass: Cell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
-            id: id,
-            content: content,
+            item: item,
             delegate: delegate
         )
         presenter.attachView(cell)
@@ -33,16 +31,15 @@ final class EventCellProvider: ConversationCellProvider {
     }
 
     private func findOrCreatePresenter(
-        id: UUID,
-        content: EventItemContent,
+        item: EventViewItem,
         delegate: ConversationCellPresenterDelegate
     ) -> EventPresenter {
-        if let presenter = presenters[id] {
-            presenter.content = content
+        if let presenter = presenters[item.id] {
+            presenter.item = item
             return presenter
         } else {
-            let presenter = EventPresenter(delegate: delegate, id: id, content: content)
-            presenters[id] = presenter
+            let presenter = EventPresenter(delegate: delegate, item: item)
+            presenters[item.id] = presenter
             return presenter
         }
     }

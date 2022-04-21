@@ -2,7 +2,7 @@ import Foundation
 
 protocol ConversationItemLocalDataSource {
     func getConversationItems(ofConversationWithId conversationId: UUID) -> [LocalConversationItem]
-    func observeConversationItems(
+    func watchConversationItems(
         ofConversationWithId conversationId: UUID,
         callback: @escaping ([LocalConversationItem]) -> Void
     ) -> Cancellable

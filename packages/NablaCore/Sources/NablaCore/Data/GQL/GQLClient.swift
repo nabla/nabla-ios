@@ -18,5 +18,10 @@ protocol GQLClient {
         callback: @escaping (Result<Query.Data, GQLError>) -> Void
     ) -> GQLWatcher<Query>
     
+    func subscribe<Subscription: GQLSubscription>(
+        subscription: Subscription,
+        callback: @escaping (Result<Subscription.Data, GQLError>) -> Void
+    ) -> Cancellable
+    
     func addRefetchTriggers(_ triggers: [RefetchTrigger])
 }

@@ -8,14 +8,15 @@ public struct Conversation {
     public let lastMessagePreview: String?
     public let lastUpdatedTime: Date
     public let isUnread: Bool
-
-    public init(id: UUID,
-                avatarURL: String?,
-                initials: String?,
-                title: String?,
-                lastMessagePreview: String?,
-                lastUpdatedTime: Date,
-                isUnread: Bool) {
+    public init(
+        id: UUID,
+        avatarURL: String?,
+        initials: String?,
+        title: String?,
+        lastMessagePreview: String?,
+        lastUpdatedTime: Date,
+        isUnread: Bool
+    ) {
         self.id = id
         self.avatarURL = avatarURL
         self.initials = initials

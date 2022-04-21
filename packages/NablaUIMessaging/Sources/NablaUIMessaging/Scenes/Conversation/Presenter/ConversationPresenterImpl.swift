@@ -2,8 +2,33 @@ import Foundation
 import NablaCore
 
 final class ConversationPresenterImpl: ConversationPresenter {
-    private var items = [ConversationViewItem]()
+    // MARK: - Internal
 
+    func start() {
+        watchItemsAction = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .failure(error):
+                self.set(state: .error(viewModel: .init(message: error.localizedDescription, buttonTitle: L10n.conversationListButtonRetry))) // TODO: Display error feedback
+            case let .success(conversationWithItems):
+                let items = self.transform(conversationWithItems: conversationWithItems)
+                self.set(state: .loaded(items: items))
+            }
+        }
+    }
+
+    func send(text: String) {
+        view?.emptyComposer()
+        sendMessageAction = client.sendMessage(.text(content: text), inConversationWithId: conversation.id) { result in
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                print(error) // TODO: Display error
+            }
+        }
+    }
+    
     // MARK: Init
 
     init(
@@ -16,33 +41,34 @@ final class ConversationPresenterImpl: ConversationPresenter {
         self.conversation = conversation
     }
 
-    // MARK: - Internal
-
-    func start() {
-        view?.configure(withState: .loaded(items: items))
-    }
-
-    func send(text: String) {
-        items.append(.init(content: TextMessageItemContent(text: text)))
-        view?.configure(withState: .loaded(items: items))
-        view?.emptyComposer()
-        sendMessage = client.sendMessage(.text(content: text), inConversationWithId: conversation.id) { result in
-            switch result {
-            case .success:
-                self.items.append(.init(content: TextMessageItemContent(text: "sent")))
-                self.view?.configure(withState: .loaded(items: self.items))
-            case let .failure(error):
-                self.items.append(.init(content: TextMessageItemContent(text: error.localizedDescription)))
-                self.view?.configure(withState: .loaded(items: self.items))
-            }
-        }
-    }
-
     // MARK: - Private
-
-    private weak var view: ConversationViewContract?
 
     private let client: NablaClient
     private let conversation: Conversation
-    private var sendMessage: Cancellable?
+    
+    private weak var view: ConversationViewContract?
+    
+    private var sendMessageAction: Cancellable?
+    private var watchItemsAction: Cancellable?
+    
+    private func set(state: ConversationViewState) {
+        DispatchQueue.main.async { [view] in
+            view?.configure(withState: state)
+        }
+    }
+    
+    private func transform(conversationWithItems: ConversationItems) -> [ConversationViewItem] {
+        conversationWithItems.items.compactMap { item -> ConversationViewItem? in
+            if let textMessage = item as? TextMessageItem {
+                return TextMessageViewItem(
+                    id: textMessage.id,
+                    date: textMessage.date,
+                    sender: textMessage.sender,
+                    state: textMessage.state,
+                    text: textMessage.content
+                )
+            }
+            return nil
+        }
+    }
 }

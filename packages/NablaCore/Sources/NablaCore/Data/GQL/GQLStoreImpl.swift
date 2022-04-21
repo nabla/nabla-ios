@@ -38,6 +38,31 @@ class GQLStoreImpl: GQLStore {
         )
     }
     
+    func updateCache<F: GraphQLFragment>(
+        of fragment: F,
+        onlyIfExists: Bool,
+        body: @escaping (inout F) throws -> Void,
+        completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
+    ) {
+        guard let key = Normalization.cacheKey(for: fragment.jsonObject) else {
+            return completion(.failure(.normalizationFailed(object: fragment)))
+        }
+        
+        apollo.withinReadWriteTransaction(
+            _: { transaction in
+                let cache = try? transaction.readObject(ofType: F.self, withKey: key)
+                if cache != nil {
+                    try transaction.updateObject(ofType: F.self, withKey: key, body)
+                } else if onlyIfExists {
+                    return // If the cache does not exist, silently return
+                } else {
+                    throw GQLError.cacheError(.entityNotCached)
+                }
+            },
+            completion: Self.makeCompletionHandler(completion: completion)
+        )
+    }
+    
     func cacheExists<Q: GraphQLQuery>(
         for query: Q,
         completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void

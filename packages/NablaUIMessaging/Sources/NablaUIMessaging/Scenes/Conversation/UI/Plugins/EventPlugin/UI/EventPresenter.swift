@@ -1,12 +1,12 @@
 import Foundation
 
 final class EventPresenter: Presenter {
-    var content: EventItemContent
+    var item: EventViewItem
 
     // MARK: - Init
 
-    init(delegate _: ConversationCellPresenterDelegate, id _: UUID, content: EventItemContent) {
-        self.content = content
+    init(delegate _: ConversationCellPresenterDelegate, item: EventViewItem) {
+        self.item = item
     }
 
     // MARK: - Presenter
@@ -26,6 +26,6 @@ final class EventPresenter: Presenter {
     private weak var view: EventCellContract?
 
     private func updateView() {
-        view?.configure(with: .init(message: content.text))
+        view?.configure(with: .init(message: item.text))
     }
 }

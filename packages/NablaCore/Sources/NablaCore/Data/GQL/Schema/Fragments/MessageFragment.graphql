@@ -2,6 +2,14 @@ fragment MessageFragment on Message {
     id
     clientId
     createdAt
+    author {
+        ... on Provider {
+            ...ProviderFragment
+        }
+        ... on Patient {
+            ...PatientFragment
+        }
+    }
     content {
         ... on TextMessageContent {
             ...TextMessageContentFragment

@@ -1,0 +1,3 @@
+fragment PatientFragment on Patient {
+    id
+}

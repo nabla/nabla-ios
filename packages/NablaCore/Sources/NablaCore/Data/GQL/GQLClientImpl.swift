@@ -41,6 +41,17 @@ class GQLClientImpl: GQLClient {
         return GQLWatcher(apolloWatcher)
     }
     
+    func subscribe<Subscription: GQLSubscription>(
+        subscription: Subscription,
+        callback: @escaping (Result<Subscription.Data, GQLError>) -> Void
+    ) -> Cancellable {
+        apollo.subscribe(subscription: subscription) { response in
+            let result = Self.parseApolloResponse(response)
+            callback(result)
+        }
+        .toNablaCancellable()
+    }
+    
     func addRefetchTriggers(_ triggers: [RefetchTrigger]) {
         refetchTrrigers.append(contentsOf: triggers)
     }
@@ -80,8 +91,25 @@ class GQLClientImpl: GQLClient {
         }
     }
     
-    private static func parseApolloError(_: Error) -> GQLError {
-        // TODO: @tgy Handle each Apollo errors individually
-        .emptyServerResponse
+    private static func parseApolloError(_ error: Error) -> GQLError {
+        if let graphqlError = error as? Apollo.GraphQLError {
+            switch graphqlError.errorName {
+            case "ENTITY_NOT_FOUND":
+                let path = graphqlError["path"] as? [String] ?? []
+                return .entityNotFound(path: path)
+            case "INTERNAL_SERVER_ERROR":
+                return .internalServerError(message: graphqlError.message)
+            default:
+                return .unknownError
+            }
+        }
+        
+        return .unknownError
+    }
+}
+
+private extension Apollo.GraphQLError {
+    var errorName: String? {
+        extensions?["errorName"] as? String
     }
 }

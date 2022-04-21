@@ -1,7 +1,7 @@
 import Foundation
 
 protocol ConversationItemRepository {
-    func observeConversationItems(
+    func watchConversationItems(
         ofConversationWithId: UUID,
         callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> Cancellable

@@ -8,8 +8,7 @@ protocol ConversationCellProvider {
     func provideCell(
         collectionView: UICollectionView,
         indexPath: IndexPath,
-        id: UUID,
-        content: ConversationViewItemContent,
+        item: ConversationViewItem,
         delegate: ConversationCellPresenterDelegate
     ) -> UICollectionViewCell?
 }

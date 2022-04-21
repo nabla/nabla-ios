@@ -1,0 +1,6 @@
+fragment ProviderFragment on Provider {
+    id
+    avatarUrl {
+        ...EphemeralUrlFragment
+    }
+}

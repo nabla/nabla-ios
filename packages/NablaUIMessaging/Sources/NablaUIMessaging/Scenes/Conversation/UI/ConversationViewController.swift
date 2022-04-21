@@ -46,8 +46,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         case main
     }
 
-    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, ConversationViewItem>
-    private typealias DataSource = UICollectionViewDiffableDataSource<Section, ConversationViewItem>
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, DiffableConversationViewItem>
+    private typealias DataSource = UICollectionViewDiffableDataSource<Section, DiffableConversationViewItem>
 
     @Inject private var logger: Logger
     private let providers: [ConversationCellProvider]
@@ -86,10 +86,9 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
 
     private func makeDataSource() -> DataSource {
-        DataSource(
-            collectionView: collectionView,
-            cellProvider: provideCell
-        )
+        DataSource(collectionView: collectionView) { [unowned self] collectionView, indexPath, item in
+            self.provideCell(collectionView: collectionView, indexPath: indexPath, item: item.value)
+        }
     }
 
     private func provideCell(
@@ -101,14 +100,13 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             if let cell = provider.provideCell(
                 collectionView: collectionView,
                 indexPath: indexPath,
-                id: item.id,
-                content: item.content,
+                item: item,
                 delegate: self
             ) {
                 return cell
             }
         }
-        logger.warning(message: "no plugin provided the cell for \(type(of: item.content))")
+        logger.warning(message: "no plugin provided the cell for \(type(of: item))")
         return nil
     }
 
@@ -177,11 +175,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private func applySnapshot(items: [ConversationViewItem], animatingDifferences: Bool = true) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(items)
+        snapshot.appendItems(items.map(DiffableConversationViewItem.init(value:)))
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 
-    private func reconfigure(item: ConversationViewItem) {
+    private func reconfigure(item: DiffableConversationViewItem) {
         var snapshot = dataSource.snapshot()
         if #available(iOS 15.0, *) {
             snapshot.reconfigureItems([item])
@@ -196,7 +194,7 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
     func didUpdateState(forItemWithId id: UUID) {
         dataSource.snapshot()
             .itemIdentifiers
-            .first { $0.id == id }
+            .first { $0.value.id == id }
             .map(reconfigure)
     }
 }
@@ -208,4 +206,16 @@ extension ConversationViewController: ComposerViewDelegate {
     }
 
     func composerViewDidTapOnAddMedia(_: ComposerView) {}
+}
+
+struct DiffableConversationViewItem: Hashable {
+    let value: ConversationViewItem
+    
+    func hash(into hasher: inout Hasher) {
+        value.hash(into: &hasher)
+    }
+    
+    static func == (lhs: DiffableConversationViewItem, rhs: DiffableConversationViewItem) -> Bool {
+        lhs.value.hashValue == rhs.value.hashValue
+    }
 }

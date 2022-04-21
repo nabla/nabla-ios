@@ -1,5 +1,7 @@
 import Foundation
 
-struct EventItemContent: ConversationViewItemContent, Hashable {
+struct EventViewItem: ConversationViewItem, Hashable {
+    let id: UUID
+    let date: Date
     let text: String
 }

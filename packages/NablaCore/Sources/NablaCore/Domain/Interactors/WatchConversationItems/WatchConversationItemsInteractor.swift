@@ -1,6 +1,6 @@
 import Foundation
 
-protocol ObserveConversationItemsInteractor {
+protocol WatchConversationItemsInteractor {
     func execute(
         conversationId: UUID,
         callback: @escaping (Result<ConversationItems, Error>) -> Void

@@ -1,5 +1,5 @@
 import Foundation
 
 protocol DateSeparatorViewContract: AnyObject {
-    func configure(content: DateSeparatorItemContent)
+    func configure(content: DateSeparatorViewItem)
 }

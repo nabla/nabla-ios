@@ -1,14 +1,14 @@
 import Foundation
 import NablaUtils
 
-class ObserveConversationItemsInteractorImpl: ObserveConversationItemsInteractor {
+class WatchConversationItemsInteractorImpl: WatchConversationItemsInteractor {
     // MARK: - Internal
     
     func execute(
         conversationId: UUID,
         callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> Cancellable {
-        conversationItemRepository.observeConversationItems(ofConversationWithId: conversationId, callback: callback)
+        conversationItemRepository.watchConversationItems(ofConversationWithId: conversationId, callback: callback)
     }
     
     // MARK: - Private

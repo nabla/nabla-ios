@@ -7,13 +7,12 @@ public protocol ConversationItem {
     var state: ConversationItemState { get }
 }
 
-public enum ConversationItemSender {
-    case system
-    case me
-    case user(UUID)
+public enum ConversationItemSender: Hashable {
+    case patient
+    case provider(id: UUID, avatarURL: String?)
 }
 
-public enum ConversationItemState {
+public enum ConversationItemState: Hashable {
     case sending
     case sent
     case failed

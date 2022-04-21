@@ -17,6 +17,13 @@ protocol GQLStore {
         completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
     )
     
+    func updateCache<F: GraphQLFragment>(
+        of fragment: F,
+        onlyIfExists: Bool,
+        body: @escaping (inout F) throws -> Void,
+        completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
+    )
+    
     func cacheExists<Q: GraphQLQuery>(
         for query: Q,
         completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void

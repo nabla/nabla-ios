@@ -29,8 +29,10 @@ class ConversationRepositoryImpl: ConversationRepository {
 private class ConversationListWatcher: PaginatedWatcher {
     // MARK: - Initializer
 
-    init(query: GQL.GetConversationsQuery,
-         callback: @escaping (Result<ConversationList, Error>) -> Void) {
+    init(
+        query: GQL.GetConversationsQuery,
+        callback: @escaping (Result<ConversationList, Error>) -> Void
+    ) {
         self.query = query
 
         cancellable = gqlClient

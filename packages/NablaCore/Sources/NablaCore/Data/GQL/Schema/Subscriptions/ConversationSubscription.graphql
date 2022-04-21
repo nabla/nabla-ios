@@ -1,0 +1,19 @@
+subscription ConversationEvents($id: UUID!) {
+    conversation(id: $id) {
+        event {
+            ... on SubscriptionReadinessEvent {
+                isReady
+            }
+            ... on MessageCreatedEvent {
+                message {
+                    ...MessageFragment
+                }
+            }
+            ... on MessageUpdatedEvent {
+                message {
+                    ...MessageFragment
+                }
+            }
+        }
+    }
+}
