@@ -81,7 +81,9 @@ class ConversationItemsMerger: Cancellable {
         var localItemsByClientId = localItems.toDictionary(\.clientId)
         
         var mergedItems = remoteItems.compactMap { remoteItem -> ConversationItem? in
-            let clientId = remoteItem.fragments.messageFragment.clientId
+            guard let clientId = remoteItem.fragments.messageFragment.clientId else {
+                return RemoteConversationItemTransformer.transform(remoteItem)
+            }
             if let localItem = localItemsByClientId[clientId] {
                 localItemsByClientId.removeValue(forKey: clientId)
                 return merge(remoteItem, localItem)
