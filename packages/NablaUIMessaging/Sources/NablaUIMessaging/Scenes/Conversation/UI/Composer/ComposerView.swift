@@ -25,18 +25,6 @@ final class ComposerView: UIView {
         }
     }
 
-    var font: UIFont {
-        didSet {
-            textView.font = font
-        }
-    }
-
-    var placeHolderFont: UIFont {
-        didSet {
-            placeHolderLabel.font = placeHolderFont
-        }
-    }
-
     // MARK: - Init
 
     @available(*, unavailable)
@@ -45,11 +33,8 @@ final class ComposerView: UIView {
     }
 
     init() {
-        font = .systemFont(ofSize: 16)
-        placeHolderFont = .italicSystemFont(ofSize: 16)
-
         super.init(frame: .zero)
-
+        backgroundColor = NablaTheme.ComposerView.backgroundColor
         addSubview(hStack)
         hStack.pinToSuperView(insets: Constants.hStackMargins)
 
@@ -94,39 +79,43 @@ final class ComposerView: UIView {
 
     private lazy var placeHolderLabel: UILabel = {
         let label = UILabel().prepareForAutoLayout()
-        label.font = placeHolderFont
-        label.textColor = .lightGray
+        label.font = NablaTheme.ComposerView.font
+        label.textColor = NablaTheme.ComposerView.textColor.withAlphaComponent(0.5)
         return label
     }()
 
     private lazy var textView: UITextView = {
         let textView = UITextView().withInteractiveDismiss().prepareForAutoLayout()
-        textView.font = font
+        textView.font = NablaTheme.ComposerView.font
         textView.constraintHeight(Constants.controlsSize, relation: .greaterThanOrEqual)
         textView.constraintHeight(Constants.maximumHeight, relation: .lessThanOrEqual)
+        textView.textColor = NablaTheme.ComposerView.textColor
         textView.layer.cornerRadius = Constants.controlsSize / 2
         textView.layer.borderWidth = 1
-        textView.layer.borderColor = UIColor.lightGray.cgColor
+        textView.layer.borderColor = NablaTheme.ComposerView.accessoryColor.cgColor
         textView.textContainerInset = .all(Constants.controlsSize / 4)
         textView.scrollIndicatorInsets = .all(Constants.controlsSize / 4)
         textView.delegate = self
+        textView.backgroundColor = NablaTheme.ComposerView.backgroundColor
         return textView
     }()
 
     private lazy var sendButton: UIButton = {
         let sendButton = UIButton().prepareForAutoLayout()
-        sendButton.setImage(.init(systemName: "paperplane.fill"), for: .normal)
+        sendButton.setImage(NablaTheme.ComposerView.sendIcon, for: .normal)
         sendButton.constraintWidth(Constants.controlsSize)
         sendButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
         sendButton.isEnabled = false
+        sendButton.tintColor = NablaTheme.ComposerView.accessoryColor
         return sendButton
     }()
 
     private lazy var addMedia: UIButton = {
         let addMediaButton = UIButton().prepareForAutoLayout()
-        addMediaButton.setImage(.init(systemName: "plus"), for: .normal)
+        addMediaButton.setImage(NablaTheme.ComposerView.addMediaIcon, for: .normal)
         addMediaButton.constraintWidth(Constants.controlsSize)
         addMediaButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        addMediaButton.tintColor = NablaTheme.ComposerView.accessoryColor
         return addMediaButton
     }()
 

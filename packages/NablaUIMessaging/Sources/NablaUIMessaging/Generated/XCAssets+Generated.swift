@@ -22,9 +22,13 @@ public enum CoreAssets {
     public enum Assets {}
 
     public enum Colors {
-        public static let chatCellMeColor = ColorAsset(name: "chatCellMeColor")
-        public static let chatCellThemColor = ColorAsset(name: "chatCellThemColor")
-        public static let tint = ColorAsset(name: "tint")
+        public static let accessory = ColorAsset(name: "accessory")
+        public static let alternateText = ColorAsset(name: "alternateText")
+        public static let background = ColorAsset(name: "background")
+        public static let primary = ColorAsset(name: "primary")
+        public static let primaryText = ColorAsset(name: "primaryText")
+        public static let secondaryBackground = ColorAsset(name: "secondaryBackground")
+        public static let secondaryText = ColorAsset(name: "secondaryText")
     }
 }
 

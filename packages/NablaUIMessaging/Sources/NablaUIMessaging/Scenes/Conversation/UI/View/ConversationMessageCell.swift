@@ -92,12 +92,12 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         case .me:
             setVisibleViews([leftSpacer])
             footerLabel.textAlignment = .right
-            container.backgroundColor = CoreAssets.Colors.chatCellMeColor.color
+            container.backgroundColor = NablaTheme.ConversationMessageCell.meBackgroundColor
         case let .them(themViewModel):
             footerLabel.textAlignment = .left
             avatarView.configure(with: themViewModel.avatar)
             authorLabel.text = themViewModel.author
-            container.backgroundColor = CoreAssets.Colors.chatCellThemColor.color
+            container.backgroundColor = NablaTheme.ConversationMessageCell.themBackgroundColor
 
             if themViewModel.displaySenderNameAndAvatar {
                 setVisibleViews([authorLabel, avatarView, rightSpacer])
@@ -137,8 +137,9 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func makeAuthorLabel() -> UILabel {
         let label = UILabel()
         label.prepareForAutoLayout()
-        label.font = .regular(Constants.authorFontSize)
+        label.font = NablaTheme.ConversationMessageCell.authorLabelFont
         label.numberOfLines = 1
+        label.textColor = NablaTheme.ConversationMessageCell.authorLabelColor
         return label
     }
 
@@ -158,7 +159,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func makeFooterLabel() -> UILabel {
         let label = UILabel()
         label.prepareForAutoLayout()
-        label.font = .regular(Constants.footerFontSize)
+        label.font = NablaTheme.ConversationMessageCell.footerLabelFont
         label.numberOfLines = 0
         label.isHidden = true
         let gesture = UITapGestureRecognizer(target: self, action: #selector(footerTapHandler))

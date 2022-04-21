@@ -13,7 +13,7 @@ final class TypingIndicatorView: UIView {
         replicatorLayer?.instanceDelay = 0.2
 
         let redCircle = CALayer()
-        redCircle.backgroundColor = CoreAssets.Colors.tint.color.cgColor
+        redCircle.backgroundColor = NablaTheme.TypingIndicatorView.dotColor.cgColor
         redCircle.frame = CGRect(x: 10, y: 25, width: 10, height: 10)
         redCircle.cornerRadius = 5
 

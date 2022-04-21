@@ -76,8 +76,7 @@ class AvatarView: UIView {
 
     private func createInitialsAvatarView() -> UILabel {
         let view = UILabel()
-        // TODO: (Thibault Tourailles) - Change background color
-        view.backgroundColor = CoreAssets.Colors.tint.color
+        view.backgroundColor = NablaTheme.AvatarView.backgroundColor
         view.textAlignment = .center
         view.textColor = .white
         return view
@@ -85,8 +84,7 @@ class AvatarView: UIView {
 
     private func createDeletedAvatarView() -> UILabel {
         let view = UILabel()
-        // TODO: (Thibault Tourailles) - Change background color
-        view.backgroundColor = CoreAssets.Colors.tint.color
+        view.backgroundColor = NablaTheme.AvatarView.backgroundColor
         view.text = "?"
         view.textAlignment = .center
         view.textColor = .black

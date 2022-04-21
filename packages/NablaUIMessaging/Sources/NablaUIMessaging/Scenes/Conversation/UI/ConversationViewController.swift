@@ -20,8 +20,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        collectionView.backgroundColor = .clear
+        view.backgroundColor = NablaTheme.ConversationViewController.backgroundColor
+        collectionView.backgroundColor = NablaTheme.ConversationViewController.backgroundColor
         providers.forEach { $0.prepare(collectionView: collectionView) }
         presenter.start()
     }
@@ -160,7 +160,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         containedView.pinToSuperView()
 
         NSLayoutConstraint.activate([
-            loadedView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            loadedView.topAnchor.constraint(equalTo: view.topAnchor),
             loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor),
             composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor), // TODO: (@ams) check iOS 13
         ])

@@ -4,9 +4,6 @@ import UIKit
 private enum Constants {
     static let avatarSize: CGFloat = 48
     static let unreadIndicatorSize: CGFloat = 8
-    static let titleSize: CGFloat = 16
-    static let subtitleSize: CGFloat = 14
-    static let timeSize: CGFloat = 12
 }
 
 class ConversationListItemCell: UITableViewCell, Reusable {
@@ -30,10 +27,6 @@ class ConversationListItemCell: UITableViewCell, Reusable {
         timeLabel.text = viewModel.lastUpdatedTime
         unreadIndicatorView.isHidden = !viewModel.isUnread
         avatarView.configure(with: viewModel.avatar)
-
-        titleLabel.font = viewModel.isUnread ? .bold(Constants.titleSize) : .semiBold(Constants.titleSize)
-        subtitleLabel.font = viewModel.isUnread ? .semiBold(Constants.subtitleSize) : .regular(Constants.subtitleSize)
-        timeLabel.font = viewModel.isUnread ? .semiBold(Constants.timeSize) : .regular(Constants.timeSize)
     }
 
     // MARK: - Private
@@ -45,6 +38,7 @@ class ConversationListItemCell: UITableViewCell, Reusable {
     private lazy var unreadIndicatorView: UIView = createUnreadIndicatorView()
 
     private func setUp() {
+        contentView.backgroundColor = NablaTheme.ConversationListItemCell.backgroundColor
         contentView.addSubview(avatarView)
         avatarView.pinToSuperView(edges: .leading, insets: .only(leading: 16))
         avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
@@ -81,25 +75,28 @@ class ConversationListItemCell: UITableViewCell, Reusable {
 
     private func createTitleLabel() -> UILabel {
         let label = UILabel()
-        label.font = .semiBold(Constants.titleSize)
+        label.textColor = NablaTheme.ConversationListItemCell.titleColor
+        label.font = NablaTheme.ConversationListItemCell.titleFont
         return label
     }
 
     private func createSubtitleLabel() -> UILabel {
         let label = UILabel()
-        label.font = .regular(Constants.subtitleSize)
+        label.textColor = NablaTheme.ConversationListItemCell.subtitleColor
+        label.font = NablaTheme.ConversationListItemCell.subtitleFont
         return label
     }
 
     private func createTimeLabel() -> UILabel {
         let label = UILabel()
-        label.font = .regular(Constants.timeSize)
+        label.textColor = NablaTheme.ConversationListItemCell.timeLabelColor
+        label.font = NablaTheme.ConversationListItemCell.timeLabelFont
         return label
     }
 
     private func createUnreadIndicatorView() -> UIView {
         let view = UIView()
-        view.backgroundColor = CoreAssets.Colors.tint.color
+        view.backgroundColor = NablaTheme.ConversationListItemCell.unreadIndicatorColor
         view.constraintToSize(CGSize(width: Constants.unreadIndicatorSize, height: Constants.unreadIndicatorSize))
         view.layer.cornerRadius = Constants.unreadIndicatorSize / 2
         view.clipsToBounds = true

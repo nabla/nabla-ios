@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 final class LoadingView: UIView {
-    let activityIndicator = UIActivityIndicatorView(style: .large)
+    // MARK: - Initializer
 
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
@@ -12,12 +12,18 @@ final class LoadingView: UIView {
     init() {
         super.init(frame: .zero)
 
-        activityIndicator.tintColor = CoreAssets.Colors.tint.color
+        activityIndicator.tintColor = NablaTheme.LoadingView.tintColor
         addSubview(activityIndicator)
         activityIndicator.center(in: self)
     }
 
+    // MARK: - Public
+
     func startAnimating() {
         activityIndicator.startAnimating()
     }
+
+    // MARK: - Private
+
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
 }

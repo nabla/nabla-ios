@@ -81,6 +81,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
         tableView.delegate = self
         tableView.register(ConversationListItemCell.self)
         tableView.separatorInset = .only(left: 70)
+        tableView.backgroundColor = NablaTheme.ConversationListView.backgroundColor
         return tableView
     }
 
