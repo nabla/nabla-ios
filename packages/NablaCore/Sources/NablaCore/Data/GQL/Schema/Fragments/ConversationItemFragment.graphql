@@ -1,0 +1,5 @@
+fragment ConversationItemFragment on ConversationItem {
+    ... on Message {
+        ...MessageFragment
+    }
+}

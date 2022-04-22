@@ -48,15 +48,17 @@ struct SwiftScript: ParsableCommand {
                 .apollo.childFolderURL(folderName: "GQL")
                 .apollo.childFolderURL(folderName: "Generated")
 
-            let authenticatedOutputFile = ApolloCodegenOptions.OutputFormat.multipleFiles(
+            let authenticatedOutputFormat = ApolloCodegenOptions.OutputFormat.multipleFiles(
                 inFolderAtURL: folderForOutputs
             )
+            
+            try? FileManager.default.removeItem(at: folderForOutputs)
 
             let authenticatedCodegenOptions = ApolloCodegenOptions(
                 includes: "\(folderForInputs.path)/**/*.graphql",
                 mergeInFieldsFromFragmentSpreads: false,
                 namespace: "GQL",
-                outputFormat: authenticatedOutputFile,
+                outputFormat: authenticatedOutputFormat,
                 customScalarFormat: .passthroughWithPrefix("GQL."),
                 urlToSchemaFile: folderForXPlatformSchema.appendingPathComponent("patient.graphql")
             )

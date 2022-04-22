@@ -1,17 +1,17 @@
 import Foundation
 import NablaUtils
 
-class ConversationItemsMerger: Cancellable {
+class ConversationItemsMerger: PaginatedWatcher {
     // MARK: - Internal
     
     func resume() {
-        remoteSubscription = remoteDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] result in
+        remoteWatcher = remoteDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] result in
             guard let self = self else { return }
             self.remoteData = result
             self.notifyNewValues()
         }
         
-        localSubscription = localDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] items in
+        localWatcher = localDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] items in
             guard let self = self else { return }
             self.localData = items
             self.notifyNewValues()
@@ -22,9 +22,16 @@ class ConversationItemsMerger: Cancellable {
         otherCancellables.append(contentsOf: cancellables)
     }
     
+    func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        guard let remoteWatcher = remoteWatcher else {
+            fatalError("You should always call `ConversationItemsMerger.resume()` before calling `loadMore(completion:)`.")
+        }
+        return remoteWatcher.loadMore(completion: completion)
+    }
+    
     func cancel() {
-        localSubscription?.cancel()
-        remoteSubscription?.cancel()
+        localWatcher?.cancel()
+        remoteWatcher?.cancel()
         otherCancellables.forEach { $0.cancel() }
     }
     
@@ -48,15 +55,15 @@ class ConversationItemsMerger: Cancellable {
     private let conversationId: UUID
     private let callback: (Result<ConversationItems, Error>) -> Void
     
-    private var remoteSubscription: Cancellable?
-    private var localSubscription: Cancellable?
+    private var remoteWatcher: PaginatedWatcher?
+    private var localWatcher: Cancellable?
     private var otherCancellables = [Cancellable]()
     
-    private var remoteData: Result<GQL.GetConversationItemsQuery.Data, GQLError>?
+    private var remoteData: Result<RemoteConversationWithItems, GQLError>?
     private var localData: [LocalConversationItem]?
     
     private func notifyNewValues() {
-        let remoteConversation: GQL.GetConversationItemsQuery.Data.Conversation.Conversation
+        let remoteConversation: RemoteConversationWithItems.Conversation.Conversation
         switch remoteData {
         case .none:
             return // Wait for remote data before emitting any value
@@ -68,7 +75,7 @@ class ConversationItemsMerger: Cancellable {
         }
         
         let localItems = localData ?? []
-        let remoteItems = remoteConversation.items.data.compactMap { $0 }
+        let remoteItems = remoteConversation.items.data.compactMap { $0?.fragments.conversationItemFragment }
         let mergedItems = merge(remoteItems, localItems)
         let newValue = ConversationItems(
             hasMore: remoteConversation.items.hasMore,

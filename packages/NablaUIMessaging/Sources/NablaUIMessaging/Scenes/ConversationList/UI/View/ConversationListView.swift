@@ -28,33 +28,39 @@ public class ConversationListView: UIView, ConversationListViewContract {
     // MARK: - ConversationListViewContract
 
     func configure(with state: ConversationListViewState) {
-        switch state {
-        case let .loaded(viewModel):
-            self.viewModel = viewModel
-            tableView.reload(animated: true)
-            loadingIndicator.isHidden = true
-            errorView.isHidden = true
-            tableView.isHidden = false
-        case let .error(errorViewModel):
-            errorView.configure(with: errorViewModel)
-            loadingIndicator.isHidden = true
-            errorView.isHidden = false
-            tableView.isHidden = true
-        case .loading:
-            loadingIndicator.isHidden = false
-            errorView.isHidden = true
-            tableView.isHidden = true
+        DispatchQueue.main.async {
+            switch state {
+            case let .loaded(viewModel):
+                self.viewModel = viewModel
+                self.tableView.reload(animated: true)
+                self.loadingIndicator.isHidden = true
+                self.errorView.isHidden = true
+                self.tableView.isHidden = false
+            case let .error(errorViewModel):
+                self.errorView.configure(with: errorViewModel)
+                self.loadingIndicator.isHidden = true
+                self.errorView.isHidden = false
+                self.tableView.isHidden = true
+            case .loading:
+                self.loadingIndicator.isHidden = false
+                self.errorView.isHidden = true
+                self.tableView.isHidden = true
+            }
         }
     }
 
     func displayLoadingMore() {
-        tableView.tableFooterView = loadingFooterView
-        let bottomOffset = CGPoint(x: 0, y: tableView.contentSize.height - tableView.bounds.size.height)
-        tableView.setContentOffset(bottomOffset, animated: true)
+        DispatchQueue.main.async {
+            self.tableView.tableFooterView = self.loadingFooterView
+            let bottomOffset = CGPoint(x: 0, y: self.tableView.contentSize.height - self.tableView.bounds.size.height)
+            self.tableView.setContentOffset(bottomOffset, animated: true)
+        }
     }
 
     func hideLoadingMore() {
-        tableView.tableFooterView = nil
+        DispatchQueue.main.async {
+            self.tableView.tableFooterView = nil
+        }
     }
 
     // MARK: - Private

@@ -6,11 +6,11 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<GQL.GetConversationItemsQuery.Data, GQLError>) -> Void
-    ) -> Cancellable {
-        gqlClient.watch(
-            query: Constants.rootQuery(conversationId: conversationId),
-            cachePolicy: .returnCacheDataAndFetch,
+        callback: @escaping (Result<RemoteConversationWithItems, GQLError>) -> Void
+    ) -> PaginatedWatcher {
+        ConversationItemsWatcher(
+            conversationId: conversationId,
+            numberOfItemsPerPage: 50,
             callback: callback
         )
     }
@@ -35,17 +35,17 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<GQL.ConversationEventsSubscription.Data, GQLError>) -> Void
+        callback: @escaping (Result<RemoteConversationEvent, GQLError>) -> Void
     ) -> Cancellable {
         gqlClient.subscribe(subscription: GQL.ConversationEventsSubscription(id: conversationId)) { [weak self] result in
-            defer { callback(result) }
             guard let self = self else { return }
             switch result {
             case let .failure(error):
-                print(error) // TODO: @tgy
+                callback(.failure(error))
             case let .success(data):
                 guard let event = data.conversation?.event else { return }
                 self.handleConversationEvent(event, inConversationWithId: conversationId)
+                callback(.success(event))
             }
         }
     }
@@ -96,4 +96,38 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             completion: { _ in }
         )
     }
+}
+
+extension GQL.GetConversationItemsQuery: PaginatedQuery {
+    static func getCursor(from data: Data) -> String? {
+        data.conversation.conversation.items.nextCursor
+    }
+}
+
+private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationItemsQuery> {
+    init(
+        conversationId: UUID,
+        numberOfItemsPerPage: Int?,
+        callback: @escaping (Result<RemoteConversationWithItems, GQLError>) -> Void
+    ) {
+        self.conversationId = conversationId
+        super.init(
+            numberOfItemsPerPage: numberOfItemsPerPage,
+            callback: callback
+        )
+    }
+
+    override func makeQuery(page: GQL.OpaqueCursorPage) -> GQL.GetConversationItemsQuery {
+        GQL.GetConversationItemsQuery(id: conversationId, page: page)
+    }
+    
+    override func updateCache(_ cache: inout RemoteConversationWithItems, withAdditionalData data: RemoteConversationWithItems) {
+        cache.conversation.conversation.items.data.append(contentsOf: data.conversation.conversation.items.data)
+        cache.conversation.conversation.items.hasMore = data.conversation.conversation.items.hasMore
+        cache.conversation.conversation.items.nextCursor = data.conversation.conversation.items.nextCursor
+    }
+    
+    // MARK: - Private
+    
+    private let conversationId: UUID
 }

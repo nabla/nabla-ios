@@ -3,12 +3,12 @@ import Foundation
 protocol ConversationItemRemoteDataSource {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<GQL.GetConversationItemsQuery.Data, GQLError>) -> Void
-    ) -> Cancellable
+        callback: @escaping (Result<RemoteConversationWithItems, GQLError>) -> Void
+    ) -> PaginatedWatcher
     
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<GQL.ConversationEventsSubscription.Data, GQLError>) -> Void
+        callback: @escaping (Result<RemoteConversationEvent, GQLError>) -> Void
     ) -> Cancellable
 
     func send(

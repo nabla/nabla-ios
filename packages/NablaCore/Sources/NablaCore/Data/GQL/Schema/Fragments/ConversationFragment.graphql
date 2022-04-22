@@ -1,0 +1,14 @@
+fragment ConversationFragment on Conversation {
+    id
+    title
+    description
+    lastMessagePreview
+    unreadMessageCount
+    providers {
+        provider {
+            avatarUrl {
+                url
+            }
+        }
+    }
+}

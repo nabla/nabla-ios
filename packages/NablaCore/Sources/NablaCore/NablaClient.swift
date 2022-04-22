@@ -65,7 +65,6 @@ public class NablaClient {
     @Inject private var authenticator: Authenticator
     @Inject private var gqlClient: GQLClient
     @Inject private var createConversationInteractor: CreateConversationInteractor
-    @Inject private var getConversationListInteractor: GetConversationListInteractor
     @Inject private var watchConversationItemsInteractor: WatchConversationItemsInteractor
     @Inject private var sendMessageInteractor: SendMessageInteractor
     @Inject private var watchConversationListInteractor: WatchConversationListInteractor

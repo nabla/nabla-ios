@@ -1,3 +1,3 @@
 import Foundation
 
-typealias RemoteConversationItem = GQL.GetConversationItemsQuery.Data.Conversation.Conversation.Item.Datum
+typealias RemoteConversationItem = GQL.ConversationItemFragment
