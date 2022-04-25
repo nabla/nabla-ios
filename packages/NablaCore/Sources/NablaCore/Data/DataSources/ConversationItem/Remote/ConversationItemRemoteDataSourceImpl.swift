@@ -49,7 +49,14 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             }
         }
     }
-    
+
+    func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable {
+        gqlClient.perform(
+            mutation: GQL.SetTypingMutation(conversationId: conversationId, isTyping: isTyping),
+            completion: { _ in }
+        )
+    }
+
     // MARK: - Private
     
     @Inject private var gqlClient: GQLClient

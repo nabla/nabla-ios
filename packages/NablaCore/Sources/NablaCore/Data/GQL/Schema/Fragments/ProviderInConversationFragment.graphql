@@ -1,0 +1,8 @@
+fragment ProviderInConversationFragment on ProviderInConversation {
+    id
+    provider {
+        ...ProviderFragment
+    }
+    isTyping
+    seenUntil
+}

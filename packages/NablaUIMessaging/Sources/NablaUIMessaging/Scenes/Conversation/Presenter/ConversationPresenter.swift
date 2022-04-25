@@ -1,5 +1,6 @@
 import Foundation
 
 protocol ConversationPresenter: Presenter {
-    func send(text: String)
+    func didTapOnSend(text: String)
+    func didUpdateDraftText(_ text: String)
 }

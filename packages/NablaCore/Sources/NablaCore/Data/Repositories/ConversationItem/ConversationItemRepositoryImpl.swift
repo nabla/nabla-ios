@@ -4,7 +4,7 @@ import NablaUtils
 class ConversationItemRepositoryImpl: ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<ConversationItems, Error>) -> Void
+        callback: @escaping (Result<ConversationWithItems, Error>) -> Void
     ) -> Cancellable {
         let merger = ConversationItemsMerger(conversationId: conversationId, callback: callback)
         merger.resume()
@@ -34,6 +34,10 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             conversationId: conversationId,
             callback: callback
         )
+    }
+
+    func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable {
+        remoteDataSource.setIsTyping(isTyping, conversationId: conversationId)
     }
 
     // MARK: - Private

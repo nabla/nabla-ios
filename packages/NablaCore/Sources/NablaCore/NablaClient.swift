@@ -44,8 +44,12 @@ public class NablaClient {
         createConversationInteractor.execute(completion: completion)
     }
     
-    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationItems, Error>) -> Void) -> Cancellable {
-        watchConversationItemsInteractor.execute(conversationId: conversationId, callback: callback)
+    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationWithItems, Error>) -> Void) -> Cancellable {
+        watchConversationWithItemsInteractor.execute(conversationId: conversationId, callback: callback)
+    }
+
+    public func setIsTyping(_ isTyping: Bool, inConversationWithId conversationId: UUID) -> Cancellable {
+        setIsTypingInteractor.execute(isTyping: isTyping, conversationId: conversationId)
     }
 
     public func watchConversationList(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
@@ -65,8 +69,9 @@ public class NablaClient {
     @Inject private var authenticator: Authenticator
     @Inject private var gqlClient: GQLClient
     @Inject private var createConversationInteractor: CreateConversationInteractor
-    @Inject private var watchConversationItemsInteractor: WatchConversationItemsInteractor
+    @Inject private var watchConversationWithItemsInteractor: WatchConversationWithItemsInteractor
     @Inject private var sendMessageInteractor: SendMessageInteractor
+    @Inject private var setIsTypingInteractor: SetIsTypingInteractor
     @Inject private var watchConversationListInteractor: WatchConversationListInteractor
     
     private static var _shared: NablaClient?

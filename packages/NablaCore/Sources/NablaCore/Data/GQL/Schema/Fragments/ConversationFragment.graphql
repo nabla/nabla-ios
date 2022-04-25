@@ -5,10 +5,6 @@ fragment ConversationFragment on Conversation {
     lastMessagePreview
     unreadMessageCount
     providers {
-        provider {
-            avatarUrl {
-                url
-            }
-        }
+        ...ProviderInConversationFragment
     }
 }

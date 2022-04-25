@@ -9,7 +9,7 @@ public protocol ConversationItem {
 
 public enum ConversationItemSender: Hashable {
     case patient
-    case provider(id: UUID, avatarURL: String?)
+    case provider(Provider)
 }
 
 public enum ConversationItemState: Hashable {

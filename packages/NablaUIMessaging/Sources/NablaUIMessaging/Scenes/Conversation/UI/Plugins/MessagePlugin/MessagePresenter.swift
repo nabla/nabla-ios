@@ -39,8 +39,8 @@ class MessagePresenter<
 
     private func transformSender() -> ConversationMessageSender {
         switch item.sender {
-        case let .provider(_, avatarURL):
-            return .them(.init(author: "Provider", avatar: .init(url: avatarURL, text: nil), displaySenderNameAndAvatar: true))
+        case let .provider(provider):
+            return .them(.init(author: "Provider", avatar: .init(url: provider.avatarURL, text: nil), displaySenderNameAndAvatar: true))
         case .patient:
             return .me
         }

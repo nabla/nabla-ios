@@ -10,7 +10,7 @@ enum ConversationTransformer {
     static func transform(fragment: RemoteConversation) -> Conversation {
         Conversation(
             id: fragment.id,
-            avatarURL: fragment.providers.first?.provider.avatarUrl?.url,
+            avatarURL: fragment.providers.first?.fragments.providerInConversationFragment.provider.fragments.providerFragment.avatarUrl?.fragments.ephemeralUrlFragment.url,
             initials: nil,
             title: fragment.title,
             lastMessagePreview: fragment.lastMessagePreview,

@@ -28,7 +28,7 @@ class ConversationItemsMerger: PaginatedWatcher {
         }
         return remoteWatcher.loadMore(completion: completion)
     }
-    
+
     func cancel() {
         localWatcher?.cancel()
         remoteWatcher?.cancel()
@@ -37,7 +37,7 @@ class ConversationItemsMerger: PaginatedWatcher {
     
     init(
         conversationId: UUID,
-        callback: @escaping (Result<ConversationItems, Error>) -> Void
+        callback: @escaping (Result<ConversationWithItems, Error>) -> Void
     ) {
         self.conversationId = conversationId
         self.callback = callback
@@ -53,7 +53,7 @@ class ConversationItemsMerger: PaginatedWatcher {
     @Inject private var localDataSource: ConversationItemLocalDataSource
     
     private let conversationId: UUID
-    private let callback: (Result<ConversationItems, Error>) -> Void
+    private let callback: (Result<ConversationWithItems, Error>) -> Void
     
     private var remoteWatcher: PaginatedWatcher?
     private var localWatcher: Cancellable?
@@ -63,22 +63,24 @@ class ConversationItemsMerger: PaginatedWatcher {
     private var localData: [LocalConversationItem]?
     
     private func notifyNewValues() {
-        let remoteConversation: RemoteConversationWithItems.Conversation.Conversation
+        let remoteConversation: RemoteConversationWithItems
         switch remoteData {
         case .none:
             return // Wait for remote data before emitting any value
         case let .success(remoteData):
-            remoteConversation = remoteData.conversation.conversation
+            remoteConversation = remoteData
         case let .failure(error):
             callback(.failure(error))
             return
         }
         
+        let item = remoteConversation.conversation.conversation.items
         let localItems = localData ?? []
-        let remoteItems = remoteConversation.items.data.compactMap { $0?.fragments.conversationItemFragment }
+        let remoteItems = item.data.compactMap { $0?.fragments.conversationItemFragment }
         let mergedItems = merge(remoteItems, localItems)
-        let newValue = ConversationItems(
-            hasMore: remoteConversation.items.hasMore,
+        let newValue = ConversationWithItems(
+            hasMore: item.hasMore,
+            typingProviders: remoteConversation.typingProviders.map(RemoteConversationProviderTransformer.transform),
             items: mergedItems
         )
         callback(.success(newValue))

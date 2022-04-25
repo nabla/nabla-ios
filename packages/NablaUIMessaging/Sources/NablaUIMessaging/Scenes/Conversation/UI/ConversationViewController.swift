@@ -202,7 +202,11 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
 extension ConversationViewController: ComposerViewDelegate {
     func composerViewDidTapOnSend(_ composerView: ComposerView) {
         guard let text = composerView.text else { return }
-        presenter.send(text: text)
+        presenter.didTapOnSend(text: text)
+    }
+
+    func composerViewDidUpdateTextDraft(_ composerView: ComposerView) {
+        presenter.didUpdateDraftText(composerView.text ?? "")
     }
 
     func composerViewDidTapOnAddMedia(_: ComposerView) {}

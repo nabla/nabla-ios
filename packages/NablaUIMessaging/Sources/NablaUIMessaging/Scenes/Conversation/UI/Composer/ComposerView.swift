@@ -132,5 +132,6 @@ extension ComposerView: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         placeHolderLabel.isHidden = !textView.text.isEmpty
         sendButton.isEnabled = !textView.text.isEmpty
+        delegate?.composerViewDidUpdateTextDraft(self)
     }
 }

@@ -17,4 +17,6 @@ protocol ConversationItemRemoteDataSource {
         conversationId: UUID,
         callback: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable
+
+    func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable
 }

@@ -1,7 +1,9 @@
 query GetConversationItems($id: UUID!, $page: OpaqueCursorPage!) {
     conversation(id: $id) {
         conversation {
-            id
+            providers {
+                ...ProviderInConversationFragment
+            }
             items(page: $page) {
                 hasMore
                 nextCursor
