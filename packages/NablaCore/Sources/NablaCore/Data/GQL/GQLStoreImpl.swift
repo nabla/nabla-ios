@@ -77,7 +77,7 @@ class GQLStoreImpl: GQLStore {
     }
     
     func cacheExists<F: GraphQLFragment>(
-        for fragment: F,
+        of fragment: F,
         completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void
     ) {
         guard let key = Normalization.cacheKey(for: fragment.jsonObject) else {

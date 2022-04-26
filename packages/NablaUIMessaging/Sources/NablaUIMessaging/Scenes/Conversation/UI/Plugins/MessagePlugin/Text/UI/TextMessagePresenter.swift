@@ -10,11 +10,13 @@ final class TextMessagePresenter:
 
     init(
         delegate: ConversationCellPresenterDelegate,
-        item: TextMessageViewItem
+        item: TextMessageViewItem,
+        conversationId: UUID
     ) {
         super.init(
             delegate: delegate,
             item: item,
+            conversationId: conversationId,
             transformContent: Self.transform
         )
     }

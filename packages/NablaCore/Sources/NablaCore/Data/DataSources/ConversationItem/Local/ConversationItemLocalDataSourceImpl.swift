@@ -9,15 +9,19 @@ private enum Constants {
 class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     // MARK: - Internal
     
+    func getConversationItems(ofConversationWithId conversationId: UUID) -> [LocalConversationItem] {
+        conversationItems[conversationId] ?? []
+    }
+    
+    func getConversationItem(withClientId clientId: UUID, inConversationWithId conversationId: UUID) -> LocalConversationItem? {
+        conversationItems[conversationId]?.first { $0.clientId == clientId }
+    }
+    
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
         callback: @escaping ([LocalConversationItem]) -> Void
     ) -> Cancellable {
         LocalDataSourceWatcher(conversationId: conversationId, callback: callback)
-    }
-    
-    func getConversationItems(ofConversationWithId conversationId: UUID) -> [LocalConversationItem] {
-        conversationItems[conversationId] ?? []
     }
     
     func addConversationItem(
@@ -26,6 +30,18 @@ class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     ) {
         var items = conversationItems[conversationId] ?? []
         items.append(conversationItem)
+        items.sort(\.date)
+        conversationItems[conversationId] = items
+        notifyChange(forConversationWithId: conversationId)
+    }
+    
+    func updateConversationItem(
+        _ conversationItem: LocalConversationItem,
+        inConversationWithId conversationId: UUID
+    ) {
+        var items = conversationItems[conversationId] ?? []
+        guard let index = items.firstIndex(where: { $0.clientId == conversationItem.clientId }) else { return }
+        items[index] = conversationItem
         items.sort(\.date)
         conversationItems[conversationId] = items
         notifyChange(forConversationWithId: conversationId)

@@ -30,7 +30,7 @@ protocol GQLStore {
     )
     
     func cacheExists<F: GraphQLFragment>(
-        for fragment: F,
+        of fragment: F,
         completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void
     )
     

@@ -1,5 +1,10 @@
 import Foundation
 
+public enum ConversationItemRepositoryError: Error {
+    case conversationItemNotFound
+    case notSupported
+}
+
 protocol ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId: UUID,
@@ -8,8 +13,14 @@ protocol ConversationItemRepository {
 
     func sendMessage(
         _ message: MessageInput,
-        conversationId: UUID,
-        callback: @escaping (Result<Void, Error>) -> Void
+        inConversationWithId: UUID,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable
+    
+    func retrySending(
+        itemWithId itemId: UUID,
+        inConversationWithId: UUID,
+        completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable
 
     func setIsTyping(

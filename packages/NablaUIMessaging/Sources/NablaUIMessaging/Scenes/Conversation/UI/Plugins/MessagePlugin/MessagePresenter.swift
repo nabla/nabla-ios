@@ -1,10 +1,11 @@
 import Foundation
+import NablaCore
 
 class MessagePresenter<
     ContentView,
     Item: ConversationViewMessageItem,
     MessageCellContract: ConversationMessageCellContract
->: Presenter where MessageCellContract.ContentView == ContentView {
+>: ConversationMessagePresenter where MessageCellContract.ContentView == ContentView {
     typealias Cell = ConversationMessageCell<ContentView>
 
     var item: Item
@@ -14,9 +15,11 @@ class MessagePresenter<
     init(
         delegate _: ConversationCellPresenterDelegate,
         item: Item,
+        conversationId: UUID,
         transformContent: @escaping (Item) -> ContentView.ContentViewModel
     ) {
         self.item = item
+        self.conversationId = conversationId
         self.transformContent = transformContent
     }
 
@@ -24,6 +27,15 @@ class MessagePresenter<
 
     func start() {
         updateView()
+    }
+    
+    func userDidTapFooter() {
+        switch item.state {
+        case .failed:
+            retrySendingMessage()
+        case .sending, .sent:
+            break
+        }
     }
 
     // MARK: - Internal
@@ -35,7 +47,10 @@ class MessagePresenter<
     // MARK: - Private
 
     private weak var view: MessageCellContract?
+    private let conversationId: UUID
     private let transformContent: (Item) -> ContentView.ContentViewModel
+    
+    private var retrySendingAction: Cancellable?
 
     private func transformSender() -> ConversationMessageSender {
         switch item.sender {
@@ -57,11 +72,26 @@ class MessagePresenter<
     private func transformFooter() -> ConversationMessageFooterViewModel? {
         switch item.state {
         case .sending:
+            // TODO: L10n
             return .init(text: "Sending", color: .lightGray)
         case .sent:
             return nil
         case .failed:
+            // TODO: L10n
             return .init(text: "Failed", color: .red)
+        }
+    }
+    
+    private func retrySendingMessage() {
+        guard retrySendingAction == nil else { return }
+        retrySendingAction = NablaClient.shared.retrySending(itemWithId: item.id, inConversationWithId: conversationId) { [weak self] result in
+            switch result {
+            case let .failure(error):
+                print(error) // TODO: @tgy Error handling
+            case .success:
+                break
+            }
+            self?.retrySendingAction = nil
         }
     }
 }

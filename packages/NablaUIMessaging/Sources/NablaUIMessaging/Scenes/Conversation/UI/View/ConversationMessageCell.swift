@@ -11,6 +11,10 @@ private enum Constants {
     static let footerFontSize: CGFloat = 12
 }
 
+protocol ConversationMessagePresenter: Presenter {
+    func userDidTapFooter()
+}
+
 final class ConversationMessageCell<ContentView: MessageContentView>: UICollectionViewCell, ConversationMessageCellContract, Reusable {
     // MARK: Lifecycle
 
@@ -29,14 +33,14 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         content.configure(with: viewModel.content, sender: viewModel.sender)
     }
 
-    func configure(presenter: Presenter) {
+    func configure(presenter: ConversationMessagePresenter) {
         self.presenter = presenter
         presenter.start()
     }
 
     // MARK: - Private
 
-    private var presenter: Presenter?
+    private var presenter: ConversationMessagePresenter?
 
     private let leftSpacer = UISpacerView(axis: .horizontal)
     private let rightSpacer = UISpacerView(axis: .horizontal)
@@ -119,6 +123,9 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
         footerLabel.text = footer.text
         footerLabel.textColor = footer.color
+        footerTapAction = { [weak self] in
+            self?.presenter?.userDidTapFooter()
+        }
     }
 
     private func makeContainer() -> UIView {

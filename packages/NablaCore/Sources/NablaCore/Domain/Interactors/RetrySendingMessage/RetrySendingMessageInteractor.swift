@@ -1,8 +1,8 @@
 import Foundation
 
-protocol SendMessageInteractor {
+protocol RetrySendingMessageInteractor {
     func execute(
-        message: MessageInput,
+        itemId: UUID,
         conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable

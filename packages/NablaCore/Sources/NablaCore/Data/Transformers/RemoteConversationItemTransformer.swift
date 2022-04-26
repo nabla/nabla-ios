@@ -5,9 +5,9 @@ enum RemoteConversationItemTransformer {
         let message = remoteConversationItem.fragments.messageFragment
         let sender: ConversationItemSender
 
-        if let provider = message.author?.asProvider?.fragments.providerFragment {
+        if let provider = message.author.asProvider?.fragments.providerFragment {
             sender = .provider(.init(id: provider.id, avatarURL: provider.avatarUrl?.fragments.ephemeralUrlFragment.url))
-        } else if message.author?.asPatient != nil {
+        } else if message.author.asPatient != nil {
             sender = .patient
         } else {
             // This is a temporary fix, backend should stop using an optional `sender`

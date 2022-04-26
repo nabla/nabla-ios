@@ -10,11 +10,13 @@ final class TypingIndicatorPresenter:
 
     init(
         delegate: ConversationCellPresenterDelegate,
-        item: TypingIndicatorViewItem
+        item: TypingIndicatorViewItem,
+        conversationId: UUID
     ) {
         super.init(
             delegate: delegate,
             item: item,
+            conversationId: conversationId,
             transformContent: Self.transform
         )
     }

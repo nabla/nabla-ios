@@ -17,6 +17,9 @@ class InteractorAssembly: Assembly {
         resolver.register(type: SendMessageInteractor.self) {
             SendMessageInteractorImpl()
         }
+        resolver.register(type: RetrySendingMessageInteractor.self) {
+            RetrySendingMessageInteractorImpl()
+        }
         resolver.register(type: SetIsTypingInteractor.self) {
             SetIsTypingInteractorImpl()
         }

@@ -19,8 +19,8 @@ public enum NablaViewFactory {
             providers: [
                 DateSeparatorCellProvider(),
                 EventCellProvider(),
-                TextMessageCellProvider(),
-                TypingIndicatorCellProvider(),
+                TextMessageCellProvider(conversationId: conversation.id),
+                TypingIndicatorCellProvider(conversationId: conversation.id),
             ]
         )
         viewController.presenter = ConversationPresenterImpl(

@@ -15,25 +15,26 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         return merger
     }
 
-    func sendMessage(_ message: MessageInput, conversationId: UUID, callback: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
-        let localConversationItem: LocalConversationItem
-        switch message {
-        case let .text(content):
-            localConversationItem = LocalTextMessageItem(
-                clientId: UUID(),
-                date: Date(),
-                sender: .patient,
-                state: .sending,
-                content: content
-            )
-        }
+    func sendMessage(
+        _ input: MessageInput,
+        inConversationWithId conversationId: UUID,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable {
+        let localConversationItem = makeLocalConversationItem(for: input)
         localDataSource.addConversationItem(localConversationItem, toConversationWithId: conversationId)
-        return remoteDataSource.send(
-            localMessageClientId: localConversationItem.clientId,
-            remoteMessageInput: Self.transform(message),
-            conversationId: conversationId,
-            callback: callback
-        )
+        return performSend(localConversationItem, inConversationWithId: conversationId, completion: completion)
+    }
+    
+    func retrySending(
+        itemWithId itemId: UUID,
+        inConversationWithId conversationId: UUID,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable {
+        guard let localConversationItem = localDataSource.getConversationItem(withClientId: itemId, inConversationWithId: conversationId) else {
+            completion(.failure(ConversationItemRepositoryError.conversationItemNotFound))
+            return Failure()
+        }
+        return performSend(localConversationItem, inConversationWithId: conversationId, completion: completion)
     }
 
     func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable {
@@ -44,6 +45,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     
     @Inject private var remoteDataSource: ConversationItemRemoteDataSource
     @Inject private var localDataSource: ConversationItemLocalDataSource
+    @Inject private var logger: Logger
     
     private var conversationEventsSubscriptions = [UUID: WeakCancellable]()
     
@@ -57,10 +59,50 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         return subscription
     }
     
-    private static func transform(_ messageInput: MessageInput) -> GQL.SendMessageContentInput {
-        switch messageInput {
+    private func makeSendInput(for localConversationItem: LocalConversationItem) -> GQL.SendMessageContentInput? {
+        if let textMessage = localConversationItem as? LocalTextMessageItem {
+            return .init(textInput: .init(text: textMessage.content))
+        }
+        logger.warning(message: "Sending \(type(of: localConversationItem)) is not supported yet")
+        return nil
+    }
+    
+    private func makeLocalConversationItem(for input: MessageInput) -> LocalConversationItem {
+        switch input {
         case let .text(content):
-            return .init(textInput: .init(text: content))
+            return LocalTextMessageItem(
+                clientId: UUID(),
+                date: Date(),
+                sender: .patient,
+                state: .sending,
+                content: content
+            )
+        }
+    }
+    
+    private func performSend(
+        _ localConversationItem: LocalConversationItem,
+        inConversationWithId conversationId: UUID,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable {
+        guard let input = makeSendInput(for: localConversationItem) else {
+            completion(.failure(ConversationItemRepositoryError.notSupported))
+            return Failure()
+        }
+        return remoteDataSource.send(
+            localMessageClientId: localConversationItem.clientId,
+            remoteMessageInput: input,
+            conversationId: conversationId
+        ) { [localDataSource] result in
+            switch result {
+            case let .failure(error):
+                var copy = localConversationItem
+                copy.state = .failed
+                localDataSource.updateConversationItem(copy, inConversationWithId: conversationId)
+                completion(.failure(error))
+            case .success:
+                completion(.success(()))
+            }
         }
     }
 }

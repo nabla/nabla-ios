@@ -59,9 +59,17 @@ public class NablaClient {
     public func sendMessage(
         _ message: MessageInput,
         inConversationWithId conversationId: UUID,
-        callback: @escaping (Result<Void, Error>) -> Void
+        completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
-        sendMessageInteractor.execute(message: message, conversationId: conversationId, callback: callback)
+        sendMessageInteractor.execute(message: message, conversationId: conversationId, completion: completion)
+    }
+    
+    public func retrySending(
+        itemWithId itemId: UUID,
+        inConversationWithId conversationId: UUID,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable {
+        retrySendingMessageInteractor.execute(itemId: itemId, conversationId: conversationId, completion: completion)
     }
 
     // MARK: - Private
@@ -71,6 +79,7 @@ public class NablaClient {
     @Inject private var createConversationInteractor: CreateConversationInteractor
     @Inject private var watchConversationWithItemsInteractor: WatchConversationWithItemsInteractor
     @Inject private var sendMessageInteractor: SendMessageInteractor
+    @Inject private var retrySendingMessageInteractor: RetrySendingMessageInteractor
     @Inject private var setIsTypingInteractor: SetIsTypingInteractor
     @Inject private var watchConversationListInteractor: WatchConversationListInteractor
     

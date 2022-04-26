@@ -2,9 +2,7 @@ import Foundation
 import UIKit
 
 final class TypingIndicatorCellProvider: ConversationCellProvider {
-    private typealias Cell = ConversationMessageCell<TypingIndicatorContentView>
-
-    private var presenters: [UUID: TypingIndicatorPresenter] = [:]
+    // MARK: - Internal
 
     func prepare(collectionView: UICollectionView) {
         collectionView.register(Cell.self)
@@ -29,6 +27,19 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
         cell.configure(presenter: presenter)
         return cell
     }
+    
+    init(
+        conversationId: UUID
+    ) {
+        self.conversationId = conversationId
+    }
+    
+    // MARK: - Private
+    
+    private typealias Cell = ConversationMessageCell<TypingIndicatorContentView>
+    
+    private let conversationId: UUID
+    private var presenters: [UUID: TypingIndicatorPresenter] = [:]
 
     private func findOrCreatePresenter(
         item: TypingIndicatorViewItem,
@@ -38,7 +49,7 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
             presenter.item = item
             return presenter
         } else {
-            let presenter = TypingIndicatorPresenter(delegate: delegate, item: item)
+            let presenter = TypingIndicatorPresenter(delegate: delegate, item: item, conversationId: conversationId)
             presenters[item.id] = presenter
             return presenter
         }

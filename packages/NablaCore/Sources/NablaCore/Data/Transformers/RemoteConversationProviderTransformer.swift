@@ -1,5 +1,4 @@
 import Foundation
-import NablaCore
 
 enum RemoteConversationProviderTransformer {
     static func transform(_ provider: GQL.ProviderInConversationFragment) -> Provider {
