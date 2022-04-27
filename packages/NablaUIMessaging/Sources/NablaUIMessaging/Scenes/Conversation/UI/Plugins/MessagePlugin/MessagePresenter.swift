@@ -74,9 +74,14 @@ class MessagePresenter<
     private func transformSender() -> ConversationMessageSender {
         switch item.sender {
         case let .provider(provider):
-            return .them(.init(author: "Provider", avatar: .init(url: provider.avatarURL, text: nil), displaySenderNameAndAvatar: true))
+            return .them(.init(
+                author: "Provider",
+                avatar: .init(url: provider.avatarURL, text: nil),
+                isContiguous: item.isContiguous
+            ))
+            
         case .patient:
-            return .me
+            return .me(isContiguous: item.isContiguous)
         }
     }
 

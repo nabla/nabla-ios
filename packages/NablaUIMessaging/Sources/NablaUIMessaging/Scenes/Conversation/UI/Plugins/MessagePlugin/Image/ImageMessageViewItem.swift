@@ -7,4 +7,5 @@ struct ImageMessageViewItem: ConversationViewMessageItem, Hashable {
     let sender: ConversationItemSender
     let state: ConversationItemState
     let image: Media
+    var isContiguous: Bool = false
 }

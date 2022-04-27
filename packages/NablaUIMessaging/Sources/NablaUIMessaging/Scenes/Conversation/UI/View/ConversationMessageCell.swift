@@ -106,20 +106,24 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
     private func configure(with sender: ConversationMessageSender) {
         switch sender {
-        case .me:
-            setVisibleViews([leftSpacer])
+        case let .me(isContiguous):
             footerLabel.textAlignment = .right
             container.backgroundColor = NablaTheme.ConversationMessageCell.meBackgroundColor
+            if isContiguous {
+                setVisibleViews([leftSpacer])
+            } else {
+                setVisibleViews([topSpacer, leftSpacer])
+            }
         case let .them(themViewModel):
             footerLabel.textAlignment = .left
             avatarView.configure(with: themViewModel.avatar)
             authorLabel.text = themViewModel.author
             container.backgroundColor = NablaTheme.ConversationMessageCell.themBackgroundColor
 
-            if themViewModel.displaySenderNameAndAvatar {
-                setVisibleViews([authorLabel, avatarView, rightSpacer])
-            } else {
+            if themViewModel.isContiguous {
                 setVisibleViews([rightSpacer])
+            } else {
+                setVisibleViews([topSpacer, authorLabel, avatarView, rightSpacer])
             }
         }
     }
@@ -212,6 +216,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func setVisibleViews(_ visibleViews: Set<UIView>) {
         // Only add views whose visibility might change.
         [
+            topSpacer,
             authorLabel,
             avatarView,
             leftSpacer,

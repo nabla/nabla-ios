@@ -13,7 +13,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             case let .success(conversationWithItems):
                 let items = self.transform(conversationWithItems: conversationWithItems)
                 self.set(state: .loaded(items: items))
-                self.client.markConversationAsSeen(self.conversation.id)
+                self.makAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
                 self.canLoadMoreItems = conversationWithItems.hasMore
             }
         }
@@ -69,7 +69,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             )
         }
     }
-    
+
     func didReachEndOfConversation() {
         guard canLoadMoreItems, loadMoreItemsAction == nil else { return }
         loadMoreItemsAction = itemsWatcher?.loadMore { [weak self] result in
@@ -134,6 +134,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var deleteMessageAction: Cancellable?
     private var setTypingAction: Cancellable?
     private var loadMoreItemsAction: Cancellable?
+    private var makAsSeenAction: Cancellable?
     private let typingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
 
     private var sendMediaCancellable: [Cancellable] = []
@@ -146,11 +147,11 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
     private func transform(conversationWithItems: ConversationWithItems) -> [ConversationViewItem] {
         var viewItems = [ConversationViewItem]()
-        
+
         if conversationWithItems.hasMore {
             viewItems.append(HasMoreIndicatorViewItem())
         }
-        
+
         let contentItems = conversationWithItems.items.compactMap { item -> ConversationViewItem? in
             if let textMessage = item as? TextMessageItem {
                 return TextMessageViewItem(
@@ -196,6 +197,16 @@ final class ConversationPresenterImpl: ConversationPresenter {
             TypingIndicatorViewItem(sender: .provider($0))
         }
         viewItems.append(contentsOf: typingItems)
+
+        viewItems = viewItems.enumerated().map { index, element in
+            guard index > 0,
+                  var current = element as? ConversationViewMessageItem,
+                  let previous = viewItems[index - 1] as? ConversationViewMessageItem else {
+                return element
+            }
+            current.isContiguous = previous.sender == current.sender
+            return current
+        }
 
         return viewItems
     }

@@ -6,4 +6,5 @@ struct TypingIndicatorViewItem: ConversationViewMessageItem, Hashable {
     let date: Date = .init()
     let sender: ConversationItemSender
     let state: ConversationItemState = .sent
+    var isContiguous: Bool = false
 }

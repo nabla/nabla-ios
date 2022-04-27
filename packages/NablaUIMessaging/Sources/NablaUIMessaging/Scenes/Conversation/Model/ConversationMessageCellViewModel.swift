@@ -4,7 +4,7 @@ import UIKit
 struct ConversationMessageThemViewModel {
     let author: String
     let avatar: AvatarViewModel
-    let displaySenderNameAndAvatar: Bool
+    let isContiguous: Bool
 }
 
 struct ConversationMessageFooterViewModel {
@@ -13,7 +13,7 @@ struct ConversationMessageFooterViewModel {
 }
 
 enum ConversationMessageSender {
-    case me
+    case me(isContiguous: Bool)
     case them(ConversationMessageThemViewModel)
 }
 

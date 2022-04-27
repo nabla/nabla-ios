@@ -6,4 +6,5 @@ struct DeletedMessageViewItem: ConversationViewMessageItem, Hashable {
     let date: Date
     let sender: ConversationItemSender
     let state: ConversationItemState
+    var isContiguous: Bool = false
 }

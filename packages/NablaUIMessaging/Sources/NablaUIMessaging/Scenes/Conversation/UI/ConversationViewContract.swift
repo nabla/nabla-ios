@@ -27,4 +27,5 @@ protocol ConversationViewContract: AnyObject {
 protocol ConversationViewMessageItem: ConversationViewItem {
     var sender: ConversationItemSender { get }
     var state: ConversationItemState { get }
+    var isContiguous: Bool { get set }
 }

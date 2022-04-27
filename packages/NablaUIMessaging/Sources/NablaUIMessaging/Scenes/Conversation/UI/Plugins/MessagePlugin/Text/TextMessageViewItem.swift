@@ -7,4 +7,5 @@ struct TextMessageViewItem: ConversationViewMessageItem, Hashable {
     let sender: ConversationItemSender
     let state: ConversationItemState
     let text: String
+    var isContiguous: Bool = false
 }
