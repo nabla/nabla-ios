@@ -9,24 +9,28 @@ final class TypingIndicatorView: UIView {
         super.init(frame: .zero)
 
         replicatorLayer?.instanceCount = 3
-        replicatorLayer?.instanceTransform = CATransform3DMakeTranslation(15, 0, 0)
+        replicatorLayer?.instanceTransform = CATransform3DMakeTranslation(12, 0, 0)
         replicatorLayer?.instanceDelay = 0.2
 
         let redCircle = CALayer()
         redCircle.backgroundColor = NablaTheme.TypingIndicatorView.dotColor.cgColor
-        redCircle.frame = CGRect(x: 10, y: 25, width: 10, height: 10)
-        redCircle.cornerRadius = 5
+        redCircle.frame = CGRect(x: 8, y: 20, width: 8, height: 8)
+        redCircle.cornerRadius = 4
 
         replicatorLayer?.addSublayer(redCircle)
+
+        let group = CAAnimationGroup()
+        group.duration = 1.5
+        group.repeatCount = .infinity
 
         let animation = CABasicAnimation(keyPath: "position.y")
         animation.duration = 0.3
         animation.fromValue = redCircle.position.y
-        animation.toValue = redCircle.position.y - 15
+        animation.toValue = redCircle.position.y - 12
         animation.autoreverses = true
-        animation.repeatCount = .infinity
 
-        redCircle.add(animation, forKey: "position.y")
+        group.animations = [animation]
+        redCircle.add(group, forKey: "position.y")
     }
 
     @available(*, unavailable)
@@ -37,7 +41,7 @@ final class TypingIndicatorView: UIView {
     // MARK: - Internal
 
     override var intrinsicContentSize: CGSize {
-        CGSize(width: 60, height: 45)
+        CGSize(width: 52, height: 36)
     }
 
     override class var layerClass: AnyClass {

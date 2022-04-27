@@ -8,6 +8,8 @@ extension RemoteConversationWithItems {
             .conversation
             .providers
             .map(\.fragments.providerInConversationFragment)
-            .filter { $0.typingAt != nil }
+            .filter { provider in
+                provider.typingAt.map { $0 > Date(timeIntervalSinceNow: -60) } ?? false
+            }
     }
 }

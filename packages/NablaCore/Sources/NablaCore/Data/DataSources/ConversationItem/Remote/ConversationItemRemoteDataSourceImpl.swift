@@ -88,7 +88,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         }
     }
     
-    private func handleConversationEvent(_ event: GQL.ConversationEventsSubscription.Data.Conversation.Event, inConversationWithId conversationId: UUID) {
+    private func handleConversationEvent(_ event: RemoteConversationEvent, inConversationWithId conversationId: UUID) {
         if let messageCreatedEvent = event.asMessageCreatedEvent {
             append(
                 message: messageCreatedEvent.message.fragments.messageFragment,
