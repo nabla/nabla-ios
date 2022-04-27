@@ -62,14 +62,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func openIAP() {
-        window?.rootViewController = IAPViewController(
+        let viewController = IAPViewController(
             configuration: .init(
                 clientId: XCConfig.current.iapClientId,
                 serverId: XCConfig.current.iapServerId
             ),
             delegate: self
         )
-        rootCoordinator = nil
+        setRootViewController(viewController, coordinator: nil, animated: true)
     }
     
     private func openUserPicker() {
@@ -80,16 +80,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             delegate: self
         )
         coordinator.start()
-        window?.rootViewController = navigationController
-        rootCoordinator = coordinator
+        setRootViewController(navigationController, coordinator: coordinator, animated: true)
     }
     
     private func openApp(user _: User) {
         let navigationController = UINavigationController()
         let coordinator = ConversationsCoordinator(navigationController: navigationController)
         coordinator.start(animated: false)
-        window?.rootViewController = navigationController
-        rootCoordinator = coordinator
+        setRootViewController(navigationController, coordinator: coordinator, animated: true)
     }
     
     private func assemble() {
@@ -120,6 +118,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         components.path = XCConfig.current.path
         // swiftlint:disable:next force_unwrapping
         return components.url!
+    }
+    
+    private func setRootViewController(_ rootViewController: UIViewController, coordinator: Coordinator?, animated: Bool) {
+        guard let window = window else { return }
+        rootCoordinator = coordinator
+        let isFirstViewController = window.rootViewController == nil
+        let duration = animated && !isFirstViewController ? 0.25 : 0
+        UIView.transition(with: window, duration: duration) {
+            window.rootViewController = rootViewController
+        }
     }
 }
 

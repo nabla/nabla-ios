@@ -57,6 +57,10 @@ final class UserLobbyViewController: UIViewController, UserLobbyViewContract {
         super.viewDidLoad()
         view.backgroundColor = .white
         setUpSubviews()
+    }
+    
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         presenter?.start()
     }
     
