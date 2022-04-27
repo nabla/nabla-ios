@@ -45,6 +45,10 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         remoteDataSource.setIsTyping(isTyping, conversationId: conversationId)
     }
 
+    func markConversationAsSeen(conversationId: UUID) -> Cancellable {
+        remoteDataSource.markConversationAsSeen(conversationId: conversationId)
+    }
+
     // MARK: - Private
     
     @Inject private var remoteDataSource: ConversationItemRemoteDataSource

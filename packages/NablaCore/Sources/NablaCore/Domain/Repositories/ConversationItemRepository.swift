@@ -16,7 +16,7 @@ protocol ConversationItemRepository {
         inConversationWithId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable
-    
+
     func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId: UUID,
@@ -33,4 +33,6 @@ protocol ConversationItemRepository {
         _ isTyping: Bool,
         conversationId: UUID
     ) -> Cancellable
+
+    func markConversationAsSeen(conversationId: UUID) -> Cancellable
 }

@@ -70,6 +70,13 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         )
     }
 
+    func markConversationAsSeen(conversationId: UUID) -> Cancellable {
+        gqlClient.perform(
+            mutation: GQL.MaskAsSeenMutation(conversationId: conversationId),
+            completion: { _ in }
+        )
+    }
+
     // MARK: - Private
     
     @Inject private var gqlClient: GQLClient

@@ -10,7 +10,7 @@ public class NablaClient {
         }
         return shared
     }
-    
+
     public static func initialize(configuration: Configuration? = nil) {
         guard _shared == nil else {
             assertionFailure("NablaClient.initialize(configuration:) can only be called once")
@@ -52,6 +52,10 @@ public class NablaClient {
         setIsTypingInteractor.execute(isTyping: isTyping, conversationId: conversationId)
     }
 
+    public func markConversationAsSeen(_ conversationId: UUID) -> Cancellable {
+        markConversationAsSeenInteractor.execute(conversationId: conversationId)
+    }
+
     public func watchConversationList(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
         watchConversationListInteractor.execute(callback: callback)
     }
@@ -90,6 +94,7 @@ public class NablaClient {
     @Inject private var retrySendingMessageInteractor: RetrySendingMessageInteractor
     @Inject private var deleteMessageInteractor: DeleteMessageInteractor
     @Inject private var setIsTypingInteractor: SetIsTypingInteractor
+    @Inject private var markConversationAsSeenInteractor: MarkConversationAsSeenInteractor
     @Inject private var watchConversationListInteractor: WatchConversationListInteractor
 
     private static var _shared: NablaClient?

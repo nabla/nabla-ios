@@ -24,4 +24,6 @@ protocol ConversationItemRemoteDataSource {
     ) -> Cancellable
 
     func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable
+
+    func markConversationAsSeen(conversationId: UUID) -> Cancellable
 }

@@ -26,5 +26,8 @@ class InteractorAssembly: Assembly {
         resolver.register(type: DeleteMessageInteractor.self) {
             DeleteMessageInteractorImpl()
         }
+        resolver.register(type: MarkConversationAsSeenInteractor.self) {
+            MarkConversationAsSeenInteractorImpl()
+        }
     }
 }

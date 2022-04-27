@@ -13,6 +13,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             case let .success(conversationWithItems):
                 let items = self.transform(conversationWithItems: conversationWithItems)
                 self.set(state: .loaded(items: items))
+                self.client.markConversationAsSeen(self.conversation.id)
             }
         }
     }
