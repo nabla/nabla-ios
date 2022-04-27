@@ -5,7 +5,7 @@ class ConversationRepositoryImpl: ConversationRepository {
     // MARK: - Internal
 
     func watch(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
-        remoteDataSource.watchConversations { result in
+        let watcher = remoteDataSource.watchConversations { result in
             switch result {
             case let .failure(error):
                 callback(.failure(error))
@@ -17,6 +17,13 @@ class ConversationRepositoryImpl: ConversationRepository {
                 callback(.success(model))
             }
         }
+        
+        let holder = PaginatedWatcherAndSubscriptionHolder(watcher: watcher)
+        
+        let eventsSubscription = makeOrReuseConversationEventsSubscription()
+        holder.hold(eventsSubscription)
+        
+        return watcher
     }
 
     func createConversation(completion: @escaping (Result<Conversation, Error>) -> Void) -> Cancellable {
@@ -34,4 +41,16 @@ class ConversationRepositoryImpl: ConversationRepository {
     // MARK: - Private
 
     @Inject private var remoteDataSource: ConversationRemoteDataSource
+    
+    private weak var conversationsEventsSubscription: Cancellable?
+    
+    private func makeOrReuseConversationEventsSubscription() -> Cancellable {
+        if let subscription = conversationsEventsSubscription {
+            return subscription
+        }
+        
+        let subscription = remoteDataSource.subscribeToConversationsEvents { _ in }
+        conversationsEventsSubscription = subscription
+        return subscription
+    }
 }

@@ -1,0 +1,22 @@
+subscription ConversationsEvents {
+    conversations {
+        event {
+            ... on SubscriptionReadinessEvent {
+                isReady
+            }
+            ... on ConversationCreatedEvent {
+                conversation {
+                    ...ConversationFragment
+                }
+            }
+            ... on ConversationUpdatedEvent {
+                conversation {
+                    ...ConversationFragment
+                }
+            }
+            ... on ConversationDeletedEvent {
+                conversationId
+            }
+        }
+    }
+}

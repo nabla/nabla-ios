@@ -18,10 +18,6 @@ class ConversationItemsMerger: PaginatedWatcher {
         }
     }
     
-    func hold(_ cancellables: Cancellable...) {
-        otherCancellables.append(contentsOf: cancellables)
-    }
-    
     func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
         guard let remoteWatcher = remoteWatcher else {
             fatalError("You should always call `ConversationItemsMerger.resume()` before calling `loadMore(completion:)`.")
@@ -39,7 +35,6 @@ class ConversationItemsMerger: PaginatedWatcher {
     func cancel() {
         localWatcher?.cancel()
         remoteWatcher?.cancel()
-        otherCancellables.forEach { $0.cancel() }
     }
     
     init(
@@ -64,7 +59,6 @@ class ConversationItemsMerger: PaginatedWatcher {
     
     private var remoteWatcher: PaginatedWatcher?
     private var localWatcher: Cancellable?
-    private var otherCancellables = [Cancellable]()
     
     private var remoteData: Result<RemoteConversationWithItems, GQLError>?
     private var localData: [LocalConversationItem]?

@@ -9,10 +9,12 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         let merger = ConversationItemsMerger(conversationId: conversationId, callback: callback)
         merger.resume()
         
-        let eventsSubscription = makeOrReuseConversationEventsSubscription(for: conversationId)
-        merger.hold(eventsSubscription)
+        let holder = PaginatedWatcherAndSubscriptionHolder(watcher: merger)
         
-        return merger
+        let eventsSubscription = makeOrReuseConversationEventsSubscription(for: conversationId)
+        holder.hold(eventsSubscription)
+        
+        return holder
     }
 
     func sendMessage(

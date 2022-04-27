@@ -16,12 +16,71 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     }
     
     func watchConversations(callback: @escaping (Result<RemoteConversationList, GQLError>) -> Void) -> PaginatedWatcher {
-        ConversationListWatcher(numberOfItemsPerPage: 50, callback: callback)
+        ConversationListWatcher(
+            numberOfItemsPerPage: Constants.numberOfItemsPerPage,
+            callback: callback
+        )
+    }
+    
+    func subscribeToConversationsEvents(
+        callback: @escaping (Result<RemoteConversationsEvent, GQLError>) -> Void
+    ) -> Cancellable {
+        gqlClient.subscribe(subscription: GQL.ConversationsEventsSubscription()) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .failure(error):
+                callback(.failure(error))
+            case let .success(data):
+                guard let event = data.conversations?.event else { return }
+                self.handleConversationsEvent(event)
+                callback(.success(event))
+            }
+        }
     }
 
     // MARK: - Private
+    
+    private enum Constants {
+        static let numberOfItemsPerPage = 50
+        static let conversationsRootQuery = GQL.GetConversationsQuery(
+            page: .init(cursor: nil, numberOfItems: numberOfItemsPerPage)
+        )
+    }
 
     @Inject private var gqlClient: GQLClient
+    @Inject private var gqlStore: GQLStore
+    
+    private func handleConversationsEvent(_ event: RemoteConversationsEvent) {
+        if let conversationCreatedEvent = event.asConversationCreatedEvent {
+            appendToCache(
+                conversation: conversationCreatedEvent.conversation.fragments.conversationFragment
+            )
+        } else if let conversationDeletedEvent = event.asConversationDeletedEvent {
+            removeFromCache(conversationId: conversationDeletedEvent.conversationId)
+        }
+    }
+    
+    private func appendToCache(conversation: GQL.ConversationFragment) {
+        gqlStore.updateCache(
+            for: Constants.conversationsRootQuery,
+            onlyIfExists: true,
+            body: { cache in
+                cache.conversations.conversations.append(.init(unsafeResultMap: conversation.resultMap))
+            },
+            completion: { _ in }
+        )
+    }
+    
+    private func removeFromCache(conversationId: UUID) {
+        gqlStore.updateCache(
+            for: Constants.conversationsRootQuery,
+            onlyIfExists: true,
+            body: { cache in
+                cache.conversations.conversations.removeAll(where: { $0.fragments.conversationFragment.id == conversationId })
+            },
+            completion: { _ in }
+        )
+    }
 }
 
 extension GQL.GetConversationsQuery: PaginatedQuery {

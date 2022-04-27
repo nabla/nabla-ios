@@ -10,7 +10,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     ) -> PaginatedWatcher {
         ConversationItemsWatcher(
             conversationId: conversationId,
-            numberOfItemsPerPage: 50,
+            numberOfItemsPerPage: Constants.numberOfItemsPerPage,
             callback: callback
         )
     }
@@ -83,8 +83,10 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     @Inject private var gqlStore: GQLStore
     
     private enum Constants {
+        static let numberOfItemsPerPage = 50
+        
         static func rootQuery(conversationId: UUID) -> GQL.GetConversationItemsQuery {
-            .init(id: conversationId, page: .init(cursor: nil, numberOfItems: 50))
+            .init(id: conversationId, page: .init(cursor: nil, numberOfItems: numberOfItemsPerPage))
         }
     }
     
@@ -92,11 +94,6 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         if let messageCreatedEvent = event.asMessageCreatedEvent {
             append(
                 message: messageCreatedEvent.message.fragments.messageFragment,
-                toCacheOfConversationWithId: conversationId
-            )
-        } else if let messageUpdatedEvent = event.asMessageUpdatedEvent {
-            update(
-                message: messageUpdatedEvent.message.fragments.messageFragment,
                 toCacheOfConversationWithId: conversationId
             )
         }
@@ -108,17 +105,6 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             onlyIfExists: true,
             body: { cache in
                 cache.conversation.conversation.items.data.append(.init(unsafeResultMap: message.resultMap))
-            },
-            completion: { _ in }
-        )
-    }
-    
-    private func update(message: GQL.MessageFragment, toCacheOfConversationWithId _: UUID) {
-        gqlStore.updateCache(
-            of: message,
-            onlyIfExists: true,
-            body: { cache in
-                cache = message
             },
             completion: { _ in }
         )
