@@ -34,6 +34,6 @@ extension UICollectionView {
         if let cell = dequeueReusableCell(withReuseIdentifier: reusableCellClass.reusableIdentifier, for: indexPath) as? Cell {
             return cell
         }
-        return reusableCellClass.init()
+        fatalError("You forgot to register \(Cell.self) as reusable cell.")
     }
 }

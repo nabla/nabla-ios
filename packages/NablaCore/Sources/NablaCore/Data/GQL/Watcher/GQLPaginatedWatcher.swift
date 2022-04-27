@@ -26,7 +26,6 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
                 case let .success(data):
                     self.cursor = Query.getCursor(from: data)
                     self.handleAdditionalData(data, completion: completion)
-                    completion(.success(()))
                 }
             }
     }

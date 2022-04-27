@@ -114,8 +114,9 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let item = NSCollectionLayoutItem(layoutSize: layoutSize)
         let group: NSCollectionLayoutGroup = .vertical(layoutSize: layoutSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        let collectionView = BottomCollectionView(frame: .zero, collectionViewLayout: layout).prepareForAutoLayout()
+        let layout = FlippedCollectionViewCompositionalLayout(section: section)
+        let collectionView = FlippedCollectionView(frame: .zero, collectionViewLayout: layout).prepareForAutoLayout()
+        collectionView.keyboardDismissMode = .interactive
         collectionView.delegate = self
         return collectionView
     }
@@ -210,7 +211,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private func applySnapshot(items: [ConversationViewItem], animatingDifferences: Bool = true) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(items.map(DiffableConversationViewItem.init(value:)))
+        snapshot.appendItems(items.reversed().map(DiffableConversationViewItem.init(value:)))
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 
@@ -323,8 +324,9 @@ struct DiffableConversationViewItem: Hashable {
 }
 
 extension ConversationViewController: UICollectionViewDelegate {
-    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let isAlmostEndOfCollectionView = indexPath.section == 0 && indexPath.item < 5
+    func collectionView(_ collectionView: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let lastIndexPath = collectionView.lastIndexPath
+        let isAlmostEndOfCollectionView = lastIndexPath.section == indexPath.section && lastIndexPath.item - indexPath.item < 5
         if isAlmostEndOfCollectionView {
             presenter.didReachEndOfConversation()
         }
@@ -363,5 +365,13 @@ extension ConversationViewController: UICollectionViewDelegate {
             return nil
         }
         return cell.previewForHighlightingContextMenu()
+    }
+}
+
+private extension UICollectionView {
+    var lastIndexPath: IndexPath {
+        let section = numberOfSections - 1
+        let item = numberOfItems(inSection: section) - 1
+        return IndexPath(item: item, section: section)
     }
 }
