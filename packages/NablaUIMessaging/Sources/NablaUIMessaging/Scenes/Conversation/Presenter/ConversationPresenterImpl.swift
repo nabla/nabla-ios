@@ -21,7 +21,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     func didTapOnSend(text: String, medias: [Media]) {
         view?.emptyComposer()
         medias.forEach {
-            let cancellable = client.sendMessage(.image(content: $0), inConversationWithId: conversation.id, completion: { result in
+            let cancellable = client.sendMessage($0.messageInput, inConversationWithId: conversation.id, completion: { result in
                 switch result {
                 case .success:
                     break
@@ -43,8 +43,16 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
     }
 
-    func didRequestTapAddMediaButton() {
-        view?.displayMediaPicker()
+    func didTapCameraButton() {
+        view?.displayMediaPicker(source: .camera)
+    }
+
+    func didTapPhotoLibraryButton() {
+        view?.displayMediaPicker(source: .library(imageLimit: nil))
+    }
+
+    func didTapDocumentLibraryButton() {
+        view?.displayDocumentPicker()
     }
 
     func didUpdateDraftText(_ text: String) {
@@ -76,7 +84,15 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     func didTapMedia(_ media: Media) {
-        view?.displayMediaDetail(for: media)
+        switch media.type {
+        case .pdf:
+            view?.displayDocumentDetail(for: media)
+        case .image:
+            view?.displayImageDetail(for: media)
+        case .video:
+            // TODO: (Thibault Tourailles) - Not handled yet
+            break
+        }
     }
 
     // MARK: Init
@@ -140,6 +156,16 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     image: imageMessage.content
                 )
             }
+
+            if let documentMessage = item as? DocumentMessageItem {
+                return DocumentMessageViewItem(
+                    id: documentMessage.id,
+                    date: documentMessage.date,
+                    sender: documentMessage.sender,
+                    state: documentMessage.state,
+                    document: documentMessage.content
+                )
+            }
             return nil
         }
 
@@ -148,5 +174,17 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
 
         return result
+    }
+}
+
+private extension Media {
+    var messageInput: MessageInput {
+        switch type {
+        case .pdf:
+            return .document(content: self)
+        // TODO: (Thibault Tourailles) - Split video when available
+        case .image, .video:
+            return .image(content: self)
+        }
     }
 }

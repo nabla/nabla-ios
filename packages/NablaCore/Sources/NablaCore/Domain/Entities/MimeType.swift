@@ -14,5 +14,5 @@ public enum MimeType: String {
     case mpeg = "audio/mpeg"
 
     // Document
-    case pdf = "file/pdf"
+    case pdf = "application/pdf"
 }

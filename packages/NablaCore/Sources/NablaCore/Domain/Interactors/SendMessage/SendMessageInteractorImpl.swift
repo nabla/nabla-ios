@@ -38,6 +38,15 @@ final class SendMessageInteractorImpl: SendMessageInteractor {
                     completion(.failure(error))
                 }
             }
+        case let .document(content):
+            fileUploadRemoteDataSource.upload(media: content) { result in
+                switch result {
+                case let .success(uuid):
+                    completion(.success(.document(.init(fileUploadUUID: uuid, media: content))))
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
         }
     }
 }

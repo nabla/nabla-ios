@@ -5,3 +5,7 @@
 "conversation_list_empty_preview" = "New conversation";
 "conversation_list_last_message_yesterday" = "Yesterday";
 "conversation_list_button_retry" = "Retry";
+"conversation_add_media_camera" = "Camera";
+"conversation_add_media_library" = "Camera roll";
+"conversation_add_media_document" = "Document";
+"conversation_add_media_cancel" = "Cancel";

@@ -4,6 +4,7 @@ import MobileCoreServices
 public enum MediaType: CaseIterable {
     case image
     case video
+    case pdf
 }
 
 public extension MediaType {
@@ -17,6 +18,10 @@ public extension MediaType {
             return [
                 kUTTypeVideo as String,
                 kUTTypeMovie as String,
+            ]
+        case .pdf:
+            return [
+                kUTTypePDF as String,
             ]
         }
     }

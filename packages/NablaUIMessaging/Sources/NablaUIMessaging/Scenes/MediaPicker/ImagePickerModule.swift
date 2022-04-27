@@ -16,7 +16,7 @@ class ImagePickerModule: NSObject {
     
     // MARK: Public
     
-    func makeViewController(source: Source, mediaTypes: [MediaType], defaultCameraType: CameraType = .rear) -> UIViewController {
+    func makeViewController(source: ImagePickerSource, mediaTypes: [MediaType], defaultCameraType: CameraType = .rear) -> UIViewController {
         switch source {
         case .camera:
             let viewController = CameraPickerController()
@@ -102,6 +102,8 @@ private extension MediaType {
             return .images
         case .video:
             return .videos
+        case .pdf:
+            return .any(of: [])
         }
     }
 }

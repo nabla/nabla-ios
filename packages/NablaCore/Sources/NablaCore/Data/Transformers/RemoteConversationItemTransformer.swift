@@ -44,10 +44,29 @@ enum RemoteConversationItemTransformer {
                     type: .image,
                     fileName: imageContent.imageFileUpload.fileName,
                     fileUrl: url,
+                    thumbnailUrl: url,
+                    mimeType: mimeType
+                )
+            )
+        } else if
+            let documentContent = message.content?.fragments.messageContentFragment.asDocumentMessageContent?.fragments.documentMessageContentFragment,
+            let url = URL(string: documentContent.documentFileUpload.url.url),
+            let mimeType = MimeType(rawValue: documentContent.documentFileUpload.mimeType) {
+            return DocumentMessageItem(
+                id: message.id,
+                date: message.createdAt,
+                sender: sender,
+                state: .sent,
+                content: Media(
+                    type: .pdf,
+                    fileName: documentContent.documentFileUpload.fileName,
+                    fileUrl: url,
+                    thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
                     mimeType: mimeType
                 )
             )
         }
+
         assertionFailure("Unknown remote conversation item content \(String(describing: message.content))")
         return nil
     }

@@ -1,0 +1,15 @@
+fragment DocumentMessageContentFragment on DocumentMessageContent {
+    documentFileUpload {
+        id
+        url {
+            url
+        }
+        fileName
+        mimeType
+        thumbnail {
+            url {
+                url
+            }
+        }
+    }
+}

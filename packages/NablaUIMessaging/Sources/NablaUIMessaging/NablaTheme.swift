@@ -101,4 +101,20 @@ public enum NablaTheme {
     public enum ImageDetailViewController {
         public static var backgroundColor = NablaTheme.backgroundColor
     }
+
+    public enum DocumentMessageContentView {
+        public static var icon = UIImage(systemName: "doc.text")
+        public static var labelFont = NablaTheme.body
+        public static var meTitleColor = NablaTheme.alternateTextColor
+        public static var themTitleColor = NablaTheme.primaryTextColor
+    }
+
+    public enum MediaComposerCollectionViewCell {
+        public static var documentIcon = UIImage(systemName: "doc.text")
+        public static var deleteButtonIcon = UIImage(systemName: "x.circle.fill")
+        public static var documentTintColor = NablaTheme.alternateTextColor
+        public static var backgroundColor = NablaTheme.secondaryBackgroundColor
+        public static var deleteButtonTintColor = NablaTheme.primaryTextColor
+        public static var deleteButtonBackgroundColor = NablaTheme.backgroundColor
+    }
 }

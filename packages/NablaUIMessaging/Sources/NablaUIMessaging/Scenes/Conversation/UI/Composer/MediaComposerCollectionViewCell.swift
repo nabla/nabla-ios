@@ -10,12 +10,6 @@ protocol MediaComposerCollectionViewCellDelegate: AnyObject {
 class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     weak var delegate: MediaComposerCollectionViewCellDelegate?
     
-    private lazy var imageView: UIURLImageView = self.makeImageView()
-    private lazy var previewView: AVPlayerViewController = self.makePreviewView()
-    private lazy var deleteButton: UIButton = self.makeDeleteButton()
-    
-    private var media: Media?
-    
     // MARK: Initializer
     
     override init(frame: CGRect) {
@@ -41,6 +35,10 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
             previewView.player = AVPlayer(url: media.fileUrl)
             imageView.isHidden = true
             previewView.view.isHidden = false
+        case .pdf:
+            imageView.image = NablaTheme.MediaComposerCollectionViewCell.documentIcon
+            imageView.isHidden = false
+            previewView.view.isHidden = true
         }
     }
     
@@ -49,15 +47,27 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     override func didMoveToSuperview() {
         setUp()
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+        imageView.url = nil
+        previewView.player = nil
+    }
     
     // MARK: - Private
+
+    private lazy var imageView: UIURLImageView = makeImageView()
+    private lazy var previewView: AVPlayerViewController = makePreviewView()
+    private lazy var deleteButton: UIButton = makeDeleteButton()
+    private lazy var deleteButtonContainerView: UIView = makeDeleteButtonContainerView()
+
+    private var media: Media?
     
     private func makeImageView() -> UIURLImageView {
         let view = UIURLImageView()
-        view.backgroundColor = .black
+        view.tintColor = NablaTheme.MediaComposerCollectionViewCell.documentTintColor
         view.contentMode = .scaleAspectFit
-        view.layer.cornerRadius = 12.0
-        view.clipsToBounds = true
         view.isUserInteractionEnabled = true
         return view
     }
@@ -71,14 +81,27 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     
     private func makeDeleteButton() -> UIButton {
         let button = UIButton()
-        button.setImage(CoreAssets.Assets.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .white
+        button.setImage(NablaTheme.MediaComposerCollectionViewCell.deleteButtonIcon, for: .normal)
+        button.tintColor = NablaTheme.MediaComposerCollectionViewCell.deleteButtonTintColor
+        button.addTarget(self, action: #selector(deleteButtonSelected), for: .touchUpInside)
         return button
+    }
+
+    private func makeDeleteButtonContainerView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = NablaTheme.MediaComposerCollectionViewCell.deleteButtonBackgroundColor
+        view.addSubview(deleteButton)
+        deleteButton.pinToSuperView()
+        view.constraintToSize(.init(width: 15, height: 15))
+        view.layer.cornerRadius = 7
+        view.clipsToBounds = true
+        return view
     }
     
     private func setUp() {
         guard subviews.isEmpty else { return }
         contentView.isUserInteractionEnabled = false
+        contentView.backgroundColor = NablaTheme.MediaComposerCollectionViewCell.backgroundColor
         
         addSubview(imageView)
         imageView.pinToSuperView()
@@ -86,10 +109,11 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         addSubview(previewView.view)
         previewView.view.pinToSuperView()
         
-        addSubview(deleteButton)
-        deleteButton.constraintToSize(.init(width: 10, height: 10))
-        deleteButton.pinToSuperView(edges: [.top, .trailing], insets: .init(horizontal: 5, vertical: 5))
-        deleteButton.addTarget(self, action: #selector(deleteButtonSelected), for: .touchUpInside)
+        addSubview(deleteButtonContainerView)
+        deleteButtonContainerView.pinToSuperView(edges: [.top, .trailing], insets: .init(horizontal: 5, vertical: 5))
+
+        layer.cornerRadius = 12.0
+        clipsToBounds = true
         
         parentViewController?.addChild(previewView)
     }

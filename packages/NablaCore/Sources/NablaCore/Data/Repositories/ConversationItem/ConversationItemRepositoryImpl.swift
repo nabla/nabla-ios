@@ -75,6 +75,10 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         if let imageMessage = localConversationItem as? LocalImageMessageItem {
             return .init(imageInput: .init(upload: .init(uuid: imageMessage.content.fileUploadUUID)))
         }
+
+        if let documentMessage = localConversationItem as? LocalDocumentMessageItem {
+            return .init(documentInput: .init(upload: .init(uuid: documentMessage.content.fileUploadUUID)))
+        }
         logger.warning(message: "Sending \(type(of: localConversationItem)) is not supported yet")
         return nil
     }
@@ -96,6 +100,14 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 sender: .patient,
                 state: .sending,
                 content: image
+            )
+        case let .document(content: document):
+            return LocalDocumentMessageItem(
+                clientId: UUID(),
+                date: Date(),
+                sender: .patient,
+                state: .sending,
+                content: document
             )
         }
     }

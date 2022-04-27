@@ -17,6 +17,7 @@ final class MediaReader {
         switch mediaType {
         case .image: return readImage(from: info)
         case .video: return readVideo(from: info)
+        case .pdf: return .failure(.invalidType)
         }
     }
     
@@ -65,6 +66,7 @@ final class MediaReader {
             type: .image,
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
+            thumbnailUrl: fileUrl,
             mimeType: .jpg
         )
         return .success(media)
@@ -89,6 +91,7 @@ final class MediaReader {
                     type: .image,
                     fileName: fileName,
                     fileUrl: temporaryFileUrl,
+                    thumbnailUrl: temporaryFileUrl,
                     mimeType: .jpg
                 )
                 completion(.success(media))
@@ -107,6 +110,7 @@ final class MediaReader {
             type: .video,
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
+            thumbnailUrl: fileUrl,
             mimeType: .mov // The videos are always compressed as .mov files by UIImagePickerController when selected
         )
         return .success(media)
@@ -123,6 +127,7 @@ final class MediaReader {
                 type: .video,
                 fileName: url.lastPathComponent,
                 fileUrl: url,
+                thumbnailUrl: url,
                 mimeType: .mov
             )
             completion(.success(media))

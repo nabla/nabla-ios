@@ -18,8 +18,10 @@ protocol ConversationViewItem {
 protocol ConversationViewContract: AnyObject {
     func configure(withState state: ConversationViewState)
     func emptyComposer()
-    func displayMediaPicker()
-    func displayMediaDetail(for media: Media)
+    func displayMediaPicker(source: ImagePickerSource)
+    func displayDocumentPicker()
+    func displayImageDetail(for media: Media)
+    func displayDocumentDetail(for media: Media)
 }
 
 protocol ConversationViewMessageItem: ConversationViewItem {

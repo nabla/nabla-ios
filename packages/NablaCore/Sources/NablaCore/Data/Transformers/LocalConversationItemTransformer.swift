@@ -27,6 +27,15 @@ enum LocalConversationItemTransformer {
                 content: imageMessageItem.content.media
             )
         }
+        if let documentMessageItem = localConversationItem as? LocalDocumentMessageItem {
+            return DocumentMessageItem(
+                id: documentMessageItem.clientId,
+                date: documentMessageItem.date,
+                sender: documentMessageItem.sender,
+                state: documentMessageItem.state,
+                content: documentMessageItem.content.media
+            )
+        }
         assertionFailure("Unknown local conversation item \(localConversationItem)")
         return nil
     }

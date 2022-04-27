@@ -42,20 +42,31 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         composerView.medias = []
     }
 
-    func displayMediaPicker() {
-        // TODO: (Thibault Tourailles) - Change source according to environment
+    func displayMediaPicker(source: ImagePickerSource) {
         let picker = imagePickerModule.makeViewController(
-            source: .library(imageLimit: nil),
+            source: source,
             mediaTypes: [.image]
         )
         navigationController?.present(picker, animated: true)
     }
 
-    func displayMediaDetail(for media: Media) {
+    func displayImageDetail(for media: Media) {
         let viewController = ImageDetailViewController()
         let presenter = ImageDetailPresenterImpl(viewContract: viewController, media: media)
         viewController.presenter = presenter
         navigationController?.pushViewController(viewController, animated: true)
+    }
+
+    func displayDocumentDetail(for media: Media) {
+        let viewController = DocumentDetailViewController()
+        let presenter = DocumentDetailPresenterImpl(viewContract: viewController, document: media)
+        viewController.presenter = presenter
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+
+    func displayDocumentPicker() {
+        let picker = documentPickerModule.makeViewController()
+        navigationController?.present(picker, animated: true)
     }
 
     // MARK: Private
@@ -87,8 +98,9 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private lazy var collectionView: UICollectionView = makeCollectionView()
     private lazy var composerView: ComposerView = makeComposerView()
 
-    // TODO: @tgy - Don't retain it
+    // TODO: @tgy - Don't retain modules
     private lazy var imagePickerModule = ImagePickerModule(delegate: self)
+    private lazy var documentPickerModule = DocumentPickerModule(delegate: self)
 
     private func makeComposerView() -> ComposerView {
         let composerView = ComposerView().prepareForAutoLayout()
@@ -209,6 +221,29 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         }
         dataSource.apply(snapshot, animatingDifferences: true)
     }
+
+    private func displayMediaSelectionSheet() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        alert.addAction(
+            UIAlertAction(title: L10n.conversationAddMediaCamera, style: .default, handler: { [weak self] _ in
+                self?.presenter?.didTapCameraButton()
+            })
+        )
+        alert.addAction(
+            UIAlertAction(title: L10n.conversationAddMediaLibrary, style: .default, handler: { [weak self] _ in
+                self?.presenter?.didTapPhotoLibraryButton()
+            })
+        )
+        alert.addAction(
+            UIAlertAction(title: L10n.conversationAddMediaDocument, style: .default, handler: { [weak self] _ in
+                self?.presenter?.didTapDocumentLibraryButton()
+            })
+        )
+        alert.addAction(UIAlertAction(title: L10n.conversationAddMediaCancel, style: .cancel, handler: nil))
+
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 extension ConversationViewController: ConversationCellPresenterDelegate {
@@ -243,7 +278,7 @@ extension ConversationViewController: ComposerViewDelegate {
     }
 
     func composerViewDidTapOnAddMedia(_: ComposerView) {
-        presenter?.didRequestTapAddMediaButton()
+        displayMediaSelectionSheet()
     }
 }
 
@@ -256,6 +291,19 @@ extension ConversationViewController: ImagePickerDelegate {
 
     func imagePicker(_: UIViewController, didSelect medias: [Media], errors _: [ImagePickerError]) {
         composerView.medias.append(contentsOf: medias)
+        navigationController?.dismiss(animated: true)
+    }
+}
+
+extension ConversationViewController: DocumentPickerDelegate {
+    // MARK: - DocumentPickerDelegate
+
+    func documentPickerDidCancel(_: UIViewController) {
+        navigationController?.dismiss(animated: true)
+    }
+
+    func documentPicker(_: UIViewController, didSelect media: Media) {
+        composerView.medias.append(media)
         navigationController?.dismiss(animated: true)
     }
 }

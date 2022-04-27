@@ -7,4 +7,5 @@ public enum ImagePickerError: Error {
     case missingAssetData
     case failedToSaveTemporaryFile
     case internalError
+    case invalidType
 }

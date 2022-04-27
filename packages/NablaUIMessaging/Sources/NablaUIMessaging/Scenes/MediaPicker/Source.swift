@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-public enum Source {
+public enum ImagePickerSource {
     case library(imageLimit: Int?)
     case camera
 }
