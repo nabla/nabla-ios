@@ -22,6 +22,7 @@ public enum NablaViewFactory {
                 TextMessageCellProvider(conversationId: conversation.id),
                 TypingIndicatorCellProvider(conversationId: conversation.id),
                 DeletedMessageCellProvider(conversationId: conversation.id),
+                ImageMessageCellProvider(conversationId: conversation.id),
             ]
         )
         viewController.presenter = ConversationPresenterImpl(

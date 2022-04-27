@@ -2,6 +2,9 @@ fragment MessageContentFragment on MessageContent {
     ... on TextMessageContent {
         ...TextMessageContentFragment
     }
+    ... on ImageMessageContent {
+        ...ImageMessageContentFragment
+    }
     ... on DeletedMessageContent {
         empty: _
     }

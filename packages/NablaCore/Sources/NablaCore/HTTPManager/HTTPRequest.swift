@@ -18,20 +18,23 @@ public struct HTTPRequest {
     private(set) var method: Method
     private(set) var endPoint: String
     private(set) var parameters: [String: Any]
-    private(set) var headers: [String: String]
+    private(set) var body: Data?
+    private(set) var headers: [String: String?]
     private(set) var keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy
 
     public init(
         method: Method = .get,
         endPoint: String,
         parameters: [String: Any] = [:],
-        headers: [String: String] = [:],
+        body: Data? = nil,
+        headers: [String: String?] = [:],
         keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase,
         requestId: String? = nil
     ) {
         self.method = method
         self.endPoint = endPoint
         self.parameters = parameters
+        self.body = body
         self.headers = headers
         self.keyDecodingStrategy = keyDecodingStrategy
         id = requestId ?? UUID().uuidString
@@ -54,6 +57,12 @@ public struct HTTPRequest {
     func headers(_ headers: [String: String]) -> HTTPRequest {
         var request = self
         request.headers = headers
+        return request
+    }
+
+    func body(_ body: Data?) -> HTTPRequest {
+        var request = self
+        request.body = body
         return request
     }
 }

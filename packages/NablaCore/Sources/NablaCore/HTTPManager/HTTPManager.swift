@@ -18,7 +18,7 @@ final class HTTPManager {
     @discardableResult
     public func fetch<Resource: Decodable>(_ type: Resource.Type,
                                            associatedTo request: HTTPRequest,
-                                           completion: @escaping (Result<Resource, HTTPError>) -> Void) -> String {
+                                           completion: @escaping (Result<Resource, HTTPError>) -> Void) -> Cancellable {
         fetch(request) { response in
             switch response.result {
             case let .success(data):
@@ -38,7 +38,7 @@ final class HTTPManager {
 
     @discardableResult
     public func fetch(_ baseRequest: HTTPRequest,
-                      completion: @escaping (JSONResponse) -> Void) -> String {
+                      completion: @escaping (JSONResponse) -> Void) -> Cancellable {
         let updatedRequest = requestBehavior.modify(request: baseRequest)
 
         guard let urlRequest = urlRequestMapper.map(httpRequest: baseRequest) else {
@@ -47,7 +47,7 @@ final class HTTPManager {
 
         requestBehavior.beforeSend(request: updatedRequest)
 
-        session.responseJSON(with: urlRequest) { [weak self] response in
+        return session.responseJSON(with: urlRequest) { [weak self] response in
             self?.requestBehavior.afterSend(request: baseRequest, response: response)
             let alteredResponse = self?.requestBehavior.modify(
                 request: updatedRequest,
@@ -55,7 +55,7 @@ final class HTTPManager {
             ) ?? response
             completion(alteredResponse)
         }
-
-        return updatedRequest.id
     }
 }
+
+extension URLSessionDataTask: Cancellable {}

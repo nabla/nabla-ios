@@ -26,7 +26,7 @@ struct URLRequestMapper {
             guard let url = urlComponents.url else { return nil }
 
             request = URLRequest(url: url)
-            request.httpBody = try? JSONSerialization.data(withJSONObject: httpRequest.parameters)
+            request.httpBody = httpRequest.body
         }
 
         request.httpMethod = httpRequest.method.rawValue
@@ -36,6 +36,7 @@ struct URLRequestMapper {
         ].merging(HTTPHeaders.extra, uniquingKeysWith: { lhs, _ in lhs })
 
         for (key, value) in httpRequest.headers {
+            guard let value = value else { continue }
             headers.updateValue(value, forKey: key)
         }
 

@@ -128,7 +128,7 @@ class AuthenticatorImpl: Authenticator {
     
     private static func isAuthorizationError(_ error: HTTPError) -> Bool {
         switch error {
-        case .transportError, .decodingError:
+        case .transportError, .decodingError, .noSelf:
             return false
         case let .serverError(serverError):
             switch serverError {

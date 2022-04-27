@@ -15,5 +15,9 @@ class NetworkAssembly: Assembly {
                 )
             )
         }
+
+        resolver.register(type: UploadClient.self) {
+            UploadClient()
+        }
     }
 }

@@ -12,7 +12,7 @@ protocol ConversationItemRepository {
     ) -> Cancellable
 
     func sendMessage(
-        _ message: MessageInput,
+        _ message: RemoteMessageInput,
         inConversationWithId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable

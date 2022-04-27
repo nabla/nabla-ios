@@ -18,16 +18,33 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
     }
 
-    func didTapOnSend(text: String) {
+    func didTapOnSend(text: String, medias: [Media]) {
         view?.emptyComposer()
-        sendMessageAction = client.sendMessage(.text(content: text), inConversationWithId: conversation.id) { result in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                print(error) // TODO: Display error
+        medias.forEach {
+            let cancellable = client.sendMessage(.image(content: $0), inConversationWithId: conversation.id, completion: { result in
+                switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    print(error) // TODO: Display error
+                }
+            })
+            sendMediaCancellable.append(cancellable)
+        }
+        if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            sendMessageAction = client.sendMessage(.text(content: text), inConversationWithId: conversation.id) { result in
+                switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    print(error) // TODO: Display error
+                }
             }
         }
+    }
+
+    func didRequestTapAddMediaButton() {
+        view?.displayMediaPicker()
     }
 
     func didUpdateDraftText(_ text: String) {
@@ -83,6 +100,8 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var setTypingAction: Cancellable?
     private let typingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
 
+    private var sendMediaCancellable: [Cancellable] = []
+
     private func set(state: ConversationViewState) {
         DispatchQueue.main.async { [view] in
             view?.configure(withState: state)
@@ -105,6 +124,16 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     date: deletedMessage.date,
                     sender: deletedMessage.sender,
                     state: deletedMessage.state
+                )
+            }
+
+            if let imageMessage = item as? ImageMessageItem {
+                return ImageMessageViewItem(
+                    id: imageMessage.id,
+                    date: imageMessage.date,
+                    sender: imageMessage.sender,
+                    state: imageMessage.state,
+                    image: imageMessage.content
                 )
             }
             return nil

@@ -1,3 +1,4 @@
+import NablaCore
 import UIKit
 
 protocol CameraPickerControllerDelegate: AnyObject {

@@ -49,8 +49,8 @@ public enum NablaTheme {
 
         public static var font = NablaTheme.body
 
-        public static var sendIcon = UIImage(systemName: "globe.europe.africa.fill")
-        public static var addMediaIcon = UIImage(systemName: "tortoise.fill")
+        public static var sendIcon = UIImage(systemName: "arrow.up.circle.fill")
+        public static var addMediaIcon = UIImage(systemName: "camera.on.rectangle")
     }
 
     public enum TextMessageContentView {

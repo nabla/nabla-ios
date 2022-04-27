@@ -16,7 +16,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     }
 
     func sendMessage(
-        _ input: MessageInput,
+        _ input: RemoteMessageInput,
         inConversationWithId conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
@@ -53,6 +53,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     
     @Inject private var remoteDataSource: ConversationItemRemoteDataSource
     @Inject private var localDataSource: ConversationItemLocalDataSource
+    @Inject private var uploadClient: UploadClient
     @Inject private var logger: Logger
     
     private var conversationEventsSubscriptions = [UUID: WeakCancellable]()
@@ -71,11 +72,14 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         if let textMessage = localConversationItem as? LocalTextMessageItem {
             return .init(textInput: .init(text: textMessage.content))
         }
+        if let imageMessage = localConversationItem as? LocalImageMessageItem {
+            return .init(imageInput: .init(upload: .init(uuid: imageMessage.content.fileUploadUUID)))
+        }
         logger.warning(message: "Sending \(type(of: localConversationItem)) is not supported yet")
         return nil
     }
     
-    private func makeLocalConversationItem(for input: MessageInput) -> LocalConversationItem {
+    private func makeLocalConversationItem(for input: RemoteMessageInput) -> LocalConversationItem {
         switch input {
         case let .text(content):
             return LocalTextMessageItem(
@@ -85,6 +89,14 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 state: .sending,
                 content: content
             )
+        case let .image(image):
+            return LocalImageMessageItem(
+                clientId: UUID(),
+                date: Date(),
+                sender: .patient,
+                state: .sending,
+                content: image
+            )
         }
     }
     
@@ -93,20 +105,19 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         inConversationWithId conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
-        guard let input = makeSendInput(for: localConversationItem) else {
-            completion(.failure(ConversationItemRepositoryError.notSupported))
+        guard let sendInput = makeSendInput(for: localConversationItem) else {
             return Failure()
         }
         return remoteDataSource.send(
             localMessageClientId: localConversationItem.clientId,
-            remoteMessageInput: input,
+            remoteMessageInput: sendInput,
             conversationId: conversationId
-        ) { [localDataSource] result in
+        ) { [weak self] result in
             switch result {
             case let .failure(error):
                 var copy = localConversationItem
                 copy.state = .failed
-                localDataSource.updateConversationItem(copy, inConversationWithId: conversationId)
+                self?.localDataSource.updateConversationItem(copy, inConversationWithId: conversationId)
                 completion(.failure(error))
             case .success:
                 completion(.success(()))

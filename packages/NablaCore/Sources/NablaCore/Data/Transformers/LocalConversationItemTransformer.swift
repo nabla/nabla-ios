@@ -18,6 +18,15 @@ enum LocalConversationItemTransformer {
                 state: deletedMessageItem.state
             )
         }
+        if let imageMessageItem = localConversationItem as? LocalImageMessageItem {
+            return ImageMessageItem(
+                id: imageMessageItem.clientId,
+                date: imageMessageItem.date,
+                sender: imageMessageItem.sender,
+                state: imageMessageItem.state,
+                content: imageMessageItem.content.media
+            )
+        }
         assertionFailure("Unknown local conversation item \(localConversationItem)")
         return nil
     }

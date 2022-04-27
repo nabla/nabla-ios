@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 final class ComposerView: UIView {
@@ -25,6 +26,16 @@ final class ComposerView: UIView {
         }
     }
 
+    var medias: [Media] {
+        get {
+            mediaComposerView.medias
+        }
+        set {
+            mediaComposerView.medias = newValue
+            updateMediaComposerVisibility()
+        }
+    }
+
     // MARK: - Init
 
     @available(*, unavailable)
@@ -34,9 +45,13 @@ final class ComposerView: UIView {
 
     init() {
         super.init(frame: .zero)
+
+        addSubview(vStack)
+        vStack.pinToSuperView(insets: Constants.hStackMargins)
+
         backgroundColor = NablaTheme.ComposerView.backgroundColor
-        addSubview(hStack)
-        hStack.pinToSuperView(insets: Constants.hStackMargins)
+        addSubview(vStack)
+        vStack.pinToSuperView(insets: Constants.hStackMargins)
 
         addSubview(placeHolderLabel)
 
@@ -44,6 +59,8 @@ final class ComposerView: UIView {
             placeHolderLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: Constants.controlsSize / 4),
             placeHolderLabel.centerYAnchor.constraint(equalTo: textView.centerYAnchor),
         ])
+
+        updateMediaComposerVisibility()
     }
 
     // MARK: - Lifecycle
@@ -54,6 +71,10 @@ final class ComposerView: UIView {
     }
 
     // MARK: - Private
+
+    private var enableSendButton: Bool {
+        !text.isBlank || !medias.isEmpty
+    }
 
     private enum Constants {
         static let controlsSize: CGFloat = 44
@@ -69,6 +90,12 @@ final class ComposerView: UIView {
         let idealSize = textView.sizeThatFits(constraintedSize)
         return idealSize.height >= Constants.maximumHeight
     }
+
+    private lazy var vStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [mediaComposerView, hStack])
+        stackView.axis = .vertical
+        return stackView
+    }()
 
     private lazy var hStack: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [addMedia, textView, sendButton])
@@ -119,6 +146,18 @@ final class ComposerView: UIView {
         return addMediaButton
     }()
 
+    private lazy var mediaComposerView: MediaComposerView = {
+        let view = MediaComposerView()
+        view.delegate = self
+
+        view.constraintHeight(70.0)
+        return view
+    }()
+
+    private func updateMediaComposerVisibility() {
+        mediaComposerView.isHidden = medias.isEmpty
+    }
+
     @objc private func didTapOnButton(_ sender: UIButton) {
         if sender == addMedia {
             delegate?.composerViewDidTapOnAddMedia(self)
@@ -131,7 +170,20 @@ final class ComposerView: UIView {
 extension ComposerView: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         placeHolderLabel.isHidden = !textView.text.isEmpty
-        sendButton.isEnabled = !textView.text.isEmpty
+        sendButton.isEnabled = enableSendButton
         delegate?.composerViewDidUpdateTextDraft(self)
+    }
+}
+
+extension ComposerView: MediaComposerViewDelegate {
+    // MARK: - MediaComposerViewDelegate
+
+    func mediaComposerView(_: MediaComposerView, didTapDeleteButtonOn media: Media) {
+        guard let index = medias.firstIndex(of: media) else { return }
+        medias.remove(at: index)
+    }
+
+    func mediaComposerView(_: MediaComposerView, didUpdateMedias _: [Media]) {
+        sendButton.isEnabled = enableSendButton
     }
 }

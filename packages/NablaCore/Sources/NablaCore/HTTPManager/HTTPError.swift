@@ -4,6 +4,7 @@ public enum HTTPError: Error {
     case transportError(TransportError)
     case serverError(ServerError)
     case decodingError(Error)
+    case noSelf
 }
 
 public enum TransportError: Error {

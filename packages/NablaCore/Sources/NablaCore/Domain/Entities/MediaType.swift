@@ -6,7 +6,7 @@ public enum MediaType: CaseIterable {
     case video
 }
 
-extension MediaType {
+public extension MediaType {
     var utTypes: Set<String> {
         switch self {
         case .image:

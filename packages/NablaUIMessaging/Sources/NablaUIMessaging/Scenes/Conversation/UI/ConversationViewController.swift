@@ -39,6 +39,16 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     func emptyComposer() {
         composerView.text = nil
+        composerView.medias = []
+    }
+
+    func displayMediaPicker() {
+        // TODO: (Thibault Tourailles) - Change source according to environment
+        let picker = imagePickerModule.makeViewController(
+            source: .library(imageLimit: nil),
+            mediaTypes: [.image]
+        )
+        navigationController?.present(picker, animated: true)
     }
 
     // MARK: Private
@@ -69,6 +79,9 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     private lazy var collectionView: UICollectionView = makeCollectionView()
     private lazy var composerView: ComposerView = makeComposerView()
+
+    // TODO: @tgy - Don't retain it
+    private lazy var imagePickerModule = ImagePickerModule(delegate: self)
 
     private func makeComposerView() -> ComposerView {
         let composerView = ComposerView().prepareForAutoLayout()
@@ -205,16 +218,33 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
 }
 
 extension ConversationViewController: ComposerViewDelegate {
+    // MARK: - ComposerViewDelegate
+
     func composerViewDidTapOnSend(_ composerView: ComposerView) {
         guard let text = composerView.text else { return }
-        presenter.didTapOnSend(text: text)
+        presenter.didTapOnSend(text: text, medias: composerView.medias)
     }
 
     func composerViewDidUpdateTextDraft(_ composerView: ComposerView) {
         presenter.didUpdateDraftText(composerView.text ?? "")
     }
 
-    func composerViewDidTapOnAddMedia(_: ComposerView) {}
+    func composerViewDidTapOnAddMedia(_: ComposerView) {
+        presenter?.didRequestTapAddMediaButton()
+    }
+}
+
+extension ConversationViewController: ImagePickerDelegate {
+    // MARK: - ImagePickerDelegate
+
+    func imagePickerDidCancel(_: UIViewController) {
+        navigationController?.dismiss(animated: true)
+    }
+
+    func imagePicker(_: UIViewController, didSelect medias: [Media], errors _: [ImagePickerError]) {
+        composerView.medias.append(contentsOf: medias)
+        navigationController?.dismiss(animated: true)
+    }
 }
 
 struct DiffableConversationViewItem: Hashable {

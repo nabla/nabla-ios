@@ -1,0 +1,10 @@
+fragment ImageMessageContentFragment on ImageMessageContent {
+    imageFileUpload {
+        id
+        url {
+            url
+        }
+        fileName
+        mimeType
+    }
+}

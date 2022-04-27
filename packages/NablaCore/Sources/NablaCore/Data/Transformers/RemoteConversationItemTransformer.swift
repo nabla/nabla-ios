@@ -31,6 +31,22 @@ enum RemoteConversationItemTransformer {
                 sender: sender,
                 state: .sent
             )
+        } else if
+            let imageContent = message.content?.fragments.messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
+            let url = URL(string: imageContent.imageFileUpload.url.url),
+            let mimeType = MimeType(rawValue: imageContent.imageFileUpload.mimeType) {
+            return ImageMessageItem(
+                id: message.id,
+                date: message.createdAt,
+                sender: sender,
+                state: .sent,
+                content: Media(
+                    type: .image,
+                    fileName: imageContent.imageFileUpload.fileName,
+                    fileUrl: url,
+                    mimeType: mimeType
+                )
+            )
         }
         assertionFailure("Unknown remote conversation item content \(String(describing: message.content))")
         return nil
