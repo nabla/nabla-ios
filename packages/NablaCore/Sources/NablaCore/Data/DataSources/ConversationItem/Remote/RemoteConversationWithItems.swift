@@ -8,6 +8,6 @@ extension RemoteConversationWithItems {
             .conversation
             .providers
             .map(\.fragments.providerInConversationFragment)
-            .filter(\.isTyping)
+            .filter { $0.typingAt != nil }
     }
 }
