@@ -4,6 +4,7 @@ fragment ConversationFragment on Conversation {
     description
     lastMessagePreview
     unreadMessageCount
+    updatedAt
     providers {
         ...ProviderInConversationFragment
     }

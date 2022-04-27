@@ -14,8 +14,7 @@ enum ConversationTransformer {
             initials: nil,
             title: fragment.title,
             lastMessagePreview: fragment.lastMessagePreview,
-            // TODO: (Thibault Tourailles) - Parse real date
-            lastUpdatedTime: Date(),
+            lastUpdatedTime: fragment.updatedAt,
             isUnread: fragment.unreadMessageCount > 0
         )
     }
