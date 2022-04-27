@@ -51,6 +51,13 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         navigationController?.present(picker, animated: true)
     }
 
+    func displayMediaDetail(for media: Media) {
+        let viewController = ImageDetailViewController()
+        let presenter = ImageDetailPresenterImpl(viewContract: viewController, media: media)
+        viewController.presenter = presenter
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+
     // MARK: Private
 
     private enum Section {
@@ -205,6 +212,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 }
 
 extension ConversationViewController: ConversationCellPresenterDelegate {
+    // MARK: - ConversationCellPresenterDelegate
+
     func didUpdateState(forItemWithId id: UUID) {
         dataSource.snapshot()
             .itemIdentifiers
@@ -214,6 +223,10 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
 
     func didDeleteItem(withId messageId: UUID) {
         presenter.didTapDeleteMessageButton(withId: messageId)
+    }
+
+    func didTapMedia(_ media: Media) {
+        presenter?.didTapMedia(media)
     }
 }
 

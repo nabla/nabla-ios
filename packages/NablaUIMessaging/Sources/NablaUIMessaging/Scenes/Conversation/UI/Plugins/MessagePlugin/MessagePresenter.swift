@@ -40,6 +40,8 @@ class MessagePresenter<
         }
     }
 
+    func userDidTapContent() {}
+
     // MARK: - Internal
 
     func attachView(_ view: MessageCellContract) {

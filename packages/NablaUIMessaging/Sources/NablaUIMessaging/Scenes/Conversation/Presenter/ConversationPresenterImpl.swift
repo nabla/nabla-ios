@@ -75,6 +75,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
     }
 
+    func didTapMedia(_ media: Media) {
+        view?.displayMediaDetail(for: media)
+    }
+
     // MARK: Init
 
     init(
@@ -91,7 +95,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
     private let client: NablaClient
     private let conversation: Conversation
-    
+
     private weak var view: ConversationViewContract?
     private var draftText: String = ""
     private var sendMessageAction: Cancellable?

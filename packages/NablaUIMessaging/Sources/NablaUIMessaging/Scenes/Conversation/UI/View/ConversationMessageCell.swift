@@ -1,3 +1,4 @@
+import NablaCore
 import UIKit
 
 private enum Constants {
@@ -13,6 +14,7 @@ private enum Constants {
 
 protocol ConversationMessagePresenter: Presenter {
     func userDidTapFooter()
+    func userDidTapContent()
 }
 
 final class ConversationMessageCell<ContentView: MessageContentView>: UICollectionViewCell, ConversationMessageCellContract, Reusable {
@@ -64,6 +66,8 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private lazy var footerLabel: UILabel = makeFooterLabel()
 
     private var footerTapAction: (() -> Void)?
+
+    private lazy var contentTapGestureRecognizer: UITapGestureRecognizer = makeContentTapGestureRecognizer()
 
     private func setUp() {
         guard contentView.subviews.isEmpty else { return }
@@ -144,6 +148,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         view.clipsToBounds = true
         view.addSubview(content)
         content.pinToSuperView()
+        content.addGestureRecognizer(contentTapGestureRecognizer)
         NSLayoutConstraint.activate([
             view.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.bodyMaxWidth),
         ])
@@ -199,6 +204,11 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         return view
     }
 
+    private func makeContentTapGestureRecognizer() -> UITapGestureRecognizer {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(contentTapHandler))
+        return gesture
+    }
+
     private func setVisibleViews(_ visibleViews: Set<UIView>) {
         // Only add views whose visibility might change.
         [
@@ -214,6 +224,10 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
     @objc private func footerTapHandler() {
         footerTapAction?()
+    }
+
+    @objc private func contentTapHandler() {
+        presenter?.userDidTapContent()
     }
 }
 

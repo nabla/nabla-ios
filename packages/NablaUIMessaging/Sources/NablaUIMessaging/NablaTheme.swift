@@ -97,4 +97,8 @@ public enum NablaTheme {
     public enum TypingIndicatorView {
         public static var dotColor = NablaTheme.primaryColor
     }
+
+    public enum ImageDetailViewController {
+        public static var backgroundColor = NablaTheme.backgroundColor
+    }
 }

@@ -6,4 +6,5 @@ protocol ConversationPresenter: Presenter {
     func didUpdateDraftText(_ text: String)
     func didRequestTapAddMediaButton()
     func didTapDeleteMessageButton(withId messageId: UUID)
+    func didTapMedia(_ media: Media)
 }

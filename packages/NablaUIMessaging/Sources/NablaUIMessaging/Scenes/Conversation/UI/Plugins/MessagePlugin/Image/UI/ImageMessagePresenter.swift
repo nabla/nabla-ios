@@ -13,6 +13,7 @@ final class ImageMessagePresenter:
         item: ImageMessageViewItem,
         conversationId: UUID
     ) {
+        self.delegate = delegate
         super.init(
             delegate: delegate,
             item: item,
@@ -21,7 +22,13 @@ final class ImageMessagePresenter:
         )
     }
 
+    override func userDidTapContent() {
+        delegate.didTapMedia(item.image)
+    }
+
     // MARK: - Private
+
+    private let delegate: ConversationCellPresenterDelegate
 
     // TODO: - Move the transform to a separate class ?
     private static func transform(item: ImageMessageViewItem) -> ImageMessageContentView.ContentViewModel {
