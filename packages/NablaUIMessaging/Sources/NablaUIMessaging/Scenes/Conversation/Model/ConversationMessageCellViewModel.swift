@@ -21,4 +21,5 @@ struct ConversationMessageViewModel<ContentViewModel> {
     let sender: ConversationMessageSender
     let footer: ConversationMessageFooterViewModel?
     let content: ContentViewModel
+    let menuElements: [UIMenuElement]
 }

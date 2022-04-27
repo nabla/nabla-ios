@@ -37,6 +37,10 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         return performSend(localConversationItem, inConversationWithId: conversationId, completion: completion)
     }
 
+    func deleteMessage(withId messageId: UUID, conversationId _: UUID, callback: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        remoteDataSource.delete(messageId: messageId, callback: callback)
+    }
+
     func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable {
         remoteDataSource.setIsTyping(isTyping, conversationId: conversationId)
     }

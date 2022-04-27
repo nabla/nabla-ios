@@ -23,6 +23,12 @@ protocol ConversationItemRepository {
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable
 
+    func deleteMessage(
+        withId messageId: UUID,
+        conversationId: UUID,
+        callback: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable
+
     func setIsTyping(
         _ isTyping: Bool,
         conversationId: UUID

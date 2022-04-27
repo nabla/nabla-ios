@@ -1,0 +1,8 @@
+fragment MessageContentFragment on MessageContent {
+    ... on TextMessageContent {
+        ...TextMessageContentFragment
+    }
+    ... on DeletedMessageContent {
+        empty: _
+    }
+}

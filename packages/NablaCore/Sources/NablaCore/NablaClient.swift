@@ -63,13 +63,21 @@ public class NablaClient {
     ) -> Cancellable {
         sendMessageInteractor.execute(message: message, conversationId: conversationId, completion: completion)
     }
-    
+
     public func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
         retrySendingMessageInteractor.execute(itemId: itemId, conversationId: conversationId, completion: completion)
+    }
+
+    public func deleteMessage(
+        withId messageId: UUID,
+        conversationId: UUID,
+        callback: @escaping (Result<Void, Error>) -> Void
+    ) -> Cancellable {
+        deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, callback: callback)
     }
 
     // MARK: - Private
@@ -80,9 +88,10 @@ public class NablaClient {
     @Inject private var watchConversationWithItemsInteractor: WatchConversationWithItemsInteractor
     @Inject private var sendMessageInteractor: SendMessageInteractor
     @Inject private var retrySendingMessageInteractor: RetrySendingMessageInteractor
+    @Inject private var deleteMessageInteractor: DeleteMessageInteractor
     @Inject private var setIsTypingInteractor: SetIsTypingInteractor
     @Inject private var watchConversationListInteractor: WatchConversationListInteractor
-    
+
     private static var _shared: NablaClient?
 
     private static func assemble(configuration: Configuration = DefaultConfiguration()) {

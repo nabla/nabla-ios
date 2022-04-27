@@ -21,6 +21,7 @@ public enum NablaTheme {
     public static var title3 = UIFont.regular(19)
     public static var headline = UIFont.semiBold(18)
     public static var body = UIFont.regular(16)
+    public static var bodyItalic = UIFont.italic(16)
     public static var callout = UIFont.regular(15)
     public static var subhead = UIFont.regular(14)
     public static var footnote = UIFont.regular(12)
@@ -59,7 +60,16 @@ public enum NablaTheme {
         public static var font = NablaTheme.body
     }
 
+    public enum DeletedMessageContentView {
+        public static var borderColor = NablaTheme.secondaryTextColor
+        public static var backgroundColor = NablaTheme.backgroundColor
+        public static var textColor = NablaTheme.secondaryTextColor
+
+        public static var font = NablaTheme.bodyItalic
+    }
+
     public enum ConversationMessageCell {
+        public static var cornerRadius: CGFloat = 16
         public static var meBackgroundColor = NablaTheme.primaryColor
         public static var themBackgroundColor = NablaTheme.secondaryBackgroundColor
         public static var authorLabelColor = NablaTheme.secondaryTextColor

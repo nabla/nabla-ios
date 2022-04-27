@@ -1,5 +1,7 @@
 
 "conversation_composer_placeholder" = "Type your message";
+"conversation_action_delete" = "Delete";
+"conversation_deleted_message" = "Deleted message";
 "conversation_list_empty_preview" = "New conversation";
 "conversation_list_last_message_yesterday" = "Yesterday";
 "conversation_list_button_retry" = "Retry";

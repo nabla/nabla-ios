@@ -10,6 +10,13 @@ enum LocalConversationItemTransformer {
                 state: textMessageItem.state,
                 content: textMessageItem.content
             )
+        } else if let deletedMessageItem = localConversationItem as? LocalDeletedMessageItem {
+            return DeleteMessageItem(
+                id: deletedMessageItem.clientId,
+                date: deletedMessageItem.date,
+                sender: deletedMessageItem.sender,
+                state: deletedMessageItem.state
+            )
         }
         assertionFailure("Unknown local conversation item \(localConversationItem)")
         return nil

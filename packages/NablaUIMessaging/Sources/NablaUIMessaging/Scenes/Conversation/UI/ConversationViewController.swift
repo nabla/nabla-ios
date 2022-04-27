@@ -22,6 +22,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         super.viewDidLoad()
         view.backgroundColor = NablaTheme.ConversationViewController.backgroundColor
         collectionView.backgroundColor = NablaTheme.ConversationViewController.backgroundColor
+        collectionView.delegate = self
         providers.forEach { $0.prepare(collectionView: collectionView) }
         presenter.start()
     }
@@ -197,6 +198,10 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
             .first { $0.value.id == id }
             .map(reconfigure)
     }
+
+    func didDeleteItem(withId messageId: UUID) {
+        presenter.didTapDeleteMessageButton(withId: messageId)
+    }
 }
 
 extension ConversationViewController: ComposerViewDelegate {
@@ -221,5 +226,42 @@ struct DiffableConversationViewItem: Hashable {
     
     static func == (lhs: DiffableConversationViewItem, rhs: DiffableConversationViewItem) -> Bool {
         lhs.value.hashValue == rhs.value.hashValue
+    }
+}
+
+extension ConversationViewController: UICollectionViewDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        contextMenuConfigurationForItemAt indexPath: IndexPath,
+        point _: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        guard let conversationContextCell = collectionView.cellForItem(at: indexPath) as? ConversationContextCell,
+              let menuConfiguration = conversationContextCell.makeContextMenuConfiguration(for: indexPath) else {
+            return nil
+        }
+
+        return menuConfiguration.makeUIConfiguration()
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+    ) -> UITargetedPreview? {
+        guard let indexPath = configuration.indexPath,
+              let cell = collectionView.cellForItem(at: indexPath) as? ConversationContextCell else {
+            return nil
+        }
+        return cell.previewForHighlightingContextMenu()
+    }
+
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+    ) -> UITargetedPreview? {
+        guard let indexPath = configuration.indexPath,
+              let cell = collectionView.cellForItem(at: indexPath) as? ConversationContextCell else {
+            return nil
+        }
+        return cell.previewForHighlightingContextMenu()
     }
 }

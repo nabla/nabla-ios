@@ -43,6 +43,20 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
     }
 
+    func didTapDeleteMessageButton(withId messageId: UUID) {
+        deleteMessageAction = client.deleteMessage(
+            withId: messageId,
+            conversationId: conversation.id
+        ) { result in
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                print(error) // TODO: Display error
+            }
+        }
+    }
+
     // MARK: Init
 
     init(
@@ -63,6 +77,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private weak var view: ConversationViewContract?
     private var draftText: String = ""
     private var sendMessageAction: Cancellable?
+    private var deleteMessageAction: Cancellable?
     private var watchItemsAction: Cancellable?
     private var setTypingAction: Cancellable?
     private let typingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
@@ -82,6 +97,13 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     sender: textMessage.sender,
                     state: textMessage.state,
                     text: textMessage.content
+                )
+            } else if let deletedMessage = item as? DeleteMessageItem {
+                return DeletedMessageViewItem(
+                    id: deletedMessage.id,
+                    date: deletedMessage.date,
+                    sender: deletedMessage.sender,
+                    state: deletedMessage.state
                 )
             }
             return nil

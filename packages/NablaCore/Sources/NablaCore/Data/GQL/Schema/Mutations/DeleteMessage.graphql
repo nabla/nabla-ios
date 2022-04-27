@@ -1,0 +1,10 @@
+mutation DeleteMessage($messageId: UUID!) {
+    deleteMessage(id: $messageId) {
+        message {
+            id
+            content {
+                ...MessageContentFragment
+            }
+        }
+    }
+}

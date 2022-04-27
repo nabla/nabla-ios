@@ -31,6 +31,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         configure(with: viewModel.sender)
         configure(with: viewModel.footer)
         content.configure(with: viewModel.content, sender: viewModel.sender)
+        menuElements = viewModel.menuElements
     }
 
     func configure(presenter: ConversationMessagePresenter) {
@@ -38,9 +39,17 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         presenter.start()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        content.prepareForReuse()
+        menuElements = []
+    }
+
     // MARK: - Private
 
     private var presenter: ConversationMessagePresenter?
+    private var menuElements: [UIMenuElement] = []
 
     private let leftSpacer = UISpacerView(axis: .horizontal)
     private let rightSpacer = UISpacerView(axis: .horizontal)
@@ -131,7 +140,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func makeContainer() -> UIView {
         let view = UIView()
         view.prepareForAutoLayout()
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = NablaTheme.ConversationMessageCell.cornerRadius
         view.clipsToBounds = true
         view.addSubview(content)
         content.pinToSuperView()
@@ -205,5 +214,24 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
     @objc private func footerTapHandler() {
         footerTapAction?()
+    }
+}
+
+extension ConversationMessageCell: ConversationContextCell {
+    func makeContextMenuConfiguration(for indexPath: IndexPath) -> ContextMenuConfiguration? {
+        guard !menuElements.isEmpty else {
+            return nil
+        }
+        return .init(indexPath: indexPath, title: nil, items: menuElements)
+    }
+
+    func previewForHighlightingContextMenu() -> UITargetedPreview? {
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        parameters.visiblePath = UIBezierPath(
+            roundedRect: container.bounds,
+            cornerRadius: container.layer.cornerRadius
+        )
+        return .init(view: container, parameters: parameters)
     }
 }

@@ -1,5 +1,6 @@
 import Foundation
 import NablaCore
+import UIKit
 
 class MessagePresenter<
     ContentView,
@@ -13,11 +14,12 @@ class MessagePresenter<
     // MARK: - Init
 
     init(
-        delegate _: ConversationCellPresenterDelegate,
+        delegate: ConversationCellPresenterDelegate,
         item: Item,
         conversationId: UUID,
         transformContent: @escaping (Item) -> ContentView.ContentViewModel
     ) {
+        self.delegate = delegate
         self.item = item
         self.conversationId = conversationId
         self.transformContent = transformContent
@@ -28,7 +30,7 @@ class MessagePresenter<
     func start() {
         updateView()
     }
-    
+
     func userDidTapFooter() {
         switch item.state {
         case .failed:
@@ -44,12 +46,27 @@ class MessagePresenter<
         self.view = view
     }
 
+    func makeMenuElements(_ item: Item) -> [UIMenuElement] {
+        if item.sender == .patient, item.state == .sent {
+            let deleteAction = UIAction(
+                title: L10n.conversationActionDelete,
+                image: UIImage(systemName: "trash"),
+                attributes: .destructive,
+                handler: { [weak self] _ in self?.delegate?.didDeleteItem(withId: item.id) }
+            )
+            return [deleteAction]
+        }
+        return []
+    }
+    
     // MARK: - Private
 
     private weak var view: MessageCellContract?
     private let conversationId: UUID
+    private weak var delegate: ConversationCellPresenterDelegate?
+
     private let transformContent: (Item) -> ContentView.ContentViewModel
-    
+
     private var retrySendingAction: Cancellable?
 
     private func transformSender() -> ConversationMessageSender {
@@ -65,7 +82,8 @@ class MessagePresenter<
         view?.configure(with: .init(
             sender: transformSender(),
             footer: transformFooter(),
-            content: transformContent(item)
+            content: transformContent(item),
+            menuElements: makeMenuElements(item)
         ))
     }
 
@@ -81,7 +99,7 @@ class MessagePresenter<
             return .init(text: "Failed", color: .red)
         }
     }
-    
+
     private func retrySendingMessage() {
         guard retrySendingAction == nil else { return }
         retrySendingAction = NablaClient.shared.retrySending(itemWithId: item.id, inConversationWithId: conversationId) { [weak self] result in

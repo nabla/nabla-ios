@@ -32,7 +32,20 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             }
         )
     }
-    
+
+    func delete(messageId: UUID, callback: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        gqlClient.perform(
+            mutation: GQL.DeleteMessageMutation(messageId: messageId),
+            completion: { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case let .failure(error): callback(.failure(error))
+                case .success: callback(.success(()))
+                }
+            }
+        )
+    }
+
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
         callback: @escaping (Result<RemoteConversationEvent, GQLError>) -> Void

@@ -1,5 +1,5 @@
 import Foundation
 
-struct TextMessageContentViewModel {
+struct DeletedMessageContentViewModel {
     let text: String
 }

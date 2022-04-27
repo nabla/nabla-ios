@@ -10,8 +10,12 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// Delete
+    internal static let conversationActionDelete = L10n.tr("Localizable", "conversation_action_delete")
     /// Type your message
     internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
+    /// Deleted message
+    internal static let conversationDeletedMessage = L10n.tr("Localizable", "conversation_deleted_message")
     /// Retry
     internal static let conversationListButtonRetry = L10n.tr("Localizable", "conversation_list_button_retry")
     /// New conversation

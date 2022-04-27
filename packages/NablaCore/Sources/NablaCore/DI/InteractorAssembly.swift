@@ -23,5 +23,8 @@ class InteractorAssembly: Assembly {
         resolver.register(type: SetIsTypingInteractor.self) {
             SetIsTypingInteractorImpl()
         }
+        resolver.register(type: DeleteMessageInteractor.self) {
+            DeleteMessageInteractorImpl()
+        }
     }
 }

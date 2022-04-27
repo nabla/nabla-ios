@@ -15,13 +15,21 @@ enum RemoteConversationItemTransformer {
             sender = .provider(.init(id: .init(), avatarURL: nil))
         }
 
-        if let textContent = message.content?.asTextMessageContent?.fragments.textMessageContentFragment {
+        let messageContentFragment = message.content?.fragments.messageContentFragment
+        if let textContent = messageContentFragment?.asTextMessageContent?.fragments.textMessageContentFragment {
             return TextMessageItem(
                 id: message.id,
                 date: message.createdAt,
                 sender: sender,
                 state: .sent,
                 content: textContent.text
+            )
+        } else if messageContentFragment?.asDeletedMessageContent != nil {
+            return DeleteMessageItem(
+                id: message.id,
+                date: message.createdAt,
+                sender: sender,
+                state: .sent
             )
         }
         assertionFailure("Unknown remote conversation item content \(String(describing: message.content))")

@@ -11,8 +11,6 @@ fragment MessageFragment on Message {
         }
     }
     content {
-        ... on TextMessageContent {
-            ...TextMessageContentFragment
-        }
+        ...MessageContentFragment
     }
 }
