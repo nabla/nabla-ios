@@ -44,7 +44,7 @@ public class NablaClient {
         createConversationInteractor.execute(completion: completion)
     }
     
-    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationWithItems, Error>) -> Void) -> Cancellable {
+    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationWithItems, Error>) -> Void) -> PaginatedWatcher {
         watchConversationWithItemsInteractor.execute(conversationId: conversationId, callback: callback)
     }
 

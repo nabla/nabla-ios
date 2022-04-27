@@ -5,7 +5,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
         callback: @escaping (Result<ConversationWithItems, Error>) -> Void
-    ) -> Cancellable {
+    ) -> PaginatedWatcher {
         let merger = ConversationItemsMerger(conversationId: conversationId, callback: callback)
         merger.resume()
         

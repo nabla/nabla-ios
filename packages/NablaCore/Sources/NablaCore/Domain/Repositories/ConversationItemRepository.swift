@@ -9,7 +9,7 @@ protocol ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId: UUID,
         callback: @escaping (Result<ConversationWithItems, Error>) -> Void
-    ) -> Cancellable
+    ) -> PaginatedWatcher
 
     func sendMessage(
         _ message: RemoteMessageInput,

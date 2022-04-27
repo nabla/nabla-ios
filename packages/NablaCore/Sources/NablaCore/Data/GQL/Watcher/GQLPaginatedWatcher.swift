@@ -10,9 +10,13 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     // MARK: - Internal
     
     func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        loadMore(numberOfItems: numberOfItemsPerPage, completion: completion)
+    }
+    
+    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
         gqlClient
             .fetch(
-                query: makeQuery(page: .init(cursor: cursor, numberOfItems: numberOfItemsPerPage)),
+                query: makeQuery(page: .init(cursor: cursor, numberOfItems: numberOfItems)),
                 cachePolicy: .fetchIgnoringCacheCompletely
             ) { [weak self] result in
                 guard let self = self else { return }
@@ -22,6 +26,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
                 case let .success(data):
                     self.cursor = Query.getCursor(from: data)
                     self.handleAdditionalData(data, completion: completion)
+                    completion(.success(()))
                 }
             }
     }
@@ -31,7 +36,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     }
     
     init(
-        numberOfItemsPerPage: Int?,
+        numberOfItemsPerPage: Int,
         callback: @escaping (Result<Query.Data, GQLError>) -> Void
     ) {
         self.numberOfItemsPerPage = numberOfItemsPerPage
@@ -70,7 +75,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     @Inject private var gqlClient: GQLClient
     @Inject private var gqlStore: GQLStore
     
-    private let numberOfItemsPerPage: Int?
+    private let numberOfItemsPerPage: Int
     private let callback: (Result<Query.Data, GQLError>) -> Void
     
     private var watcher: Cancellable?

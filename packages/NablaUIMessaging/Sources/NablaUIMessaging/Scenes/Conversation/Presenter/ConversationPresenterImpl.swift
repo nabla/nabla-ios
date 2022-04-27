@@ -5,7 +5,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
 
     func start() {
-        watchItemsAction = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
+        itemsWatcher = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .failure(error):
@@ -14,6 +14,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 let items = self.transform(conversationWithItems: conversationWithItems)
                 self.set(state: .loaded(items: items))
                 self.client.markConversationAsSeen(self.conversation.id)
+                self.canLoadMoreItems = conversationWithItems.hasMore
             }
         }
     }
@@ -68,6 +69,19 @@ final class ConversationPresenterImpl: ConversationPresenter {
             )
         }
     }
+    
+    func didReachEndOfConversation() {
+        guard canLoadMoreItems, loadMoreItemsAction == nil else { return }
+        loadMoreItemsAction = itemsWatcher?.loadMore { [weak self] result in
+            switch result {
+            case let .failure(error):
+                print(error) // TODO: Display error
+            case .success:
+                break
+            }
+            self?.loadMoreItemsAction = nil
+        }
+    }
 
     func didTapDeleteMessageButton(withId messageId: UUID) {
         deleteMessageAction = client.deleteMessage(
@@ -113,11 +127,13 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private let conversation: Conversation
 
     private weak var view: ConversationViewContract?
+    private var canLoadMoreItems = false
     private var draftText: String = ""
+    private var itemsWatcher: PaginatedWatcher?
     private var sendMessageAction: Cancellable?
     private var deleteMessageAction: Cancellable?
-    private var watchItemsAction: Cancellable?
     private var setTypingAction: Cancellable?
+    private var loadMoreItemsAction: Cancellable?
     private let typingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
 
     private var sendMediaCancellable: [Cancellable] = []
@@ -129,7 +145,13 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     private func transform(conversationWithItems: ConversationWithItems) -> [ConversationViewItem] {
-        var result = conversationWithItems.items.compactMap { item -> ConversationViewItem? in
+        var viewItems = [ConversationViewItem]()
+        
+        if conversationWithItems.hasMore {
+            viewItems.append(HasMoreIndicatorViewItem())
+        }
+        
+        let contentItems = conversationWithItems.items.compactMap { item -> ConversationViewItem? in
             if let textMessage = item as? TextMessageItem {
                 return TextMessageViewItem(
                     id: textMessage.id,
@@ -168,12 +190,14 @@ final class ConversationPresenterImpl: ConversationPresenter {
             }
             return nil
         }
+        viewItems.append(contentsOf: contentItems)
 
-        conversationWithItems.typingProviders.forEach { typingProvider in
-            result.append(TypingIndicatorViewItem(sender: .provider(typingProvider)))
+        let typingItems = conversationWithItems.typingProviders.map {
+            TypingIndicatorViewItem(sender: .provider($0))
         }
+        viewItems.append(contentsOf: typingItems)
 
-        return result
+        return viewItems
     }
 }
 

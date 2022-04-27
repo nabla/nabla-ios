@@ -9,4 +9,5 @@ protocol ConversationPresenter: Presenter {
     func didTapCameraButton()
     func didTapPhotoLibraryButton()
     func didTapDocumentLibraryButton()
+    func didReachEndOfConversation()
 }

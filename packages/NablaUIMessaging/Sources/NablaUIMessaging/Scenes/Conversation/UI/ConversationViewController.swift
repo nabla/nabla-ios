@@ -115,7 +115,9 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let group: NSCollectionLayoutGroup = .vertical(layoutSize: layoutSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         let layout = UICollectionViewCompositionalLayout(section: section)
-        return BottomCollectionView(frame: .zero, collectionViewLayout: layout).prepareForAutoLayout()
+        let collectionView = BottomCollectionView(frame: .zero, collectionViewLayout: layout).prepareForAutoLayout()
+        collectionView.delegate = self
+        return collectionView
     }
 
     private func makeDataSource() -> DataSource {
@@ -321,6 +323,13 @@ struct DiffableConversationViewItem: Hashable {
 }
 
 extension ConversationViewController: UICollectionViewDelegate {
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let isAlmostEndOfCollectionView = indexPath.section == 0 && indexPath.item < 5
+        if isAlmostEndOfCollectionView {
+            presenter.didReachEndOfConversation()
+        }
+    }
+    
     func collectionView(
         _ collectionView: UICollectionView,
         contextMenuConfigurationForItemAt indexPath: IndexPath,

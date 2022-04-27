@@ -7,7 +7,7 @@ class WatchConversationWithItemsInteractorImpl: WatchConversationWithItemsIntera
     func execute(
         conversationId: UUID,
         callback: @escaping (Result<ConversationWithItems, Error>) -> Void
-    ) -> Cancellable {
+    ) -> PaginatedWatcher {
         conversationItemRepository.watchConversationItems(ofConversationWithId: conversationId, callback: callback)
     }
     

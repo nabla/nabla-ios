@@ -134,7 +134,7 @@ extension GQL.GetConversationItemsQuery: PaginatedQuery {
 private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationItemsQuery> {
     init(
         conversationId: UUID,
-        numberOfItemsPerPage: Int?,
+        numberOfItemsPerPage: Int,
         callback: @escaping (Result<RemoteConversationWithItems, GQLError>) -> Void
     ) {
         self.conversationId = conversationId
@@ -149,12 +149,25 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
     }
     
     override func updateCache(_ cache: inout RemoteConversationWithItems, withAdditionalData data: RemoteConversationWithItems) {
-        cache.conversation.conversation.items.data.append(contentsOf: data.conversation.conversation.items.data)
+        let existingIds = Set(cache.conversation.conversation.items.data.compactMap {
+            $0?.fragments.conversationItemFragment.fragments.messageFragment.id
+        })
+        let newItems = data.conversation.conversation.items.data.filter { maybeItem in
+            guard let item = maybeItem else { return false }
+            if existingIds.contains(item.fragments.conversationItemFragment.fragments.messageFragment.id) {
+                logger.warning(message: "Found duplicated item when loading more: \(item)")
+                return false
+            }
+            return true
+        }
+        cache.conversation.conversation.items.data.append(contentsOf: newItems)
         cache.conversation.conversation.items.hasMore = data.conversation.conversation.items.hasMore
         cache.conversation.conversation.items.nextCursor = data.conversation.conversation.items.nextCursor
     }
     
     // MARK: - Private
+    
+    @Inject private var logger: Logger
     
     private let conversationId: UUID
 }
