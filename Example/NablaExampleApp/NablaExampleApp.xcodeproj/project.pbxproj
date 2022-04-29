@@ -1,0 +1,394 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E412CB18281AC831001979B5 /* NablaMessagingUI in Frameworks */ = {isa = PBXBuildFile; productRef = E412CB17281AC831001979B5 /* NablaMessagingUI */; };
+		E4CD916E2819D29E00562EC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD916D2819D29E00562EC5 /* AppDelegate.swift */; };
+		E4CD91702819D29E00562EC5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD916F2819D29E00562EC5 /* SceneDelegate.swift */; };
+		E4CD91722819D29E00562EC5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD91712819D29E00562EC5 /* ViewController.swift */; };
+		E4CD91772819D29F00562EC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4CD91762819D29F00562EC5 /* Assets.xcassets */; };
+		E4CD917A2819D29F00562EC5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CD91782819D29F00562EC5 /* LaunchScreen.storyboard */; };
+		E4CD91852819D37300562EC5 /* NablaMessagingCore in Frameworks */ = {isa = PBXBuildFile; productRef = E4CD91842819D37300562EC5 /* NablaMessagingCore */; };
+		E4D11D67281A70DA00B32420 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D11D66281A70DA00B32420 /* DemoViewController.swift */; };
+		E4D11D69281A720400B32420 /* FakeAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D11D68281A720400B32420 /* FakeAuthenticator.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E4CD916A2819D29E00562EC5 /* NablaExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NablaExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4CD916D2819D29E00562EC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E4CD916F2819D29E00562EC5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		E4CD91712819D29E00562EC5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E4CD91762819D29F00562EC5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E4CD91792819D29F00562EC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E4CD917B2819D29F00562EC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E4CD91822819D35C00562EC5 /* ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ios; path = ../..; sourceTree = "<group>"; };
+		E4D11D66281A70DA00B32420 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
+		E4D11D68281A720400B32420 /* FakeAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAuthenticator.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E4CD91672819D29E00562EC5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E412CB18281AC831001979B5 /* NablaMessagingUI in Frameworks */,
+				E4CD91852819D37300562EC5 /* NablaMessagingCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E4CD91612819D29E00562EC5 = {
+			isa = PBXGroup;
+			children = (
+				E4CD91812819D35C00562EC5 /* Packages */,
+				E4CD916C2819D29E00562EC5 /* NablaExampleApp */,
+				E4CD916B2819D29E00562EC5 /* Products */,
+				E4CD91832819D37300562EC5 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E4CD916B2819D29E00562EC5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E4CD916A2819D29E00562EC5 /* NablaExampleApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E4CD916C2819D29E00562EC5 /* NablaExampleApp */ = {
+			isa = PBXGroup;
+			children = (
+				E4CD916D2819D29E00562EC5 /* AppDelegate.swift */,
+				E4CD916F2819D29E00562EC5 /* SceneDelegate.swift */,
+				E4CD91712819D29E00562EC5 /* ViewController.swift */,
+				E4D11D68281A720400B32420 /* FakeAuthenticator.swift */,
+				E4D11D66281A70DA00B32420 /* DemoViewController.swift */,
+				E4CD91762819D29F00562EC5 /* Assets.xcassets */,
+				E4CD91782819D29F00562EC5 /* LaunchScreen.storyboard */,
+				E4CD917B2819D29F00562EC5 /* Info.plist */,
+			);
+			path = NablaExampleApp;
+			sourceTree = "<group>";
+		};
+		E4CD91812819D35C00562EC5 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				E4CD91822819D35C00562EC5 /* ios */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		E4CD91832819D37300562EC5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E4CD91692819D29E00562EC5 /* NablaExampleApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4CD917E2819D29F00562EC5 /* Build configuration list for PBXNativeTarget "NablaExampleApp" */;
+			buildPhases = (
+				E4CD91662819D29E00562EC5 /* Sources */,
+				E4CD91672819D29E00562EC5 /* Frameworks */,
+				E4CD91682819D29E00562EC5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NablaExampleApp;
+			packageProductDependencies = (
+				E4CD91842819D37300562EC5 /* NablaMessagingCore */,
+				E412CB17281AC831001979B5 /* NablaMessagingUI */,
+			);
+			productName = NablaExampleApp;
+			productReference = E4CD916A2819D29E00562EC5 /* NablaExampleApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E4CD91622819D29E00562EC5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
+				TargetAttributes = {
+					E4CD91692819D29E00562EC5 = {
+						CreatedOnToolsVersion = 13.3;
+					};
+				};
+			};
+			buildConfigurationList = E4CD91652819D29E00562EC5 /* Build configuration list for PBXProject "NablaExampleApp" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E4CD91612819D29E00562EC5;
+			productRefGroup = E4CD916B2819D29E00562EC5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E4CD91692819D29E00562EC5 /* NablaExampleApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E4CD91682819D29E00562EC5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4CD917A2819D29F00562EC5 /* LaunchScreen.storyboard in Resources */,
+				E4CD91772819D29F00562EC5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E4CD91662819D29E00562EC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4D11D69281A720400B32420 /* FakeAuthenticator.swift in Sources */,
+				E4CD91722819D29E00562EC5 /* ViewController.swift in Sources */,
+				E4CD916E2819D29E00562EC5 /* AppDelegate.swift in Sources */,
+				E4CD91702819D29E00562EC5 /* SceneDelegate.swift in Sources */,
+				E4D11D67281A70DA00B32420 /* DemoViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E4CD91782819D29F00562EC5 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E4CD91792819D29F00562EC5 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E4CD917C2819D29F00562EC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E4CD917D2819D29F00562EC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E4CD917F2819D29F00562EC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NablaExampleApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabla.example.NablaExampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E4CD91802819D29F00562EC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NablaExampleApp/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabla.example.NablaExampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E4CD91652819D29E00562EC5 /* Build configuration list for PBXProject "NablaExampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4CD917C2819D29F00562EC5 /* Debug */,
+				E4CD917D2819D29F00562EC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E4CD917E2819D29F00562EC5 /* Build configuration list for PBXNativeTarget "NablaExampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4CD917F2819D29F00562EC5 /* Debug */,
+				E4CD91802819D29F00562EC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E412CB17281AC831001979B5 /* NablaMessagingUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NablaMessagingUI;
+		};
+		E4CD91842819D37300562EC5 /* NablaMessagingCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NablaMessagingCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = E4CD91622819D29E00562EC5 /* Project object */;
+}

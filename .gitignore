@@ -9,6 +9,10 @@ xcuserdata/
 *.xcscmblueprint
 *.xccheckout
 
+## Swift Package Manager
+.swiftpm/config/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+
 ## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
 build/
 DerivedData/
@@ -94,3 +98,6 @@ iOSInjectionProject/
 
 #XCConfigs
 User.xcconfig
+
+# Codegen cache
+.run_cached_hash.apollo-codegen
