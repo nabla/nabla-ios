@@ -10,6 +10,8 @@ public protocol ConversationItem {
 public enum ConversationItemSender: Hashable {
     case patient
     case provider(Provider)
+    case system
+    case deleted
 }
 
 public enum ConversationItemState: Hashable {

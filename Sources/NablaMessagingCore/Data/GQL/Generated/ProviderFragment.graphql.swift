@@ -17,6 +17,9 @@ public extension GQL {
           __typename
           ...EphemeralUrlFragment
         }
+        prefix
+        firstName
+        lastName
       }
       """
 
@@ -27,6 +30,9 @@ public extension GQL {
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
         GraphQLField("avatarUrl", type: .object(AvatarUrl.selections)),
+        GraphQLField("prefix", type: .scalar(String.self)),
+        GraphQLField("firstName", type: .nonNull(.scalar(String.self))),
+        GraphQLField("lastName", type: .nonNull(.scalar(String.self))),
       ]
     }
 
@@ -36,8 +42,8 @@ public extension GQL {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, avatarUrl: AvatarUrl? = nil) {
-      self.init(unsafeResultMap: ["__typename": "Provider", "id": id, "avatarUrl": avatarUrl.flatMap { (value: AvatarUrl) -> ResultMap in value.resultMap }])
+    public init(id: GQL.UUID, avatarUrl: AvatarUrl? = nil, `prefix`: String? = nil, firstName: String, lastName: String) {
+      self.init(unsafeResultMap: ["__typename": "Provider", "id": id, "avatarUrl": avatarUrl.flatMap { (value: AvatarUrl) -> ResultMap in value.resultMap }, "prefix": `prefix`, "firstName": firstName, "lastName": lastName])
     }
 
     public var __typename: String {
@@ -64,6 +70,33 @@ public extension GQL {
       }
       set {
         resultMap.updateValue(newValue?.resultMap, forKey: "avatarUrl")
+      }
+    }
+
+    public var `prefix`: String? {
+      get {
+        return resultMap["prefix"] as? String
+      }
+      set {
+        resultMap.updateValue(newValue, forKey: "prefix")
+      }
+    }
+
+    public var firstName: String {
+      get {
+        return resultMap["firstName"]! as! String
+      }
+      set {
+        resultMap.updateValue(newValue, forKey: "firstName")
+      }
+    }
+
+    public var lastName: String {
+      get {
+        return resultMap["lastName"]! as! String
+      }
+      set {
+        resultMap.updateValue(newValue, forKey: "lastName")
       }
     }
 

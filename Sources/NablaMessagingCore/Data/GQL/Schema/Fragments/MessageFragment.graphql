@@ -9,6 +9,12 @@ fragment MessageFragment on Message {
         ... on Patient {
             ...PatientFragment
         }
+        ... on System {
+            empty: _
+        }
+        ... on DeletedProvider {
+            empty: _
+        }
     }
     content {
         ...MessageContentFragment

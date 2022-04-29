@@ -10,47 +10,53 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
-  /// Delete
-  internal static let conversationActionDelete = L10n.tr("Localizable", "conversation_action_delete")
-  /// Camera
-  internal static let conversationAddMediaCamera = L10n.tr("Localizable", "conversation_add_media_camera")
-  /// Cancel
-  internal static let conversationAddMediaCancel = L10n.tr("Localizable", "conversation_add_media_cancel")
-  /// Document
-  internal static let conversationAddMediaDocument = L10n.tr("Localizable", "conversation_add_media_document")
-  /// Camera roll
-  internal static let conversationAddMediaLibrary = L10n.tr("Localizable", "conversation_add_media_library")
-  /// Type your message
-  internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
-  /// Deleted message
-  internal static let conversationDeletedMessage = L10n.tr("Localizable", "conversation_deleted_message")
-  /// Retry
-  internal static let conversationListButtonRetry = L10n.tr("Localizable", "conversation_list_button_retry")
-  /// New conversation
-  internal static let conversationListEmptyPreview = L10n.tr("Localizable", "conversation_list_empty_preview")
-  /// Yesterday
-  internal static let conversationListLastMessageYesterday = L10n.tr("Localizable", "conversation_list_last_message_yesterday")
+    /// Delete
+    internal static let conversationActionDelete = L10n.tr("Localizable", "conversation_action_delete")
+    /// Camera
+    internal static let conversationAddMediaCamera = L10n.tr("Localizable", "conversation_add_media_camera")
+    /// Cancel
+    internal static let conversationAddMediaCancel = L10n.tr("Localizable", "conversation_add_media_cancel")
+    /// Document
+    internal static let conversationAddMediaDocument = L10n.tr("Localizable", "conversation_add_media_document")
+    /// Camera roll
+    internal static let conversationAddMediaLibrary = L10n.tr("Localizable", "conversation_add_media_library")
+    /// Type your message
+    internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
+    /// Deleted message
+    internal static let conversationDeletedMessage = L10n.tr("Localizable", "conversation_deleted_message")
+    /// Deleted
+    internal static let conversationDeletedSender = L10n.tr("Localizable", "conversation_deleted_sender")
+    /// Retry
+    internal static let conversationListButtonRetry = L10n.tr("Localizable", "conversation_list_button_retry")
+    /// New conversation
+    internal static let conversationListEmptyPreview = L10n.tr("Localizable", "conversation_list_empty_preview")
+    /// Yesterday
+    internal static let conversationListLastMessageYesterday = L10n.tr("Localizable", "conversation_list_last_message_yesterday")
+    /// System
+    internal static let conversationSystemSender = L10n.tr("Localizable", "conversation_system_sender")
 }
+
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces
 
 // MARK: - Implementation Details
 
 extension L10n {
-  private static func tr(_ table: String, _ key: String, _ args: CVarArg...) -> String {
-    let format = BundleToken.bundle.localizedString(forKey: key, value: nil, table: table)
-    return String(format: format, locale: Locale.current, arguments: args)
-  }
+    private static func tr(_ table: String, _ key: String, _ args: CVarArg...) -> String {
+        let format = BundleToken.bundle.localizedString(forKey: key, value: nil, table: table)
+        return String(format: format, locale: Locale.current, arguments: args)
+    }
 }
 
 // swiftlint:disable convenience_type
 private final class BundleToken {
-  static let bundle: Bundle = {
-    #if SWIFT_PACKAGE
-    return Bundle.module
-    #else
-    return Bundle(for: BundleToken.self)
-    #endif
-  }()
+    static let bundle: Bundle = {
+        #if SWIFT_PACKAGE
+            return Bundle.module
+        #else
+            return Bundle(for: BundleToken.self)
+        #endif
+    }()
 }
+
 // swiftlint:enable convenience_type

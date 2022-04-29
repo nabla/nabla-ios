@@ -25,6 +25,14 @@ public extension GQL {
             __typename
             ...PatientFragment
           }
+          ... on System {
+            __typename
+            empty: _
+          }
+          ... on DeletedProvider {
+            __typename
+            empty: _
+          }
         }
         content {
           __typename
@@ -116,7 +124,7 @@ public extension GQL {
       public static var selections: [GraphQLSelection] {
         return [
           GraphQLTypeCase(
-            variants: ["Provider": AsProvider.selections, "Patient": AsPatient.selections],
+            variants: ["Provider": AsProvider.selections, "Patient": AsPatient.selections, "System": AsSystem.selections, "DeletedProvider": AsDeletedProvider.selections],
             default: [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             ]
@@ -130,16 +138,16 @@ public extension GQL {
         self.resultMap = unsafeResultMap
       }
 
-      public static func makeSystem() -> Author {
-        return Author(unsafeResultMap: ["__typename": "System"])
-      }
-
-      public static func makeDeletedProvider() -> Author {
-        return Author(unsafeResultMap: ["__typename": "DeletedProvider"])
-      }
-
       public static func makePatient(id: GQL.UUID) -> Author {
         return Author(unsafeResultMap: ["__typename": "Patient", "id": id])
+      }
+
+      public static func makeSystem(empty: EmptyObject) -> Author {
+        return Author(unsafeResultMap: ["__typename": "System", "empty": empty])
+      }
+
+      public static func makeDeletedProvider(empty: EmptyObject) -> Author {
+        return Author(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
       }
 
       public var __typename: String {
@@ -279,6 +287,108 @@ public extension GQL {
             set {
               resultMap += newValue.resultMap
             }
+          }
+        }
+      }
+
+      public var asSystem: AsSystem? {
+        get {
+          if !AsSystem.possibleTypes.contains(__typename) { return nil }
+          return AsSystem(unsafeResultMap: resultMap)
+        }
+        set {
+          guard let newValue = newValue else { return }
+          resultMap = newValue.resultMap
+        }
+      }
+
+      public struct AsSystem: GraphQLSelectionSet {
+        public static let possibleTypes: [String] = ["System"]
+
+        public static var selections: [GraphQLSelection] {
+          return [
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("_", alias: "empty", type: .nonNull(.scalar(EmptyObject.self))),
+          ]
+        }
+
+        public private(set) var resultMap: ResultMap
+
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+        public init(empty: EmptyObject) {
+          self.init(unsafeResultMap: ["__typename": "System", "empty": empty])
+        }
+
+        public var __typename: String {
+          get {
+            return resultMap["__typename"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+        public var empty: EmptyObject {
+          get {
+            return resultMap["empty"]! as! EmptyObject
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "empty")
+          }
+        }
+      }
+
+      public var asDeletedProvider: AsDeletedProvider? {
+        get {
+          if !AsDeletedProvider.possibleTypes.contains(__typename) { return nil }
+          return AsDeletedProvider(unsafeResultMap: resultMap)
+        }
+        set {
+          guard let newValue = newValue else { return }
+          resultMap = newValue.resultMap
+        }
+      }
+
+      public struct AsDeletedProvider: GraphQLSelectionSet {
+        public static let possibleTypes: [String] = ["DeletedProvider"]
+
+        public static var selections: [GraphQLSelection] {
+          return [
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("_", alias: "empty", type: .nonNull(.scalar(EmptyObject.self))),
+          ]
+        }
+
+        public private(set) var resultMap: ResultMap
+
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+        public init(empty: EmptyObject) {
+          self.init(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
+        }
+
+        public var __typename: String {
+          get {
+            return resultMap["__typename"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+        public var empty: EmptyObject {
+          get {
+            return resultMap["empty"]! as! EmptyObject
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "empty")
           }
         }
       }

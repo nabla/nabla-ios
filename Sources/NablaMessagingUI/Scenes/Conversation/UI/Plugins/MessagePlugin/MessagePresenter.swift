@@ -1,5 +1,6 @@
 import Foundation
 import NablaMessagingCore
+import NablaUtils
 import UIKit
 
 class MessagePresenter<
@@ -75,11 +76,22 @@ class MessagePresenter<
         switch item.sender {
         case let .provider(provider):
             return .them(.init(
-                author: "Provider",
+                author: [provider.prefix, provider.lastName].compactMap(identity).joined(separator: " "),
                 avatar: .init(url: provider.avatarURL, text: nil),
                 isContiguous: item.isContiguous
             ))
-            
+        case .system:
+            return .them(.init(
+                author: L10n.conversationSystemSender,
+                avatar: .init(url: nil, text: nil),
+                isContiguous: item.isContiguous
+            ))
+        case .deleted:
+            return .them(.init(
+                author: L10n.conversationDeletedSender,
+                avatar: .init(url: nil, text: nil),
+                isContiguous: item.isContiguous
+            ))
         case .patient:
             return .me(isContiguous: item.isContiguous)
         }

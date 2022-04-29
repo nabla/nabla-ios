@@ -6,13 +6,15 @@ enum RemoteConversationItemTransformer {
         let sender: ConversationItemSender
         
         if let provider = message.author.asProvider?.fragments.providerFragment {
-            sender = .provider(.init(id: provider.id, avatarURL: provider.avatarUrl?.fragments.ephemeralUrlFragment.url))
+            sender = .provider(RemoteConversationProviderTransformer.transform(provider))
         } else if message.author.asPatient != nil {
             sender = .patient
+        } else if message.author.asSystem != nil {
+            sender = .system
+        } else if message.author.asDeletedProvider != nil {
+            sender = .deleted
         } else {
-            // This is a temporary fix, backend should stop using an optional `sender`
-            // TODO: @tgy remove workaround
-            sender = .provider(.init(id: .init(), avatarURL: nil))
+            fatalError("[Should not get here] Received an unknown author type \(message.author.__typename)")
         }
         
         let messageContentFragment = message.content?.fragments.messageContentFragment

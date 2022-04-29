@@ -3,4 +3,7 @@ fragment ProviderFragment on Provider {
     avatarUrl {
         ...EphemeralUrlFragment
     }
+    prefix
+    firstName
+    lastName
 }

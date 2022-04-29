@@ -81,7 +81,9 @@ class ConversationItemsMerger: PaginatedWatcher {
         let mergedItems = merge(remoteItems, localItems)
         let newValue = ConversationWithItems(
             hasMore: item.hasMore,
-            typingProviders: remoteConversation.typingProviders.map(RemoteConversationProviderTransformer.transform),
+            typingProviders: remoteConversation.typingProviders
+                .map(\.provider.fragments.providerFragment)
+                .map(RemoteConversationProviderTransformer.transform),
             items: mergedItems
         )
         callback(.success(newValue))

@@ -1,10 +1,13 @@
 import Foundation
 
 enum RemoteConversationProviderTransformer {
-    static func transform(_ provider: GQL.ProviderInConversationFragment) -> Provider {
+    static func transform(_ provider: GQL.ProviderFragment) -> Provider {
         .init(
-            id: provider.provider.fragments.providerFragment.id,
-            avatarURL: provider.provider.fragments.providerFragment.avatarUrl?.fragments.ephemeralUrlFragment.url
+            id: provider.id,
+            avatarURL: provider.avatarUrl?.fragments.ephemeralUrlFragment.url,
+            prefix: provider.prefix,
+            firstName: provider.firstName,
+            lastName: provider.lastName
         )
     }
 }
