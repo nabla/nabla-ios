@@ -13,6 +13,7 @@ class AuthenticatorImpl: Authenticator {
             case let .success(tokens):
                 self?.session = Session(tokens: tokens)
                 self?.provider = provider
+                self?.notifyTokensChanged()
                 completion(.success(()))
             case let .failure(error):
                 completion(.failure(error))
@@ -49,7 +50,30 @@ class AuthenticatorImpl: Authenticator {
         task.resume()
     }
     
+    func addObserver(_ observer: Any, selector: Selector) {
+        notificationCenter.addObserver(
+            observer,
+            selector: selector,
+            name: Constants.tokenChangedNotification,
+            object: nil
+        )
+    }
+    
+    func removeObserver(_ observer: Any) {
+        notificationCenter.removeObserver(
+            observer,
+            name: Constants.tokenChangedNotification,
+            object: nil
+        )
+    }
+    
     // MARK: - Private
+    
+    private enum Constants {
+        static let tokenChangedNotification = Notification.Name(rawValue: "tokenChangedNotification")
+    }
+    
+    private let notificationCenter = NotificationCenter()
     
     @Inject private var httpManager: HTTPManager
     
@@ -76,10 +100,15 @@ class AuthenticatorImpl: Authenticator {
             self.renewTokens(tokens) { result in
                 completion(result)
                 self.renewTask = nil
+                self.notifyTokensChanged()
             }
         }
         self.renewTask = renewTask
         return renewTask
+    }
+    
+    private func notifyTokensChanged() {
+        notificationCenter.post(name: Constants.tokenChangedNotification, object: nil)
     }
     
     private func renewTokens(_ tokens: Tokens, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {

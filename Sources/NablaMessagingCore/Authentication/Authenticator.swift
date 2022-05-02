@@ -12,4 +12,6 @@ protocol Authenticator {
     )
     func logOut()
     func getAccessToken(completion: @escaping (Result<AuthenticationState, AuthenticationError>) -> Void)
+    func addObserver(_ observer: Any, selector: Selector)
+    func removeObserver(_ observer: Any)
 }
