@@ -15,6 +15,8 @@ public extension GQL {
           __typename
           conversation {
             __typename
+            id
+            title
             providers {
               __typename
               ...ProviderInConversationFragment
@@ -134,6 +136,8 @@ public extension GQL {
           public static var selections: [GraphQLSelection] {
             return [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+              GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
+              GraphQLField("title", type: .scalar(String.self)),
               GraphQLField("providers", type: .nonNull(.list(.nonNull(.object(Provider.selections))))),
               GraphQLField("items", arguments: ["page": GraphQLVariable("page")], type: .nonNull(.object(Item.selections))),
             ]
@@ -145,8 +149,8 @@ public extension GQL {
             self.resultMap = unsafeResultMap
           }
 
-          public init(providers: [Provider], items: Item) {
-            self.init(unsafeResultMap: ["__typename": "Conversation", "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }, "items": items.resultMap])
+          public init(id: GQL.UUID, title: String? = nil, providers: [Provider], items: Item) {
+            self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }, "items": items.resultMap])
           }
 
           public var __typename: String {
@@ -155,6 +159,24 @@ public extension GQL {
             }
             set {
               resultMap.updateValue(newValue, forKey: "__typename")
+            }
+          }
+
+          public var id: GQL.UUID {
+            get {
+              return resultMap["id"]! as! GQL.UUID
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "id")
+            }
+          }
+
+          public var title: String? {
+            get {
+              return resultMap["title"] as? String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "title")
             }
           }
 

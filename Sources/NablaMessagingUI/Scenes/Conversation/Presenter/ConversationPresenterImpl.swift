@@ -5,12 +5,17 @@ final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
     
     func start() {
+        let conversationViewModel = transform(conversation: conversation)
+        view?.configure(withConversation: conversationViewModel)
+        
         itemsWatcher = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .failure(error):
                 self.set(state: .error(viewModel: .init(message: error.localizedDescription, buttonTitle: L10n.conversationListButtonRetry))) // TODO: Display error feedback
             case let .success(conversationWithItems):
+                let conversation = self.transform(conversation: conversationWithItems)
+                self.set(conversation: conversation)
                 let items = self.transform(conversationWithItems: conversationWithItems)
                 self.set(state: .loaded(items: items))
                 self.makAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
@@ -140,10 +145,30 @@ final class ConversationPresenterImpl: ConversationPresenter {
     
     private var sendMediaCancellable: [Cancellable] = []
     
+    private func set(conversation: ConversationViewModel) {
+        DispatchQueue.main.async { [view] in
+            view?.configure(withConversation: conversation)
+        }
+    }
+    
     private func set(state: ConversationViewState) {
         DispatchQueue.main.async { [view] in
             view?.configure(withState: state)
         }
+    }
+    
+    private func transform(conversation: Conversation) -> ConversationViewModel {
+        ConversationViewModel(
+            title: conversation.title ?? L10n.conversationListEmptyPreview,
+            avatar: AvatarViewModel(url: conversation.avatarURL, text: nil)
+        )
+    }
+    
+    private func transform(conversation: ConversationWithItems) -> ConversationViewModel {
+        ConversationViewModel(
+            title: conversation.title ?? L10n.conversationListEmptyPreview,
+            avatar: AvatarViewModel(url: conversation.avatarURL, text: nil)
+        )
     }
     
     private func transform(conversationWithItems: ConversationWithItems) -> [ConversationViewItem] {

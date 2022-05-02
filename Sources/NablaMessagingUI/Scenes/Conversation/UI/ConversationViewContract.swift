@@ -15,7 +15,13 @@ protocol ConversationViewItem {
     func hash(into hasher: inout Hasher)
 }
 
+struct ConversationViewModel {
+    let title: String?
+    let avatar: AvatarViewModel
+}
+
 protocol ConversationViewContract: AnyObject {
+    func configure(withConversation: ConversationViewModel)
     func configure(withState state: ConversationViewState)
     func emptyComposer()
     func displayMediaPicker(source: ImagePickerSource)

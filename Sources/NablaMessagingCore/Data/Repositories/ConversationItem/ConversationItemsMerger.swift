@@ -80,6 +80,11 @@ class ConversationItemsMerger: PaginatedWatcher {
         let remoteItems = item.data.compactMap { $0?.fragments.conversationItemFragment }
         let mergedItems = merge(remoteItems, localItems)
         let newValue = ConversationWithItems(
+            title: remoteConversation.conversation.conversation.title,
+            avatarURL: remoteConversation.conversation.conversation
+                .providers.first?
+                .fragments.providerInConversationFragment.provider.fragments.providerFragment
+                .avatarUrl?.fragments.ephemeralUrlFragment.url,
             hasMore: item.hasMore,
             typingProviders: remoteConversation.typingProviders
                 .map(\.provider.fragments.providerFragment)

@@ -9,6 +9,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     init(providers: [ConversationCellProvider]) {
         self.providers = providers
         super.init(nibName: nil, bundle: nil)
+        navigationItem.titleView = titleView
     }
     
     @available(*, unavailable)
@@ -32,6 +33,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     var presenter: ConversationPresenter!
     
     // MARK: - ConversationViewContract
+    
+    func configure(withConversation conversation: ConversationViewModel) {
+        titleView.title = conversation.title
+        titleView.avatar = conversation.avatar
+    }
     
     func configure(withState state: ConversationViewState) {
         self.state = state
@@ -89,6 +95,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private lazy var dataSource = makeDataSource()
     
+    private lazy var titleView: TitleView = makeTitleView()
+    
     private let loadingView: LoadingView = .init().prepareForAutoLayout()
     
     private let errorView: ErrorView = .init().prepareForAutoLayout()
@@ -101,6 +109,10 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     // TODO: @tgy - Don't retain modules
     private lazy var imagePickerModule = ImagePickerModule(delegate: self)
+    
+    private func makeTitleView() -> TitleView {
+        TitleView(frame: .zero)
+    }
     
     private func makeComposerView() -> ComposerView {
         let composerView = ComposerView().prepareForAutoLayout()
