@@ -167,11 +167,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         switch (state, oldValue) {
         case (.empty, .loaded):
             switchLoadedLayout(from: collectionView, to: emptyView)
-        case let (.loaded(items), .loaded):
-            applySnapshot(items: items)
+        case let (.loaded(items), .loaded(previousItems)):
+            applySnapshot(items: items, animatingDifferences: !previousItems.isEmpty)
         case let (.loaded(items), .empty):
             switchLoadedLayout(from: emptyView, to: collectionView)
-            applySnapshot(items: items)
+            applySnapshot(items: items, animatingDifferences: true)
         case (.loading, _):
             switchToLoadingLayout()
             loadingView.startAnimating()

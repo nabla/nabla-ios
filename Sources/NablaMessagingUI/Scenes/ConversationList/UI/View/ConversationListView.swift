@@ -31,8 +31,9 @@ public class ConversationListView: UIView, ConversationListViewContract {
         DispatchQueue.main.async {
             switch state {
             case let .loaded(viewModel):
+                let animated = !self.viewModel.items.isEmpty
                 self.viewModel = viewModel
-                self.tableView.reload(animated: true)
+                self.tableView.reload(animated: animated)
                 self.loadingIndicator.isHidden = true
                 self.errorView.isHidden = true
                 self.tableView.isHidden = false
