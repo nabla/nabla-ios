@@ -9,7 +9,10 @@ class WebSocketTransport {
     private(set) lazy var apollo: ApolloWebSocket.WebSocketTransport = makeApolloTransport()
     
     init() {
+        apollo.delegate = self
         authenticator.addObserver(self, selector: #selector(updateAuthenticationHeader))
+        HTTPHeaders.addObserver(self, selector: #selector(updateStaticHeaders), notification: .extraHeadersChanged)
+        updateStaticHeaders()
         updateAuthenticationHeader()
     }
     
@@ -42,10 +45,14 @@ class WebSocketTransport {
             requestBodyCreator: ApolloRequestBodyCreator(),
             operationMessageIdCreator: ApolloSequencedOperationMessageIdCreator()
         )
-        
-        apollo.updateHeaderValues(HTTPHeaders.extra)
-        apollo.delegate = self
         return apollo
+    }
+    
+    @objc private func updateStaticHeaders() {
+        apollo.updateHeaderValues(
+            HTTPHeaders.extra,
+            reconnectIfConnected: true
+        )
     }
     
     @objc private func updateAuthenticationHeader() {
