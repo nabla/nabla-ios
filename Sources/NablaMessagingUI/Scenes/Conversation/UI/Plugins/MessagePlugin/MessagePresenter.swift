@@ -63,7 +63,8 @@ class MessagePresenter<
     }
     
     // MARK: - Private
-    
+
+    @Inject private var logger: Logger
     private weak var view: MessageCellContract?
     private let conversationId: UUID
     private weak var delegate: ConversationCellPresenterDelegate?
@@ -109,13 +110,11 @@ class MessagePresenter<
     private func transformFooter() -> ConversationMessageFooterViewModel? {
         switch item.state {
         case .sending:
-            // TODO: L10n
-            return .init(text: "Sending", color: .lightGray)
+            return .init(text: L10n.conversationStatusSending, color: .lightGray)
         case .sent:
             return nil
         case .failed:
-            // TODO: L10n
-            return .init(text: "Failed", color: .red)
+            return .init(text: L10n.conversationStatusFailed, color: .red)
         }
     }
     
@@ -124,7 +123,7 @@ class MessagePresenter<
         retrySendingAction = NablaClient.shared.retrySending(itemWithId: item.id, inConversationWithId: conversationId) { [weak self] result in
             switch result {
             case let .failure(error):
-                print(error) // TODO: @tgy Error handling
+                self?.logger.error(message: "Failed send retry with error: \(error.localizedDescription)")
             case .success:
                 break
             }

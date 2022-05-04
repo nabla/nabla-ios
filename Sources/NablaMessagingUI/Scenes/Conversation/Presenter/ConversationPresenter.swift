@@ -10,4 +10,5 @@ protocol ConversationPresenter: Presenter {
     func didTapPhotoLibraryButton()
     @available(iOS 14, *) func didTapDocumentLibraryButton()
     func didReachEndOfConversation()
+    func retry()
 }

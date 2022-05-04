@@ -47,13 +47,16 @@ final class ErrorView: UIView {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = NablaTheme.ErrorView.labelColor
+        label.font = NablaTheme.ErrorView.labelFont
         return label
     }
     
     private func makeButton() -> UIButton {
         let button = UIButton()
         button.addTarget(self, action: #selector(buttonDidTap), for: .touchUpInside)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(NablaTheme.ErrorView.retryButtonTitleColor, for: .normal)
+        button.titleLabel?.font = NablaTheme.ErrorView.retryButtonTitleFont
         return button
     }
     

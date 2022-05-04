@@ -117,4 +117,11 @@ public enum NablaTheme {
         public static var deleteButtonTintColor = NablaTheme.primaryTextColor
         public static var deleteButtonBackgroundColor = NablaTheme.backgroundColor
     }
+
+    public enum ErrorView {
+        public static var labelFont = NablaTheme.bodyItalic
+        public static var labelColor = NablaTheme.secondaryTextColor
+        public static var retryButtonTitleFont = NablaTheme.body
+        public static var retryButtonTitleColor = NablaTheme.primaryColor
+    }
 }

@@ -25,6 +25,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         collectionView.backgroundColor = NablaTheme.ConversationViewController.backgroundColor
         collectionView.delegate = self
         providers.forEach { $0.prepare(collectionView: collectionView) }
+        errorView.delegate = self
         presenter.start()
     }
     
@@ -75,7 +76,14 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let picker = DocumentPickerModule.makeViewController(delegate: self)
         navigationController?.present(picker, animated: true)
     }
-    
+
+    func showErrorAlert(viewModel: AlertViewModel) {
+        present(
+            UIAlertController.create(with: viewModel),
+            animated: true
+        )
+    }
+
     // MARK: Private
     
     private enum Section {
@@ -210,7 +218,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         NSLayoutConstraint.activate([
             loadedView.topAnchor.constraint(equalTo: view.topAnchor),
             loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor),
-            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor), // TODO: (@ams) check iOS 13
+            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
         ])
     }
     
@@ -402,5 +410,11 @@ private extension UICollectionView {
         let section = numberOfSections - 1
         let item = numberOfItems(inSection: section) - 1
         return IndexPath(item: item, section: section)
+    }
+}
+
+extension ConversationViewController: ErrorViewDelegate {
+    func errorViewDidTapButton(_: ErrorView) {
+        presenter.retry()
     }
 }

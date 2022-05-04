@@ -40,13 +40,17 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     func didTapRetry() {
         guard !isLoading else { return }
         isLoading = true
-        loadMoreAction = watcher?.loadMore { [weak self] _ in
+        loadMoreAction = watcher?.loadMore { [weak self] result in
+            if case let .failure(error) = result {
+                self?.logger.error(message: "Failed to load more conversations with error: \(error.localizedDescription)")
+            }
             self?.isLoading = false
         }
     }
     
     // MARK: - Private
-    
+
+    @Inject private var logger: Logger
     private let client: NablaClient
     private weak var viewContract: ConversationListViewContract?
     
@@ -74,7 +78,11 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         case let .success(list):
             self.list = list
         case let .failure(error):
-            let viewModel = ErrorViewModel(message: error.localizedDescription, buttonTitle: L10n.conversationListButtonRetry)
+            logger.error(message: "Failed to watch conversations with error: \(error.localizedDescription)")
+            let viewModel = ErrorViewModel(
+                message: L10n.conversationListLoadErrorLabel,
+                buttonTitle: L10n.conversationListButtonRetry
+            )
             viewContract?.configure(with: .error(viewModel))
         }
     }

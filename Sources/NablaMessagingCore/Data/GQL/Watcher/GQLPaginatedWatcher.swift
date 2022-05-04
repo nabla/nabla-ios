@@ -44,7 +44,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
         watcher = gqlClient
             .watch(
                 query: makeQuery(page: .init(cursor: nil, numberOfItems: numberOfItemsPerPage)),
-                cachePolicy: .returnCacheDataAndFetch
+                cachePolicy: .fetchIgnoringCacheData
             ) { [weak self] result in
                 guard let self = self else { return }
                 switch result {

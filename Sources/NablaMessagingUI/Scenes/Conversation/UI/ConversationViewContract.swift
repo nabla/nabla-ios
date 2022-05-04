@@ -28,6 +28,7 @@ protocol ConversationViewContract: AnyObject {
     @available(iOS 14, *) func displayDocumentPicker()
     func displayImageDetail(for media: Media)
     func displayDocumentDetail(for media: Media)
+    func showErrorAlert(viewModel: AlertViewModel)
 }
 
 protocol ConversationViewMessageItem: ConversationViewItem {

@@ -1,5 +1,6 @@
 import Foundation
 import NablaMessagingCore
+import NablaUtils
 
 final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
@@ -7,32 +8,18 @@ final class ConversationPresenterImpl: ConversationPresenter {
     func start() {
         let conversationViewModel = transform(conversation: conversation)
         view?.configure(withConversation: conversationViewModel)
-        
-        itemsWatcher = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .failure(error):
-                self.set(state: .error(viewModel: .init(message: error.localizedDescription, buttonTitle: L10n.conversationListButtonRetry))) // TODO: Display error feedback
-            case let .success(conversationWithItems):
-                let conversation = self.transform(conversation: conversationWithItems)
-                self.set(conversation: conversation)
-                let items = self.transform(conversationWithItems: conversationWithItems)
-                self.set(state: .loaded(items: items))
-                self.makAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
-                self.canLoadMoreItems = conversationWithItems.hasMore
-            }
-        }
+        watchItems()
     }
     
     func didTapOnSend(text: String, medias: [Media]) {
         view?.emptyComposer()
-        medias.forEach {
-            let cancellable = client.sendMessage($0.messageInput, inConversationWithId: conversation.id, completion: { result in
+        medias.forEach { media in
+            let cancellable = client.sendMessage(media.messageInput, inConversationWithId: conversation.id, completion: { result in
                 switch result {
                 case .success:
                     break
                 case let .failure(error):
-                    print(error) // TODO: Display error
+                    self.logger.warning(message: "Failed to send a media (type: \(media.type)) with error: \(error.localizedDescription)")
                 }
             })
             sendMediaCancellable.append(cancellable)
@@ -43,7 +30,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 case .success:
                     break
                 case let .failure(error):
-                    print(error) // TODO: Display error
+                    self.logger.warning(message: "Failed to send text with error: \(error.localizedDescription)")
                 }
             }
         }
@@ -81,7 +68,14 @@ final class ConversationPresenterImpl: ConversationPresenter {
         loadMoreItemsAction = itemsWatcher?.loadMore { [weak self] result in
             switch result {
             case let .failure(error):
-                print(error) // TODO: Display error
+                self?.logger.warning(message: "Failed to load more items with error: \(error.localizedDescription)")
+                self?.view?.showErrorAlert(
+                    viewModel: .init(
+                        title: L10n.conversationLoadMoreErrorTitle,
+                        message: L10n.conversationLoadMoreErrorMessage,
+                        defaultAction: L10n.conversationLoadMoreErrorAlertAction
+                    )
+                )
             case .success:
                 break
             }
@@ -98,7 +92,14 @@ final class ConversationPresenterImpl: ConversationPresenter {
             case .success:
                 break
             case let .failure(error):
-                print(error) // TODO: Display error
+                self.logger.error(message: "Could not delete message with error: \(error.localizedDescription)")
+                self.view?.showErrorAlert(
+                    viewModel: .init(
+                        title: L10n.conversationDeleteErrorTitle,
+                        message: L10n.conversationDeleteErrorMessage,
+                        defaultAction: L10n.conversationDeleteErrorAlertAction
+                    )
+                )
             }
         }
     }
@@ -114,7 +115,11 @@ final class ConversationPresenterImpl: ConversationPresenter {
             break
         }
     }
-    
+
+    func retry() {
+        watchItems()
+    }
+
     // MARK: Init
     
     init(
@@ -131,7 +136,9 @@ final class ConversationPresenterImpl: ConversationPresenter {
     
     private let client: NablaClient
     private let conversation: Conversation
-    
+
+    @Inject private var logger: Logger
+
     private weak var view: ConversationViewContract?
     private var canLoadMoreItems = false
     private var draftText: String = ""
@@ -145,12 +152,31 @@ final class ConversationPresenterImpl: ConversationPresenter {
     
     private var sendMediaCancellable: [Cancellable] = []
     
+    private func watchItems() {
+        set(state: .loading)
+        itemsWatcher = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .failure(error):
+                self.logger.error(message: "Failed to watch messages with error: \(error.localizedDescription)")
+                self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
+            case let .success(conversationWithItems):
+                let conversation = self.transform(conversation: conversationWithItems)
+                self.set(conversation: conversation)
+                let items = self.transform(conversationWithItems: conversationWithItems)
+                self.set(state: .loaded(items: items))
+                self.makAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
+                self.canLoadMoreItems = conversationWithItems.hasMore
+            }
+        }
+    }
+
     private func set(conversation: ConversationViewModel) {
         DispatchQueue.main.async { [view] in
             view?.configure(withConversation: conversation)
         }
     }
-    
+
     private func set(state: ConversationViewState) {
         DispatchQueue.main.async { [view] in
             view?.configure(withState: state)
@@ -163,14 +189,14 @@ final class ConversationPresenterImpl: ConversationPresenter {
             avatar: AvatarViewModel(url: conversation.avatarURL, text: nil)
         )
     }
-    
+
     private func transform(conversation: ConversationWithItems) -> ConversationViewModel {
         ConversationViewModel(
             title: conversation.title ?? L10n.conversationListEmptyPreview,
             avatar: AvatarViewModel(url: conversation.avatarURL, text: nil)
         )
     }
-    
+
     private func transform(conversationWithItems: ConversationWithItems) -> [ConversationViewItem] {
         var viewItems = [ConversationViewItem]()
 
