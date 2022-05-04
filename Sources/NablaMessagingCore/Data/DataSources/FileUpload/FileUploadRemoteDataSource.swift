@@ -1,5 +1,10 @@
 import Foundation
 
+enum FileUploadRemoteDataSourceError: Error {
+    case cantReadFileData
+    case uploadError(UploadClientError)
+}
+
 protocol FileUploadRemoteDataSource {
-    func upload(media: Media, completion: @escaping (Result<UUID, UploadClientError>) -> Void)
+    func upload(file: RemoteFileUpload, completion: @escaping (Result<UUID, FileUploadRemoteDataSourceError>) -> Void)
 }

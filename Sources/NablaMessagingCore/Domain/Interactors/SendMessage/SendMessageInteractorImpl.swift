@@ -29,24 +29,35 @@ final class SendMessageInteractorImpl: SendMessageInteractor {
         switch message {
         case let .text(content):
             completion(.success(.text(content)))
-        case let .image(content):
-            fileUploadRemoteDataSource.upload(media: content) { result in
+        case let .image(media):
+            let file = transform(media)
+            fileUploadRemoteDataSource.upload(file: file) { result in
                 switch result {
                 case let .success(uuid):
-                    completion(.success(.image(.init(fileUploadUUID: uuid, media: content))))
+                    completion(.success(.image(.init(fileUploadUUID: uuid, media: media))))
                 case let .failure(error):
                     completion(.failure(error))
                 }
             }
-        case let .document(content):
-            fileUploadRemoteDataSource.upload(media: content) { result in
+        case let .document(media):
+            let file = transform(media)
+            fileUploadRemoteDataSource.upload(file: file) { result in
                 switch result {
                 case let .success(uuid):
-                    completion(.success(.document(.init(fileUploadUUID: uuid, media: content))))
+                    completion(.success(.document(.init(fileUploadUUID: uuid, media: media))))
                 case let .failure(error):
                     completion(.failure(error))
                 }
             }
         }
+    }
+    
+    private func transform(_ media: Media) -> RemoteFileUpload {
+        RemoteFileUpload(
+            fileName: media.fileName,
+            fileUrl: media.fileUrl,
+            mimeType: media.mimeType,
+            purpose: .message
+        )
     }
 }

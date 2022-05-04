@@ -2,18 +2,25 @@ import Foundation
 import NablaUtils
 import UIKit
 
-public enum UploadClientError: Error {
+enum UploadClientError: Error {
     case noSelf
     case noAccessToken
-    case noFileData
     case impossibleToBuildFormData
     case noValidData
+    case failedToSerializePurpose
 }
 
-public class UploadClient {
+struct UploadData {
+    let purpose: String
+    let content: Data
+    let fileName: String
+    let mimeType: MimeType
+}
+
+class UploadClient {
     // MARK: - Public
     
-    public func upload(media: Media, completion: @escaping (Result<UUID, UploadClientError>) -> Void) {
+    func upload(_ data: UploadData, completion: @escaping (Result<UUID, UploadClientError>) -> Void) {
         authenticator.getAccessToken { [weak self] result in
             guard let state = result.value else {
                 completion(.failure(UploadClientError.noAccessToken))
@@ -21,7 +28,7 @@ public class UploadClient {
             }
             switch state {
             case let .authenticated(accessToken: token):
-                self?.doUpload(authToken: token, media: media, completion: completion)
+                self?.doUpload(authToken: token, data: data, completion: completion)
             case .unauthenticated:
                 completion(.failure(.noSelf))
             }
@@ -40,14 +47,11 @@ public class UploadClient {
         ]
     }
     
-    private func makeMultipartFormData(media: Media) -> Result<MultipartFormData.BuildResult, UploadClientError> {
+    private func makeMultipartFormData(data: UploadData) -> Result<MultipartFormData.BuildResult, UploadClientError> {
         guard
-            // TODO: (Thibault Tourailles) - Create new type of media that carries a purpose instead of
-            // hardcoding this one
-            let purpose = "MESSAGE".data(using: .utf8),
-            let data = try? Data(contentsOf: media.fileUrl)
+            let purpose = data.purpose.data(using: .utf8)
         else {
-            return .failure(UploadClientError.noFileData)
+            return .failure(UploadClientError.failedToSerializePurpose)
         }
         do {
             let multipartFormData = try MultipartFormData.Builder.build(
@@ -60,9 +64,9 @@ public class UploadClient {
                     ),
                     (
                         name: "file",
-                        filename: media.fileName,
-                        mimeType: Self.makeMimeType(from: media.mimeType),
-                        data: data
+                        filename: data.fileName,
+                        mimeType: Self.makeMimeType(from: data.mimeType),
+                        data: data.content
                     ),
                 ],
                 willSeparateBy: RandomBoundaryGenerator.generate()
@@ -73,12 +77,12 @@ public class UploadClient {
         }
     }
     
-    private func doUpload(authToken: String, media: Media, completion: @escaping (Result<UUID, UploadClientError>) -> Void) {
+    private func doUpload(authToken: String, data: UploadData, completion: @escaping (Result<UUID, UploadClientError>) -> Void) {
         var request = UploadEndpoint.request()
         var headers = makeHeaders(authToken: authToken)
         var body: Data?
         
-        switch makeMultipartFormData(media: media) {
+        switch makeMultipartFormData(data: data) {
         case let .success(multipartFormData):
             headers[HTTPHeaders.ContentType] = multipartFormData.contentType
             body = multipartFormData.body

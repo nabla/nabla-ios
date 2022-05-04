@@ -1,22 +1,8 @@
 import NablaMessagingCore
 import UIKit
 
-protocol MediaComposerViewDelegate: AnyObject {
-    func mediaComposerView(_ view: MediaComposerView, didTapDeleteButtonOn media: Media)
-    func mediaComposerView(_ view: MediaComposerView, didUpdateMedias medias: [Media])
-}
-
-class MediaComposerView: UIView {
-    weak var delegate: MediaComposerViewDelegate?
-    
-    private lazy var collectionView: UICollectionView = self.makeCollectionView()
-    
-    var medias: [Media] = [] {
-        didSet {
-            delegate?.mediaComposerView(self, didUpdateMedias: medias)
-            collectionView.reloadData()
-        }
-    }
+class MediaComposerView: UIView, MediaComposerViewContract {
+    var presenter: MediaComposerPresenter?
     
     // MARK: Lifecycle
     
@@ -24,8 +10,27 @@ class MediaComposerView: UIView {
         super.didMoveToSuperview()
         setUp()
     }
+
+    // MARK: - MediaComposerViewContract
+
+    func configure(with viewModels: [MediaComposerItemViewModel]) {
+        self.viewModels = viewModels
+        collectionView.reloadData()
+    }
+
+    func emptyMedias() {
+        presenter?.emptyMedias()
+    }
+
+    func add(_ medias: [Media]) {
+        presenter?.add(medias)
+    }
     
     // MARK: - Private
+
+    private var viewModels: [MediaComposerItemViewModel] = []
+
+    private lazy var collectionView: UICollectionView = self.makeCollectionView()
     
     private func setUp() {
         guard subviews.isEmpty else { return }
@@ -55,12 +60,12 @@ extension MediaComposerView: UICollectionViewDataSource {
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        medias.count
+        viewModels.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(ofClass: MediaComposerCollectionViewCell.self, for: indexPath)
-        cell.configure(with: medias[indexPath.item])
+        cell.configure(with: viewModels[indexPath.item])
         cell.delegate = self
         return cell
     }
@@ -72,8 +77,9 @@ extension MediaComposerView: UICollectionViewDelegate {
 
 extension MediaComposerView: MediaComposerCollectionViewCellDelegate {
     // MARK: - MediaComposerCollectionViewCellDelegate
-    
-    func mediaComposerCollectionVIewCell(_: MediaComposerCollectionViewCell, didTapDeleteButtonFor media: Media) {
-        delegate?.mediaComposerView(self, didTapDeleteButtonOn: media)
+
+    func mediaComposerCollectionViewCellDidTapDeleteButton(_ cell: MediaComposerCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        presenter?.didTapDeleteButtonForMedia(at: indexPath.item)
     }
 }

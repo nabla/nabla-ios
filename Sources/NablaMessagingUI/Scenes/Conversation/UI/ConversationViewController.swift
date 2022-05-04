@@ -45,8 +45,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
     
     func emptyComposer() {
-        composerView.text = nil
-        composerView.medias = []
+        composerView.emptyComposer()
     }
     
     func displayMediaPicker(source: ImagePickerSource) {
@@ -325,7 +324,7 @@ extension ConversationViewController: ImagePickerDelegate {
     }
     
     func imagePicker(_: UIViewController, didSelect medias: [Media], errors _: [ImagePickerError]) {
-        composerView.medias.append(contentsOf: medias)
+        composerView.add(medias)
         navigationController?.dismiss(animated: true)
     }
 }
@@ -338,7 +337,7 @@ extension ConversationViewController: DocumentPickerDelegate {
     }
     
     func documentPicker(_: UIViewController, didSelect media: Media) {
-        composerView.medias.append(media)
+        composerView.add([media])
         navigationController?.dismiss(animated: true)
     }
 }

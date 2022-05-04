@@ -4,7 +4,7 @@ import NablaMessagingCore
 import UIKit
 
 protocol MediaComposerCollectionViewCellDelegate: AnyObject {
-    func mediaComposerCollectionVIewCell(_ cell: MediaComposerCollectionViewCell, didTapDeleteButtonFor media: Media)
+    func mediaComposerCollectionViewCellDidTapDeleteButton(_ cell: MediaComposerCollectionViewCell)
 }
 
 class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
@@ -23,22 +23,12 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     
     // MARK: Public
     
-    func configure(with media: Media) {
-        // TODO: Thibault Tourailles - Don't use media directly
-        self.media = media
-        switch media.type {
+    func configure(with viewModel: MediaComposerItemViewModel) {
+        switch viewModel.type {
         case .image:
-            imageView.url = media.fileUrl
-            imageView.isHidden = false
-            previewView.view.isHidden = true
-        case .video:
-            previewView.player = AVPlayer(url: media.fileUrl)
-            imageView.isHidden = true
-            previewView.view.isHidden = false
+            imageView.url = viewModel.url
         case .pdf:
             imageView.image = NablaTheme.MediaComposerCollectionViewCell.documentIcon
-            imageView.isHidden = false
-            previewView.view.isHidden = true
         }
     }
     
@@ -53,17 +43,13 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         super.prepareForReuse()
         imageView.image = nil
         imageView.url = nil
-        previewView.player = nil
     }
     
     // MARK: - Private
     
     private lazy var imageView: UIURLImageView = makeImageView()
-    private lazy var previewView: AVPlayerViewController = makePreviewView()
     private lazy var deleteButton: UIButton = makeDeleteButton()
     private lazy var deleteButtonContainerView: UIView = makeDeleteButtonContainerView()
-    
-    private var media: Media?
     
     private func makeImageView() -> UIURLImageView {
         let view = UIURLImageView()
@@ -71,13 +57,6 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         view.contentMode = .scaleAspectFit
         view.isUserInteractionEnabled = true
         return view
-    }
-    
-    private func makePreviewView() -> AVPlayerViewController {
-        let playerViewController = AVPlayerViewController()
-        playerViewController.videoGravity = .resizeAspectFill
-        playerViewController.showsPlaybackControls = false
-        return playerViewController
     }
     
     private func makeDeleteButton() -> UIButton {
@@ -107,20 +86,14 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         addSubview(imageView)
         imageView.pinToSuperView()
         
-        addSubview(previewView.view)
-        previewView.view.pinToSuperView()
-        
         addSubview(deleteButtonContainerView)
         deleteButtonContainerView.pinToSuperView(edges: [.top, .trailing], insets: .init(horizontal: 5, vertical: 5))
         
         layer.cornerRadius = 12.0
         clipsToBounds = true
-        
-        parentViewController?.addChild(previewView)
     }
     
     @objc private func deleteButtonSelected() {
-        guard let media = media else { return }
-        delegate?.mediaComposerCollectionVIewCell(self, didTapDeleteButtonFor: media)
+        delegate?.mediaComposerCollectionViewCellDidTapDeleteButton(self)
     }
 }

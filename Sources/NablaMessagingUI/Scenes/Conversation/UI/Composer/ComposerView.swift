@@ -26,15 +26,7 @@ final class ComposerView: UIView {
         }
     }
     
-    var medias: [Media] {
-        get {
-            mediaComposerView.medias
-        }
-        set {
-            mediaComposerView.medias = newValue
-            updateMediaComposerVisibility()
-        }
-    }
+    private(set) var medias: [Media] = []
     
     // MARK: - Init
     
@@ -68,6 +60,18 @@ final class ComposerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         textView.isScrollEnabled = hasReachedMaximumHeight
+    }
+
+    // MARK: - Public
+
+    func emptyComposer() {
+        text = nil
+        mediaComposerView.emptyMedias()
+    }
+
+    func add(_ medias: [Media]) {
+        self.medias.append(contentsOf: medias)
+        mediaComposerView.add(medias)
     }
     
     // MARK: - Private
@@ -148,7 +152,8 @@ final class ComposerView: UIView {
     
     private lazy var mediaComposerView: MediaComposerView = {
         let view = MediaComposerView()
-        view.delegate = self
+        let presenter = MediaComposerPresenterImplementation(viewContract: view, delegate: self)
+        view.presenter = presenter
         
         view.constraintHeight(70.0)
         return view
@@ -175,15 +180,13 @@ extension ComposerView: UITextViewDelegate {
     }
 }
 
-extension ComposerView: MediaComposerViewDelegate {
-    // MARK: - MediaComposerViewDelegate
-    
-    func mediaComposerView(_: MediaComposerView, didTapDeleteButtonOn media: Media) {
-        guard let index = medias.firstIndex(of: media) else { return }
-        medias.remove(at: index)
-    }
-    
-    func mediaComposerView(_: MediaComposerView, didUpdateMedias _: [Media]) {
+extension ComposerView: MediaComposerPresenterDelegate {
+    // MARK: - MediaComposerPresenterDelegate
+
+    func mediaComposerPresenter(_: MediaComposerPresenter,
+                                didUpdateMedias medias: [Media]) {
+        self.medias = medias
         sendButton.isEnabled = enableSendButton
+        updateMediaComposerVisibility()
     }
 }
