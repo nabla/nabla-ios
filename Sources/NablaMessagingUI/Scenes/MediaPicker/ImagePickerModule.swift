@@ -19,7 +19,7 @@ class ImagePickerModule: NSObject {
     func makeViewController(source: ImagePickerSource, mediaTypes: [MediaType], defaultCameraType: CameraType = .rear) -> UIViewController {
         switch source {
         case .camera:
-            let viewController = CameraPickerController()
+            let viewController = UIImagePickerController()
             viewController.mediaTypes = mediaTypes.flatMap(\.utTypes)
             viewController.sourceType = .camera
             viewController.cameraDevice = defaultCameraType.cameraDevice
@@ -37,7 +37,12 @@ class ImagePickerModule: NSObject {
                 
                 return viewController
             } else {
-                fatalError("Not supported yet")
+                let viewController = UIImagePickerController()
+                viewController.mediaTypes = mediaTypes.flatMap(\.utTypes)
+                viewController.sourceType = .photoLibrary
+                viewController.delegate = self
+
+                return viewController
             }
         }
     }

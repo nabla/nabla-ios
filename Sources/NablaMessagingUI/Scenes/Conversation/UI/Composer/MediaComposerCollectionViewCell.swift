@@ -45,6 +45,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     // MARK: Lifecycle
     
     override func didMoveToSuperview() {
+        super.didMoveToSuperview()
         setUp()
     }
     
@@ -99,7 +100,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     }
     
     private func setUp() {
-        guard subviews.isEmpty else { return }
+        guard contentView.subviews.isEmpty else { return }
         contentView.isUserInteractionEnabled = false
         contentView.backgroundColor = NablaTheme.MediaComposerCollectionViewCell.backgroundColor
         

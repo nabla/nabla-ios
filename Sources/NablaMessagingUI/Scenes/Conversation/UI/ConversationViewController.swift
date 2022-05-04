@@ -263,13 +263,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
                 self?.presenter?.didTapCameraButton()
             })
         )
-        if #available(iOS 14, *) {
-            alert.addAction(
-                UIAlertAction(title: L10n.conversationAddMediaLibrary, style: .default, handler: { [weak self] _ in
-                    self?.presenter?.didTapPhotoLibraryButton()
-                })
-            )
-        }
+        alert.addAction(
+            UIAlertAction(title: L10n.conversationAddMediaLibrary, style: .default, handler: { [weak self] _ in
+                self?.presenter?.didTapPhotoLibraryButton()
+            })
+        )
         if #available(iOS 14, *) {
             alert.addAction(
                 UIAlertAction(title: L10n.conversationAddMediaDocument, style: .default, handler: { [weak self] _ in
