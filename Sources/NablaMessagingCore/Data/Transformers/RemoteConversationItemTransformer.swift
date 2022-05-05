@@ -3,7 +3,7 @@ import Foundation
 enum RemoteConversationItemTransformer {
     static func transform(_ remoteConversationItem: RemoteConversationItem) -> ConversationItem? {
         let message = remoteConversationItem.fragments.messageFragment
-        let sender: ConversationItemSender
+        let sender: ConversationMessageSender
         
         if let provider = message.author.asProvider?.fragments.providerFragment {
             sender = .provider(RemoteConversationProviderTransformer.transform(provider))
@@ -23,15 +23,15 @@ enum RemoteConversationItemTransformer {
                 id: message.id,
                 date: message.createdAt,
                 sender: sender,
-                state: .sent,
+                sendingState: .sent,
                 content: textContent.text
             )
         } else if messageContentFragment?.asDeletedMessageContent != nil {
-            return DeleteMessageItem(
+            return DeletedMessageItem(
                 id: message.id,
                 date: message.createdAt,
                 sender: sender,
-                state: .sent
+                sendingState: .sent
             )
         } else if
             let imageContent = message.content?.fragments.messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
@@ -41,7 +41,7 @@ enum RemoteConversationItemTransformer {
                 id: message.id,
                 date: message.createdAt,
                 sender: sender,
-                state: .sent,
+                sendingState: .sent,
                 content: Media(
                     type: .image,
                     fileName: imageContent.imageFileUpload.fileName,
@@ -58,7 +58,7 @@ enum RemoteConversationItemTransformer {
                 id: message.id,
                 date: message.createdAt,
                 sender: sender,
-                state: .sent,
+                sendingState: .sent,
                 content: Media(
                     type: .pdf,
                     fileName: documentContent.documentFileUpload.fileName,

@@ -4,7 +4,7 @@ import NablaUtils
 class ConversationItemRepositoryImpl: ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<ConversationWithItems, Error>) -> Void
+        callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> PaginatedWatcher {
         let merger = ConversationItemsMerger(conversationId: conversationId, callback: callback)
         merger.resume()
@@ -22,10 +22,10 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         inConversationWithId conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
-        let localConversationItem = makeLocalConversationItem(for: messageInput)
-        localDataSource.addConversationItem(localConversationItem, toConversationWithId: conversationId)
+        let localConversationMessage = makeLocalConversationMessage(for: messageInput)
+        localDataSource.addConversationItem(localConversationMessage, toConversationWithId: conversationId)
         return makeRemoteMessageAndThenSend(
-            localConversationItem: localConversationItem,
+            localConversationMessage: localConversationMessage,
             conversationId: conversationId,
             completion: completion
         )
@@ -41,11 +41,16 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             return Failure()
         }
 
-        if let item = localConversationItem as? LocalMediaConversationItem,
-           case .media = item.content {
-            return makeRemoteMessageAndThenSend(localConversationItem: localConversationItem, conversationId: conversationId, completion: completion)
+        guard let localConversationMessage = localConversationItem as? LocalConversationMessage else {
+            completion(.failure(ConversationItemRepositoryError.notSupported))
+            return Failure()
+        }
+        
+        if let mediaMessage = localConversationMessage as? LocalMediaConversationMessage,
+           case .media = mediaMessage.content {
+            return makeRemoteMessageAndThenSend(localConversationMessage: localConversationMessage, conversationId: conversationId, completion: completion)
         } else {
-            return performSend(localConversationItem, inConversationWithId: conversationId, completion: completion)
+            return performSend(localConversationMessage, inConversationWithId: conversationId, completion: completion)
         }
     }
     
@@ -80,70 +85,70 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         return subscription
     }
     
-    private func makeSendInput(for localConversationItem: LocalConversationItem) -> GQL.SendMessageContentInput? {
-        if let textMessage = localConversationItem as? LocalTextMessageItem {
+    private func makeSendInput(for localConversationMessage: LocalConversationMessage) -> GQL.SendMessageContentInput? {
+        if let textMessage = localConversationMessage as? LocalTextMessageItem {
             return .init(textInput: .init(text: textMessage.content))
         }
-        if let imageMessage = localConversationItem as? LocalImageMessageItem,
+        if let imageMessage = localConversationMessage as? LocalImageMessageItem,
            case let .uploadedMedia(uploadedMedia) = imageMessage.content {
             return .init(imageInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
         }
         
-        if let documentMessage = localConversationItem as? LocalDocumentMessageItem,
+        if let documentMessage = localConversationMessage as? LocalDocumentMessageItem,
            case let .uploadedMedia(uploadedMedia) = documentMessage.content {
             return .init(documentInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
         }
-        logger.warning(message: "Sending \(type(of: localConversationItem)) is not supported yet")
+        logger.warning(message: "Sending \(type(of: localConversationMessage)) is not supported yet")
         return nil
     }
-
-    private func makeLocalConversationItem(for input: MessageInput) -> LocalConversationItem {
+    
+    private func makeLocalConversationMessage(for input: MessageInput) -> LocalConversationMessage {
         switch input {
         case let .text(content):
-            return LocalTextMessageItem(clientId: UUID(), date: Date(), state: .sending, content: content)
+            return LocalTextMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: content)
         case let .image(content):
-            return LocalImageMessageItem(clientId: UUID(), date: Date(), state: .sending, content: .media(content))
+            return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .media(content))
         case let .document(content):
-            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), state: .sending, content: .media(content))
+            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .media(content))
         }
     }
 
-    private func updateLocalConversationItem(
-        _ localConversationItem: LocalConversationItem,
+    private func updateLocalConversationMessage(
+        _ localConversationMessage: LocalConversationMessage,
         with remoteMessageInput: RemoteMessageInput
-    ) -> LocalConversationItem {
+    ) -> LocalConversationMessage {
         switch remoteMessageInput {
         case let .text(content):
             return LocalTextMessageItem(
-                clientId: localConversationItem.clientId,
-                date: localConversationItem.date,
-                state: .sending,
+                clientId: localConversationMessage.clientId,
+                date: localConversationMessage.date,
+                sendingState: .toBeSent,
                 content: content
             )
         case let .image(uploadedMedia):
             return LocalImageMessageItem(
-                clientId: localConversationItem.clientId,
-                date: localConversationItem.date,
-                state: .sending,
+                clientId: localConversationMessage.clientId,
+                date: localConversationMessage.date,
+                sendingState: .toBeSent,
                 content: .uploadedMedia(uploadedMedia)
             )
         case let .document(uploadedDocument):
             return LocalDocumentMessageItem(
-                clientId: localConversationItem.clientId,
-                date: localConversationItem.date,
-                state: .sending,
+                clientId: localConversationMessage.clientId,
+                date: localConversationMessage.date,
+                sendingState: .toBeSent,
                 content: .uploadedMedia(uploadedDocument)
             )
         }
     }
 
     private func makeRemoteMessageAndThenSend(
-        localConversationItem: LocalConversationItem,
+        localConversationMessage: LocalConversationMessage,
         conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> UmbrellaCancellable {
         let umbrellaCancellable = UmbrellaCancellable()
-        makeRemoteMessageInput(from: localConversationItem) { [weak self] result in
+        makeRemoteMessageInput(from: localConversationMessage) { [weak self] result in
             guard let self = self else { return }
 
             switch result {
@@ -151,7 +156,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 guard !umbrellaCancellable.isCancelled else { return }
                 let task = self.sendMessage(
                     remoteMessage,
-                    existingLocalConversationItem: localConversationItem,
+                    existingLocalConversationMessage: localConversationMessage,
                     inConversationWithId: conversationId,
                     completion: completion
                 )
@@ -193,35 +198,45 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
 
     private func sendMessage(
         _ remoteMessage: RemoteMessageInput,
-        existingLocalConversationItem localConversationItem: LocalConversationItem,
+        existingLocalConversationMessage localConversationMessage: LocalConversationMessage,
         inConversationWithId conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
-        let updatedLocalConversationItem = updateLocalConversationItem(localConversationItem, with: remoteMessage)
-        localDataSource.updateConversationItem(updatedLocalConversationItem, inConversationWithId: conversationId)
-        return performSend(updatedLocalConversationItem, inConversationWithId: conversationId, completion: completion)
+        let updatedLocalConversationMessage = updateLocalConversationMessage(localConversationMessage, with: remoteMessage)
+        localDataSource.updateConversationItem(updatedLocalConversationMessage, inConversationWithId: conversationId)
+        return performSend(updatedLocalConversationMessage, inConversationWithId: conversationId, completion: completion)
     }
 
     private func performSend(
-        _ localConversationItem: LocalConversationItem,
+        _ localConversationMessage: LocalConversationMessage,
         inConversationWithId conversationId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable {
-        guard let sendInput = makeSendInput(for: localConversationItem) else {
+        guard let sendInput = makeSendInput(for: localConversationMessage) else {
             return Failure()
         }
+        
+        var copy = localConversationMessage
+        copy.sendingState = .sending
+        localDataSource.updateConversationItem(copy, inConversationWithId: conversationId)
+        
         return remoteDataSource.send(
-            localMessageClientId: localConversationItem.clientId,
+            localMessageClientId: localConversationMessage.clientId,
             remoteMessageInput: sendInput,
             conversationId: conversationId
         ) { [weak self] result in
             switch result {
             case let .failure(error):
-                var copy = localConversationItem
-                copy.state = .failed
+                var copy = localConversationMessage
+                copy.sendingState = .failed
                 self?.localDataSource.updateConversationItem(copy, inConversationWithId: conversationId)
+                
                 completion(.failure(error))
             case .success:
+                var copy = localConversationMessage
+                copy.sendingState = .sent
+                self?.localDataSource.updateConversationItem(copy, inConversationWithId: conversationId)
+                
                 completion(.success(()))
             }
         }

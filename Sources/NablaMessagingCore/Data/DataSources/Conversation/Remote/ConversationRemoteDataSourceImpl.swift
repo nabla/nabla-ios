@@ -15,6 +15,24 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
         }
     }
     
+    func watchConversation(
+        _ conversationId: UUID,
+        callback: @escaping (Result<RemoteConversation, GQLError>) -> Void
+    ) -> Cancellable {
+        gqlClient.watch(
+            query: GQL.GetConversationQuery(id: conversationId),
+            cachePolicy: .returnCacheDataAndFetch,
+            callback: { result in
+                switch result {
+                case let .failure(error):
+                    callback(.failure(error))
+                case let .success(data):
+                    callback(.success(data.conversation.conversation.fragments.conversationFragment))
+                }
+            }
+        )
+    }
+    
     func watchConversations(callback: @escaping (Result<RemoteConversationList, GQLError>) -> Void) -> PaginatedWatcher {
         ConversationListWatcher(
             numberOfItemsPerPage: Constants.numberOfItemsPerPage,

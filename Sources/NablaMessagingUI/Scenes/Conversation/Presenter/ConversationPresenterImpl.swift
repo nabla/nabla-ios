@@ -6,7 +6,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
     
     func start() {
-        let conversationViewModel = transform(conversation: conversation)
+        let conversationViewModel = Self.transform(conversation: conversation)
         view?.configure(withConversation: conversationViewModel)
         watchItems()
     }
@@ -135,38 +135,63 @@ final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Private
     
     private let client: NablaClient
-    private let conversation: Conversation
+    private var conversation: Conversation
 
     @Inject private var logger: Logger
 
     private weak var view: ConversationViewContract?
+    private var conversationItems: ConversationItems?
     private var canLoadMoreItems = false
     private var draftText: String = ""
     private var itemsWatcher: PaginatedWatcher?
+    private var conversationWatcher: Cancellable?
     private var sendMessageAction: Cancellable?
     private var deleteMessageAction: Cancellable?
     private var setTypingAction: Cancellable?
     private var loadMoreItemsAction: Cancellable?
-    private var makAsSeenAction: Cancellable?
+    private var markAsSeenAction: Cancellable?
     private let typingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
     
     private var sendMediaCancellable: [Cancellable] = []
     
     private func watchItems() {
         set(state: .loading)
+        
+        conversationWatcher = client.watchConversation(
+            conversation.id,
+            callback: { [weak self] result in
+                guard let self = self else { return }
+                
+                switch result {
+                case let .failure(error):
+                    self.logger.error(message: "Failed to watch conversation with error: \(error.localizedDescription)")
+                    self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
+                case let .success(conversation):
+                    self.conversation = conversation
+                    
+                    let conversationViewModel = Self.transform(conversation: conversation)
+                    self.set(conversation: conversationViewModel)
+                    
+                    if let conversationItems = self.conversationItems {
+                        let items = Self.transform(conversationItems: conversationItems, conversation: conversation)
+                        self.set(state: .loaded(items: items))
+                    }
+                }
+            }
+        )
+        
         itemsWatcher = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .failure(error):
                 self.logger.error(message: "Failed to watch messages with error: \(error.localizedDescription)")
                 self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
-            case let .success(conversationWithItems):
-                let conversation = self.transform(conversation: conversationWithItems)
-                self.set(conversation: conversation)
-                let items = self.transform(conversationWithItems: conversationWithItems)
+            case let .success(conversationItems):
+                self.conversationItems = conversationItems
+                let items = Self.transform(conversationItems: conversationItems, conversation: self.conversation)
                 self.set(state: .loaded(items: items))
-                self.makAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
-                self.canLoadMoreItems = conversationWithItems.hasMore
+                self.markAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
+                self.canLoadMoreItems = conversationItems.hasMore
             }
         }
     }
@@ -183,42 +208,35 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
     }
     
-    private func transform(conversation: Conversation) -> ConversationViewModel {
+    private static func transform(conversation: Conversation) -> ConversationViewModel {
         ConversationViewModel(
-            title: conversation.title ?? L10n.conversationListEmptyPreview,
-            avatar: AvatarViewModel(url: conversation.avatarURL, text: nil)
+            title: conversation.title ?? conversation.inboxPreviewTitle,
+            avatar: AvatarViewModel(url: conversation.providers.first?.provider.avatarURL, text: nil)
         )
     }
 
-    private func transform(conversation: ConversationWithItems) -> ConversationViewModel {
-        ConversationViewModel(
-            title: conversation.title ?? L10n.conversationListEmptyPreview,
-            avatar: AvatarViewModel(url: conversation.avatarURL, text: nil)
-        )
-    }
-
-    private func transform(conversationWithItems: ConversationWithItems) -> [ConversationViewItem] {
+    private static func transform(conversationItems: ConversationItems, conversation: Conversation) -> [ConversationViewItem] {
         var viewItems = [ConversationViewItem]()
 
-        if conversationWithItems.hasMore {
+        if conversationItems.hasMore {
             viewItems.append(HasMoreIndicatorViewItem())
         }
 
-        let contentItems = conversationWithItems.items.compactMap { item -> ConversationViewItem? in
+        let contentItems = conversationItems.items.compactMap { item -> ConversationViewItem? in
             if let textMessage = item as? TextMessageItem {
                 return TextMessageViewItem(
                     id: textMessage.id,
                     date: textMessage.date,
                     sender: textMessage.sender,
-                    state: textMessage.state,
+                    sendingState: textMessage.sendingState,
                     text: textMessage.content
                 )
-            } else if let deletedMessage = item as? DeleteMessageItem {
+            } else if let deletedMessage = item as? DeletedMessageItem {
                 return DeletedMessageViewItem(
                     id: deletedMessage.id,
                     date: deletedMessage.date,
                     sender: deletedMessage.sender,
-                    state: deletedMessage.state
+                    sendingState: deletedMessage.sendingState
                 )
             }
             
@@ -227,7 +245,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     id: imageMessage.id,
                     date: imageMessage.date,
                     sender: imageMessage.sender,
-                    state: imageMessage.state,
+                    sendingState: imageMessage.sendingState,
                     image: imageMessage.content
                 )
             }
@@ -237,7 +255,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     id: documentMessage.id,
                     date: documentMessage.date,
                     sender: documentMessage.sender,
-                    state: documentMessage.state,
+                    sendingState: documentMessage.sendingState,
                     document: documentMessage.content
                 )
             }
@@ -245,9 +263,12 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
         viewItems.append(contentsOf: contentItems)
         
-        let typingItems = conversationWithItems.typingProviders.map {
-            TypingIndicatorViewItem(sender: .provider($0))
-        }
+        let typingItems = conversation.providers
+            .filter(\.isTyping)
+            .map {
+                TypingIndicatorViewItem(sender: .provider($0.provider))
+            }
+        
         viewItems.append(contentsOf: typingItems)
 
         viewItems = viewItems.enumerated().map { index, element in

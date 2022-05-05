@@ -8,7 +8,7 @@ protocol PaginatedQuery: GQLQuery {
 /// Abstract class
 class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     // MARK: - Internal
-    
+
     func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
         loadMore(numberOfItems: numberOfItemsPerPage, completion: completion)
     }

@@ -39,7 +39,7 @@ class ConversationItemsMerger: PaginatedWatcher {
     
     init(
         conversationId: UUID,
-        callback: @escaping (Result<ConversationWithItems, Error>) -> Void
+        callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) {
         self.conversationId = conversationId
         self.callback = callback
@@ -55,16 +55,16 @@ class ConversationItemsMerger: PaginatedWatcher {
     @Inject private var localDataSource: ConversationItemLocalDataSource
     
     private let conversationId: UUID
-    private let callback: (Result<ConversationWithItems, Error>) -> Void
+    private let callback: (Result<ConversationItems, Error>) -> Void
     
     private var remoteWatcher: PaginatedWatcher?
     private var localWatcher: Cancellable?
     
-    private var remoteData: Result<RemoteConversationWithItems, GQLError>?
+    private var remoteData: Result<RemoteConversationItems, GQLError>?
     private var localData: [LocalConversationItem]?
     
     private func notifyNewValues() {
-        let remoteConversation: RemoteConversationWithItems
+        let remoteConversation: RemoteConversationItems
         switch remoteData {
         case .none:
             return // Wait for remote data before emitting any value
@@ -79,16 +79,9 @@ class ConversationItemsMerger: PaginatedWatcher {
         let localItems = localData ?? []
         let remoteItems = item.data.compactMap { $0?.fragments.conversationItemFragment }
         let mergedItems = merge(remoteItems, localItems)
-        let newValue = ConversationWithItems(
-            title: remoteConversation.conversation.conversation.title,
-            avatarURL: remoteConversation.conversation.conversation
-                .providers.first?
-                .fragments.providerInConversationFragment.provider.fragments.providerFragment
-                .avatarUrl?.fragments.ephemeralUrlFragment.url,
+        let newValue = ConversationItems(
+            conversationId: remoteConversation.conversation.conversation.id,
             hasMore: item.hasMore,
-            typingProviders: remoteConversation.typingProviders
-                .map(\.provider.fragments.providerFragment)
-                .map(RemoteConversationProviderTransformer.transform),
             items: mergedItems
         )
         callback(.success(newValue))

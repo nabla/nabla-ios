@@ -10,12 +10,27 @@ enum ConversationTransformer {
     static func transform(fragment: RemoteConversation) -> Conversation {
         Conversation(
             id: fragment.id,
-            avatarURL: fragment.providers.first?.fragments.providerInConversationFragment.provider.fragments.providerFragment.avatarUrl?.fragments.ephemeralUrlFragment.url,
-            initials: nil,
             title: fragment.title,
+            description: fragment.description,
+            inboxPreviewTitle: fragment.inboxPreviewTitle,
             lastMessagePreview: fragment.lastMessagePreview,
-            lastUpdatedTime: fragment.updatedAt,
-            isUnread: fragment.unreadMessageCount > 0
+            lastModified: fragment.updatedAt,
+            patientUnreadMessageCount: fragment.unreadMessageCount,
+            providers: transform(providers: fragment.providers)
         )
+    }
+    
+    private static func transform(providers: [RemoteConversation.Provider]) -> [ProviderInConversation] {
+        providers
+            .map { provider in
+                let providerFragment = provider.fragments.providerInConversationFragment.provider.fragments.providerFragment
+                let providerInConversationFragment = provider.fragments.providerInConversationFragment
+                
+                return ProviderInConversation(
+                    provider: RemoteConversationProviderTransformer.transform(providerFragment),
+                    typingAt: providerInConversationFragment.typingAt,
+                    seenUntil: providerInConversationFragment.seenUntil
+                )
+            }
     }
 }

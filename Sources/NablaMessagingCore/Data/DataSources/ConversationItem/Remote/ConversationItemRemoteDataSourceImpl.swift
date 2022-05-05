@@ -6,7 +6,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<RemoteConversationWithItems, GQLError>) -> Void
+        callback: @escaping (Result<RemoteConversationItems, GQLError>) -> Void
     ) -> PaginatedWatcher {
         ConversationItemsWatcher(
             conversationId: conversationId,
@@ -121,12 +121,14 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     private func update(provider: GQL.ProviderInConversationFragment, inCacheOfConversationWithId conversationId: UUID) {
         gqlStore.updateCache(
-            for: Constants.rootQuery(conversationId: conversationId),
+            for: GQL.GetConversationQuery(id: conversationId),
             onlyIfExists: true,
             body: { cache in
-                let isAlreadyInConversation = cache.conversation.conversation.providers.contains(where: { $0.fragments.providerInConversationFragment.id == provider.id })
+                
+                let isAlreadyInConversation = cache.conversation.conversation.fragments.conversationFragment.providers.contains(where: { $0.fragments.providerInConversationFragment.id == provider.id })
+                
                 if !isAlreadyInConversation {
-                    cache.conversation.conversation.providers.append(.init(unsafeResultMap: provider.resultMap))
+                    cache.conversation.conversation.fragments.conversationFragment.providers.append(.init(unsafeResultMap: provider.resultMap))
                 }
             },
             completion: { _ in }
@@ -144,7 +146,7 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
     init(
         conversationId: UUID,
         numberOfItemsPerPage: Int,
-        callback: @escaping (Result<RemoteConversationWithItems, GQLError>) -> Void
+        callback: @escaping (Result<RemoteConversationItems, GQLError>) -> Void
     ) {
         self.conversationId = conversationId
         super.init(
@@ -157,7 +159,7 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
         GQL.GetConversationItemsQuery(id: conversationId, page: page)
     }
     
-    override func updateCache(_ cache: inout RemoteConversationWithItems, withAdditionalData data: RemoteConversationWithItems) {
+    override func updateCache(_ cache: inout RemoteConversationItems, withAdditionalData data: RemoteConversationItems) {
         let existingIds = Set(cache.conversation.conversation.items.data.compactMap {
             $0?.fragments.conversationItemFragment.fragments.messageFragment.id
         })

@@ -35,10 +35,10 @@ class MessagePresenter<
     }
     
     func userDidTapFooter() {
-        switch item.state {
+        switch item.sendingState {
         case .failed:
             retrySendingMessage()
-        case .sending, .sent:
+        case .sending, .sent, .toBeSent:
             break
         }
     }
@@ -52,7 +52,7 @@ class MessagePresenter<
     }
     
     func makeMenuElements(_ item: Item) -> [UIMenuElement] {
-        if item.sender == .patient, item.state == .sent {
+        if item.sender == .patient, item.sendingState == .sent {
             let deleteAction = UIAction(
                 title: L10n.conversationActionDelete,
                 image: UIImage(systemName: "trash"),
@@ -112,10 +112,10 @@ class MessagePresenter<
     }
     
     private func transformFooter() -> ConversationMessageFooterViewModel? {
-        switch item.state {
+        switch item.sendingState {
         case .sending:
             return .init(text: L10n.conversationStatusSending, color: .lightGray)
-        case .sent:
+        case .sent, .toBeSent:
             return nil
         case .failed:
             return .init(text: L10n.conversationStatusFailed, color: .red)

@@ -1,5 +1,5 @@
 import Foundation
 
-protocol LocalMediaConversationItem: LocalConversationItem {
+protocol LocalMediaConversationMessage: LocalConversationMessage {
     var content: LocalMediaMessageItemContent { get }
 }

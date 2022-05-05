@@ -3,7 +3,7 @@ import Foundation
 protocol ConversationItemRemoteDataSource {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<RemoteConversationWithItems, GQLError>) -> Void
+        callback: @escaping (Result<RemoteConversationItems, GQLError>) -> Void
     ) -> PaginatedWatcher
     
     func subscribeToConversationItemsEvents(

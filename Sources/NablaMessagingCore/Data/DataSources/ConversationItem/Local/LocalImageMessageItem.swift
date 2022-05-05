@@ -1,8 +1,8 @@
 import Foundation
 
-struct LocalImageMessageItem: LocalMediaConversationItem {
+struct LocalImageMessageItem: LocalMediaConversationMessage {
     let clientId: UUID
     let date: Date
-    var state: ConversationItemState
+    var sendingState: ConversationMessageSendingState
     let content: LocalMediaMessageItemContent
 }

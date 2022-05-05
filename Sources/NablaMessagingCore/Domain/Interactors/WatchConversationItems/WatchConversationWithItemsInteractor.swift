@@ -1,8 +1,8 @@
 import Foundation
 
-protocol WatchConversationWithItemsInteractor {
+protocol WatchConversationItemsInteractor {
     func execute(
         conversationId: UUID,
-        callback: @escaping (Result<ConversationWithItems, Error>) -> Void
+        callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> PaginatedWatcher
 }

@@ -1,8 +1,8 @@
 import Foundation
 
-struct LocalTextMessageItem: LocalConversationItem {
+struct LocalTextMessageItem: LocalConversationMessage {
     let clientId: UUID
     let date: Date
-    var state: ConversationItemState
+    var sendingState: ConversationMessageSendingState
     let content: String
 }

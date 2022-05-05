@@ -4,7 +4,24 @@ import NablaUtils
 class ConversationRepositoryImpl: ConversationRepository {
     // MARK: - Internal
     
-    func watch(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
+    func watchConversation(
+        _ conversationId: UUID,
+        callback: @escaping (Result<Conversation, Error>) -> Void
+    ) -> Cancellable {
+        let watcher = remoteDataSource.watchConversation(conversationId, callback: { result in
+            switch result {
+            case let .failure(error):
+                callback(.failure(error))
+            case let .success(data):
+                let conversation = ConversationTransformer.transform(fragment: data)
+                callback(.success(conversation))
+            }
+        })
+        
+        return watcher
+    }
+    
+    func watchConversations(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
         let watcher = remoteDataSource.watchConversations { result in
             switch result {
             case let .failure(error):

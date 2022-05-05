@@ -8,7 +8,7 @@ public enum ConversationItemRepositoryError: Error {
 protocol ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId: UUID,
-        callback: @escaping (Result<ConversationWithItems, Error>) -> Void
+        callback: @escaping (Result<ConversationItems, Error>) -> Void
     ) -> PaginatedWatcher
     
     func sendMessage(

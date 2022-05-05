@@ -44,8 +44,8 @@ public class NablaClient {
         createConversationInteractor.execute(completion: completion)
     }
     
-    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationWithItems, Error>) -> Void) -> PaginatedWatcher {
-        watchConversationWithItemsInteractor.execute(conversationId: conversationId, callback: callback)
+    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationItems, Error>) -> Void) -> PaginatedWatcher {
+        watchConversationItemsInteractor.execute(conversationId: conversationId, callback: callback)
     }
     
     public func setIsTyping(_ isTyping: Bool, inConversationWithId conversationId: UUID) -> Cancellable {
@@ -58,6 +58,13 @@ public class NablaClient {
     
     public func watchConversations(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
         watchConversationsInteractor.execute(callback: callback)
+    }
+    
+    public func watchConversation(
+        _ conversationId: UUID,
+        callback: @escaping (Result<Conversation, Error>) -> Void
+    ) -> Cancellable {
+        watchConversationInteractor.execute(conversationId, callback: callback)
     }
     
     public func sendMessage(
@@ -89,13 +96,14 @@ public class NablaClient {
     @Inject private var authenticator: Authenticator
     @Inject private var gqlClient: GQLClient
     @Inject private var createConversationInteractor: CreateConversationInteractor
-    @Inject private var watchConversationWithItemsInteractor: WatchConversationWithItemsInteractor
+    @Inject private var watchConversationItemsInteractor: WatchConversationItemsInteractor
     @Inject private var sendMessageInteractor: SendMessageInteractor
     @Inject private var retrySendingMessageInteractor: RetrySendingMessageInteractor
     @Inject private var deleteMessageInteractor: DeleteMessageInteractor
     @Inject private var setIsTypingInteractor: SetIsTypingInteractor
     @Inject private var markConversationAsSeenInteractor: MarkConversationAsSeenInteractor
     @Inject private var watchConversationsInteractor: WatchConversationsInteractor
+    @Inject private var watchConversationInteractor: WatchConversationInteractor
     
     private static var _shared: NablaClient?
     

@@ -8,8 +8,11 @@ class InteractorAssembly: Assembly {
         resolver.register(type: CreateConversationInteractor.self) {
             CreateConversationInteractorImpl()
         }
-        resolver.register(type: WatchConversationWithItemsInteractor.self) {
-            WatchConversationWithItemsInteractorImpl()
+        resolver.register(type: WatchConversationInteractor.self) {
+            WatchConversationInteractorImpl()
+        }
+        resolver.register(type: WatchConversationItemsInteractor.self) {
+            WatchConversationItemsInteractorImpl()
         }
         resolver.register(type: WatchConversationsInteractor.self) {
             WatchConversationsInteractorImpl()

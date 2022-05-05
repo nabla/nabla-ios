@@ -7,11 +7,11 @@ struct ConversationListViewModelMapper {
     func map(conversations: [Conversation]) -> ConversationListViewModel {
         let items = conversations.map { conversation in
             ConversationListItemViewModel(
-                avatar: AvatarViewModel(url: conversation.avatarURL, text: nil),
-                title: conversation.title ?? L10n.conversationListEmptyPreview,
+                avatar: AvatarViewModel(url: conversation.providers.first?.provider.avatarURL, text: nil),
+                title: conversation.inboxPreviewTitle,
                 lastMessage: conversation.lastMessagePreview,
                 lastUpdatedTime: lastUpdatedTime(from: conversation),
-                isUnread: conversation.isUnread
+                isUnread: conversation.patientUnreadMessageCount > 0
             )
         }
         
@@ -48,16 +48,16 @@ struct ConversationListViewModelMapper {
     
     private func lastUpdatedTime(from conversation: Conversation) -> String {
         let calendar = Calendar.current
-        if calendar.isDateInToday(conversation.lastUpdatedTime) {
-            return timeFormatter.string(from: conversation.lastUpdatedTime)
-        } else if calendar.isDateInYesterday(conversation.lastUpdatedTime) {
+        if calendar.isDateInToday(conversation.lastModified) {
+            return timeFormatter.string(from: conversation.lastModified)
+        } else if calendar.isDateInYesterday(conversation.lastModified) {
             return L10n.conversationListLastMessageYesterday
-        } else if calendar.isDateInWeek(conversation.lastUpdatedTime) {
-            return shortDateFormatter.string(from: conversation.lastUpdatedTime)
-        } else if calendar.isDateInYear(conversation.lastUpdatedTime) {
-            return dateInYearFormatter.string(from: conversation.lastUpdatedTime)
+        } else if calendar.isDateInWeek(conversation.lastModified) {
+            return shortDateFormatter.string(from: conversation.lastModified)
+        } else if calendar.isDateInYear(conversation.lastModified) {
+            return dateInYearFormatter.string(from: conversation.lastModified)
         } else {
-            return dateLongAgoFormatter.string(from: conversation.lastUpdatedTime)
+            return dateLongAgoFormatter.string(from: conversation.lastModified)
         }
     }
 }

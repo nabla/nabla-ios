@@ -5,7 +5,7 @@ class WatchConversationsInteractorImpl: WatchConversationsInteractor {
     // MARK: - WatchConversationsInteractor
     
     func execute(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
-        conversationRepository.watch(callback: callback)
+        conversationRepository.watchConversations(callback: callback)
     }
     
     // MARK: - private

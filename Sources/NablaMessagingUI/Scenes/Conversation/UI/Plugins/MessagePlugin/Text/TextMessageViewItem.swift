@@ -4,8 +4,8 @@ import NablaMessagingCore
 struct TextMessageViewItem: ConversationViewMessageItem, Hashable {
     let id: UUID
     let date: Date
-    let sender: ConversationItemSender
-    let state: ConversationItemState
+    let sender: NablaMessagingCore.ConversationMessageSender
+    let sendingState: ConversationMessageSendingState
     let text: String
     var isContiguous: Bool = false
 }

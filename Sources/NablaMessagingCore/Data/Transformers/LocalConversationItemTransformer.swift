@@ -7,15 +7,15 @@ enum LocalConversationItemTransformer {
                 id: textMessageItem.clientId,
                 date: textMessageItem.date,
                 sender: .patient,
-                state: textMessageItem.state,
+                sendingState: textMessageItem.sendingState,
                 content: textMessageItem.content
             )
         } else if let deletedMessageItem = localConversationItem as? LocalDeletedMessageItem {
-            return DeleteMessageItem(
+            return DeletedMessageItem(
                 id: deletedMessageItem.clientId,
                 date: deletedMessageItem.date,
                 sender: .patient,
-                state: deletedMessageItem.state
+                sendingState: deletedMessageItem.sendingState
             )
         }
         if let imageMessageItem = localConversationItem as? LocalImageMessageItem {
@@ -23,7 +23,7 @@ enum LocalConversationItemTransformer {
                 id: imageMessageItem.clientId,
                 date: imageMessageItem.date,
                 sender: .patient,
-                state: imageMessageItem.state,
+                sendingState: imageMessageItem.sendingState,
                 content: imageMessageItem.content.media
             )
         }
@@ -32,7 +32,7 @@ enum LocalConversationItemTransformer {
                 id: documentMessageItem.clientId,
                 date: documentMessageItem.date,
                 sender: .patient,
-                state: documentMessageItem.state,
+                sendingState: documentMessageItem.sendingState,
                 content: documentMessageItem.content.media
             )
         }

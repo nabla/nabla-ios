@@ -32,7 +32,7 @@ protocol ConversationViewContract: AnyObject {
 }
 
 protocol ConversationViewMessageItem: ConversationViewItem {
-    var sender: ConversationItemSender { get }
-    var state: ConversationItemState { get }
+    var sender: NablaMessagingCore.ConversationMessageSender { get }
+    var sendingState: ConversationMessageSendingState { get }
     var isContiguous: Bool { get set }
 }
