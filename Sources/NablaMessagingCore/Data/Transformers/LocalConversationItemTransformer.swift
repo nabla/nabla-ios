@@ -6,7 +6,7 @@ enum LocalConversationItemTransformer {
             return TextMessageItem(
                 id: textMessageItem.clientId,
                 date: textMessageItem.date,
-                sender: textMessageItem.sender,
+                sender: .patient,
                 state: textMessageItem.state,
                 content: textMessageItem.content
             )
@@ -14,7 +14,7 @@ enum LocalConversationItemTransformer {
             return DeleteMessageItem(
                 id: deletedMessageItem.clientId,
                 date: deletedMessageItem.date,
-                sender: deletedMessageItem.sender,
+                sender: .patient,
                 state: deletedMessageItem.state
             )
         }
@@ -22,7 +22,7 @@ enum LocalConversationItemTransformer {
             return ImageMessageItem(
                 id: imageMessageItem.clientId,
                 date: imageMessageItem.date,
-                sender: imageMessageItem.sender,
+                sender: .patient,
                 state: imageMessageItem.state,
                 content: imageMessageItem.content.media
             )
@@ -31,7 +31,7 @@ enum LocalConversationItemTransformer {
             return DocumentMessageItem(
                 id: documentMessageItem.clientId,
                 date: documentMessageItem.date,
-                sender: documentMessageItem.sender,
+                sender: .patient,
                 state: documentMessageItem.state,
                 content: documentMessageItem.content.media
             )

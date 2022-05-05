@@ -12,7 +12,7 @@ protocol ConversationItemRepository {
     ) -> PaginatedWatcher
     
     func sendMessage(
-        _ message: RemoteMessageInput,
+        _ message: MessageInput,
         inConversationWithId: UUID,
         completion: @escaping (Result<Void, Error>) -> Void
     ) -> Cancellable
