@@ -15,14 +15,16 @@ class MessagePresenter<
     // MARK: - Init
     
     init(
-        delegate: ConversationCellPresenterDelegate,
         item: Item,
         conversationId: UUID,
+        client: NablaClient,
+        delegate: ConversationCellPresenterDelegate,
         transformContent: @escaping (Item) -> ContentView.ContentViewModel
     ) {
-        self.delegate = delegate
         self.item = item
         self.conversationId = conversationId
+        self.client = client
+        self.delegate = delegate
         self.transformContent = transformContent
     }
     
@@ -65,11 +67,13 @@ class MessagePresenter<
     // MARK: - Private
 
     @Inject private var logger: Logger
-    private weak var view: MessageCellContract?
-    private let conversationId: UUID
-    private weak var delegate: ConversationCellPresenterDelegate?
     
+    private let conversationId: UUID
+    private let client: NablaClient
     private let transformContent: (Item) -> ContentView.ContentViewModel
+    
+    private weak var view: MessageCellContract?
+    private weak var delegate: ConversationCellPresenterDelegate?
     
     private var retrySendingAction: Cancellable?
     
@@ -120,7 +124,7 @@ class MessagePresenter<
     
     private func retrySendingMessage() {
         guard retrySendingAction == nil else { return }
-        retrySendingAction = NablaClient.shared.retrySending(itemWithId: item.id, inConversationWithId: conversationId) { [weak self] result in
+        retrySendingAction = client.retrySending(itemWithId: item.id, inConversationWithId: conversationId) { [weak self] result in
             switch result {
             case let .failure(error):
                 self?.logger.error(message: "Failed send retry with error: \(error.localizedDescription)")

@@ -11,8 +11,8 @@ class InteractorAssembly: Assembly {
         resolver.register(type: WatchConversationWithItemsInteractor.self) {
             WatchConversationWithItemsInteractorImpl()
         }
-        resolver.register(type: WatchConversationListInteractor.self) {
-            WatchConversationListInteractorImpl()
+        resolver.register(type: WatchConversationsInteractor.self) {
+            WatchConversationsInteractorImpl()
         }
         resolver.register(type: SendMessageInteractor.self) {
             SendMessageInteractorImpl()

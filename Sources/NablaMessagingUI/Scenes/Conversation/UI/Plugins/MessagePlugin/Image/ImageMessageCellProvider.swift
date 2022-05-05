@@ -1,11 +1,16 @@
 import Foundation
+import NablaMessagingCore
 import UIKit
 
 final class ImageMessageCellProvider: ConversationCellProvider {
     // MARK: Initializer
     
-    init(conversationId: UUID) {
+    init(
+        conversationId: UUID,
+        client: NablaClient
+    ) {
         self.conversationId = conversationId
+        self.client = client
     }
     
     // MARK: - Public
@@ -38,6 +43,7 @@ final class ImageMessageCellProvider: ConversationCellProvider {
     
     private typealias Cell = ConversationMessageCell<ImageMessageContentView>
     
+    private let client: NablaClient
     private let conversationId: UUID
     
     private var presenters: [UUID: ImageMessagePresenter] = [:]
@@ -50,7 +56,12 @@ final class ImageMessageCellProvider: ConversationCellProvider {
             presenter.item = item
             return presenter
         } else {
-            let presenter = ImageMessagePresenter(delegate: delegate, item: item, conversationId: conversationId)
+            let presenter = ImageMessagePresenter(
+                item: item,
+                conversationId: conversationId,
+                client: client,
+                delegate: delegate
+            )
             presenters[item.id] = presenter
             return presenter
         }

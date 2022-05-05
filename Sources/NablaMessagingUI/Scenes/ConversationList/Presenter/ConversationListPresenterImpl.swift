@@ -19,7 +19,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     
     func start() {
         isLoading = true
-        watcher = client.watchConversationList(callback: { [weak self] result in
+        watcher = client.watchConversations(callback: { [weak self] result in
             self?.isLoading = false
             self?.handle(result: result)
         })

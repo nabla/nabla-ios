@@ -1,4 +1,5 @@
 import Foundation
+import NablaMessagingCore
 
 final class TextMessagePresenter:
     MessagePresenter<
@@ -9,14 +10,16 @@ final class TextMessagePresenter:
     // MARK: - Init
     
     init(
-        delegate: ConversationCellPresenterDelegate,
         item: TextMessageViewItem,
-        conversationId: UUID
+        conversationId: UUID,
+        client: NablaClient,
+        delegate: ConversationCellPresenterDelegate
     ) {
         super.init(
-            delegate: delegate,
             item: item,
             conversationId: conversationId,
+            client: client,
+            delegate: delegate,
             transformContent: Self.transform
         )
     }

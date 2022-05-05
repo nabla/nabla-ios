@@ -5,7 +5,7 @@ class AuthenticatorImpl: Authenticator {
     // MARK: - Internal
     
     func authenticate(
-        provider: NablaAuthenticationProvider,
+        provider: SessionTokenProvider,
         completion: (Result<Void, AuthenticationError>) -> Void
     ) {
         requireTokens(provider: provider) { [weak self] result in
@@ -77,7 +77,7 @@ class AuthenticatorImpl: Authenticator {
     
     @Inject private var httpManager: HTTPManager
     
-    private var provider: NablaAuthenticationProvider?
+    private var provider: SessionTokenProvider?
     private var session: Session?
     private var renewTask: SharedTask<Result<Tokens, AuthenticationError>>?
     
@@ -124,7 +124,7 @@ class AuthenticatorImpl: Authenticator {
         requireTokens(provider: provider, completion: completion)
     }
     
-    private func requireTokens(provider: NablaAuthenticationProvider, completion: (Result<Tokens, AuthenticationError>) -> Void) {
+    private func requireTokens(provider: SessionTokenProvider, completion: (Result<Tokens, AuthenticationError>) -> Void) {
         provider.provideTokens { token in
             if let token = token {
                 completion(.success(token))

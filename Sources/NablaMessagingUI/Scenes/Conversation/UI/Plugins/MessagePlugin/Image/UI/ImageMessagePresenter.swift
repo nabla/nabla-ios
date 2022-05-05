@@ -1,4 +1,5 @@
 import Foundation
+import NablaMessagingCore
 
 final class ImageMessagePresenter:
     MessagePresenter<
@@ -9,15 +10,17 @@ final class ImageMessagePresenter:
     // MARK: - Init
     
     init(
-        delegate: ConversationCellPresenterDelegate,
         item: ImageMessageViewItem,
-        conversationId: UUID
+        conversationId: UUID,
+        client: NablaClient,
+        delegate: ConversationCellPresenterDelegate
     ) {
         self.delegate = delegate
         super.init(
-            delegate: delegate,
             item: item,
             conversationId: conversationId,
+            client: client,
+            delegate: delegate,
             transformContent: Self.transform
         )
     }

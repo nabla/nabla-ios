@@ -1,4 +1,5 @@
 import Foundation
+import NablaMessagingCore
 
 final class DocumentMessagePresenter:
     MessagePresenter<
@@ -7,17 +8,18 @@ final class DocumentMessagePresenter:
         ConversationMessageCell<DocumentMessageContentView>
     > {
     // MARK: - Init
-    
+        
     init(
-        delegate: ConversationCellPresenterDelegate,
         item: DocumentMessageViewItem,
-        conversationId: UUID
+        conversationId: UUID,
+        client: NablaClient,
+        delegate: ConversationCellPresenterDelegate
     ) {
-        self.delegate = delegate
         super.init(
-            delegate: delegate,
             item: item,
             conversationId: conversationId,
+            client: client,
+            delegate: delegate,
             transformContent: Self.transform
         )
     }

@@ -7,7 +7,7 @@ enum AuthenticationState {
 
 protocol Authenticator {
     func authenticate(
-        provider: NablaAuthenticationProvider,
+        provider: SessionTokenProvider,
         completion: (Result<Void, AuthenticationError>) -> Void
     )
     func logOut()

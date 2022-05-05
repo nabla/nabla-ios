@@ -1,4 +1,5 @@
 import Foundation
+import NablaMessagingCore
 import UIKit
 
 final class TypingIndicatorCellProvider: ConversationCellProvider {
@@ -29,15 +30,18 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
     }
     
     init(
-        conversationId: UUID
+        conversationId: UUID,
+        client: NablaClient
     ) {
         self.conversationId = conversationId
+        self.client = client
     }
     
     // MARK: - Private
     
     private typealias Cell = ConversationMessageCell<TypingIndicatorContentView>
     
+    private let client: NablaClient
     private let conversationId: UUID
     private var presenters: [UUID: TypingIndicatorPresenter] = [:]
     
@@ -49,7 +53,12 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
             presenter.item = item
             return presenter
         } else {
-            let presenter = TypingIndicatorPresenter(delegate: delegate, item: item, conversationId: conversationId)
+            let presenter = TypingIndicatorPresenter(
+                item: item,
+                conversationId: conversationId,
+                client: client,
+                delegate: delegate
+            )
             presenters[item.id] = presenter
             return presenter
         }

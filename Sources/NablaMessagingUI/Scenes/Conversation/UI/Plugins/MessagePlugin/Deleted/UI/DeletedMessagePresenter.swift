@@ -1,4 +1,5 @@
 import Foundation
+import NablaMessagingCore
 import UIKit
 
 final class DeletedMessagePresenter:
@@ -10,14 +11,16 @@ final class DeletedMessagePresenter:
     // MARK: - Init
     
     init(
-        delegate: ConversationCellPresenterDelegate,
         item: DeletedMessageViewItem,
-        conversationId: UUID
+        conversationId: UUID,
+        client: NablaClient,
+        delegate: ConversationCellPresenterDelegate
     ) {
         super.init(
-            delegate: delegate,
             item: item,
             conversationId: conversationId,
+            client: client,
+            delegate: delegate,
             transformContent: Self.transform
         )
     }

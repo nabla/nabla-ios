@@ -1,11 +1,16 @@
 import Foundation
+import NablaMessagingCore
 import UIKit
 
 final class DocumentMessageCellProvider: ConversationCellProvider {
     // MARK: Initializer
     
-    init(conversationId: UUID) {
+    init(
+        conversationId: UUID,
+        client: NablaClient
+    ) {
         self.conversationId = conversationId
+        self.client = client
     }
     
     // MARK: - Public
@@ -38,6 +43,7 @@ final class DocumentMessageCellProvider: ConversationCellProvider {
     
     private typealias Cell = ConversationMessageCell<DocumentMessageContentView>
     
+    private let client: NablaClient
     private let conversationId: UUID
     
     private var presenters: [UUID: DocumentMessagePresenter] = [:]
@@ -50,7 +56,12 @@ final class DocumentMessageCellProvider: ConversationCellProvider {
             presenter.item = item
             return presenter
         } else {
-            let presenter = DocumentMessagePresenter(delegate: delegate, item: item, conversationId: conversationId)
+            let presenter = DocumentMessagePresenter(
+                item: item,
+                conversationId: conversationId,
+                client: client,
+                delegate: delegate
+            )
             presenters[item.id] = presenter
             return presenter
         }

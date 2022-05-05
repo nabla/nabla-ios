@@ -1,5 +1,5 @@
 import Foundation
 
-public protocol NablaAuthenticationProvider {
+public protocol SessionTokenProvider {
     func provideTokens(completion: (Tokens?) -> Void)
 }

@@ -1,7 +1,7 @@
 import Foundation
 import NablaMessagingCore
 
-class FakeAuthenticator: NablaAuthenticationProvider {
+class FakeAuthenticator: SessionTokenProvider {
     static let shared = FakeAuthenticator()
     
     func provideTokens(completion: (Tokens?) -> Void) {

@@ -22,7 +22,7 @@ public class NablaClient {
     }
     
     public func authenticate(
-        provider: NablaAuthenticationProvider,
+        provider: SessionTokenProvider,
         completion: @escaping (Result<Void, AuthenticationError>) -> Void
     ) {
         authenticator.authenticate(provider: provider, completion: completion)
@@ -56,8 +56,8 @@ public class NablaClient {
         markConversationAsSeenInteractor.execute(conversationId: conversationId)
     }
     
-    public func watchConversationList(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
-        watchConversationListInteractor.execute(callback: callback)
+    public func watchConversations(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
+        watchConversationsInteractor.execute(callback: callback)
     }
     
     public func sendMessage(
@@ -95,7 +95,7 @@ public class NablaClient {
     @Inject private var deleteMessageInteractor: DeleteMessageInteractor
     @Inject private var setIsTypingInteractor: SetIsTypingInteractor
     @Inject private var markConversationAsSeenInteractor: MarkConversationAsSeenInteractor
-    @Inject private var watchConversationListInteractor: WatchConversationListInteractor
+    @Inject private var watchConversationsInteractor: WatchConversationsInteractor
     
     private static var _shared: NablaClient?
     

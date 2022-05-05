@@ -3,34 +3,34 @@ import NablaMessagingCore
 import UIKit
 
 public enum NablaViewFactory {
-    public static func createConversationListView(delegate: ConversationListDelegate) -> ConversationListView {
+    public static func createConversationListView(delegate: ConversationListDelegate, client: NablaClient = .shared) -> ConversationListView {
         let view = ConversationListView(frame: .zero)
         let presenter = ConversationListPresenterImpl(
             viewContract: view,
             delegate: delegate,
-            client: NablaClient.shared
+            client: client
         )
         view.presenter = presenter
         return view
     }
     
-    public static func createConversationViewController(_ conversation: Conversation) -> UIViewController {
+    public static func createConversationViewController(_ conversation: Conversation, client: NablaClient = .shared) -> UIViewController {
         let viewController = ConversationViewController(
             providers: [
                 DateSeparatorCellProvider(),
                 EventCellProvider(),
-                TextMessageCellProvider(conversationId: conversation.id),
-                TypingIndicatorCellProvider(conversationId: conversation.id),
-                DeletedMessageCellProvider(conversationId: conversation.id),
-                ImageMessageCellProvider(conversationId: conversation.id),
-                DocumentMessageCellProvider(conversationId: conversation.id),
+                TextMessageCellProvider(conversationId: conversation.id, client: client),
+                TypingIndicatorCellProvider(conversationId: conversation.id, client: client),
+                DeletedMessageCellProvider(conversationId: conversation.id, client: client),
+                ImageMessageCellProvider(conversationId: conversation.id, client: client),
+                DocumentMessageCellProvider(conversationId: conversation.id, client: client),
                 HasMoreIndicatorCellProvider(conversationId: conversation.id),
             ]
         )
         viewController.presenter = ConversationPresenterImpl(
             conversation: conversation,
             view: viewController,
-            client: NablaClient.shared
+            client: client
         )
         return viewController
     }

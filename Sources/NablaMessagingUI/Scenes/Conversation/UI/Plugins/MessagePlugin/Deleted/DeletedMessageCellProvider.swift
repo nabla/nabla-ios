@@ -1,4 +1,5 @@
 import Foundation
+import NablaMessagingCore
 import UIKit
 
 final class DeletedMessageCellProvider: ConversationCellProvider {
@@ -29,15 +30,18 @@ final class DeletedMessageCellProvider: ConversationCellProvider {
     }
     
     init(
-        conversationId: UUID
+        conversationId: UUID,
+        client: NablaClient
     ) {
         self.conversationId = conversationId
+        self.client = client
     }
     
     // MARK: - Private
     
     private typealias Cell = ConversationMessageCell<DeletedMessageContentView>
     
+    private let client: NablaClient
     private let conversationId: UUID
     private var presenters: [UUID: DeletedMessagePresenter] = [:]
     
@@ -50,9 +54,10 @@ final class DeletedMessageCellProvider: ConversationCellProvider {
             return presenter
         } else {
             let presenter = DeletedMessagePresenter(
-                delegate: delegate,
                 item: item,
-                conversationId: conversationId
+                conversationId: conversationId,
+                client: client,
+                delegate: delegate
             )
             presenters[item.id] = presenter
             return presenter
