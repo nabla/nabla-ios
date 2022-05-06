@@ -23,7 +23,7 @@ internal enum L10n {
     /// Type your message
     internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
     /// OK
-    internal static let conversationDeleteErrorAlertAction = L10n.tr("Localizable", "conversation_delete_error_alert_Action")
+    internal static let conversationDeleteErrorAlertAction = L10n.tr("Localizable", "conversation_delete_error_alert_action")
     /// An error occurred while deleting the message.
     internal static let conversationDeleteErrorMessage = L10n.tr("Localizable", "conversation_delete_error_message")
     /// Error
@@ -39,11 +39,11 @@ internal enum L10n {
     /// Yesterday
     internal static let conversationListLastMessageYesterday = L10n.tr("Localizable", "conversation_list_last_message_yesterday")
     /// An error occurred while loading the conversations. Please retry.
-    internal static let conversationListLoadErrorLabel = L10n.tr("Localizable", "conversation_List_load_error_label")
+    internal static let conversationListLoadErrorLabel = L10n.tr("Localizable", "conversation_list_load_error_label")
     /// An error occurred while loading the messages. Please retry.
     internal static let conversationLoadErrorLabel = L10n.tr("Localizable", "conversation_load_error_label")
     /// OK
-    internal static let conversationLoadMoreErrorAlertAction = L10n.tr("Localizable", "conversation_load_more_error_alert_Action")
+    internal static let conversationLoadMoreErrorAlertAction = L10n.tr("Localizable", "conversation_load_more_error_alert_action")
     /// An error occurred while loading the messages.
     internal static let conversationLoadMoreErrorMessage = L10n.tr("Localizable", "conversation_load_more_error_message")
     /// Error

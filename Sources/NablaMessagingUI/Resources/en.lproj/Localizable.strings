@@ -2,7 +2,7 @@
 "conversation_list_empty_preview" = "New conversation";
 "conversation_list_last_message_yesterday" = "Yesterday";
 "conversation_list_button_retry" = "Retry";
-"conversation_List_load_error_label" = "An error occurred while loading the conversations. Please retry.";
+"conversation_list_load_error_label" = "An error occurred while loading the conversations. Please retry.";
 
 // Conversation
 "conversation_composer_placeholder" = "Type your message";
@@ -17,9 +17,9 @@
 "conversation_load_error_label" = "An error occurred while loading the messages. Please retry.";
 "conversation_load_more_error_title" = "Error";
 "conversation_load_more_error_message" = "An error occurred while loading the messages.";
-"conversation_load_more_error_alert_Action" = "OK";
+"conversation_load_more_error_alert_action" = "OK";
 "conversation_delete_error_title" = "Error";
 "conversation_delete_error_message" = "An error occurred while deleting the message.";
-"conversation_delete_error_alert_Action" = "OK";
+"conversation_delete_error_alert_action" = "OK";
 "conversation_status_sending" = "Sending";
 "conversation_status_failed" = "Failed";
