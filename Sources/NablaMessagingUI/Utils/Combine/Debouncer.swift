@@ -10,7 +10,7 @@ final class Debouncer {
     }
     
     func execute(_ block: @escaping () -> Void) {
-        workItem?.cancel()
+        cancel()
         
         workItem = DispatchWorkItem(block: block)
         
@@ -18,7 +18,11 @@ final class Debouncer {
             queue.asyncAfter(deadline: .now() + delay, execute: workItem)
         }
     }
-    
+
+    func cancel() {
+        workItem?.cancel()
+    }
+
     // MARK: - Pr
     
     private let delay: TimeInterval

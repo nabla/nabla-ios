@@ -54,7 +54,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             return
         }
         draftText = text
-        typingDebouncer.execute { [weak self] in
+        localTypingDebouncer.execute { [weak self] in
             guard let self = self else { return }
             self.setTypingAction = self.client.setIsTyping(
                 !text.isEmpty,
@@ -150,8 +150,9 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var setTypingAction: Cancellable?
     private var loadMoreItemsAction: Cancellable?
     private var markAsSeenAction: Cancellable?
-    private let typingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
-    
+    private let localTypingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
+    private let remoteTypingDebouncer: Debouncer = .init(delay: 20, queue: .global(qos: .userInitiated))
+
     private var sendMediaCancellable: [Cancellable] = []
     
     private func watchItems() {
@@ -173,8 +174,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     self.set(conversation: conversationViewModel)
                     
                     if let conversationItems = self.conversationItems {
-                        let items = Self.transform(conversationItems: conversationItems, conversation: conversation)
-                        self.set(state: .loaded(items: items))
+                        self.transformAndUpdateState(conversationItems: conversationItems, conversation: conversation)
                     }
                 }
             }
@@ -188,8 +188,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
             case let .success(conversationItems):
                 self.conversationItems = conversationItems
-                let items = Self.transform(conversationItems: conversationItems, conversation: self.conversation)
-                self.set(state: .loaded(items: items))
+                self.transformAndUpdateState(conversationItems: conversationItems, conversation: self.conversation)
                 self.markAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
                 self.canLoadMoreItems = conversationItems.hasMore
             }
@@ -268,7 +267,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             .map {
                 TypingIndicatorViewItem(sender: .provider($0.provider))
             }
-        
+
         viewItems.append(contentsOf: typingItems)
 
         viewItems = viewItems.enumerated().map { index, element in
@@ -282,6 +281,18 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
 
         return viewItems
+    }
+
+    private func transformAndUpdateState(conversationItems: ConversationItems, conversation: Conversation) {
+        let items = Self.transform(conversationItems: conversationItems, conversation: conversation)
+        set(state: .loaded(items: items))
+        if items.contains { $0 is TypingIndicatorViewItem } {
+            remoteTypingDebouncer.execute { [weak self] in
+                self?.transformAndUpdateState(conversationItems: conversationItems, conversation: conversation)
+            }
+        } else {
+            remoteTypingDebouncer.cancel()
+        }
     }
 }
 
