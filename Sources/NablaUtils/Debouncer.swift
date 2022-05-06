@@ -1,15 +1,15 @@
 import Foundation
 
-final class Debouncer {
-    init(
+public final class Debouncer {
+    public init(
         delay: TimeInterval,
         queue: DispatchQueue
     ) {
         self.delay = delay
         self.queue = queue
     }
-    
-    func execute(_ block: @escaping () -> Void) {
+
+    public func execute(_ block: @escaping () -> Void) {
         cancel()
         
         workItem = DispatchWorkItem(block: block)
@@ -19,11 +19,11 @@ final class Debouncer {
         }
     }
 
-    func cancel() {
+    public func cancel() {
         workItem?.cancel()
     }
 
-    // MARK: - Pr
+    // MARK: - Private
     
     private let delay: TimeInterval
     private let queue: DispatchQueue

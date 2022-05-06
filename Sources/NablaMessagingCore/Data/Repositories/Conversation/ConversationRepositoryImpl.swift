@@ -8,12 +8,19 @@ class ConversationRepositoryImpl: ConversationRepository {
         _ conversationId: UUID,
         callback: @escaping (Result<Conversation, Error>) -> Void
     ) -> Cancellable {
-        let watcher = remoteDataSource.watchConversation(conversationId, callback: { result in
+        let watcher = remoteDataSource.watchConversation(conversationId, callback: { [weak self] result in
             switch result {
             case let .failure(error):
                 callback(.failure(error))
             case let .success(data):
                 let conversation = ConversationTransformer.transform(fragment: data)
+                if conversation.providers.contains(where: \.isTyping) {
+                    self?.remoteTypingDebouncer.execute {
+                        callback(.success(conversation))
+                    }
+                } else {
+                    self?.remoteTypingDebouncer.cancel()
+                }
                 callback(.success(conversation))
             }
         })
@@ -60,6 +67,10 @@ class ConversationRepositoryImpl: ConversationRepository {
     @Inject private var remoteDataSource: ConversationRemoteDataSource
     
     private weak var conversationsEventsSubscription: Cancellable?
+    private let remoteTypingDebouncer: Debouncer = .init(
+        delay: ProviderInConversation.Constants.typingTimeWindowTimeInterval,
+        queue: .global(qos: .userInitiated)
+    )
     
     private func makeOrReuseConversationEventsSubscription() -> Cancellable {
         if let subscription = conversationsEventsSubscription {

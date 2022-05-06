@@ -151,7 +151,6 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var loadMoreItemsAction: Cancellable?
     private var markAsSeenAction: Cancellable?
     private let localTypingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
-    private let remoteTypingDebouncer: Debouncer = .init(delay: 20, queue: .global(qos: .userInitiated))
 
     private var sendMediaCancellable: [Cancellable] = []
     
@@ -286,13 +285,6 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private func transformAndUpdateState(conversationItems: ConversationItems, conversation: Conversation) {
         let items = Self.transform(conversationItems: conversationItems, conversation: conversation)
         set(state: .loaded(items: items))
-        if items.contains { $0 is TypingIndicatorViewItem } {
-            remoteTypingDebouncer.execute { [weak self] in
-                self?.transformAndUpdateState(conversationItems: conversationItems, conversation: conversation)
-            }
-        } else {
-            remoteTypingDebouncer.cancel()
-        }
     }
 }
 
