@@ -53,7 +53,7 @@ class GQLClientImpl: GQLClient {
     }
     
     func addRefetchTriggers(_ triggers: [RefetchTrigger]) {
-        refetchTrrigers.append(contentsOf: triggers)
+        refetchTrigers.append(contentsOf: triggers)
     }
     
     // MARK: - Private
@@ -63,7 +63,7 @@ class GQLClientImpl: GQLClient {
     
     private lazy var apollo: ApolloClient = makeApolloClient()
     
-    private var refetchTrrigers = [RefetchTrigger]()
+    private var refetchTrigers = [RefetchTrigger]()
     
     private func makeApolloClient() -> ApolloClient {
         let apollo = ApolloClient(

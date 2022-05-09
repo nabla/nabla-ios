@@ -4,14 +4,13 @@ public class NotificationRefetchTrigger: RefetchTrigger {
     // MARK: - Private
     
     public init(name: Notification.Name) {
-        self.name = name
+        super.init()
+        observeNotification(name: name)
     }
     
     // MARK: - Private
     
-    private let name: Notification.Name
-    
-    private func observeEnterForeground() {
+    private func observeNotification(name: Notification.Name) {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(notificationHanlder),

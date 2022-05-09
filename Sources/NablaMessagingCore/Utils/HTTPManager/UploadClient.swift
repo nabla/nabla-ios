@@ -1,6 +1,5 @@
 import Foundation
 import NablaUtils
-import UIKit
 
 enum UploadClientError: Error {
     case noSelf
