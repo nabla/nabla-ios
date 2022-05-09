@@ -31,7 +31,7 @@ final class DeletedMessageCellProvider: ConversationCellProvider {
     
     init(
         conversationId: UUID,
-        client: NablaClient
+        client: NablaMessagingClient
     ) {
         self.conversationId = conversationId
         self.client = client
@@ -41,7 +41,7 @@ final class DeletedMessageCellProvider: ConversationCellProvider {
     
     private typealias Cell = ConversationMessageCell<DeletedMessageContentView>
     
-    private let client: NablaClient
+    private let client: NablaMessagingClient
     private let conversationId: UUID
     private var presenters: [UUID: DeletedMessagePresenter] = [:]
     

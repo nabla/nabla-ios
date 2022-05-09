@@ -13,7 +13,7 @@ final class DeletedMessagePresenter:
     init(
         item: DeletedMessageViewItem,
         conversationId: UUID,
-        client: NablaClient,
+        client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(

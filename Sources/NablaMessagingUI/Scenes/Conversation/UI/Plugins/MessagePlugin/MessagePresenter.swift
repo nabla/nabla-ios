@@ -17,7 +17,7 @@ class MessagePresenter<
     init(
         item: Item,
         conversationId: UUID,
-        client: NablaClient,
+        client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate,
         transformContent: @escaping (Item) -> ContentView.ContentViewModel
     ) {
@@ -69,7 +69,7 @@ class MessagePresenter<
     @Inject private var logger: Logger
     
     private let conversationId: UUID
-    private let client: NablaClient
+    private let client: NablaMessagingClient
     private let transformContent: (Item) -> ContentView.ContentViewModel
     
     private weak var view: MessageCellContract?

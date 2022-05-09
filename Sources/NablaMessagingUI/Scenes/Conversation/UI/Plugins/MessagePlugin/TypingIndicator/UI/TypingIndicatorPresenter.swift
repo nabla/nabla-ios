@@ -12,7 +12,7 @@ final class TypingIndicatorPresenter:
     init(
         item: TypingIndicatorViewItem,
         conversationId: UUID,
-        client: NablaClient,
+        client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(

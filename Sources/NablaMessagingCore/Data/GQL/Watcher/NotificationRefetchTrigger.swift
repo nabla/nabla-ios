@@ -13,13 +13,13 @@ public class NotificationRefetchTrigger: RefetchTrigger {
     private func observeNotification(name: Notification.Name) {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(notificationHanlder),
+            selector: #selector(notificationHandler),
             name: name,
             object: nil
         )
     }
     
-    @objc private func notificationHanlder() {
+    @objc private func notificationHandler() {
         trigger()
     }
     

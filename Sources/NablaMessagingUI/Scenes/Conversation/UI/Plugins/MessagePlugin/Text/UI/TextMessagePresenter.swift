@@ -13,7 +13,7 @@ final class TextMessagePresenter:
     init(
         item: TextMessageViewItem,
         conversationId: UUID,
-        client: NablaClient,
+        client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(

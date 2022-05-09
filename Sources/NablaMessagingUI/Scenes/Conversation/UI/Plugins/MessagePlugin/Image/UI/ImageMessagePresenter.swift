@@ -12,7 +12,7 @@ final class ImageMessagePresenter:
     init(
         item: ImageMessageViewItem,
         conversationId: UUID,
-        client: NablaClient,
+        client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         self.delegate = delegate

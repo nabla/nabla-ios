@@ -7,9 +7,11 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     
     private weak var delegate: ConversationListDelegate?
     
-    init(viewContract: ConversationListViewContract,
-         delegate: ConversationListDelegate,
-         client: NablaClient) {
+    init(
+        viewContract: ConversationListViewContract,
+        delegate: ConversationListDelegate,
+        client: NablaMessagingClient
+    ) {
         self.viewContract = viewContract
         self.delegate = delegate
         self.client = client
@@ -51,7 +53,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     // MARK: - Private
 
     @Inject private var logger: Logger
-    private let client: NablaClient
+    private let client: NablaMessagingClient
     private weak var viewContract: ConversationListViewContract?
     
     private var list: ConversationList = .empty {

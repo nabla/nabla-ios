@@ -7,7 +7,7 @@ final class ImageMessageCellProvider: ConversationCellProvider {
     
     init(
         conversationId: UUID,
-        client: NablaClient
+        client: NablaMessagingClient
     ) {
         self.conversationId = conversationId
         self.client = client
@@ -43,7 +43,7 @@ final class ImageMessageCellProvider: ConversationCellProvider {
     
     private typealias Cell = ConversationMessageCell<ImageMessageContentView>
     
-    private let client: NablaClient
+    private let client: NablaMessagingClient
     private let conversationId: UUID
     
     private var presenters: [UUID: ImageMessagePresenter] = [:]

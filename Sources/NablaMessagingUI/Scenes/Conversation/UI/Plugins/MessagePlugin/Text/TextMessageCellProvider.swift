@@ -31,7 +31,7 @@ final class TextMessageCellProvider: ConversationCellProvider {
     
     init(
         conversationId: UUID,
-        client: NablaClient
+        client: NablaMessagingClient
     ) {
         self.conversationId = conversationId
         self.client = client
@@ -41,7 +41,7 @@ final class TextMessageCellProvider: ConversationCellProvider {
     
     private typealias Cell = ConversationMessageCell<TextMessageContentView>
     
-    private let client: NablaClient
+    private let client: NablaMessagingClient
     private let conversationId: UUID
     private var presenters: [UUID: TextMessagePresenter] = [:]
     

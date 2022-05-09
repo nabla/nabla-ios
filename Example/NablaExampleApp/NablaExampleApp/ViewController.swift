@@ -8,7 +8,7 @@ class ViewController: DemoViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        client.authenticate(provider: FakeAuthenticator.shared) { result in
+        NablaClient.shared.authenticate(provider: FakeAuthenticator.shared) { result in
             switch result {
             case let .failure(error):
                 print(error)
@@ -22,7 +22,7 @@ class ViewController: DemoViewController {
     // MARK: Handlers
     
     override func createConversationButtonHandler() {
-        createConversationAction = client.createConversation { result in
+        createConversationAction = NablaMessagingClient.shared.createConversation { result in
             switch result {
             case let .failure(error):
                 print(error)
@@ -34,8 +34,6 @@ class ViewController: DemoViewController {
     }
     
     // MARK: - Private
-
-    private let client = NablaClient.shared
     
     private var createConversationAction: Any?
 }

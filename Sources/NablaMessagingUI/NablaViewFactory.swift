@@ -3,7 +3,7 @@ import NablaMessagingCore
 import UIKit
 
 public enum NablaViewFactory {
-    public static func createConversationListView(delegate: ConversationListDelegate, client: NablaClient = .shared) -> ConversationListView {
+    public static func createConversationListView(delegate: ConversationListDelegate, client: NablaMessagingClient = .shared) -> ConversationListView {
         let view = ConversationListView(frame: .zero)
         let presenter = ConversationListPresenterImpl(
             viewContract: view,
@@ -14,7 +14,7 @@ public enum NablaViewFactory {
         return view
     }
     
-    public static func createConversationViewController(_ conversation: Conversation, client: NablaClient = .shared) -> UIViewController {
+    public static func createConversationViewController(_ conversation: Conversation, client: NablaMessagingClient = .shared) -> UIViewController {
         let viewController = ConversationViewController(
             providers: [
                 DateSeparatorCellProvider(),

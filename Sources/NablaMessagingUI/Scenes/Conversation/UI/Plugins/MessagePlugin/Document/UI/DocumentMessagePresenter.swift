@@ -12,7 +12,7 @@ final class DocumentMessagePresenter:
     init(
         item: DocumentMessageViewItem,
         conversationId: UUID,
-        client: NablaClient,
+        client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(
