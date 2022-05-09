@@ -6,8 +6,8 @@ class FakeAuthenticator: SessionTokenProvider {
     
     func provideTokens(completion: (Tokens?) -> Void) {
         completion(.init(
-            accessToken: "",
-            refreshToken: ""
+            accessToken: "<youraccesstoken>",
+            refreshToken: "<yourrefreshtoken>"
         ))
     }
 }

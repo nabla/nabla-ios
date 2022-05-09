@@ -1,18 +1,11 @@
 import NablaMessagingCore
 import UIKit
 
-struct Config: Configuration {
-    var domain = "api.preprod.nabla.com"
-    var scheme = "https"
-    var port: Int?
-    var path: String = "/"
-}
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        NablaClient.initialize(apiKey: "", configuration: Config())
+        NablaClient.initialize(apiKey: "<yourapikey>")
         
         return true
     }
