@@ -6,6 +6,7 @@
 
 // Conversation
 "conversation_composer_placeholder" = "Type your message";
+"conversation_action_copy" = "Copy";
 "conversation_action_delete" = "Delete";
 "conversation_deleted_message" = "Deleted message";
 "conversation_deleted_sender" = "Deleted";

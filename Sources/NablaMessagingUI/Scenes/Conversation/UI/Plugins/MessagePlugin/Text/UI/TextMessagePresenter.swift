@@ -1,5 +1,6 @@
 import Foundation
 import NablaMessagingCore
+import UIKit
 
 final class TextMessagePresenter:
     MessagePresenter<
@@ -23,7 +24,17 @@ final class TextMessagePresenter:
             transformContent: Self.transform
         )
     }
-    
+
+    override func makeMenuElements(_ item: TextMessageViewItem) -> [UIMenuElement] {
+        let menuElements = super.makeMenuElements(item)
+        let copyAction = UIAction(
+            title: L10n.conversationActionCopy,
+            image: UIImage(systemName: "doc.on.doc"),
+            handler: { _ in UIPasteboard.general.string = item.text }
+        )
+        return [copyAction] + menuElements
+    }
+
     // MARK: - Private
     
     // TODO: - Move the transform to a separate class ?

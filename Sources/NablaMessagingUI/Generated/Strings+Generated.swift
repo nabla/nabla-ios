@@ -10,6 +10,8 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// Copy
+    internal static let conversationActionCopy = L10n.tr("Localizable", "conversation_action_copy")
     /// Delete
     internal static let conversationActionDelete = L10n.tr("Localizable", "conversation_action_delete")
     /// Camera
