@@ -32,7 +32,7 @@ class AvatarView: UIView {
     
     private lazy var imageAvatarView: UIURLImageView = createImageAvatarView()
     private lazy var initialsAvatarView: UILabel = createInitialsAvatarView()
-    private lazy var deletedAvatarView: UILabel = createDeletedAvatarView()
+    private lazy var deletedAvatarView: UIView = createDeletedAvatarView()
     
     fileprivate var backgroundLayer: CALayer? {
         didSet {
@@ -64,7 +64,6 @@ class AvatarView: UIView {
         
         let fontSize = min(frame.height, frame.width) / 2.2
         initialsAvatarView.font = .regular(fontSize)
-        deletedAvatarView.font = .regular(fontSize)
     }
     
     private func createImageAvatarView() -> UIURLImageView {
@@ -82,16 +81,13 @@ class AvatarView: UIView {
         return view
     }
     
-    private func createDeletedAvatarView() -> UILabel {
-        let view = UILabel()
+    private func createDeletedAvatarView() -> UIView {
+        let view = UIView()
         view.backgroundColor = NablaTheme.AvatarView.backgroundColor
-        view.text = "?"
-        view.textAlignment = .center
-        view.textColor = .black
         return view
     }
     
     private func setVisible(subview: UIView) {
-        subviews.forEach { $0.isHidden = $0 != subview }
+        [imageAvatarView, initialsAvatarView, deletedAvatarView].forEach { $0.isHidden = $0 != subview }
     }
 }

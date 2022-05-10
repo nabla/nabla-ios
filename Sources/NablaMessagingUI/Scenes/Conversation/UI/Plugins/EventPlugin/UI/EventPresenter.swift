@@ -17,15 +17,15 @@ final class EventPresenter: Presenter {
     
     // MARK: - Internal
     
-    func attachView(_ view: EventCellContract) {
+    func attachView(_ view: ConversationTextSeparatorCellContract) {
         self.view = view
     }
     
     // MARK: - Private
     
-    private weak var view: EventCellContract?
+    private weak var view: ConversationTextSeparatorCellContract?
     
     private func updateView() {
-        view?.configure(with: .init(message: item.text))
+        view?.configure(with: .init(text: item.text))
     }
 }

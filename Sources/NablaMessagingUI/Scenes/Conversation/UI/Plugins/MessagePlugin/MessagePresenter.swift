@@ -82,7 +82,7 @@ class MessagePresenter<
         case let .provider(provider):
             return .them(.init(
                 author: [provider.prefix, provider.lastName].compactMap(identity).joined(separator: " "),
-                avatar: .init(url: provider.avatarURL, text: nil),
+                avatar: .init(url: provider.avatarURL, text: provider.initials),
                 isContiguous: item.isContiguous
             ))
         case .system:

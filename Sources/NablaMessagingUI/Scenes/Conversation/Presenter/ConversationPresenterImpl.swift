@@ -209,7 +209,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private static func transform(conversation: Conversation) -> ConversationViewModel {
         ConversationViewModel(
             title: conversation.title ?? conversation.inboxPreviewTitle,
-            avatar: AvatarViewModel(url: conversation.providers.first?.provider.avatarURL, text: nil)
+            avatar: AvatarViewModel(
+                url: conversation.providers.first?.provider.avatarURL,
+                text: conversation.providers.first?.provider.initials
+            )
         )
     }
 
@@ -269,14 +272,31 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
         viewItems.append(contentsOf: typingItems)
 
-        viewItems = viewItems.enumerated().map { index, element in
-            guard index > 0,
-                  var current = element as? ConversationViewMessageItem,
-                  let previous = viewItems[index - 1] as? ConversationViewMessageItem else {
-                return element
+        if let firstItem = viewItems.first as? ConversationViewMessageItem {
+            viewItems.insert(DateSeparatorViewItem(id: UUID(), date: firstItem.date), at: 0)
+        }
+
+        zip(viewItems, viewItems.dropFirst()).enumerated().forEach { arg in
+            let (index, tuple) = arg
+            let (previous, current) = tuple
+
+            guard
+                let previousItem = previous as? ConversationViewMessageItem,
+                var currentItem = current as? ConversationViewMessageItem else {
+                return
             }
-            current.isContiguous = previous.sender == current.sender
-            return current
+
+            currentItem.isContiguous = previousItem.sender == currentItem.sender
+            viewItems[index + 1] = currentItem
+
+            guard
+                Calendar.current.areDatesMoreThanAnHourApart(previousItem.date, currentItem.date) else {
+                return
+            }
+
+            currentItem.isContiguous = false
+            viewItems[index + 1] = currentItem
+            viewItems.insert(DateSeparatorViewItem(id: UUID(), date: currentItem.date), at: index + 1)
         }
 
         return viewItems

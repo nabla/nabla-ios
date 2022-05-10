@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 final class EventCellProvider: ConversationCellProvider {
-    private typealias Cell = EventCell
+    private typealias Cell = ConversationTextSeparatorCell
     
     private var presenters: [UUID: EventPresenter] = [:]
     

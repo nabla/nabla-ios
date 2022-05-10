@@ -34,5 +34,6 @@ protocol ConversationViewContract: AnyObject {
 protocol ConversationViewMessageItem: ConversationViewItem {
     var sender: NablaMessagingCore.ConversationMessageSender { get }
     var sendingState: ConversationMessageSendingState { get }
+    var date: Date { get }
     var isContiguous: Bool { get set }
 }

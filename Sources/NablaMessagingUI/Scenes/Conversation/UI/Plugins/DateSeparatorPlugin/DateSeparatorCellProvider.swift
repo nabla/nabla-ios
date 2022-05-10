@@ -2,14 +2,14 @@ import Foundation
 import UIKit
 
 final class DateSeparatorCellProvider: ConversationCellProvider {
-    private typealias Cell = EventCell
-    
+    private typealias Cell = ConversationTextSeparatorCell
+
     private var presenters: [UUID: DateSeparatorPresenter] = [:]
-    
+
     func prepare(collectionView: UICollectionView) {
         collectionView.register(Cell.self)
     }
-    
+
     func provideCell(
         collectionView: UICollectionView,
         indexPath: IndexPath,
@@ -19,7 +19,7 @@ final class DateSeparatorCellProvider: ConversationCellProvider {
         guard let item = item as? DateSeparatorViewItem else {
             return nil
         }
-        
+
         let cell = collectionView.dequeueReusableCell(ofClass: Cell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
             item: item,
@@ -29,7 +29,7 @@ final class DateSeparatorCellProvider: ConversationCellProvider {
         cell.configure(presenter: presenter)
         return cell
     }
-    
+
     private func findOrCreatePresenter(
         item: DateSeparatorViewItem,
         delegate: ConversationCellPresenterDelegate

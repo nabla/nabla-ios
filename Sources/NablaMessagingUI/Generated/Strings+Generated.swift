@@ -20,13 +20,22 @@ internal enum L10n {
     internal static let conversationAddMediaCancel = L10n.tr("Localizable", "conversation_add_media_cancel")
     /// Document
     internal static let conversationAddMediaDocument = L10n.tr("Localizable", "conversation_add_media_document")
-    /// Camera roll
+    /// Photo Library
     internal static let conversationAddMediaLibrary = L10n.tr("Localizable", "conversation_add_media_library")
     /// Type your message
     internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
+    /// %@ at %@
+    internal static func conversationDateSeparatorDateTime(_ p1: Any, _ p2: Any) -> String {
+        L10n.tr("Localizable", "conversation_date_separator_date_time", String(describing: p1), String(describing: p2))
+    }
+
+    /// Today
+    internal static let conversationDateSeparatorDateToday = L10n.tr("Localizable", "conversation_date_separator_date_today")
+    /// Yesterday
+    internal static let conversationDateSeparatorDateYesterday = L10n.tr("Localizable", "conversation_date_separator_date_yesterday")
     /// OK
     internal static let conversationDeleteErrorAlertAction = L10n.tr("Localizable", "conversation_delete_error_alert_action")
-    /// An error occurred while deleting the message.
+    /// An error occurred while deleting the message, please try again.
     internal static let conversationDeleteErrorMessage = L10n.tr("Localizable", "conversation_delete_error_message")
     /// Error
     internal static let conversationDeleteErrorTitle = L10n.tr("Localizable", "conversation_delete_error_title")
@@ -40,9 +49,9 @@ internal enum L10n {
     internal static let conversationListEmptyPreview = L10n.tr("Localizable", "conversation_list_empty_preview")
     /// Yesterday
     internal static let conversationListLastMessageYesterday = L10n.tr("Localizable", "conversation_list_last_message_yesterday")
-    /// An error occurred while loading the conversations. Please retry.
+    /// An error occurred while loading the conversations, please try again.
     internal static let conversationListLoadErrorLabel = L10n.tr("Localizable", "conversation_list_load_error_label")
-    /// An error occurred while loading the messages. Please retry.
+    /// An error occurred while loading the messages, please try again.
     internal static let conversationLoadErrorLabel = L10n.tr("Localizable", "conversation_load_error_label")
     /// OK
     internal static let conversationLoadMoreErrorAlertAction = L10n.tr("Localizable", "conversation_load_more_error_alert_action")
@@ -50,9 +59,9 @@ internal enum L10n {
     internal static let conversationLoadMoreErrorMessage = L10n.tr("Localizable", "conversation_load_more_error_message")
     /// Error
     internal static let conversationLoadMoreErrorTitle = L10n.tr("Localizable", "conversation_load_more_error_title")
-    /// Failed
+    /// Failed to send, tap to try again…
     internal static let conversationStatusFailed = L10n.tr("Localizable", "conversation_status_failed")
-    /// Sending
+    /// Sending…
     internal static let conversationStatusSending = L10n.tr("Localizable", "conversation_status_sending")
     /// System
     internal static let conversationSystemSender = L10n.tr("Localizable", "conversation_system_sender")

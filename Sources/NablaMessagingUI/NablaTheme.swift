@@ -179,4 +179,9 @@ public enum NablaTheme {
         /// Color of the retry button on error in the conversations list view or in the conversation list. Default set to NablaTheme.primaryColor
         public static var retryButtonTitleColor = NablaTheme.primaryColor
     }
+
+    public enum ConversationTextSeparatorCell {
+        public static var font = NablaTheme.footnote
+        public static var color = NablaTheme.secondaryTextColor
+    }
 }

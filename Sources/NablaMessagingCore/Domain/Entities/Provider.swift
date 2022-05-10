@@ -7,3 +7,9 @@ public struct Provider: Hashable {
     public let firstName: String
     public let lastName: String
 }
+
+public extension Provider {
+    var initials: String? {
+        String([firstName, lastName].compactMap(\.first)).nilIfEmpty
+    }
+}
