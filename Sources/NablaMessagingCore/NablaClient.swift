@@ -36,15 +36,30 @@ public class NablaClient {
     ///   - provider: ``Tokens`` provider
     ///   - completion: Callback to get the authentication Status. See ``AuthenticationError`` for more information.
     public func authenticate(
+        userId: UUID,
         provider: SessionTokenProvider,
         completion: @escaping (Result<Void, AuthenticationError>) -> Void
     ) {
-        authenticator.authenticate(provider: provider, completion: completion)
+        if let currentUser = userRepository.getCurrentUser(), currentUser.id != userId {
+            logger.info(message: "Authenticating a new user, will log previous one out first.")
+            logOut()
+        }
+        userRepository.setCurrentUser(User(id: userId))
+        authenticator.authenticate(userId: userId, provider: provider, completion: completion)
     }
 
     /// Log the current user out
     public func logOut() {
+        userRepository.setCurrentUser(nil)
         authenticator.logOut()
+        gqlStore.clearCache { [logger] result in
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                logger.error(message: "Failed to clear cache on logout: \(error)")
+            }
+        }
     }
 
     /// Any ``RefetchTrigger`` will tell the SDK to update watchers with the latest server data.
@@ -67,6 +82,9 @@ public class NablaClient {
     
     @Inject private var authenticator: Authenticator
     @Inject private var gqlClient: GQLClient
+    @Inject private var gqlStore: GQLStore
+    @Inject private var userRepository: UserRepository
+    @Inject private var logger: Logger
     
     private static var _shared: NablaClient?
     

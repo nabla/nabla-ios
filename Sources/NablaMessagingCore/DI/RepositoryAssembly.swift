@@ -11,5 +11,8 @@ class RepositoryAssembly: Assembly {
         resolver.register(type: ConversationItemRepository.self) {
             ConversationItemRepositoryImpl()
         }
+        resolver.register(type: UserRepository.self) {
+            UserRepositoryImpl()
+        }
     }
 }

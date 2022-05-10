@@ -17,5 +17,8 @@ class DataSourceAssembly: Assembly {
         resolver.register(type: FileUploadRemoteDataSource.self) {
             FileUploadRemoteDataSourceImpl()
         }
+        resolver.register(type: UserLocalDataSource.self) {
+            UserLocalDataSourceImpl()
+        }
     }
 }

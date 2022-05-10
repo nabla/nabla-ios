@@ -5,13 +5,14 @@ class AuthenticatorImpl: Authenticator {
     // MARK: - Internal
     
     func authenticate(
+        userId: UUID,
         provider: SessionTokenProvider,
         completion: (Result<Void, AuthenticationError>) -> Void
     ) {
-        requireTokens(provider: provider) { [weak self] result in
+        requireTokens(userId: userId, provider: provider) { [weak self] result in
             switch result {
             case let .success(tokens):
-                self?.session = Session(tokens: tokens)
+                self?.session = Session(userId: userId, tokens: tokens)
                 self?.provider = provider
                 self?.notifyTokensChanged()
                 completion(.success(()))
@@ -37,7 +38,7 @@ class AuthenticatorImpl: Authenticator {
             return
         }
         
-        let task = makeOrReuseRenewTokensTask(tokens: session.tokens)
+        let task = makeOrReuseRenewSessionTask(session: session)
         task.addOnComplete { [session] result in
             switch result {
             case let .success(tokens):
@@ -91,13 +92,13 @@ class AuthenticatorImpl: Authenticator {
         }
     }
     
-    private func makeOrReuseRenewTokensTask(tokens: Tokens) -> SharedTask<Result<Tokens, AuthenticationError>> {
+    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<Tokens, AuthenticationError>> {
         if let existing = renewTask {
             return existing
         }
         let renewTask = SharedTask<Result<Tokens, AuthenticationError>> { [weak self] completion in
             guard let self = self else { return }
-            self.renewTokens(tokens) { result in
+            self.renewSession(session) { result in
                 completion(result)
                 self.renewTask = nil
                 self.notifyTokensChanged()
@@ -111,9 +112,9 @@ class AuthenticatorImpl: Authenticator {
         notificationCenter.post(name: Constants.tokenChangedNotification, object: nil)
     }
     
-    private func renewTokens(_ tokens: Tokens, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
-        if !isExpired(tokens.refreshToken) {
-            fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
+    private func renewSession(_ session: Session, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
+        if !isExpired(session.tokens.refreshToken) {
+            fetchTokens(refreshToken: session.tokens.refreshToken, completion: completion)
             return
         }
         
@@ -121,11 +122,11 @@ class AuthenticatorImpl: Authenticator {
             completion(.failure(.missingAuthenticationProvider))
             return
         }
-        requireTokens(provider: provider, completion: completion)
+        requireTokens(userId: session.userId, provider: provider, completion: completion)
     }
     
-    private func requireTokens(provider: SessionTokenProvider, completion: (Result<Tokens, AuthenticationError>) -> Void) {
-        provider.provideTokens { token in
+    private func requireTokens(userId: UUID, provider: SessionTokenProvider, completion: (Result<Tokens, AuthenticationError>) -> Void) {
+        provider.provideTokens(forUserId: userId) { token in
             if let token = token {
                 completion(.success(token))
             } else {
