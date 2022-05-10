@@ -8,15 +8,10 @@ class ViewController: DemoViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NablaClient.shared.authenticate(provider: FakeAuthenticator.shared) { result in
-            switch result {
-            case let .failure(error):
-                print(error)
-            case .success:
-                let view = NablaViewFactory.createConversationListView(delegate: self)
-                self.setContentView(view)
-            }
-        }
+        let userId = UUID() // Replace with your own `userId`
+        NablaClient.shared.authenticate(userId: userId, provider: FakeAuthenticator.shared)
+        let view = NablaViewFactory.createConversationListView(delegate: self)
+        setContentView(view)
     }
     
     // MARK: Handlers

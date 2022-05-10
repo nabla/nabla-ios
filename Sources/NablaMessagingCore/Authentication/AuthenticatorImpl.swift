@@ -6,20 +6,11 @@ class AuthenticatorImpl: Authenticator {
     
     func authenticate(
         userId: UUID,
-        provider: SessionTokenProvider,
-        completion: (Result<Void, AuthenticationError>) -> Void
+        provider: SessionTokenProvider
     ) {
-        requireTokens(userId: userId, provider: provider) { [weak self] result in
-            switch result {
-            case let .success(tokens):
-                self?.session = Session(userId: userId, tokens: tokens)
-                self?.provider = provider
-                self?.notifyTokensChanged()
-                completion(.success(()))
-            case let .failure(error):
-                completion(.failure(error))
-            }
-        }
+        self.provider = provider
+        session = Session(userId: userId, tokens: nil)
+        notifyTokensChanged()
     }
     
     func logOut() {
@@ -33,8 +24,8 @@ class AuthenticatorImpl: Authenticator {
             return
         }
         
-        if !isExpired(session.tokens.accessToken) {
-            completion(.success(.authenticated(accessToken: session.tokens.accessToken)))
+        if let tokens = session.tokens, !isExpired(tokens.accessToken) {
+            completion(.success(.authenticated(accessToken: tokens.accessToken)))
             return
         }
         
@@ -113,8 +104,8 @@ class AuthenticatorImpl: Authenticator {
     }
     
     private func renewSession(_ session: Session, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
-        if !isExpired(session.tokens.refreshToken) {
-            fetchTokens(refreshToken: session.tokens.refreshToken, completion: completion)
+        if let tokens = session.tokens, !isExpired(tokens.refreshToken) {
+            fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
             return
         }
         

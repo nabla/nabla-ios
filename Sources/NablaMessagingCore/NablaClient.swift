@@ -37,15 +37,14 @@ public class NablaClient {
     ///   - completion: Callback to get the authentication Status. See ``AuthenticationError`` for more information.
     public func authenticate(
         userId: UUID,
-        provider: SessionTokenProvider,
-        completion: @escaping (Result<Void, AuthenticationError>) -> Void
+        provider: SessionTokenProvider
     ) {
         if let currentUser = userRepository.getCurrentUser(), currentUser.id != userId {
             logger.info(message: "Authenticating a new user, will log previous one out first.")
             logOut()
         }
         userRepository.setCurrentUser(User(id: userId))
-        authenticator.authenticate(userId: userId, provider: provider, completion: completion)
+        authenticator.authenticate(userId: userId, provider: provider)
     }
 
     /// Log the current user out

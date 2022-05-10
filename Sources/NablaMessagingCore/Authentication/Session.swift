@@ -4,11 +4,11 @@ class Session {
     // MARK: - Internal
     
     let userId: UUID
-    var tokens: Tokens
+    var tokens: Tokens?
     
     init(
         userId: UUID,
-        tokens: Tokens
+        tokens: Tokens?
     ) {
         self.userId = userId
         self.tokens = tokens

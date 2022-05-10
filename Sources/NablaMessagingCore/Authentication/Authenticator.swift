@@ -8,8 +8,7 @@ enum AuthenticationState {
 protocol Authenticator {
     func authenticate(
         userId: UUID,
-        provider: SessionTokenProvider,
-        completion: (Result<Void, AuthenticationError>) -> Void
+        provider: SessionTokenProvider
     )
     func logOut()
     func getAccessToken(completion: @escaping (Result<AuthenticationState, AuthenticationError>) -> Void)
