@@ -20,11 +20,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     // MARK: - ConversationListPresenter
     
     func start() {
-        isLoading = true
-        watcher = client.watchConversations(callback: { [weak self] result in
-            self?.isLoading = false
-            self?.handle(result: result)
-        })
+        watchConversations()
     }
     
     func didSelectConversation(at indexPath: IndexPath) {
@@ -40,14 +36,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     }
     
     func didTapRetry() {
-        guard !isLoading else { return }
-        isLoading = true
-        loadMoreAction = watcher?.loadMore { [weak self] result in
-            if case let .failure(error) = result {
-                self?.logger.error(message: "Failed to load more conversations with error: \(error.localizedDescription)")
-            }
-            self?.isLoading = false
-        }
+        watchConversations()
     }
     
     // MARK: - Private
@@ -74,6 +63,15 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     
     private var watcher: PaginatedWatcher?
     private var loadMoreAction: Cancellable?
+    
+    private func watchConversations() {
+        guard !isLoading else { return }
+        isLoading = true
+        watcher = client.watchConversations(callback: { [weak self] result in
+            self?.isLoading = false
+            self?.handle(result: result)
+        })
+    }
     
     private func handle(result: Result<ConversationList, Error>) {
         switch result {
