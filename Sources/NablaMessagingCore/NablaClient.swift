@@ -33,8 +33,8 @@ public class NablaClient {
 
     /// Authenticate the current user.
     /// - Parameters:
+    ///   - userId: Identifies the user between sessions.
     ///   - provider: ``Tokens`` provider
-    ///   - completion: Callback to get the authentication Status. See ``AuthenticationError`` for more information.
     public func authenticate(
         userId: UUID,
         provider: SessionTokenProvider
