@@ -91,7 +91,7 @@ class ConversationItemsMerger: PaginatedWatcher {
         var localItemsByClientId = localItems.toDictionary(\.clientId)
         
         var mergedItems = remoteItems.compactMap { remoteItem -> ConversationItem? in
-            guard let clientId = remoteItem.fragments.messageFragment.clientId else {
+            guard let clientId = remoteItem.clientId else {
                 return RemoteConversationItemTransformer.transform(remoteItem)
             }
             if let localItem = localItemsByClientId[clientId] {

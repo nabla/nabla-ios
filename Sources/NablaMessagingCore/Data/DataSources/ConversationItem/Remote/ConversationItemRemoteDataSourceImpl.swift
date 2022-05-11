@@ -109,7 +109,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             onlyIfExists: true,
             body: { cache in
                 let isAlreadyInConversation = cache.conversation.conversation.items.data.contains(
-                    where: { $0?.fragments.conversationItemFragment.fragments.messageFragment.id == message.id }
+                    where: { $0?.fragments.conversationItemFragment.id == message.id }
                 )
                 if !isAlreadyInConversation {
                     cache.conversation.conversation.items.data.append(.init(unsafeResultMap: message.resultMap))
@@ -161,11 +161,15 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
     
     override func updateCache(_ cache: inout RemoteConversationItems, withAdditionalData data: RemoteConversationItems) {
         let existingIds = Set(cache.conversation.conversation.items.data.compactMap {
-            $0?.fragments.conversationItemFragment.fragments.messageFragment.id
+            $0?.fragments.conversationItemFragment.id
         })
         let newItems = data.conversation.conversation.items.data.filter { maybeItem in
             guard let item = maybeItem else { return false }
-            if existingIds.contains(item.fragments.conversationItemFragment.fragments.messageFragment.id) {
+            guard let itemId = item.fragments.conversationItemFragment.id else {
+                logger.warning(message: "Unknown item type: \(item.__typename)")
+                return false
+            }
+            if existingIds.contains(itemId) {
                 logger.warning(message: "Found duplicated item when loading more: \(item)")
                 return false
             }

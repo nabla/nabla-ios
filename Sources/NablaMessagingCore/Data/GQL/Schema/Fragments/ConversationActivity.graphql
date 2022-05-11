@@ -1,0 +1,3 @@
+fragment ConversationActivityFragment on ConversationActivity {
+    id
+}

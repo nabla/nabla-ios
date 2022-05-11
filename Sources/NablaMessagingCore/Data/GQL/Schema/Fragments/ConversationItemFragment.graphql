@@ -2,4 +2,7 @@ fragment ConversationItemFragment on ConversationItem {
     ... on Message {
         ...MessageFragment
     }
+    ... on ConversationActivity {
+        ...ConversationActivityFragment
+    }
 }

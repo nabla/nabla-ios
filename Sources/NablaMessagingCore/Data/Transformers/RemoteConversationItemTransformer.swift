@@ -2,27 +2,20 @@ import Foundation
 
 enum RemoteConversationItemTransformer {
     static func transform(_ remoteConversationItem: RemoteConversationItem) -> ConversationItem? {
-        let message = remoteConversationItem.fragments.messageFragment
-        let sender: ConversationMessageSender
-        
-        if let provider = message.author.asProvider?.fragments.providerFragment {
-            sender = .provider(RemoteConversationProviderTransformer.transform(provider))
-        } else if message.author.asPatient != nil {
-            sender = .patient
-        } else if message.author.asSystem != nil {
-            sender = .system
-        } else if message.author.asDeletedProvider != nil {
-            sender = .deleted
-        } else {
-            fatalError("[Should not get here] Received an unknown author type \(message.author.__typename)")
+        if let message = remoteConversationItem.asMessage?.fragments.messageFragment {
+            return transform(message)
         }
-        
+        assertionFailure("Unknown remote conversation item type: \(remoteConversationItem.__typename)")
+        return nil
+    }
+    
+    private static func transform(_ message: GQL.MessageFragment) -> ConversationItem? {
         let messageContentFragment = message.content?.fragments.messageContentFragment
         if let textContent = messageContentFragment?.asTextMessageContent?.fragments.textMessageContentFragment {
             return TextMessageItem(
                 id: message.id,
                 date: message.createdAt,
-                sender: sender,
+                sender: transform(message.author),
                 sendingState: .sent,
                 content: textContent.text
             )
@@ -30,7 +23,7 @@ enum RemoteConversationItemTransformer {
             return DeletedMessageItem(
                 id: message.id,
                 date: message.createdAt,
-                sender: sender,
+                sender: transform(message.author),
                 sendingState: .sent
             )
         } else if
@@ -40,7 +33,7 @@ enum RemoteConversationItemTransformer {
             return ImageMessageItem(
                 id: message.id,
                 date: message.createdAt,
-                sender: sender,
+                sender: transform(message.author),
                 sendingState: .sent,
                 content: Media(
                     type: .image,
@@ -57,7 +50,7 @@ enum RemoteConversationItemTransformer {
             return DocumentMessageItem(
                 id: message.id,
                 date: message.createdAt,
-                sender: sender,
+                sender: transform(message.author),
                 sendingState: .sent,
                 content: Media(
                     type: .pdf,
@@ -68,8 +61,22 @@ enum RemoteConversationItemTransformer {
                 )
             )
         }
-        
-        assertionFailure("Unknown remote conversation item content \(String(describing: message.content))")
+        assertionFailure("Unknown message content \(String(describing: message.content))")
         return nil
+    }
+    
+    private static func transform(_ author: GQL.MessageFragment.Author) -> ConversationMessageSender {
+        if let provider = author.asProvider?.fragments.providerFragment {
+            return .provider(RemoteConversationProviderTransformer.transform(provider))
+        } else if author.asPatient != nil {
+            return .patient
+        } else if author.asSystem != nil {
+            return .system
+        } else if author.asDeletedProvider != nil {
+            return .deleted
+        } else {
+            assertionFailure("[Should not get here] Received an unknown author type \(author.__typename)")
+            return .deleted
+        }
     }
 }

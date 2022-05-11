@@ -40,6 +40,7 @@ public extension GQL {
             document.append("\n" + TextMessageContentFragment.fragmentDefinition)
             document.append("\n" + ImageMessageContentFragment.fragmentDefinition)
             document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
+            document.append("\n" + ConversationActivityFragment.fragmentDefinition)
             return document
         }
 
@@ -228,7 +229,7 @@ public extension GQL {
                         }
 
                         public struct Datum: GraphQLSelectionSet {
-                            public static let possibleTypes: [String] = ["Message"]
+                            public static let possibleTypes: [String] = ["Message", "ConversationActivity"]
 
                             public static var selections: [GraphQLSelection] {
                                 [
@@ -241,6 +242,10 @@ public extension GQL {
 
                             public init(unsafeResultMap: ResultMap) {
                                 resultMap = unsafeResultMap
+                            }
+
+                            public static func makeConversationActivity(id: GQL.UUID) -> Datum {
+                                Datum(unsafeResultMap: ["__typename": "ConversationActivity", "id": id])
                             }
 
                             public var __typename: String {

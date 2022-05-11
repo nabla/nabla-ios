@@ -16,6 +16,7 @@ echo "--- NablaMessagingCore - Build ---"
 # This should be kept in sync with the files in ApolloCodegen/Sources/ApolloCodegen/main.swift
 input_output_files=(
   "$DIRNAME/Data/GQL/Schema"
+  "$DIRNAME/../../../../graphql/sdk"
 )
 
 cd ../../ApolloCodegen
@@ -23,7 +24,7 @@ cd ../../ApolloCodegen
 run_cached apollo-codegen "${input_output_files[*]}" \
   /usr/bin/xcrun --sdk macosx swift run ApolloCodegen generate
 
-cd $DIRNAME
+cd "$DIRNAME"
 
 # SwiftGen
 GENERATED_FOLDER="$DIRNAME"/Generated
