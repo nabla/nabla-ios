@@ -43,4 +43,7 @@
 --closurevoid preserve
 
 --swiftversion 5.2
---exclude **/Generated,**/ApolloCodegen,**/Vendors
+
+--exclude **/Generated/**.swift
+--exclude **/ApolloCodegen
+--exclude **/Vendors
