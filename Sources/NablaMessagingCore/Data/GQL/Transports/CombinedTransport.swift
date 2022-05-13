@@ -1,5 +1,7 @@
 import Apollo
-import ApolloWebSocket
+#if canImport(ApolloWebSocket)
+    import ApolloWebSocket
+#endif
 import Foundation
 import NablaUtils
 

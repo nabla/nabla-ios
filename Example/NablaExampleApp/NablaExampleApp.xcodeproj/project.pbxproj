@@ -50,7 +50,6 @@
 				E4CD91812819D35C00562EC5 /* Packages */,
 				E4CD916C2819D29E00562EC5 /* NablaExampleApp */,
 				E4CD916B2819D29E00562EC5 /* Products */,
-				E4CD91832819D37300562EC5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,13 +82,6 @@
 				E4CD91822819D35C00562EC5 /* ios */,
 			);
 			name = Packages;
-			sourceTree = "<group>";
-		};
-		E4CD91832819D37300562EC5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

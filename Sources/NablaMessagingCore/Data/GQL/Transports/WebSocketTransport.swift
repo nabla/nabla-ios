@@ -1,12 +1,22 @@
 import Apollo
-import ApolloWebSocket
+#if canImport(ApolloWebSocket)
+    import ApolloWebSocket
+#endif
 import Foundation
 import NablaUtils
+
+#if canImport(ApolloWebSocket)
+    typealias ApolloWebSocketTransport = ApolloWebSocket.WebSocketTransport
+    typealias ApolloWebSocketTransportDelegate = ApolloWebSocket.WebSocketTransportDelegate
+#else
+    typealias ApolloWebSocketTransport = Apollo.WebSocketTransport
+    typealias ApolloWebSocketTransportDelegate = Apollo.WebSocketTransportDelegate
+#endif
 
 class WebSocketTransport {
     // MARK: - Internal
     
-    private(set) lazy var apollo: ApolloWebSocket.WebSocketTransport = makeApolloTransport()
+    private(set) lazy var apollo: ApolloWebSocketTransport = makeApolloTransport()
     
     init() {
         apollo.delegate = self
@@ -27,8 +37,8 @@ class WebSocketTransport {
     @Inject private var authenticator: Authenticator
     @Inject private var logger: Logger
     
-    private func makeApolloTransport() -> ApolloWebSocket.WebSocketTransport {
-        let apollo = ApolloWebSocket.WebSocketTransport(
+    private func makeApolloTransport() -> ApolloWebSocketTransport {
+        let apollo = ApolloWebSocketTransport(
             websocket: WebSocket(
                 url: environment.graphqlWebSocketUrl,
                 protocol: .graphql_ws
@@ -75,16 +85,16 @@ class WebSocketTransport {
     }
 }
 
-extension WebSocketTransport: ApolloWebSocket.WebSocketTransportDelegate {
-    func webSocketTransportDidConnect(_: ApolloWebSocket.WebSocketTransport) {
+extension WebSocketTransport: ApolloWebSocketTransportDelegate {
+    func webSocketTransportDidConnect(_: ApolloWebSocketTransport) {
         logger.info(message: "Websocket did connect")
     }
     
-    func webSocketTransportDidReconnect(_: ApolloWebSocket.WebSocketTransport) {
+    func webSocketTransportDidReconnect(_: ApolloWebSocketTransport) {
         logger.info(message: "Websocket did reconnect")
     }
     
-    func webSocketTransport(_: ApolloWebSocket.WebSocketTransport, didDisconnectWithError error: Error?) {
+    func webSocketTransport(_: ApolloWebSocketTransport, didDisconnectWithError error: Error?) {
         logger.info(message: "Websocket did disconnect with error: \(error?.localizedDescription ?? "null")")
     }
 }

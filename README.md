@@ -10,6 +10,7 @@ Check our [documentation portal](https://docs.nabla.dev/docs/setup-1) for in dep
 
 ## Getting started
 
+### Using Swift Package Manager
 The Nabla Messaging UI SDK is compatible with iOS 13 and higher.
 
 Open your .xcodeproj, select the option "Add Package..." in the File menu, and paste this URL:
@@ -21,6 +22,18 @@ https://github.com/nabla/nabla-ios
 Xcode will look for the Products available in the Package. Select NablaMessagingCore and NablaMessagingUI. Press next and Xcode will download the dependencies.
 
 You can find the latest version available in the [release page](https://github.com/nabla/nabla-ios/releases).
+
+### Using Cocoapods
+
+Add the following dependencies in your `Podfile`
+```ruby
+pod 'NablaMessagingUI', git: 'https://github.com/nabla/nabla-ios'
+pod 'NablaMessagingCore', git: 'https://github.com/nabla/nabla-ios'
+pod 'NablaUtils', git: 'https://github.com/nabla/nabla-ios'
+```
+
+And then run `pod install` to update your project.
+
 
 ## Sample app
 

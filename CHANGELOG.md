@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `NablaMessagingUI` avatar component now displays Provider initials when no avatar picture is available
 - `NablaMessagingUI` conversation screen now has an option to copy any text message in the conversation
 - Public APIs are now documented in the code, making it available for developers in Xcode
+- Started Cocoapods support for SDK integration
 
 ### Changed
 - `NablaClient` messaging APIs are now a part of `NablaMessagingClient`. Only initialization and authentication are provided by `NablaClient`
