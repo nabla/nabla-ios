@@ -24,7 +24,11 @@ let package = Package(
         ),
     ],
     dependencies: [
+        // SDK
         .package(url: "https://github.com/apollographql/apollo-ios", from: "0.50.0"),
+        
+        // Tests
+        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", from: "4.1.0"),
     ],
     targets: [
         .target(
@@ -45,7 +49,10 @@ let package = Package(
         ),
         .testTarget(
             name: "NablaMessagingCoreTests",
-            dependencies: ["NablaMessagingCore"]
+            dependencies: [
+                .target(name: "NablaMessagingCore"),
+                .product(name: "SwiftyMocky", package: "SwiftyMocky"),
+            ]
         ),
         .target(
             name: "NablaMessagingUI",

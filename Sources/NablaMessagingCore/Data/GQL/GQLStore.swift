@@ -1,36 +1,36 @@
 import Apollo
 import Foundation
 
+// sourcery: AutoMockable
+// sourcery: typealias = "Cancellable = NablaMessagingCore.Cancellable"
 protocol GQLStore {
-    var apollo: ApolloStore { get }
-    
-    func createCache<Q: GraphQLQuery>(
-        for query: Q,
-        data: Q.Data,
+    func createCache<Query: GQLQuery>(
+        for query: Query,
+        data: Query.Data,
         completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
     )
     
-    func updateCache<Q: GraphQLQuery>(
-        for query: Q,
+    func updateCache<Query: GQLQuery>(
+        for query: Query,
         onlyIfExists: Bool,
-        body: @escaping (inout Q.Data) throws -> Void,
+        body: @escaping (inout Query.Data) throws -> Void,
         completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
     )
     
-    func updateCache<F: GraphQLFragment>(
-        of fragment: F,
+    func updateCache<Fragment: GQLFragment>(
+        of fragment: Fragment,
         onlyIfExists: Bool,
-        body: @escaping (inout F) throws -> Void,
+        body: @escaping (inout Fragment) throws -> Void,
         completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
     )
     
-    func cacheExists<Q: GraphQLQuery>(
-        for query: Q,
+    func cacheExists<Query: GQLQuery>(
+        for query: Query,
         completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void
     )
     
-    func cacheExists<F: GraphQLFragment>(
-        of fragment: F,
+    func cacheExists<Fragment: GQLFragment>(
+        of fragment: Fragment,
         completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void
     )
     

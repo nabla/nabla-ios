@@ -60,6 +60,7 @@ class GQLClientImpl: GQLClient {
     
     @Inject private var transport: CombinedTransport
     @Inject private var store: GQLStore
+    @Inject private var apolloStore: ApolloStore
     
     private lazy var apollo: ApolloClient = makeApolloClient()
     
@@ -68,7 +69,7 @@ class GQLClientImpl: GQLClient {
     private func makeApolloClient() -> ApolloClient {
         let apollo = ApolloClient(
             networkTransport: transport.apollo,
-            store: store.apollo
+            store: apolloStore
         )
         apollo.cacheKeyForObject = Normalization.cacheKey(for:)
         return apollo

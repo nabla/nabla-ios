@@ -6,10 +6,14 @@ class GQLAssembly: Assembly {
     // MARK: Assembly
     
     func assemble(resolver: Resolver) {
+        resolver.register(type: ApolloStore.self) {
+            ApolloStore(cache: InMemoryNormalizedCache())
+        }
+        
         resolver.register(type: GQLStore.self) {
             GQLStoreImpl()
         }
-        
+
         resolver.register(type: InterceptorProvider.self) {
             HttpInterceptorProvider()
         }

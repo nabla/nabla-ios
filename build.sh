@@ -19,7 +19,7 @@ echo "Searching for build.sh files inside every directory"
 # Find files named ./build.sh in every directory contained
 # within the Packages directory. Doesn't go deeper than depth 2, 
 # and doesn't consider depth 0 or 1 either.
-build_files=$(find ./Sources -type f -maxdepth 2 -name "build.sh" | sort)
+build_files=$(find ./Sources ./Tests -type f -maxdepth 2 -name "build.sh" | sort)
 echo "Found the following files:"
 echo "$build_files" | tr " " "\n"
 echo ''
@@ -34,3 +34,8 @@ do
   echo ''
   cd ../../
 done
+
+# SwiftyMocky
+echo "--- SwiftyMocky ---"
+
+mint run swiftymocky generate

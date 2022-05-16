@@ -1,5 +1,7 @@
 import Foundation
 
+// sourcery: AutoMockable
+// sourcery: typealias = "Cancellable = NablaMessagingCore.Cancellable"
 protocol GQLClient {
     func fetch<Query: GQLQuery>(
         query: Query,

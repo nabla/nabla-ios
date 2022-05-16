@@ -14,7 +14,7 @@ class HttpInterceptorProvider: InterceptorProvider {
     
     // MARK: - Private
     
-    @Inject private var store: GQLStore
+    @Inject private var apolloStore: ApolloStore
     
-    private lazy var defaultProvider = DefaultInterceptorProvider(store: store.apollo)
+    private lazy var defaultProvider = DefaultInterceptorProvider(store: apolloStore)
 }

@@ -33,7 +33,7 @@ class WebSocketTransport {
     // MARK: - Private
     
     @Inject private var environment: Environment
-    @Inject private var store: GQLStore
+    @Inject private var apolloStore: ApolloStore
     @Inject private var authenticator: Authenticator
     @Inject private var logger: Logger
     
@@ -43,7 +43,7 @@ class WebSocketTransport {
                 url: environment.graphqlWebSocketUrl,
                 protocol: .graphql_ws
             ),
-            store: store.apollo,
+            store: apolloStore,
             clientName: environment.packageName,
             clientVersion: environment.packageVersion,
             sendOperationIdentifiers: false,

@@ -1,5 +1,6 @@
 import Apollo
 import Foundation
+import NablaUtils
 
 class GQLStoreImpl: GQLStore {
     // MARK: - Internal
@@ -103,15 +104,9 @@ class GQLStoreImpl: GQLStore {
     
     // MARK: Init
     
-    let apollo: ApolloStore
-    
-    init(
-        cache: NormalizedCache = InMemoryNormalizedCache()
-    ) {
-        apollo = ApolloStore(cache: cache)
-    }
-    
     // MARK: - Private
+    
+    @Inject private var apollo: ApolloStore
     
     private static func makeCompletionHandler<T>(
         completion: @escaping (Result<T, GQLError.CacheError>) -> Void

@@ -1,0 +1,18 @@
+sourceryCommand: null
+sourceryTemplate: ./Mock.swifttemplate # Custom template until https://github.com/MakeAWishFoundation/SwiftyMocky/issues/313 is fixed
+
+NablaMessagingCore:
+    sources:
+        include:
+            - ./Sources/NablaMessagingCore
+        exclude:
+            - ./Sources/**/Generated
+    output:
+        ./Tests/NablaMessagingCoreTests/Generated/Mock.generated.swift
+    targets:
+        - NablaMessagingCoreTests
+    testable:
+        - NablaMessagingCore
+    import: []
+    prototype: false
+    sourcery: []
