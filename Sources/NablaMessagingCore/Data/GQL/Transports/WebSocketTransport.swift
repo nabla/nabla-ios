@@ -66,22 +66,25 @@ class WebSocketTransport {
     }
     
     @objc private func updateAuthenticationHeader() {
-        authenticator.getAccessToken { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure:
-                self.apollo.closeConnection()
-            case let .success(authenticationState):
-                switch authenticationState {
-                case .unauthenticated:
-                    // We don't support any unauthenticated subscription
-                    self.apollo.closeConnection()
-                case let .authenticated(accessToken):
-                    self.apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"])
-                    self.apollo.resumeWebSocketConnection(autoReconnect: true)
+        authenticator.getAccessToken(
+            handler: .init { [weak self] result in
+                guard let self = self else {
+                    return
                 }
-            }
-        }
+                switch result {
+                case .failure:
+                    self.apollo.closeConnection()
+                case let .success(authenticationState):
+                    switch authenticationState {
+                    case .unauthenticated:
+                        // We don't support any unauthenticated subscription
+                        self.apollo.closeConnection()
+                    case let .authenticated(accessToken):
+                        self.apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"])
+                        self.apollo.resumeWebSocketConnection(autoReconnect: true)
+                    }
+                }
+            })
     }
 }
 

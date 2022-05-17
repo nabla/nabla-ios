@@ -4,8 +4,8 @@ import NablaUtils
 class WatchConversationsInteractorImpl: WatchConversationsInteractor {
     // MARK: - WatchConversationsInteractor
     
-    func execute(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
-        conversationRepository.watchConversations(callback: callback)
+    func execute(handler: ResultHandler<ConversationList, NablaWatchConversationsError>) -> PaginatedWatcher {
+        conversationRepository.watchConversations(handler: handler)
     }
     
     // MARK: - private

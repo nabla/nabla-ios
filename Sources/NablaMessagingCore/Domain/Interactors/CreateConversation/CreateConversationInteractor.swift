@@ -1,5 +1,5 @@
 import Foundation
 
 protocol CreateConversationInteractor {
-    func execute(completion: @escaping (Result<Conversation, Error>) -> Void) -> Cancellable
+    func execute(handler: ResultHandler<Conversation, NablaCreateConversationError>) -> Cancellable
 }

@@ -5,12 +5,17 @@ class ConversationItemsMerger: PaginatedWatcher {
     // MARK: - Internal
     
     func resume() {
-        remoteWatcher = remoteDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] result in
-            guard let self = self else { return }
-            self.remoteData = result
-            self.notifyNewValues()
-        }
-        
+        remoteWatcher = remoteDataSource.watchConversationItems(
+            ofConversationWithId: conversationId,
+            handler: .init { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                self.remoteData = result
+                self.notifyNewValues()
+            }
+        )
+
         localWatcher = localDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] items in
             guard let self = self else { return }
             self.localData = items
@@ -39,10 +44,10 @@ class ConversationItemsMerger: PaginatedWatcher {
     
     init(
         conversationId: UUID,
-        callback: @escaping (Result<ConversationItems, Error>) -> Void
+        handler: ResultHandler<ConversationItems, GQLError>
     ) {
         self.conversationId = conversationId
-        self.callback = callback
+        self.handler = handler
     }
     
     deinit {
@@ -55,7 +60,7 @@ class ConversationItemsMerger: PaginatedWatcher {
     @Inject private var localDataSource: ConversationItemLocalDataSource
     
     private let conversationId: UUID
-    private let callback: (Result<ConversationItems, Error>) -> Void
+    private let handler: ResultHandler<ConversationItems, GQLError>
     
     private var remoteWatcher: PaginatedWatcher?
     private var localWatcher: Cancellable?
@@ -71,7 +76,7 @@ class ConversationItemsMerger: PaginatedWatcher {
         case let .success(remoteData):
             remoteConversation = remoteData
         case let .failure(error):
-            callback(.failure(error))
+            handler(.failure(error))
             return
         }
         
@@ -84,7 +89,7 @@ class ConversationItemsMerger: PaginatedWatcher {
             hasMore: item.hasMore,
             items: mergedItems
         )
-        callback(.success(newValue))
+        handler(.success(newValue))
     }
     
     private func merge(_ remoteItems: [RemoteConversationItem], _ localItems: [LocalConversationItem]) -> [ConversationItem] {

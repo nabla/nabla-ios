@@ -1,5 +1,5 @@
 import Foundation
 
-public protocol WatchConversationInteractor {
-    func execute(_ conversationId: UUID, callback: @escaping (Result<Conversation, Error>) -> Void) -> Cancellable
+protocol WatchConversationInteractor {
+    func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaWatchConversationError>) -> Cancellable
 }

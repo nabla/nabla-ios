@@ -4,9 +4,12 @@ import NablaUtils
 class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
     // MARK: - FileUploadRemoteDataSource
     
-    func upload(file: RemoteFileUpload, completion: @escaping (Result<UUID, FileUploadRemoteDataSourceError>) -> Void) {
+    func upload(
+        file: RemoteFileUpload,
+        handler: ResultHandler<UUID, FileUploadRemoteDataSourceError>
+    ) {
         guard let data = try? Data(contentsOf: file.fileUrl) else {
-            completion(.failure(.cantReadFileData))
+            handler(.failure(.cannotReadFileData))
             return
         }
         
@@ -16,14 +19,10 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
             fileName: file.fileName,
             mimeType: file.mimeType
         )
-        uploadClient.upload(upload) { result in
-            switch result {
-            case let .success(uuid):
-                completion(.success(uuid))
-            case let .failure(error):
-                completion(.failure(.uploadError(error)))
-            }
-        }
+        uploadClient.upload(
+            upload,
+            handler: handler.pullbackError(FileUploadRemoteDataSourceError.uploadError)
+        )
     }
     
     // MARK: - Private

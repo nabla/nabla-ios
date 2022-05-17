@@ -6,12 +6,12 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<RemoteConversationItems, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversationItems, GQLError>
     ) -> PaginatedWatcher {
         ConversationItemsWatcher(
             conversationId: conversationId,
             numberOfItemsPerPage: Constants.numberOfItemsPerPage,
-            callback: callback
+            handler: handler
         )
     }
     
@@ -19,7 +19,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         localMessageClientId: UUID,
         remoteMessageInput: GQL.SendMessageContentInput,
         conversationId: UUID,
-        callback: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, GQLError>
     ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.SendMessageMutation(
@@ -27,52 +27,59 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 content: remoteMessageInput,
                 clientId: localMessageClientId
             ),
-            completion: { result in
-                callback(result.map { _ in () }.mapError { $0 as Error })
-            }
+            handler: handler.pullback(void)
         )
     }
-    
-    func delete(messageId: UUID, callback: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+
+    func delete(
+        messageId: UUID,
+        handler: ResultHandler<Void, GQLError>
+    ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.DeleteMessageMutation(messageId: messageId),
-            completion: { result in
-                switch result {
-                case let .failure(error): callback(.failure(error))
-                case .success: callback(.success(()))
-                }
-            }
+            handler: handler.pullback(void)
         )
     }
-    
+
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<RemoteConversationEvent, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversationEvent, GQLError>
     ) -> Cancellable {
-        gqlClient.subscribe(subscription: GQL.ConversationEventsSubscription(id: conversationId)) { [weak self] result in
-            guard let self = self else { return }
+        gqlClient.subscribe(subscription: GQL.ConversationEventsSubscription(id: conversationId), handler: .init { [weak self] result in
+            guard let self = self else {
+                return
+            }
             switch result {
             case let .failure(error):
-                callback(.failure(error))
+                handler(.failure(error))
             case let .success(data):
-                guard let event = data.conversation?.event else { return }
+                guard let event = data.conversation?.event else {
+                    return
+                }
                 self.handleConversationEvent(event, inConversationWithId: conversationId)
-                callback(.success(event))
+                handler(.success(event))
             }
-        }
+        })
     }
     
-    func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable {
+    func setIsTyping(
+        _ isTyping: Bool,
+        conversationId: UUID,
+        handler: ResultHandler<Void, GQLError>
+    ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.SetTypingMutation(conversationId: conversationId, isTyping: isTyping),
-            completion: { _ in }
+            handler: handler.pullback(void)
         )
     }
     
-    func markConversationAsSeen(conversationId: UUID) -> Cancellable {
+    func markConversationAsSeen(
+        conversationId: UUID,
+        handler: ResultHandler<Void, GQLError>
+    ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.MaskAsSeenMutation(conversationId: conversationId),
-            completion: { _ in }
+            handler: handler.pullback(void)
         )
     }
     
@@ -146,12 +153,12 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
     init(
         conversationId: UUID,
         numberOfItemsPerPage: Int,
-        callback: @escaping (Result<RemoteConversationItems, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversationItems, GQLError>
     ) {
         self.conversationId = conversationId
         super.init(
             numberOfItemsPerPage: numberOfItemsPerPage,
-            callback: callback
+            handler: handler
         )
     }
     

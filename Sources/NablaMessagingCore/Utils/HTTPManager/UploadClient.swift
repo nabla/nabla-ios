@@ -2,7 +2,6 @@ import Foundation
 import NablaUtils
 
 enum UploadClientError: Error {
-    case noSelf
     case noAccessToken
     case impossibleToBuildFormData
     case noValidData
@@ -19,19 +18,20 @@ struct UploadData {
 class UploadClient {
     // MARK: - Public
     
-    func upload(_ data: UploadData, completion: @escaping (Result<UUID, UploadClientError>) -> Void) {
-        authenticator.getAccessToken { [weak self] result in
-            guard let state = result.value else {
-                completion(.failure(UploadClientError.noAccessToken))
-                return
-            }
-            switch state {
-            case let .authenticated(accessToken: token):
-                self?.doUpload(authToken: token, data: data, completion: completion)
-            case .unauthenticated:
-                completion(.failure(.noSelf))
-            }
-        }
+    func upload(_ data: UploadData, handler: ResultHandler<UUID, UploadClientError>) {
+        authenticator.getAccessToken(
+            handler: .init { [weak self] result in
+                guard let state = result.value else {
+                    handler(.failure(.noAccessToken))
+                    return
+                }
+                switch state {
+                case let .authenticated(accessToken: token):
+                    self?.doUpload(authToken: token, data: data, handler: handler)
+                case .unauthenticated:
+                    handler(.failure(.noAccessToken))
+                }
+            })
     }
     
     // MARK: - Private
@@ -76,7 +76,11 @@ class UploadClient {
         }
     }
     
-    private func doUpload(authToken: String, data: UploadData, completion: @escaping (Result<UUID, UploadClientError>) -> Void) {
+    private func doUpload(
+        authToken: String,
+        data: UploadData,
+        handler: ResultHandler<UUID, UploadClientError>
+    ) {
         var request = UploadEndpoint.request()
         var headers = makeHeaders(authToken: authToken)
         var body: Data?
@@ -86,7 +90,7 @@ class UploadClient {
             headers[HTTPHeaders.ContentType] = multipartFormData.contentType
             body = multipartFormData.body
         case .failure:
-            completion(.failure(.impossibleToBuildFormData))
+            handler(.failure(.impossibleToBuildFormData))
             return
         }
         
@@ -98,10 +102,10 @@ class UploadClient {
                 let uuidString = result.value?.first,
                 let uuid = UUID(uuidString: uuidString)
             else {
-                completion(.failure(.noValidData))
+                handler(.failure(.noValidData))
                 return
             }
-            completion(.success(uuid))
+            handler(.success(uuid))
         }
     }
     

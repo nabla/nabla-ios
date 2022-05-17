@@ -4,8 +4,8 @@ import NablaUtils
 final class CreateConversationInteractorImpl: CreateConversationInteractor {
     // MARK: - Internal
     
-    func execute(completion: @escaping (Result<Conversation, Error>) -> Void) -> Cancellable {
-        repository.createConversation(completion: completion)
+    func execute(handler: ResultHandler<Conversation, NablaCreateConversationError>) -> Cancellable {
+        repository.createConversation(handler: handler)
     }
     
     // MARK: - Private

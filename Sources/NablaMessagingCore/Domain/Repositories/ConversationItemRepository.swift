@@ -1,38 +1,37 @@
 import Foundation
 
-public enum ConversationItemRepositoryError: Error {
-    case conversationItemNotFound
-    case notSupported
-}
-
 protocol ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId: UUID,
-        callback: @escaping (Result<ConversationItems, Error>) -> Void
+        handler: ResultHandler<ConversationItems, NablaWatchConversationItemsError>
     ) -> PaginatedWatcher
     
     func sendMessage(
         _ message: MessageInput,
         inConversationWithId: UUID,
-        completion: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, NablaSendMessageError>
     ) -> Cancellable
     
     func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId: UUID,
-        completion: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, NablaRetrySendingMessageError>
     ) -> Cancellable
     
     func deleteMessage(
         withId messageId: UUID,
         conversationId: UUID,
-        callback: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, NablaDeleteMessageError>
     ) -> Cancellable
     
     func setIsTyping(
         _ isTyping: Bool,
-        conversationId: UUID
+        conversationId: UUID,
+        handler: ResultHandler<Void, NablaSetIsTypingError>
     ) -> Cancellable
     
-    func markConversationAsSeen(conversationId: UUID) -> Cancellable
+    func markConversationAsSeen(
+        conversationId: UUID,
+        handler: ResultHandler<Void, NablaMarkConversationAsSeenError>
+    ) -> Cancellable
 }

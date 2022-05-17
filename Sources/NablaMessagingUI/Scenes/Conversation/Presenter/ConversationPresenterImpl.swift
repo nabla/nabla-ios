@@ -14,7 +14,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     func didTapOnSend(text: String, medias: [Media]) {
         view?.emptyComposer()
         medias.forEach { media in
-            let cancellable = client.sendMessage(media.messageInput, inConversationWithId: conversation.id, completion: { result in
+            let cancellable = client.sendMessage(media.messageInput, inConversationWithId: conversation.id, handler: { result in
                 switch result {
                 case .success:
                     break
@@ -58,7 +58,8 @@ final class ConversationPresenterImpl: ConversationPresenter {
             guard let self = self else { return }
             self.setTypingAction = self.client.setIsTyping(
                 !text.isEmpty,
-                inConversationWithId: self.conversation.id
+                inConversationWithId: self.conversation.id,
+                handler: { _ in }
             )
         }
     }
@@ -159,7 +160,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
         
         conversationWatcher = client.watchConversation(
             conversation.id,
-            callback: { [weak self] result in
+            handler: { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {
@@ -188,7 +189,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             case let .success(conversationItems):
                 self.conversationItems = conversationItems
                 self.transformAndUpdateState(conversationItems: conversationItems, conversation: self.conversation)
-                self.markAsSeenAction = self.client.markConversationAsSeen(self.conversation.id)
+                self.markAsSeenAction = self.client.markConversationAsSeen(self.conversation.id, handler: { _ in })
                 self.canLoadMoreItems = conversationItems.hasMore
             }
         }

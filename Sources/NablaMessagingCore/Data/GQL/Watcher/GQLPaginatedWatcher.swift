@@ -17,17 +17,20 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
         gqlClient
             .fetch(
                 query: makeQuery(page: .init(cursor: cursor, numberOfItems: numberOfItems)),
-                cachePolicy: .fetchIgnoringCacheCompletely
-            ) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                case let .success(data):
-                    self.cursor = Query.getCursor(from: data)
-                    self.handleAdditionalData(data, completion: completion)
+                cachePolicy: .fetchIgnoringCacheCompletely,
+                handler: .init { [weak self] result in
+                    guard let self = self else {
+                        return
+                    }
+                    switch result {
+                    case let .failure(error):
+                        completion(.failure(error))
+                    case let .success(data):
+                        self.cursor = Query.getCursor(from: data)
+                        self.handleAdditionalData(data, completion: completion)
+                    }
                 }
-            }
+            )
     }
     
     func cancel() {
@@ -36,25 +39,28 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     
     init(
         numberOfItemsPerPage: Int,
-        callback: @escaping (Result<Query.Data, GQLError>) -> Void
+        handler: ResultHandler<Query.Data, GQLError>
     ) {
         self.numberOfItemsPerPage = numberOfItemsPerPage
-        self.callback = callback
+        self.handler = handler
         
         watcher = gqlClient
             .watch(
                 query: makeQuery(page: .init(cursor: nil, numberOfItems: numberOfItemsPerPage)),
-                cachePolicy: .fetchIgnoringCacheData
-            ) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case let .failure(error):
-                    callback(.failure(error))
-                case let .success(data):
-                    self.cursor = Query.getCursor(from: data)
-                    callback(.success(data))
+                cachePolicy: .fetchIgnoringCacheData,
+                handler: .init { [weak self] result in
+                    guard let self = self else {
+                        return
+                    }
+                    switch result {
+                    case let .failure(error):
+                        handler(.failure(error))
+                    case let .success(data):
+                        self.cursor = Query.getCursor(from: data)
+                        handler(.success(data))
+                    }
                 }
-            }
+            )
     }
     
     deinit {
@@ -75,7 +81,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     @Inject private var gqlStore: GQLStore
     
     private let numberOfItemsPerPage: Int
-    private let callback: (Result<Query.Data, GQLError>) -> Void
+    private let handler: ResultHandler<Query.Data, GQLError>
     
     private var watcher: Cancellable?
     private var cursor: String?

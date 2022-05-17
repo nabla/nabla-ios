@@ -5,9 +5,9 @@ final class RetrySendingMessageInteractorImpl: RetrySendingMessageInteractor {
     func execute(
         itemId: UUID,
         conversationId: UUID,
-        completion: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, NablaRetrySendingMessageError>
     ) -> Cancellable {
-        repository.retrySending(itemWithId: itemId, inConversationWithId: conversationId, completion: completion)
+        repository.retrySending(itemWithId: itemId, inConversationWithId: conversationId, handler: handler)
     }
     
     // MARK: - Private

@@ -31,7 +31,7 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "DocumentMessageContent", "DeletedMessageContent"]
+    public static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "DocumentMessageContent", "DeletedMessageContent", "AudioMessageContent"]
 
     public static var selections: [GraphQLSelection] {
       return [
@@ -48,6 +48,10 @@ public extension GQL {
 
     public init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
+    }
+
+    public static func makeAudioMessageContent() -> MessageContentFragment {
+      return MessageContentFragment(unsafeResultMap: ["__typename": "AudioMessageContent"])
     }
 
     public static func makeTextMessageContent(text: String) -> MessageContentFragment {

@@ -4,6 +4,6 @@ protocol RetrySendingMessageInteractor {
     func execute(
         itemId: UUID,
         conversationId: UUID,
-        completion: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, NablaRetrySendingMessageError>
     ) -> Cancellable
 }

@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some `NablaMessagingUI` strings have been updated
 - `Conversation` struct has been revamped and now contains the providers with a proper `ProviderInConversation` struct
 - `NablaMessagingClient.watchConversationItems` now returns a `ConversationItems` struct which only contains the messages themselves. Details of the conversation and its participants should now be watched using `NablaMessagingClient.watchConversation`
+- Used explicit errors for `NablaMessagingClient` methods
 
 ### Fixed
 - `NablaMessagingClient` now correctly triggers `watchConversationItems` watcher when a Provider is not typing anymore

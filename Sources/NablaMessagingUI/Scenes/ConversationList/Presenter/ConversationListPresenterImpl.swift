@@ -67,13 +67,13 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     private func watchConversations() {
         guard !isLoading else { return }
         isLoading = true
-        watcher = client.watchConversations(callback: { [weak self] result in
+        watcher = client.watchConversations(handler: { [weak self] result in
             self?.isLoading = false
             self?.handle(result: result)
         })
     }
     
-    private func handle(result: Result<ConversationList, Error>) {
+    private func handle(result: Result<ConversationList, NablaWatchConversationsError>) {
         switch result {
         case let .success(list):
             self.list = list

@@ -8,20 +8,23 @@ public class NablaMessagingClient {
     public static let shared = NablaMessagingClient(client: .shared)
 
     /// Create a new conversation on behalf of the current user.
-    /// - Parameter completion: Completion called when the ``Conversation`` is created or an ``Error`` if something went wrong.
+    /// - Parameter handler: Handler called when the ``Conversation`` is created or an ``Error`` if something went wrong.
     /// - Returns: A ``Cancellable`` of the task
-    public func createConversation(completion: @escaping (Result<Conversation, Error>) -> Void) -> Cancellable {
-        createConversationInteractor.execute(completion: completion)
+    public func createConversation(handler: @escaping (Result<Conversation, NablaCreateConversationError>) -> Void) -> Cancellable {
+        createConversationInteractor.execute(handler: .init(handler))
     }
 
     /// Watch the list of messages in a conversation.
     /// The current user should be involved in that conversation or a security error will be raised.
     /// - Parameters:
     ///   - conversationId: The id of the conversation to watch.
-    ///   - callback: The callback to call when new items are received.
+    ///   - handler: The handler to call when new items are received.
     /// - Returns: A ``PaginatedWatcher`` of the task
-    public func watchItems(ofConversationWithId conversationId: UUID, callback: @escaping (Result<ConversationItems, Error>) -> Void) -> PaginatedWatcher {
-        watchConversationItemsInteractor.execute(conversationId: conversationId, callback: callback)
+    public func watchItems(
+        ofConversationWithId conversationId: UUID,
+        handler: @escaping (Result<ConversationItems, NablaWatchConversationItemsError>) -> Void
+    ) -> PaginatedWatcher {
+        watchConversationItemsInteractor.execute(conversationId: conversationId, handler: .init(handler))
     }
 
     /// Change the current user typing status in the conversation.
@@ -40,31 +43,44 @@ public class NablaMessagingClient {
     /// - Parameters:
     ///   - isTyping: A boolean declaring if the user is typing or not.
     ///   - conversationId: The id of the ``Conversation``.
+    ///   - handler: Handler called with the result.
     /// - Returns: A ``Cancellable`` of the task
-    public func setIsTyping(_ isTyping: Bool, inConversationWithId conversationId: UUID) -> Cancellable {
-        setIsTypingInteractor.execute(isTyping: isTyping, conversationId: conversationId)
+    public func setIsTyping(
+        _ isTyping: Bool,
+        inConversationWithId conversationId: UUID,
+        handler: @escaping (Result<Void, NablaSetIsTypingError>) -> Void
+    ) -> Cancellable {
+        setIsTypingInteractor.execute(isTyping: isTyping, conversationId: conversationId, handler: .init(handler))
     }
 
     /// Acknowledge that the current user has seen all messages in it.
     /// Will result in all messages sent before current timestamp to be marked as read.
     /// - Parameter conversationId: The id of the ``Conversation``
+    /// - Parameter handler: Handler called with the result.
     /// - Returns: A ``Cancellable`` of the task
-    public func markConversationAsSeen(_ conversationId: UUID) -> Cancellable {
-        markConversationAsSeenInteractor.execute(conversationId: conversationId)
+    public func markConversationAsSeen(
+        _ conversationId: UUID,
+        handler: @escaping ((Result<Void, NablaMarkConversationAsSeenError>) -> Void)
+    ) -> Cancellable {
+        markConversationAsSeenInteractor.execute(conversationId: conversationId, handler: .init(handler))
     }
 
     /// Watch the list of conversations the current user is involved in.
-    /// - Parameter callback: The callback to call when new items are received.
+    /// - Parameter handler: The callback to call when new items are received.
     /// - Returns: A ``PaginatedWatcher`` of the task
-    public func watchConversations(callback: @escaping (Result<ConversationList, Error>) -> Void) -> PaginatedWatcher {
-        watchConversationsInteractor.execute(callback: callback)
+    public func watchConversations(handler: @escaping (Result<ConversationList, NablaWatchConversationsError>) -> Void) -> PaginatedWatcher {
+        watchConversationsInteractor.execute(handler: .init(handler))
     }
-    
+
+    /// Watch a conversation details.
+    /// - Parameters:
+    ///   - conversationId: the id of the conversation you want to watch update for.
+    ///   - handler: Handler called every time something changes in the conversation state
     public func watchConversation(
         _ conversationId: UUID,
-        callback: @escaping (Result<Conversation, Error>) -> Void
+        handler: @escaping (Result<Conversation, NablaWatchConversationError>) -> Void
     ) -> Cancellable {
-        watchConversationInteractor.execute(conversationId, callback: callback)
+        watchConversationInteractor.execute(conversationId, handler: .init(handler))
     }
 
     /// Send a new message in the conversation referenced by its identifier.
@@ -78,28 +94,28 @@ public class NablaMessagingClient {
     /// - Parameters:
     ///   - message: The message to send.
     ///   - conversationId: The id of the ``Conversation``
-    ///   - completion: Completion called with the result when the message is sent.
+    ///   - handler: Handler called with the result when the message is sent.
     /// - Returns: A ``Cancellable`` of the task
     public func sendMessage(
         _ message: MessageInput,
         inConversationWithId conversationId: UUID,
-        completion: @escaping (Result<Void, Error>) -> Void
+        handler: @escaping (Result<Void, NablaSendMessageError>) -> Void
     ) -> Cancellable {
-        sendMessageInteractor.execute(message: message, conversationId: conversationId, completion: completion)
+        sendMessageInteractor.execute(message: message, conversationId: conversationId, handler: .init(handler))
     }
 
     /// Retry sending a message for which `LocalConversationItem.state`` is ``ConversationItemState.failed``.
     /// - Parameters:
     ///   - itemId: The id of the message to send.
     ///   - conversationId: The id of the ``Conversation``
-    ///   - completion: Completion called with the result when the message is sent.
+    ///   - handler: Handler called with the result when the message is sent.
     /// - Returns: A ``Cancellable`` of the task
     public func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId conversationId: UUID,
-        completion: @escaping (Result<Void, Error>) -> Void
+        handler: @escaping (Result<Void, NablaRetrySendingMessageError>) -> Void
     ) -> Cancellable {
-        retrySendingMessageInteractor.execute(itemId: itemId, conversationId: conversationId, completion: completion)
+        retrySendingMessageInteractor.execute(itemId: itemId, conversationId: conversationId, handler: .init(handler))
     }
 
     /// Delete a message in the conversation. Current user should be its author.
@@ -112,14 +128,14 @@ public class NablaMessagingClient {
     /// - Parameters:
     ///   - messageId: The id of the message to delete.
     ///   - conversationId: The id of the ``Conversation``
-    ///   - callback: Completion called with the result when the message is deleted.
+    ///   - handler: Handler called with the result when the message is deleted.
     /// - Returns: A ``Cancellable`` of the task
     public func deleteMessage(
         withId messageId: UUID,
         conversationId: UUID,
-        callback: @escaping (Result<Void, Error>) -> Void
+        handler: @escaping (Result<Void, NablaDeleteMessageError>) -> Void
     ) -> Cancellable {
-        deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, callback: callback)
+        deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, handler: .init(handler))
     }
     
     public init(client _: NablaClient) {}

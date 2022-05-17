@@ -2,15 +2,32 @@ import Foundation
 import NablaUtils
 
 final class SendMessageInteractorImpl: SendMessageInteractor {
-    func execute(message: MessageInput, conversationId: UUID, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
-        conversationItemRepository.sendMessage(
+    func execute(
+        message: MessageInput,
+        conversationId: UUID,
+        handler: ResultHandler<Void, NablaSendMessageError>
+    ) -> Cancellable {
+        guard isMessageValid(message) else {
+            handler(.failure(.invalidMessage))
+            return Failure()
+        }
+        return conversationItemRepository.sendMessage(
             message,
             inConversationWithId: conversationId,
-            completion: completion
+            handler: handler
         )
     }
     
     // MARK: - Private
     
     @Inject private var conversationItemRepository: ConversationItemRepository
+
+    private func isMessageValid(_ message: MessageInput) -> Bool {
+        switch message {
+        case let .text(content):
+            return !content.isEmpty
+        case .document, .image:
+            return true
+        }
+    }
 }

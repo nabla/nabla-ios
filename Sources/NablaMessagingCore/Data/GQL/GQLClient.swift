@@ -6,23 +6,23 @@ protocol GQLClient {
     func fetch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
-        completion: @escaping (Result<Query.Data, GQLError>) -> Void
+        handler: ResultHandler<Query.Data, GQLError>
     ) -> Cancellable
     
     func perform<Mutation: GQLMutation>(
         mutation: Mutation,
-        completion: @escaping (Result<Mutation.Data, GQLError>) -> Void
+        handler: ResultHandler<Mutation.Data, GQLError>
     ) -> Cancellable
     
     func watch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
-        callback: @escaping (Result<Query.Data, GQLError>) -> Void
+        handler: ResultHandler<Query.Data, GQLError>
     ) -> GQLWatcher<Query>
     
     func subscribe<Subscription: GQLSubscription>(
         subscription: Subscription,
-        callback: @escaping (Result<Subscription.Data, GQLError>) -> Void
+        handler: ResultHandler<Subscription.Data, GQLError>
     ) -> Cancellable
     
     func addRefetchTriggers(_ triggers: [RefetchTrigger])

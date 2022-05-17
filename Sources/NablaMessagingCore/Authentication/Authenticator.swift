@@ -11,7 +11,7 @@ protocol Authenticator {
         provider: SessionTokenProvider
     )
     func logOut()
-    func getAccessToken(completion: @escaping (Result<AuthenticationState, AuthenticationError>) -> Void)
+    func getAccessToken(handler: ResultHandler<AuthenticationState, NablaAuthenticationError>)
     func addObserver(_ observer: Any, selector: Selector)
     func removeObserver(_ observer: Any)
 }

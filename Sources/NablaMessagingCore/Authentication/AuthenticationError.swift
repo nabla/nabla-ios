@@ -1,8 +1,10 @@
-import Foundation
+typealias NablaAuthenticationError = NablaError.AuthenticationError
 
-public enum AuthenticationError: Error {
-    case missingAuthenticationProvider
-    case authenticationProviderFailedToProvideTokens
-    case authorizationDenied(Error)
-    case failedToRefreshTokens(Error)
+public extension NablaError {
+    enum AuthenticationError: Error {
+        case missingAuthenticationProvider
+        case authenticationProviderFailedToProvideTokens
+        case authorizationDenied(Error)
+        case failedToRefreshTokens(Error)
+    }
 }

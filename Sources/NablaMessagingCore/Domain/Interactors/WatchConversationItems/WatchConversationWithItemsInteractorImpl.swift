@@ -6,9 +6,9 @@ class WatchConversationItemsInteractorImpl: WatchConversationItemsInteractor {
     
     func execute(
         conversationId: UUID,
-        callback: @escaping (Result<ConversationItems, Error>) -> Void
+        handler: ResultHandler<ConversationItems, NablaWatchConversationItemsError>
     ) -> PaginatedWatcher {
-        conversationItemRepository.watchConversationItems(ofConversationWithId: conversationId, callback: callback)
+        conversationItemRepository.watchConversationItems(ofConversationWithId: conversationId, handler: handler)
     }
     
     // MARK: - Private

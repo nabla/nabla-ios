@@ -3,27 +3,34 @@ import Foundation
 protocol ConversationItemRemoteDataSource {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<RemoteConversationItems, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversationItems, GQLError>
     ) -> PaginatedWatcher
     
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
-        callback: @escaping (Result<RemoteConversationEvent, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversationEvent, GQLError>
     ) -> Cancellable
     
     func send(
         localMessageClientId: UUID,
         remoteMessageInput: GQL.SendMessageContentInput,
         conversationId: UUID,
-        callback: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, GQLError>
     ) -> Cancellable
     
     func delete(
         messageId: UUID,
-        callback: @escaping (Result<Void, Error>) -> Void
+        handler: ResultHandler<Void, GQLError>
     ) -> Cancellable
     
-    func setIsTyping(_ isTyping: Bool, conversationId: UUID) -> Cancellable
+    func setIsTyping(
+        _ isTyping: Bool,
+        conversationId: UUID,
+        handler: ResultHandler<Void, GQLError>
+    ) -> Cancellable
     
-    func markConversationAsSeen(conversationId: UUID) -> Cancellable
+    func markConversationAsSeen(
+        conversationId: UUID,
+        handler: ResultHandler<Void, GQLError>
+    ) -> Cancellable
 }

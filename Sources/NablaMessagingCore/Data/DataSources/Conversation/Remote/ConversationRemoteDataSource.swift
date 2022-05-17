@@ -1,13 +1,13 @@
 import Foundation
 
 protocol ConversationRemoteDataSource {
-    func createConversation(completion: @escaping (Result<RemoteConversation, GQLError>) -> Void) -> Cancellable
+    func createConversation(handler: ResultHandler<RemoteConversation, GQLError>) -> Cancellable
     
-    func watchConversation(_ conversationId: UUID, callback: @escaping (Result<RemoteConversation, GQLError>) -> Void) -> Cancellable
+    func watchConversation(_ conversationId: UUID, handler: ResultHandler<RemoteConversation, GQLError>) -> Cancellable
     
-    func watchConversations(callback: @escaping (Result<RemoteConversationList, GQLError>) -> Void) -> PaginatedWatcher
+    func watchConversations(handler: ResultHandler<RemoteConversationList, GQLError>) -> PaginatedWatcher
     
     func subscribeToConversationsEvents(
-        callback: @escaping (Result<RemoteConversationsEvent, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversationsEvent, GQLError>
     ) -> Cancellable
 }

@@ -228,58 +228,58 @@ open class GQLClientMock: GQLClient, Mock {
 
 
 
-    open func fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, completion: @escaping (Result<Query.Data, GQLError>) -> Void) -> Cancellable {
-        addInvocation(.m_fetch__query_querycachePolicy_cachePolicycompletion_completion(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<(Result<Query.Data, GQLError>) -> Void>.value(`completion`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_fetch__query_querycachePolicy_cachePolicycompletion_completion(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<(Result<Query.Data, GQLError>) -> Void>.value(`completion`).wrapAsGeneric())) as? (Query, CachePolicy, @escaping (Result<Query.Data, GQLError>) -> Void) -> Void
-		perform?(`query`, `cachePolicy`, `completion`)
+    open func fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>) -> Cancellable {
+        addInvocation(.m_fetch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_fetch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric())) as? (Query, CachePolicy, ResultHandler<Query.Data, GQLError>) -> Void
+		perform?(`query`, `cachePolicy`, `handler`)
 		var __value: Cancellable
 		do {
-		    __value = try methodReturnValue(.m_fetch__query_querycachePolicy_cachePolicycompletion_completion(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<(Result<Query.Data, GQLError>) -> Void>.value(`completion`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_fetch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, completion: @escaping (Result<Query.Data, GQLError>) -> Void). Use given")
-			Failure("Stub return value not specified for fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, completion: @escaping (Result<Query.Data, GQLError>) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>). Use given")
+			Failure("Stub return value not specified for fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>). Use given")
 		}
 		return __value
     }
 
-    open func perform<Mutation: GQLMutation>(mutation: Mutation, completion: @escaping (Result<Mutation.Data, GQLError>) -> Void) -> Cancellable {
-        addInvocation(.m_perform__mutation_mutationcompletion_completion(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<(Result<Mutation.Data, GQLError>) -> Void>.value(`completion`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_perform__mutation_mutationcompletion_completion(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<(Result<Mutation.Data, GQLError>) -> Void>.value(`completion`).wrapAsGeneric())) as? (Mutation, @escaping (Result<Mutation.Data, GQLError>) -> Void) -> Void
-		perform?(`mutation`, `completion`)
+    open func perform<Mutation: GQLMutation>(mutation: Mutation, handler: ResultHandler<Mutation.Data, GQLError>) -> Cancellable {
+        addInvocation(.m_perform__mutation_mutationhandler_handler(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<ResultHandler<Mutation.Data, GQLError>>.value(`handler`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_perform__mutation_mutationhandler_handler(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<ResultHandler<Mutation.Data, GQLError>>.value(`handler`).wrapAsGeneric())) as? (Mutation, ResultHandler<Mutation.Data, GQLError>) -> Void
+		perform?(`mutation`, `handler`)
 		var __value: Cancellable
 		do {
-		    __value = try methodReturnValue(.m_perform__mutation_mutationcompletion_completion(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<(Result<Mutation.Data, GQLError>) -> Void>.value(`completion`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_perform__mutation_mutationhandler_handler(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<ResultHandler<Mutation.Data, GQLError>>.value(`handler`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for perform<Mutation: GQLMutation>(mutation: Mutation, completion: @escaping (Result<Mutation.Data, GQLError>) -> Void). Use given")
-			Failure("Stub return value not specified for perform<Mutation: GQLMutation>(mutation: Mutation, completion: @escaping (Result<Mutation.Data, GQLError>) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for perform<Mutation: GQLMutation>(mutation: Mutation, handler: ResultHandler<Mutation.Data, GQLError>). Use given")
+			Failure("Stub return value not specified for perform<Mutation: GQLMutation>(mutation: Mutation, handler: ResultHandler<Mutation.Data, GQLError>). Use given")
 		}
 		return __value
     }
 
-    open func watch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, callback: @escaping (Result<Query.Data, GQLError>) -> Void) -> GQLWatcher<Query> {
-        addInvocation(.m_watch__query_querycachePolicy_cachePolicycallback_callback(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<(Result<Query.Data, GQLError>) -> Void>.value(`callback`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_watch__query_querycachePolicy_cachePolicycallback_callback(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<(Result<Query.Data, GQLError>) -> Void>.value(`callback`).wrapAsGeneric())) as? (Query, CachePolicy, @escaping (Result<Query.Data, GQLError>) -> Void) -> Void
-		perform?(`query`, `cachePolicy`, `callback`)
+    open func watch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>) -> GQLWatcher<Query> {
+        addInvocation(.m_watch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_watch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric())) as? (Query, CachePolicy, ResultHandler<Query.Data, GQLError>) -> Void
+		perform?(`query`, `cachePolicy`, `handler`)
 		var __value: GQLWatcher<Query>
 		do {
-		    __value = try methodReturnValue(.m_watch__query_querycachePolicy_cachePolicycallback_callback(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<(Result<Query.Data, GQLError>) -> Void>.value(`callback`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_watch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for watch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, callback: @escaping (Result<Query.Data, GQLError>) -> Void). Use given")
-			Failure("Stub return value not specified for watch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, callback: @escaping (Result<Query.Data, GQLError>) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for watch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>). Use given")
+			Failure("Stub return value not specified for watch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>). Use given")
 		}
 		return __value
     }
 
-    open func subscribe<Subscription: GQLSubscription>(subscription: Subscription, callback: @escaping (Result<Subscription.Data, GQLError>) -> Void) -> Cancellable {
-        addInvocation(.m_subscribe__subscription_subscriptioncallback_callback(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<(Result<Subscription.Data, GQLError>) -> Void>.value(`callback`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_subscribe__subscription_subscriptioncallback_callback(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<(Result<Subscription.Data, GQLError>) -> Void>.value(`callback`).wrapAsGeneric())) as? (Subscription, @escaping (Result<Subscription.Data, GQLError>) -> Void) -> Void
-		perform?(`subscription`, `callback`)
+    open func subscribe<Subscription: GQLSubscription>(subscription: Subscription, handler: ResultHandler<Subscription.Data, GQLError>) -> Cancellable {
+        addInvocation(.m_subscribe__subscription_subscriptionhandler_handler(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<ResultHandler<Subscription.Data, GQLError>>.value(`handler`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_subscribe__subscription_subscriptionhandler_handler(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<ResultHandler<Subscription.Data, GQLError>>.value(`handler`).wrapAsGeneric())) as? (Subscription, ResultHandler<Subscription.Data, GQLError>) -> Void
+		perform?(`subscription`, `handler`)
 		var __value: Cancellable
 		do {
-		    __value = try methodReturnValue(.m_subscribe__subscription_subscriptioncallback_callback(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<(Result<Subscription.Data, GQLError>) -> Void>.value(`callback`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_subscribe__subscription_subscriptionhandler_handler(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<ResultHandler<Subscription.Data, GQLError>>.value(`handler`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for subscribe<Subscription: GQLSubscription>(subscription: Subscription, callback: @escaping (Result<Subscription.Data, GQLError>) -> Void). Use given")
-			Failure("Stub return value not specified for subscribe<Subscription: GQLSubscription>(subscription: Subscription, callback: @escaping (Result<Subscription.Data, GQLError>) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for subscribe<Subscription: GQLSubscription>(subscription: Subscription, handler: ResultHandler<Subscription.Data, GQLError>). Use given")
+			Failure("Stub return value not specified for subscribe<Subscription: GQLSubscription>(subscription: Subscription, handler: ResultHandler<Subscription.Data, GQLError>). Use given")
 		}
 		return __value
     }
@@ -292,38 +292,38 @@ open class GQLClientMock: GQLClient, Mock {
 
 
     fileprivate enum MethodType {
-        case m_fetch__query_querycachePolicy_cachePolicycompletion_completion(Parameter<GenericAttribute>, Parameter<CachePolicy>, Parameter<GenericAttribute>)
-        case m_perform__mutation_mutationcompletion_completion(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
-        case m_watch__query_querycachePolicy_cachePolicycallback_callback(Parameter<GenericAttribute>, Parameter<CachePolicy>, Parameter<GenericAttribute>)
-        case m_subscribe__subscription_subscriptioncallback_callback(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
+        case m_fetch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<GenericAttribute>, Parameter<CachePolicy>, Parameter<GenericAttribute>)
+        case m_perform__mutation_mutationhandler_handler(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
+        case m_watch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<GenericAttribute>, Parameter<CachePolicy>, Parameter<GenericAttribute>)
+        case m_subscribe__subscription_subscriptionhandler_handler(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
         case m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_fetch__query_querycachePolicy_cachePolicycompletion_completion(let lhsQuery, let lhsCachepolicy, let lhsCompletion), .m_fetch__query_querycachePolicy_cachePolicycompletion_completion(let rhsQuery, let rhsCachepolicy, let rhsCompletion)):
+            case (.m_fetch__query_querycachePolicy_cachePolicyhandler_handler(let lhsQuery, let lhsCachepolicy, let lhsHandler), .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(let rhsQuery, let rhsCachepolicy, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "query"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCachepolicy, rhs: rhsCachepolicy, with: matcher), lhsCachepolicy, rhsCachepolicy, "cachePolicy"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCompletion, rhs: rhsCompletion, with: matcher), lhsCompletion, rhsCompletion, "completion"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_perform__mutation_mutationcompletion_completion(let lhsMutation, let lhsCompletion), .m_perform__mutation_mutationcompletion_completion(let rhsMutation, let rhsCompletion)):
+            case (.m_perform__mutation_mutationhandler_handler(let lhsMutation, let lhsHandler), .m_perform__mutation_mutationhandler_handler(let rhsMutation, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMutation, rhs: rhsMutation, with: matcher), lhsMutation, rhsMutation, "mutation"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCompletion, rhs: rhsCompletion, with: matcher), lhsCompletion, rhsCompletion, "completion"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_watch__query_querycachePolicy_cachePolicycallback_callback(let lhsQuery, let lhsCachepolicy, let lhsCallback), .m_watch__query_querycachePolicy_cachePolicycallback_callback(let rhsQuery, let rhsCachepolicy, let rhsCallback)):
+            case (.m_watch__query_querycachePolicy_cachePolicyhandler_handler(let lhsQuery, let lhsCachepolicy, let lhsHandler), .m_watch__query_querycachePolicy_cachePolicyhandler_handler(let rhsQuery, let rhsCachepolicy, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "query"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCachepolicy, rhs: rhsCachepolicy, with: matcher), lhsCachepolicy, rhsCachepolicy, "cachePolicy"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher), lhsCallback, rhsCallback, "callback"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_subscribe__subscription_subscriptioncallback_callback(let lhsSubscription, let lhsCallback), .m_subscribe__subscription_subscriptioncallback_callback(let rhsSubscription, let rhsCallback)):
+            case (.m_subscribe__subscription_subscriptionhandler_handler(let lhsSubscription, let lhsHandler), .m_subscribe__subscription_subscriptionhandler_handler(let rhsSubscription, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsSubscription, rhs: rhsSubscription, with: matcher), lhsSubscription, rhsSubscription, "subscription"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher), lhsCallback, rhsCallback, "callback"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_addRefetchTriggers__triggers(let lhsTriggers), .m_addRefetchTriggers__triggers(let rhsTriggers)):
@@ -336,19 +336,19 @@ open class GQLClientMock: GQLClient, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_fetch__query_querycachePolicy_cachePolicycompletion_completion(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_perform__mutation_mutationcompletion_completion(p0, p1): return p0.intValue + p1.intValue
-            case let .m_watch__query_querycachePolicy_cachePolicycallback_callback(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_subscribe__subscription_subscriptioncallback_callback(p0, p1): return p0.intValue + p1.intValue
+            case let .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_perform__mutation_mutationhandler_handler(p0, p1): return p0.intValue + p1.intValue
+            case let .m_watch__query_querycachePolicy_cachePolicyhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_subscribe__subscription_subscriptionhandler_handler(p0, p1): return p0.intValue + p1.intValue
             case let .m_addRefetchTriggers__triggers(p0): return p0.intValue
             }
         }
         func assertionName() -> String {
             switch self {
-            case .m_fetch__query_querycachePolicy_cachePolicycompletion_completion: return ".fetch(query:cachePolicy:completion:)"
-            case .m_perform__mutation_mutationcompletion_completion: return ".perform(mutation:completion:)"
-            case .m_watch__query_querycachePolicy_cachePolicycallback_callback: return ".watch(query:cachePolicy:callback:)"
-            case .m_subscribe__subscription_subscriptioncallback_callback: return ".subscribe(subscription:callback:)"
+            case .m_fetch__query_querycachePolicy_cachePolicyhandler_handler: return ".fetch(query:cachePolicy:handler:)"
+            case .m_perform__mutation_mutationhandler_handler: return ".perform(mutation:handler:)"
+            case .m_watch__query_querycachePolicy_cachePolicyhandler_handler: return ".watch(query:cachePolicy:handler:)"
+            case .m_subscribe__subscription_subscriptionhandler_handler: return ".subscribe(subscription:handler:)"
             case .m_addRefetchTriggers__triggers: return ".addRefetchTriggers(_:)"
             }
         }
@@ -363,42 +363,42 @@ open class GQLClientMock: GQLClient, Mock {
         }
 
 
-        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, completion: Parameter<(Result<Query.Data, GQLError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_fetch__query_querycachePolicy_cachePolicycompletion_completion(`query`.wrapAsGeneric(), `cachePolicy`, `completion`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, completion: Parameter<(Result<Mutation.Data, GQLError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_perform__mutation_mutationcompletion_completion(`mutation`.wrapAsGeneric(), `completion`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_perform__mutation_mutationhandler_handler(`mutation`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, callback: Parameter<(Result<Query.Data, GQLError>) -> Void>, willReturn: GQLWatcher<Query>...) -> MethodStub {
-            return Given(method: .m_watch__query_querycachePolicy_cachePolicycallback_callback(`query`.wrapAsGeneric(), `cachePolicy`, `callback`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func watch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willReturn: GQLWatcher<Query>...) -> MethodStub {
+            return Given(method: .m_watch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, callback: Parameter<(Result<Subscription.Data, GQLError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_subscribe__subscription_subscriptioncallback_callback(`subscription`.wrapAsGeneric(), `callback`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_subscribe__subscription_subscriptionhandler_handler(`subscription`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, completion: Parameter<(Result<Query.Data, GQLError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
             let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_fetch__query_querycachePolicy_cachePolicycompletion_completion(`query`.wrapAsGeneric(), `cachePolicy`, `completion`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Cancellable).self)
 			willProduce(stubber)
 			return given
         }
-        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, completion: Parameter<(Result<Mutation.Data, GQLError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
             let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_perform__mutation_mutationcompletion_completion(`mutation`.wrapAsGeneric(), `completion`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_perform__mutation_mutationhandler_handler(`mutation`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Cancellable).self)
 			willProduce(stubber)
 			return given
         }
-        public static func watch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, callback: Parameter<(Result<Query.Data, GQLError>) -> Void>, willProduce: (Stubber<GQLWatcher<Query>>) -> Void) -> MethodStub {
+        public static func watch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willProduce: (Stubber<GQLWatcher<Query>>) -> Void) -> MethodStub {
             let willReturn: [GQLWatcher<Query>] = []
-			let given: Given = { return Given(method: .m_watch__query_querycachePolicy_cachePolicycallback_callback(`query`.wrapAsGeneric(), `cachePolicy`, `callback`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_watch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (GQLWatcher<Query>).self)
 			willProduce(stubber)
 			return given
         }
-        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, callback: Parameter<(Result<Subscription.Data, GQLError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
             let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_subscribe__subscription_subscriptioncallback_callback(`subscription`.wrapAsGeneric(), `callback`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_subscribe__subscription_subscriptionhandler_handler(`subscription`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Cancellable).self)
 			willProduce(stubber)
 			return given
@@ -408,10 +408,10 @@ open class GQLClientMock: GQLClient, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func fetch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, completion: Parameter<(Result<Query.Data, GQLError>) -> Void>) -> Verify where Query:GQLQuery { return Verify(method: .m_fetch__query_querycachePolicy_cachePolicycompletion_completion(`query`.wrapAsGeneric(), `cachePolicy`, `completion`.wrapAsGeneric()))}
-        public static func perform<Mutation>(mutation: Parameter<Mutation>, completion: Parameter<(Result<Mutation.Data, GQLError>) -> Void>) -> Verify where Mutation:GQLMutation { return Verify(method: .m_perform__mutation_mutationcompletion_completion(`mutation`.wrapAsGeneric(), `completion`.wrapAsGeneric()))}
-        public static func watch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, callback: Parameter<(Result<Query.Data, GQLError>) -> Void>) -> Verify where Query:GQLQuery { return Verify(method: .m_watch__query_querycachePolicy_cachePolicycallback_callback(`query`.wrapAsGeneric(), `cachePolicy`, `callback`.wrapAsGeneric()))}
-        public static func subscribe<Subscription>(subscription: Parameter<Subscription>, callback: Parameter<(Result<Subscription.Data, GQLError>) -> Void>) -> Verify where Subscription:GQLSubscription { return Verify(method: .m_subscribe__subscription_subscriptioncallback_callback(`subscription`.wrapAsGeneric(), `callback`.wrapAsGeneric()))}
+        public static func fetch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>) -> Verify where Query:GQLQuery { return Verify(method: .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()))}
+        public static func perform<Mutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>) -> Verify where Mutation:GQLMutation { return Verify(method: .m_perform__mutation_mutationhandler_handler(`mutation`.wrapAsGeneric(), `handler`.wrapAsGeneric()))}
+        public static func watch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>) -> Verify where Query:GQLQuery { return Verify(method: .m_watch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()))}
+        public static func subscribe<Subscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>) -> Verify where Subscription:GQLSubscription { return Verify(method: .m_subscribe__subscription_subscriptionhandler_handler(`subscription`.wrapAsGeneric(), `handler`.wrapAsGeneric()))}
         public static func addRefetchTriggers(_ triggers: Parameter<[RefetchTrigger]>) -> Verify { return Verify(method: .m_addRefetchTriggers__triggers(`triggers`))}
     }
 
@@ -419,17 +419,17 @@ open class GQLClientMock: GQLClient, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func fetch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, completion: Parameter<(Result<Query.Data, GQLError>) -> Void>, perform: @escaping (Query, CachePolicy, @escaping (Result<Query.Data, GQLError>) -> Void) -> Void) -> Perform where Query:GQLQuery {
-            return Perform(method: .m_fetch__query_querycachePolicy_cachePolicycompletion_completion(`query`.wrapAsGeneric(), `cachePolicy`, `completion`.wrapAsGeneric()), performs: perform)
+        public static func fetch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, perform: @escaping (Query, CachePolicy, ResultHandler<Query.Data, GQLError>) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), performs: perform)
         }
-        public static func perform<Mutation>(mutation: Parameter<Mutation>, completion: Parameter<(Result<Mutation.Data, GQLError>) -> Void>, perform: @escaping (Mutation, @escaping (Result<Mutation.Data, GQLError>) -> Void) -> Void) -> Perform where Mutation:GQLMutation {
-            return Perform(method: .m_perform__mutation_mutationcompletion_completion(`mutation`.wrapAsGeneric(), `completion`.wrapAsGeneric()), performs: perform)
+        public static func perform<Mutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>, perform: @escaping (Mutation, ResultHandler<Mutation.Data, GQLError>) -> Void) -> Perform where Mutation:GQLMutation {
+            return Perform(method: .m_perform__mutation_mutationhandler_handler(`mutation`.wrapAsGeneric(), `handler`.wrapAsGeneric()), performs: perform)
         }
-        public static func watch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, callback: Parameter<(Result<Query.Data, GQLError>) -> Void>, perform: @escaping (Query, CachePolicy, @escaping (Result<Query.Data, GQLError>) -> Void) -> Void) -> Perform where Query:GQLQuery {
-            return Perform(method: .m_watch__query_querycachePolicy_cachePolicycallback_callback(`query`.wrapAsGeneric(), `cachePolicy`, `callback`.wrapAsGeneric()), performs: perform)
+        public static func watch<Query>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, perform: @escaping (Query, CachePolicy, ResultHandler<Query.Data, GQLError>) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_watch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), performs: perform)
         }
-        public static func subscribe<Subscription>(subscription: Parameter<Subscription>, callback: Parameter<(Result<Subscription.Data, GQLError>) -> Void>, perform: @escaping (Subscription, @escaping (Result<Subscription.Data, GQLError>) -> Void) -> Void) -> Perform where Subscription:GQLSubscription {
-            return Perform(method: .m_subscribe__subscription_subscriptioncallback_callback(`subscription`.wrapAsGeneric(), `callback`.wrapAsGeneric()), performs: perform)
+        public static func subscribe<Subscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>, perform: @escaping (Subscription, ResultHandler<Subscription.Data, GQLError>) -> Void) -> Perform where Subscription:GQLSubscription {
+            return Perform(method: .m_subscribe__subscription_subscriptionhandler_handler(`subscription`.wrapAsGeneric(), `handler`.wrapAsGeneric()), performs: perform)
         }
         public static func addRefetchTriggers(_ triggers: Parameter<[RefetchTrigger]>, perform: @escaping ([RefetchTrigger]) -> Void) -> Perform {
             return Perform(method: .m_addRefetchTriggers__triggers(`triggers`), performs: perform)

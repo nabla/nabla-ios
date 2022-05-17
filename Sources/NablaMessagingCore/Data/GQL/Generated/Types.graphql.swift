@@ -13,8 +13,9 @@ public enum GQL {
     ///   - textInput
     ///   - imageInput
     ///   - documentInput
-    public init(textInput: Swift.Optional<SendTextMessageInput?> = nil, imageInput: Swift.Optional<SendImageMessageInput?> = nil, documentInput: Swift.Optional<SendDocumentMessageInput?> = nil) {
-      graphQLMap = ["textInput": textInput, "imageInput": imageInput, "documentInput": documentInput]
+    ///   - audioInput
+    public init(textInput: Swift.Optional<SendTextMessageInput?> = nil, imageInput: Swift.Optional<SendImageMessageInput?> = nil, documentInput: Swift.Optional<SendDocumentMessageInput?> = nil, audioInput: Swift.Optional<SendAudioMessageInput?> = nil) {
+      graphQLMap = ["textInput": textInput, "imageInput": imageInput, "documentInput": documentInput, "audioInput": audioInput]
     }
 
     public var textInput: Swift.Optional<SendTextMessageInput?> {
@@ -41,6 +42,15 @@ public enum GQL {
       }
       set {
         graphQLMap.updateValue(newValue, forKey: "documentInput")
+      }
+    }
+
+    public var audioInput: Swift.Optional<SendAudioMessageInput?> {
+      get {
+        return graphQLMap["audioInput"] as? Swift.Optional<SendAudioMessageInput?> ?? Swift.Optional<SendAudioMessageInput?>.none
+      }
+      set {
+        graphQLMap.updateValue(newValue, forKey: "audioInput")
       }
     }
   }
@@ -103,6 +113,25 @@ public enum GQL {
   }
 
   public struct SendDocumentMessageInput: GraphQLMapConvertible {
+    public var graphQLMap: GraphQLMap
+
+    /// - Parameters:
+    ///   - upload
+    public init(upload: UploadInput) {
+      graphQLMap = ["upload": upload]
+    }
+
+    public var upload: UploadInput {
+      get {
+        return graphQLMap["upload"] as! UploadInput
+      }
+      set {
+        graphQLMap.updateValue(newValue, forKey: "upload")
+      }
+    }
+  }
+
+  public struct SendAudioMessageInput: GraphQLMapConvertible {
     public var graphQLMap: GraphQLMap
 
     /// - Parameters:

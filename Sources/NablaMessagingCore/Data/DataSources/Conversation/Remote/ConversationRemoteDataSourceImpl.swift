@@ -4,56 +4,52 @@ import NablaUtils
 final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     // MARK: - Internal
     
-    func createConversation(completion: @escaping (Result<RemoteConversation, GQLError>) -> Void) -> Cancellable {
-        gqlClient.perform(mutation: GQL.CreateConversationMutation()) { result in
-            switch result {
-            case let .failure(error):
-                completion(.failure(error))
-            case let .success(data):
-                completion(.success(data.createConversation.conversation.fragments.conversationFragment))
-            }
-        }
+    func createConversation(handler: ResultHandler<RemoteConversation, GQLError>) -> Cancellable {
+        gqlClient.perform(
+            mutation: GQL.CreateConversationMutation(),
+            handler: handler.pullback { $0.createConversation.conversation.fragments.conversationFragment }
+        )
     }
     
     func watchConversation(
         _ conversationId: UUID,
-        callback: @escaping (Result<RemoteConversation, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversation, GQLError>
     ) -> Cancellable {
         gqlClient.watch(
             query: GQL.GetConversationQuery(id: conversationId),
             cachePolicy: .returnCacheDataAndFetch,
-            callback: { result in
-                switch result {
-                case let .failure(error):
-                    callback(.failure(error))
-                case let .success(data):
-                    callback(.success(data.conversation.conversation.fragments.conversationFragment))
-                }
-            }
+            handler: handler.pullback { $0.conversation.conversation.fragments.conversationFragment }
         )
     }
     
-    func watchConversations(callback: @escaping (Result<RemoteConversationList, GQLError>) -> Void) -> PaginatedWatcher {
+    func watchConversations(handler: ResultHandler<RemoteConversationList, GQLError>) -> PaginatedWatcher {
         ConversationListWatcher(
             numberOfItemsPerPage: Constants.numberOfItemsPerPage,
-            callback: callback
+            handler: handler
         )
     }
     
     func subscribeToConversationsEvents(
-        callback: @escaping (Result<RemoteConversationsEvent, GQLError>) -> Void
+        handler: ResultHandler<RemoteConversationsEvent, GQLError>
     ) -> Cancellable {
-        gqlClient.subscribe(subscription: GQL.ConversationsEventsSubscription()) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .failure(error):
-                callback(.failure(error))
-            case let .success(data):
-                guard let event = data.conversations?.event else { return }
-                self.handleConversationsEvent(event)
-                callback(.success(event))
+        gqlClient.subscribe(
+            subscription: GQL.ConversationsEventsSubscription(),
+            handler: .init { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                switch result {
+                case let .failure(error):
+                    handler(.failure(error))
+                case let .success(data):
+                    guard let event = data.conversations?.event else {
+                        return
+                    }
+                    self.handleConversationsEvent(event)
+                    handler(.success(event))
+                }
             }
-        }
+        )
     }
     
     // MARK: - Private

@@ -161,7 +161,7 @@ public extension GQL {
           }
 
           public struct Content: GraphQLSelectionSet {
-            public static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "DocumentMessageContent", "DeletedMessageContent"]
+            public static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "DocumentMessageContent", "DeletedMessageContent", "AudioMessageContent"]
 
             public static var selections: [GraphQLSelection] {
               return [
@@ -182,6 +182,10 @@ public extension GQL {
 
             public static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
               return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
+            }
+
+            public static func makeAudioMessageContent() -> Content {
+              return Content(unsafeResultMap: ["__typename": "AudioMessageContent"])
             }
 
             public var __typename: String {

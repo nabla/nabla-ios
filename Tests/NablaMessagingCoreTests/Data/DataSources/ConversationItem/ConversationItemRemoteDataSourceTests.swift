@@ -29,10 +29,10 @@ class ConversationItemRemoteDataSourceTests: XCTestCase {
         // GIVEN
         let conversationId = UUID()
         let sut = ConversationItemRemoteDataSourceImpl()
-        Given(mockGqlClient, .perform(mutation: .any(GQL.MaskAsSeenMutation.self), completion: .any, willReturn: CancellableMock()))
+        Given(mockGqlClient, .perform(mutation: .any(GQL.MaskAsSeenMutation.self), handler: .any, willReturn: CancellableMock()))
         // WHEN
-        _ = sut.markConversationAsSeen(conversationId: conversationId)
+        _ = sut.markConversationAsSeen(conversationId: conversationId, handler: .void)
         // THEN
-        Verify(mockGqlClient, .perform(mutation: .value(GQL.MaskAsSeenMutation(conversationId: conversationId)), completion: .any))
+        Verify(mockGqlClient, .perform(mutation: .value(GQL.MaskAsSeenMutation(conversationId: conversationId)), handler: .any))
     }
 }

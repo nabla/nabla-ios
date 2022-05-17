@@ -2,8 +2,12 @@ import Foundation
 import NablaUtils
 
 final class SetIsTypingInteractorImpl: SetIsTypingInteractor {
-    func execute(isTyping: Bool, conversationId: UUID) -> Cancellable {
-        conversationItemRepository.setIsTyping(isTyping, conversationId: conversationId)
+    func execute(
+        isTyping: Bool,
+        conversationId: UUID,
+        handler: ResultHandler<Void, NablaSetIsTypingError>
+    ) -> Cancellable {
+        conversationItemRepository.setIsTyping(isTyping, conversationId: conversationId, handler: handler)
     }
     
     // MARK: - Private

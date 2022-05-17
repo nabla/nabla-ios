@@ -18,14 +18,14 @@ class AuthenticatorImpl: Authenticator {
         provider = nil
     }
     
-    func getAccessToken(completion: @escaping (Result<AuthenticationState, AuthenticationError>) -> Void) {
+    func getAccessToken(handler: ResultHandler<AuthenticationState, NablaAuthenticationError>) {
         guard let session = session else {
-            completion(.success(.unauthenticated))
+            handler(.success(.unauthenticated))
             return
         }
         
         if let tokens = session.tokens, !isExpired(tokens.accessToken) {
-            completion(.success(.authenticated(accessToken: tokens.accessToken)))
+            handler(.success(.authenticated(accessToken: tokens.accessToken)))
             return
         }
         
@@ -34,9 +34,9 @@ class AuthenticatorImpl: Authenticator {
             switch result {
             case let .success(tokens):
                 session.tokens = tokens
-                completion(.success(.authenticated(accessToken: tokens.accessToken)))
+                handler(.success(.authenticated(accessToken: tokens.accessToken)))
             case let .failure(error):
-                completion(.failure(error))
+                handler(.failure(error))
             }
         }
         task.resume()
@@ -71,7 +71,7 @@ class AuthenticatorImpl: Authenticator {
     
     private var provider: SessionTokenProvider?
     private var session: Session?
-    private var renewTask: SharedTask<Result<Tokens, AuthenticationError>>?
+    private var renewTask: SharedTask<Result<Tokens, NablaAuthenticationError>>?
     
     private func isExpired(_ token: String) -> Bool {
         do {
@@ -83,11 +83,11 @@ class AuthenticatorImpl: Authenticator {
         }
     }
     
-    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<Tokens, AuthenticationError>> {
+    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<Tokens, NablaAuthenticationError>> {
         if let existing = renewTask {
             return existing
         }
-        let renewTask = SharedTask<Result<Tokens, AuthenticationError>> { [weak self] completion in
+        let renewTask = SharedTask<Result<Tokens, NablaAuthenticationError>> { [weak self] completion in
             guard let self = self else { return }
             self.renewSession(session) { result in
                 completion(result)
@@ -103,7 +103,7 @@ class AuthenticatorImpl: Authenticator {
         notificationCenter.post(name: Constants.tokenChangedNotification, object: nil)
     }
     
-    private func renewSession(_ session: Session, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
+    private func renewSession(_ session: Session, completion: @escaping (Result<Tokens, NablaAuthenticationError>) -> Void) {
         if let tokens = session.tokens, !isExpired(tokens.refreshToken) {
             fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
             return
@@ -116,7 +116,7 @@ class AuthenticatorImpl: Authenticator {
         requireTokens(userId: session.userId, provider: provider, completion: completion)
     }
     
-    private func requireTokens(userId: UUID, provider: SessionTokenProvider, completion: (Result<Tokens, AuthenticationError>) -> Void) {
+    private func requireTokens(userId: UUID, provider: SessionTokenProvider, completion: (Result<Tokens, NablaAuthenticationError>) -> Void) {
         provider.provideTokens(forUserId: userId) { token in
             if let token = token {
                 completion(.success(token))
@@ -126,7 +126,7 @@ class AuthenticatorImpl: Authenticator {
         }
     }
     
-    private func fetchTokens(refreshToken: String, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
+    private func fetchTokens(refreshToken: String, completion: @escaping (Result<Tokens, NablaAuthenticationError>) -> Void) {
         let request = RefreshTokenEndpoint.request(refreshToken: refreshToken)
         httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request) { result in
             switch result {

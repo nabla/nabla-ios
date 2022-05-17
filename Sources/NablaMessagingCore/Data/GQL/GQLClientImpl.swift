@@ -8,22 +8,22 @@ class GQLClientImpl: GQLClient {
     func fetch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
-        completion: @escaping (Result<Query.Data, GQLError>) -> Void
+        handler: ResultHandler<Query.Data, GQLError>
     ) -> Cancellable {
         apollo.fetch(query: query, cachePolicy: cachePolicy) { response in
             let result = Self.parseApolloResponse(response)
-            completion(result)
+            handler(result)
         }
         .toNablaCancellable()
     }
     
     func perform<Mutation: GQLMutation>(
         mutation: Mutation,
-        completion: @escaping (Result<Mutation.Data, GQLError>) -> Void
+        handler: ResultHandler<Mutation.Data, GQLError>
     ) -> Cancellable {
         apollo.perform(mutation: mutation) { response in
             let result = Self.parseApolloResponse(response)
-            completion(result)
+            handler(result)
         }
         .toNablaCancellable()
     }
@@ -31,11 +31,11 @@ class GQLClientImpl: GQLClient {
     func watch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
-        callback: @escaping (Result<Query.Data, GQLError>) -> Void
+        handler: ResultHandler<Query.Data, GQLError>
     ) -> GQLWatcher<Query> {
         let apolloWatcher = apollo.watch(query: query, cachePolicy: cachePolicy) { response in
             let result = Self.parseApolloResponse(response)
-            callback(result)
+            handler(result)
         }
         // TODO: @tgy configure server url
         return GQLWatcher(apolloWatcher)
@@ -43,11 +43,11 @@ class GQLClientImpl: GQLClient {
     
     func subscribe<Subscription: GQLSubscription>(
         subscription: Subscription,
-        callback: @escaping (Result<Subscription.Data, GQLError>) -> Void
+        handler: ResultHandler<Subscription.Data, GQLError>
     ) -> Cancellable {
         apollo.subscribe(subscription: subscription) { response in
             let result = Self.parseApolloResponse(response)
-            callback(result)
+            handler(result)
         }
         .toNablaCancellable()
     }
@@ -109,6 +109,8 @@ class GQLClientImpl: GQLClient {
             default:
                 break
             }
+        } else if let authenticationError = error as? NablaAuthenticationError {
+            return .authenticationError(authenticationError)
         }
         
         return .unknownError
