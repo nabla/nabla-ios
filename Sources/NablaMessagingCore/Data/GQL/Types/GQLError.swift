@@ -2,12 +2,14 @@ import Foundation
 
 enum GQLError: Error {
     case unknownError
+    case internalError
     case emptyServerResponse
     case entityNotFound(path: [String])
-    case internalServerError(message: String?)
+    case serverError(message: String?)
     case incompatibleServerSchema(message: String?)
     case cacheError(CacheError)
     case authenticationError(NablaAuthenticationError)
+    case networkError(message: String?)
     
     enum CacheError: Error {
         case queryNotCached

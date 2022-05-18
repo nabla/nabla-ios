@@ -1,4 +1,5 @@
 import Apollo
+import ApolloWebSocket
 import Foundation
 import NablaUtils
 
@@ -10,8 +11,9 @@ class GQLClientImpl: GQLClient {
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
     ) -> Cancellable {
-        apollo.fetch(query: query, cachePolicy: cachePolicy) { response in
-            let result = Self.parseApolloResponse(response)
+        apollo.fetch(query: query, cachePolicy: cachePolicy) { [weak self] response in
+            guard let self = self else { return handler(.failure(.internalError)) }
+            let result = self.parseApolloResponse(response)
             handler(result)
         }
         .toNablaCancellable()
@@ -21,8 +23,9 @@ class GQLClientImpl: GQLClient {
         mutation: Mutation,
         handler: ResultHandler<Mutation.Data, GQLError>
     ) -> Cancellable {
-        apollo.perform(mutation: mutation) { response in
-            let result = Self.parseApolloResponse(response)
+        apollo.perform(mutation: mutation) { [weak self] response in
+            guard let self = self else { return handler(.failure(.internalError)) }
+            let result = self.parseApolloResponse(response)
             handler(result)
         }
         .toNablaCancellable()
@@ -33,11 +36,11 @@ class GQLClientImpl: GQLClient {
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
     ) -> GQLWatcher<Query> {
-        let apolloWatcher = apollo.watch(query: query, cachePolicy: cachePolicy) { response in
-            let result = Self.parseApolloResponse(response)
+        let apolloWatcher = apollo.watch(query: query, cachePolicy: cachePolicy) { [weak self] response in
+            guard let self = self else { return handler(.failure(.internalError)) }
+            let result = self.parseApolloResponse(response)
             handler(result)
         }
-        // TODO: @tgy configure server url
         return GQLWatcher(apolloWatcher)
     }
     
@@ -45,8 +48,9 @@ class GQLClientImpl: GQLClient {
         subscription: Subscription,
         handler: ResultHandler<Subscription.Data, GQLError>
     ) -> Cancellable {
-        apollo.subscribe(subscription: subscription) { response in
-            let result = Self.parseApolloResponse(response)
+        apollo.subscribe(subscription: subscription) { [weak self] response in
+            guard let self = self else { return handler(.failure(.internalError)) }
+            let result = self.parseApolloResponse(response)
             handler(result)
         }
         .toNablaCancellable()
@@ -61,6 +65,7 @@ class GQLClientImpl: GQLClient {
     @Inject private var transport: CombinedTransport
     @Inject private var store: GQLStore
     @Inject private var apolloStore: ApolloStore
+    @Inject private var logger: Logger
     
     private lazy var apollo: ApolloClient = makeApolloClient()
     
@@ -75,7 +80,7 @@ class GQLClientImpl: GQLClient {
         return apollo
     }
     
-    private static func parseApolloResponse<Data>(_ response: Result<GraphQLResult<Data>, Error>) -> Result<Data, GQLError> {
+    private func parseApolloResponse<Data>(_ response: Result<GraphQLResult<Data>, Error>) -> Result<Data, GQLError> {
         switch response {
         case let .failure(error):
             let parsed = parseApolloError(error)
@@ -92,14 +97,14 @@ class GQLClientImpl: GQLClient {
         }
     }
     
-    private static func parseApolloError(_ error: Error) -> GQLError {
+    private func parseApolloError(_ error: Error) -> GQLError {
         if let graphqlError = error as? Apollo.GraphQLError {
             switch graphqlError.errorName {
             case "ENTITY_NOT_FOUND":
                 let path = graphqlError["path"] as? [String] ?? []
                 return .entityNotFound(path: path)
             case "INTERNAL_SERVER_ERROR":
-                return .internalServerError(message: graphqlError.message)
+                return .serverError(message: graphqlError.message)
             default:
                 break
             }
@@ -111,8 +116,27 @@ class GQLClientImpl: GQLClient {
             }
         } else if let authenticationError = error as? NablaAuthenticationError {
             return .authenticationError(authenticationError)
+        } else if let websocketError = error as? WebSocketError {
+            switch websocketError.kind {
+            case .networkError, .upgradeError, .unprocessedMessage, .serializedMessageError:
+                return .networkError(message: websocketError.errorDescription)
+            case .errorResponse, .neitherErrorNorPayloadReceived:
+                return .serverError(message: websocketError.errorDescription)
+            }
+        } else if let wserror = error as? WebSocket.WSError {
+            return .networkError(message: wserror.message)
+        } else if let responseCodeError = error as? ResponseCodeInterceptor.ResponseCodeError {
+            switch responseCodeError {
+            case let .invalidResponseCode(response, _):
+                guard let statusCode = response?.statusCode else { return .networkError(message: responseCodeError.errorDescription) }
+                switch statusCode {
+                case 400 ..< 500: return .networkError(message: responseCodeError.errorDescription)
+                case 500...: return .serverError(message: responseCodeError.errorDescription)
+                default: return .unknownError
+                }
+            }
         }
-        
+        logger.warning(message: "Unhandled error type: \(type(of: error)). Description: \(String(describing: error))")
         return .unknownError
     }
 }
