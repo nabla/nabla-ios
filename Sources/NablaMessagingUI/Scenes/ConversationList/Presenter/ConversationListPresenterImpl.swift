@@ -75,7 +75,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         })
     }
     
-    private func handle(result: Result<ConversationList, NablaWatchConversationsError>) {
+    private func handle(result: Result<ConversationList, NablaError>) {
         switch result {
         case let .success(list):
             self.list = list

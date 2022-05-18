@@ -12,14 +12,14 @@ class ConversationRepositoryImpl: ConversationRepository {
     
     func watchConversation(
         _ conversationId: UUID,
-        handler: ResultHandler<Conversation, NablaWatchConversationError>
+        handler: ResultHandler<Conversation, NablaError>
     ) -> Cancellable {
         let watcher = remoteDataSource.watchConversation(
             conversationId,
             handler: .init { [weak self] result in
                 switch result {
                 case let .failure(error):
-                    handler(.failure(.technicalError(.init(gqlError: error))))
+                    handler(.failure(GQLErrorTransformer.transform(gqlError: error)))
                 case let .success(data):
                     let conversation = ConversationTransformer.transform(fragment: data)
                     if conversation.providers.contains(where: \.isTyping) {
@@ -37,11 +37,11 @@ class ConversationRepositoryImpl: ConversationRepository {
         return watcher
     }
     
-    func watchConversations(handler: ResultHandler<ConversationList, NablaWatchConversationsError>) -> PaginatedWatcher {
+    func watchConversations(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher {
         let watcher = remoteDataSource.watchConversations(handler: .init { result in
             switch result {
             case let .failure(error):
-                handler(.failure(.technicalError(.init(gqlError: error))))
+                handler(.failure(GQLErrorTransformer.transform(gqlError: error)))
             case let .success(data):
                 let model = ConversationList(
                     conversations: ConversationTransformer.transform(data: data),
@@ -59,10 +59,10 @@ class ConversationRepositoryImpl: ConversationRepository {
         return watcher
     }
     
-    func createConversation(handler: ResultHandler<Conversation, NablaCreateConversationError>) -> Cancellable {
+    func createConversation(handler: ResultHandler<Conversation, NablaError>) -> Cancellable {
         remoteDataSource.createConversation(
             handler: handler
-                .pullbackError { .technicalError(.init(gqlError: $0)) }
+                .pullbackError(GQLErrorTransformer.transform)
                 .pullback(ConversationTransformer.transform)
         )
     }

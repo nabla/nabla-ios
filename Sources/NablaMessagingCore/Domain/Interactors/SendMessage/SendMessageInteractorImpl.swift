@@ -1,11 +1,12 @@
 import Foundation
 import NablaUtils
 
-final class SendMessageInteractorImpl: SendMessageInteractor {
+final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInteractor {
     // MARK: - Initializer
 
-    init(conversationItemRepository: ConversationItemRepository) {
-        repository = conversationItemRepository
+    init(authenticator: Authenticator, repository: ConversationItemRepository) {
+        self.repository = repository
+        super.init(authenticator: authenticator)
     }
 
     // MARK: - SendMessageInteractor
@@ -13,8 +14,11 @@ final class SendMessageInteractorImpl: SendMessageInteractor {
     func execute(
         message: MessageInput,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaSendMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
+        guard isAuthenticated(handler: handler) else {
+            return Failure()
+        }
         guard isMessageValid(message) else {
             handler(.failure(.invalidMessage))
             return Failure()

@@ -1,11 +1,12 @@
 import Foundation
 import NablaUtils
 
-final class DeleteMessageInteractorImpl: DeleteMessageInteractor {
+final class DeleteMessageInteractorImpl: AuthenticatedInteractor, DeleteMessageInteractor {
     // MARK: - Initializer
 
-    init(conversationItemRepository: ConversationItemRepository) {
-        repository = conversationItemRepository
+    init(authenticator: Authenticator, repository: ConversationItemRepository) {
+        self.repository = repository
+        super.init(authenticator: authenticator)
     }
 
     // MARK: - DeleteMessageInteractor
@@ -13,9 +14,12 @@ final class DeleteMessageInteractorImpl: DeleteMessageInteractor {
     func execute(
         messageId: UUID,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaDeleteMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
-        repository.deleteMessage(
+        guard isAuthenticated(handler: handler) else {
+            return Failure()
+        }
+        return repository.deleteMessage(
             withId: messageId,
             conversationId: conversationId,
             handler: handler

@@ -14,7 +14,7 @@ public class NablaMessagingClient {
     /// Create a new conversation on behalf of the current user.
     /// - Parameter handler: Handler called when the ``Conversation`` is created or an ``Error`` if something went wrong.
     /// - Returns: A ``Cancellable`` of the task
-    public func createConversation(handler: @escaping (Result<Conversation, NablaCreateConversationError>) -> Void) -> Cancellable {
+    public func createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable {
         container.createConversationInteractor.execute(handler: .init(handler))
     }
 
@@ -26,7 +26,7 @@ public class NablaMessagingClient {
     /// - Returns: A ``PaginatedWatcher`` of the task
     public func watchItems(
         ofConversationWithId conversationId: UUID,
-        handler: @escaping (Result<ConversationItems, NablaWatchConversationItemsError>) -> Void
+        handler: @escaping (Result<ConversationItems, NablaError>) -> Void
     ) -> PaginatedWatcher {
         container.watchConversationItemsInteractor.execute(conversationId: conversationId, handler: .init(handler))
     }
@@ -52,7 +52,7 @@ public class NablaMessagingClient {
     public func setIsTyping(
         _ isTyping: Bool,
         inConversationWithId conversationId: UUID,
-        handler: @escaping (Result<Void, NablaSetIsTypingError>) -> Void
+        handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
         container.setIsTypingInteractor.execute(isTyping: isTyping, conversationId: conversationId, handler: .init(handler))
     }
@@ -64,7 +64,7 @@ public class NablaMessagingClient {
     /// - Returns: A ``Cancellable`` of the task
     public func markConversationAsSeen(
         _ conversationId: UUID,
-        handler: @escaping ((Result<Void, NablaMarkConversationAsSeenError>) -> Void)
+        handler: @escaping ((Result<Void, NablaError>) -> Void)
     ) -> Cancellable {
         container.markConversationAsSeenInteractor.execute(conversationId: conversationId, handler: .init(handler))
     }
@@ -72,7 +72,7 @@ public class NablaMessagingClient {
     /// Watch the list of conversations the current user is involved in.
     /// - Parameter handler: The callback to call when new items are received.
     /// - Returns: A ``PaginatedWatcher`` of the task
-    public func watchConversations(handler: @escaping (Result<ConversationList, NablaWatchConversationsError>) -> Void) -> PaginatedWatcher {
+    public func watchConversations(handler: @escaping (Result<ConversationList, NablaError>) -> Void) -> PaginatedWatcher {
         container.watchConversationsInteractor.execute(handler: .init(handler))
     }
 
@@ -82,7 +82,7 @@ public class NablaMessagingClient {
     ///   - handler: Handler called every time something changes in the conversation state
     public func watchConversation(
         _ conversationId: UUID,
-        handler: @escaping (Result<Conversation, NablaWatchConversationError>) -> Void
+        handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
         container.watchConversationInteractor.execute(conversationId, handler: .init(handler))
     }
@@ -103,7 +103,7 @@ public class NablaMessagingClient {
     public func sendMessage(
         _ message: MessageInput,
         inConversationWithId conversationId: UUID,
-        handler: @escaping (Result<Void, NablaSendMessageError>) -> Void
+        handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
         container.sendMessageInteractor.execute(message: message, conversationId: conversationId, handler: .init(handler))
     }
@@ -117,7 +117,7 @@ public class NablaMessagingClient {
     public func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId conversationId: UUID,
-        handler: @escaping (Result<Void, NablaRetrySendingMessageError>) -> Void
+        handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
         container.retrySendingMessageInteractor.execute(itemId: itemId, conversationId: conversationId, handler: .init(handler))
     }
@@ -137,7 +137,7 @@ public class NablaMessagingClient {
     public func deleteMessage(
         withId messageId: UUID,
         conversationId: UUID,
-        handler: @escaping (Result<Void, NablaDeleteMessageError>) -> Void
+        handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
         container.deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, handler: .init(handler))
     }

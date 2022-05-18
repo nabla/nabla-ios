@@ -1,17 +1,21 @@
 import Foundation
 import NablaUtils
 
-class WatchConversationInteractorImpl: WatchConversationInteractor {
+class WatchConversationInteractorImpl: AuthenticatedInteractor, WatchConversationInteractor {
     // MARK: - Initializer
 
-    init(conversationRepository: ConversationRepository) {
-        repository = conversationRepository
+    init(authenticator: Authenticator, repository: ConversationRepository) {
+        self.repository = repository
+        super.init(authenticator: authenticator)
     }
 
     // MARK: - WatchConversationInteractor
 
-    func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaWatchConversationError>) -> Cancellable {
-        repository.watchConversation(conversationId, handler: handler)
+    func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaError>) -> Cancellable {
+        guard isAuthenticated(handler: handler) else {
+            return Failure()
+        }
+        return repository.watchConversation(conversationId, handler: handler)
     }
     
     // MARK: - private

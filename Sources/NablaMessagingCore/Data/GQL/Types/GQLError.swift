@@ -5,9 +5,10 @@ enum GQLError: Error {
     case internalError
     case emptyServerResponse
     case entityNotFound(path: [String])
-    case serverError(message: String?)
     case incompatibleServerSchema(message: String?)
     case cacheError(CacheError)
+
+    case serverError(message: String?)
     case authenticationError(NablaAuthenticationError)
     case networkError(message: String?)
     

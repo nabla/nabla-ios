@@ -24,7 +24,7 @@ class AuthorizationInterceptor: ApolloInterceptor {
                     chain.handleErrorAsync(error, request: request, response: response, completion: completion)
                 case let .success(state):
                     switch state {
-                    case .unauthenticated:
+                    case .notAuthenticated:
                         chain.proceedAsync(request: request, response: response, completion: completion)
                     case let .authenticated(accessToken):
                         request.addHeader(name: HTTPHeaders.NablaAuthorization, value: "Bearer \(accessToken)")

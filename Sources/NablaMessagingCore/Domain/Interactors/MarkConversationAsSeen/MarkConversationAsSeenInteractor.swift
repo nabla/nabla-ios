@@ -3,6 +3,6 @@ import Foundation
 protocol MarkConversationAsSeenInteractor {
     func execute(
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaMarkConversationAsSeenError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable
 }

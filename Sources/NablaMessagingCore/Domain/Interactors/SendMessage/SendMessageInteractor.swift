@@ -4,6 +4,6 @@ protocol SendMessageInteractor {
     func execute(
         message: MessageInput,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaSendMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable
 }

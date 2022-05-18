@@ -1,7 +1,7 @@
 import Foundation
 
 protocol ConversationRepository {
-    func watchConversation(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaWatchConversationError>) -> Cancellable
-    func watchConversations(handler: ResultHandler<ConversationList, NablaWatchConversationsError>) -> PaginatedWatcher
-    func createConversation(handler: ResultHandler<Conversation, NablaCreateConversationError>) -> Cancellable
+    func watchConversation(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaError>) -> Cancellable
+    func watchConversations(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher
+    func createConversation(handler: ResultHandler<Conversation, NablaError>) -> Cancellable
 }

@@ -1,11 +1,12 @@
 import Foundation
 import NablaUtils
 
-final class RetrySendingMessageInteractorImpl: RetrySendingMessageInteractor {
+final class RetrySendingMessageInteractorImpl: AuthenticatedInteractor, RetrySendingMessageInteractor {
     // MARK: - Initializer
 
-    init(conversationItemRepository: ConversationItemRepository) {
-        repository = conversationItemRepository
+    init(authenticator: Authenticator, repository: ConversationItemRepository) {
+        self.repository = repository
+        super.init(authenticator: authenticator)
     }
 
     // MARK: - RetrySendingMessageInteractor
@@ -13,9 +14,12 @@ final class RetrySendingMessageInteractorImpl: RetrySendingMessageInteractor {
     func execute(
         itemId: UUID,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaRetrySendingMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
-        repository.retrySending(itemWithId: itemId, inConversationWithId: conversationId, handler: handler)
+        guard isAuthenticated(handler: handler) else {
+            return Failure()
+        }
+        return repository.retrySending(itemWithId: itemId, inConversationWithId: conversationId, handler: handler)
     }
     
     // MARK: - Private

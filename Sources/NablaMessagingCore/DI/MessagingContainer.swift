@@ -10,39 +10,48 @@ class MessagingContainer {
     // MARK: - Public
 
     private(set) lazy var createConversationInteractor: CreateConversationInteractor = CreateConversationInteractorImpl(
-        conversationRepository: conversationRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationRepository
     )
 
     private(set) lazy var watchConversationItemsInteractor: WatchConversationItemsInteractor = WatchConversationItemsInteractorImpl(
-        conversationItemRepository: conversationItemRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationItemRepository
     )
 
     private(set) lazy var sendMessageInteractor: SendMessageInteractor = SendMessageInteractorImpl(
-        conversationItemRepository: conversationItemRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationItemRepository
     )
 
     private(set) lazy var retrySendingMessageInteractor: RetrySendingMessageInteractor = RetrySendingMessageInteractorImpl(
-        conversationItemRepository: conversationItemRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationItemRepository
     )
 
     private(set) lazy var deleteMessageInteractor: DeleteMessageInteractor = DeleteMessageInteractorImpl(
-        conversationItemRepository: conversationItemRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationItemRepository
     )
 
     private(set) lazy var setIsTypingInteractor: SetIsTypingInteractor = SetIsTypingInteractorImpl(
-        conversationItemRepository: conversationItemRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationItemRepository
     )
 
     private(set) lazy var markConversationAsSeenInteractor: MarkConversationAsSeenInteractor = MarkConversationAsSeenInteractorImpl(
-        conversationItemRepository: conversationItemRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationItemRepository
     )
 
     private(set) lazy var watchConversationsInteractor: WatchConversationsInteractor = WatchConversationsInteractorImpl(
-        conversationRepository: conversationRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationRepository
     )
 
     private(set) lazy var watchConversationInteractor: WatchConversationInteractor = WatchConversationInteractorImpl(
-        conversationRepository: conversationRepository
+        authenticator: coreContainer.authenticator,
+        repository: conversationRepository
     )
 
     // MARK: - Private

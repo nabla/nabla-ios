@@ -1,7 +1,7 @@
 import Foundation
 
 enum AuthenticationState {
-    case unauthenticated
+    case notAuthenticated
     case authenticated(accessToken: String)
 }
 
@@ -14,4 +14,5 @@ protocol Authenticator {
     func getAccessToken(handler: ResultHandler<AuthenticationState, NablaAuthenticationError>)
     func addObserver(_ observer: Any, selector: Selector)
     func removeObserver(_ observer: Any)
+    func isSessionInitialized() -> Bool
 }

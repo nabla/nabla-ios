@@ -17,3 +17,15 @@ public protocol PaginatedWatcher: Cancellable {
     /// - Returns: The ``Cancellable`` of the task.
     func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable
 }
+
+final class FailurePaginatedWatcher: PaginatedWatcher {
+    func loadMore(completion _: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        Failure()
+    }
+
+    func loadMore(numberOfItems _: Int, completion _: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        Failure()
+    }
+
+    func cancel() {}
+}

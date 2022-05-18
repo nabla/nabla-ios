@@ -4,6 +4,6 @@ protocol DeleteMessageInteractor {
     func execute(
         messageId: UUID,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaDeleteMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable
 }

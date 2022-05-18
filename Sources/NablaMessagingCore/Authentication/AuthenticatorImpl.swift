@@ -26,7 +26,7 @@ class AuthenticatorImpl: Authenticator {
     
     func getAccessToken(handler: ResultHandler<AuthenticationState, NablaAuthenticationError>) {
         guard let session = session else {
-            handler(.success(.unauthenticated))
+            handler(.success(.notAuthenticated))
             return
         }
         
@@ -64,7 +64,11 @@ class AuthenticatorImpl: Authenticator {
             object: nil
         )
     }
-    
+
+    func isSessionInitialized() -> Bool {
+        provider != nil
+    }
+
     // MARK: - Private
     
     private enum Constants {

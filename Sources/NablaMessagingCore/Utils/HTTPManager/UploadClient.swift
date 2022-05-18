@@ -38,7 +38,7 @@ class UploadClient {
                 switch state {
                 case let .authenticated(accessToken: token):
                     self?.doUpload(authToken: token, data: data, handler: handler)
-                case .unauthenticated:
+                case .notAuthenticated:
                     handler(.failure(.noAccessToken))
                 }
             })

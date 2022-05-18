@@ -99,7 +99,7 @@ class WebSocketTransport {
                     self.apollo.closeConnection()
                 case let .success(authenticationState):
                     switch authenticationState {
-                    case .unauthenticated:
+                    case .notAuthenticated:
                         // We don't support any unauthenticated subscription
                         self.apollo.closeConnection()
                     case let .authenticated(accessToken):

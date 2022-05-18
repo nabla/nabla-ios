@@ -22,13 +22,13 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
 
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
-        handler: ResultHandler<ConversationItems, NablaWatchConversationItemsError>
+        handler: ResultHandler<ConversationItems, NablaError>
     ) -> PaginatedWatcher {
         let merger = ConversationItemsMerger(
             remoteDataSource: remoteDataSource,
             localDataSource: localDataSource,
             conversationId: conversationId,
-            handler: handler.pullbackError { .technicalError(.init(gqlError: $0)) }
+            handler: handler.pullbackError(GQLErrorTransformer.transform)
         )
         merger.resume()
         
@@ -43,7 +43,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     func sendMessage(
         _ messageInput: MessageInput,
         inConversationWithId conversationId: UUID,
-        handler: ResultHandler<Void, NablaSendMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
         let localConversationMessage = makeLocalConversationMessage(for: messageInput)
         localDataSource.addConversationItem(localConversationMessage, toConversationWithId: conversationId)
@@ -57,31 +57,28 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId conversationId: UUID,
-        handler: ResultHandler<Void, NablaRetrySendingMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
-        guard let localConversationItem = localDataSource.getConversationItem(withClientId: itemId, inConversationWithId: conversationId) else {
-            handler(.failure(.conversationItemNotFound))
+        guard let localConversationMessage = localDataSource.getConversationItem(
+            withClientId: itemId,
+            inConversationWithId: conversationId
+        ) as? LocalConversationMessage else {
+            handler(.failure(.messageNotFound))
             return Failure()
         }
 
-        guard let localConversationMessage = localConversationItem as? LocalConversationMessage else {
-            logger.error(message: "Cannot send a non-message item")
-            handler(.failure(.invalidMessage))
-            return Failure()
-        }
-        
         if let mediaMessage = localConversationMessage as? LocalMediaConversationMessage,
            case .media = mediaMessage.content {
             return makeRemoteMessageAndThenSend(
                 localConversationMessage: localConversationMessage,
                 conversationId: conversationId,
-                handler: handler.pullbackError(Self.transformSendMessageError)
+                handler: handler
             )
         } else {
             return performSend(
                 localConversationMessage,
                 inConversationWithId: conversationId,
-                handler: handler.pullbackError(Self.transformSendMessageError)
+                handler: handler
             )
         }
     }
@@ -89,30 +86,30 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     func deleteMessage(
         withId messageId: UUID,
         conversationId _: UUID,
-        handler: ResultHandler<Void, NablaDeleteMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
         remoteDataSource.delete(
             messageId: messageId,
-            handler: handler.pullbackError { .technicalError(.init(gqlError: $0)) }
+            handler: handler.pullbackError(GQLErrorTransformer.transform)
         )
     }
     
     func setIsTyping(
         _ isTyping: Bool,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaSetIsTypingError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
         remoteDataSource.setIsTyping(
             isTyping,
             conversationId: conversationId,
-            handler: handler.pullbackError { .technicalError(.init(gqlError: $0)) }
+            handler: handler.pullbackError(GQLErrorTransformer.transform)
         )
     }
     
-    func markConversationAsSeen(conversationId: UUID, handler: ResultHandler<Void, NablaMarkConversationAsSeenError>) -> Cancellable {
+    func markConversationAsSeen(conversationId: UUID, handler: ResultHandler<Void, NablaError>) -> Cancellable {
         remoteDataSource.markConversationAsSeen(
             conversationId: conversationId,
-            handler: handler.pullbackError { .technicalError(.init(gqlError: $0)) }
+            handler: handler.pullbackError(GQLErrorTransformer.transform)
         )
     }
     
@@ -196,7 +193,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private func makeRemoteMessageAndThenSend(
         localConversationMessage: LocalConversationMessage,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaSendMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> UmbrellaCancellable {
         let umbrellaCancellable = UmbrellaCancellable()
         makeRemoteMessageInput(
@@ -228,7 +225,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
 
     private func makeRemoteMessageInput(
         from localConversationItem: LocalConversationItem,
-        handler: ResultHandler<RemoteMessageInput, NablaSendMessageError>
+        handler: ResultHandler<RemoteMessageInput, NablaError>
     ) {
         if let localTextItem = localConversationItem as? LocalTextMessageItem {
             handler(.success(.text(localTextItem.content)))
@@ -257,7 +254,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         _ remoteMessage: RemoteMessageInput,
         existingLocalConversationMessage localConversationMessage: LocalConversationMessage,
         inConversationWithId conversationId: UUID,
-        handler: ResultHandler<Void, NablaSendMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
         let updatedLocalConversationMessage = updateLocalConversationMessage(localConversationMessage, with: remoteMessage)
         localDataSource.updateConversationItem(updatedLocalConversationMessage, inConversationWithId: conversationId)
@@ -267,10 +264,10 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private func performSend(
         _ localConversationMessage: LocalConversationMessage,
         inConversationWithId conversationId: UUID,
-        handler: ResultHandler<Void, NablaSendMessageError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
         guard let sendInput = makeSendInput(for: localConversationMessage) else {
-            handler(.failure(.notSupported))
+            handler(.failure(.invalidMessage))
             return Failure()
         }
         
@@ -289,7 +286,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                     copy.sendingState = .failed
                     self?.localDataSource.updateConversationItem(copy, inConversationWithId: conversationId)
 
-                    handler(.failure(.technicalError(.init(gqlError: error))))
+                    handler(.failure(GQLErrorTransformer.transform(gqlError: error)))
                 case .success:
                     var copy = localConversationMessage
                     copy.sendingState = .sent
@@ -301,27 +298,12 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         )
     }
 
-    private static func transformFileUploadError(_ error: FileUploadRemoteDataSourceError) -> NablaSendMessageError {
+    private static func transformFileUploadError(_ error: FileUploadRemoteDataSourceError) -> NablaError {
         switch error {
         case .cannotReadFileData:
             return .cannotReadFileData
         case let .uploadError(error):
-            return .uploadError(error)
-        }
-    }
-
-    private static func transformSendMessageError(error: NablaSendMessageError) -> NablaRetrySendingMessageError {
-        switch error {
-        case .invalidMessage:
-            return .invalidMessage
-        case .notSupported:
-            return .notSupported
-        case .cannotReadFileData:
-            return .cannotReadFileData
-        case let .uploadError(error):
-            return .uploadError(error)
-        case let .technicalError(error):
-            return .technicalError(error)
+            return .serverError(error.localizedDescription)
         }
     }
 }

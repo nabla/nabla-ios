@@ -1,20 +1,24 @@
 import Foundation
 import NablaUtils
 
-final class MarkConversationAsSeenInteractorImpl: MarkConversationAsSeenInteractor {
+final class MarkConversationAsSeenInteractorImpl: AuthenticatedInteractor, MarkConversationAsSeenInteractor {
     // MARK: - Initializer
 
-    init(conversationItemRepository: ConversationItemRepository) {
-        repository = conversationItemRepository
+    init(authenticator: Authenticator, repository: ConversationItemRepository) {
+        self.repository = repository
+        super.init(authenticator: authenticator)
     }
 
     // MARK: - MarkConversationAsSeenInteractor
 
     func execute(
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaMarkConversationAsSeenError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
-        repository.markConversationAsSeen(conversationId: conversationId, handler: handler)
+        guard isAuthenticated(handler: handler) else {
+            return Failure()
+        }
+        return repository.markConversationAsSeen(conversationId: conversationId, handler: handler)
     }
     
     // MARK: - Private

@@ -1,17 +1,21 @@
 import Foundation
 import NablaUtils
 
-final class CreateConversationInteractorImpl: CreateConversationInteractor {
+final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateConversationInteractor {
     // MARK: - Initializer
 
-    init(conversationRepository: ConversationRepository) {
-        repository = conversationRepository
+    init(authenticator: Authenticator, repository: ConversationRepository) {
+        self.repository = repository
+        super.init(authenticator: authenticator)
     }
 
     // MARK: - Internal
     
-    func execute(handler: ResultHandler<Conversation, NablaCreateConversationError>) -> Cancellable {
-        repository.createConversation(handler: handler)
+    func execute(handler: ResultHandler<Conversation, NablaError>) -> Cancellable {
+        guard isAuthenticated(handler: handler) else {
+            return Failure()
+        }
+        return repository.createConversation(handler: handler)
     }
     
     // MARK: - Private

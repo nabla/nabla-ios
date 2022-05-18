@@ -1,11 +1,12 @@
 import Foundation
 import NablaUtils
 
-final class SetIsTypingInteractorImpl: SetIsTypingInteractor {
+final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInteractor {
     // MARK: - Initializer
 
-    init(conversationItemRepository: ConversationItemRepository) {
-        repository = conversationItemRepository
+    init(authenticator: Authenticator, repository: ConversationItemRepository) {
+        self.repository = repository
+        super.init(authenticator: authenticator)
     }
 
     // MARK: - SetIsTypingInteractor
@@ -13,9 +14,12 @@ final class SetIsTypingInteractorImpl: SetIsTypingInteractor {
     func execute(
         isTyping: Bool,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaSetIsTypingError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
-        repository.setIsTyping(isTyping, conversationId: conversationId, handler: handler)
+        guard isAuthenticated(handler: handler) else {
+            return Failure()
+        }
+        return repository.setIsTyping(isTyping, conversationId: conversationId, handler: handler)
     }
     
     // MARK: - Private

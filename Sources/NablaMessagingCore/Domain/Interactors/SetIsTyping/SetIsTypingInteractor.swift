@@ -4,6 +4,6 @@ protocol SetIsTypingInteractor {
     func execute(
         isTyping: Bool,
         conversationId: UUID,
-        handler: ResultHandler<Void, NablaSetIsTypingError>
+        handler: ResultHandler<Void, NablaError>
     ) -> Cancellable
 }
