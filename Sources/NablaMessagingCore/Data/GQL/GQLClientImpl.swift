@@ -4,6 +4,20 @@ import Foundation
 import NablaUtils
 
 class GQLClientImpl: GQLClient {
+    // MARK: - Initializer
+
+    init(
+        transport: CombinedTransport,
+        store: GQLStore,
+        apolloStore: ApolloStore,
+        logger: Logger
+    ) {
+        self.transport = transport
+        self.store = store
+        self.apolloStore = apolloStore
+        self.logger = logger
+    }
+
     // MARK: - Internal
     
     func fetch<Query: GQLQuery>(
@@ -61,11 +75,11 @@ class GQLClientImpl: GQLClient {
     }
     
     // MARK: - Private
-    
-    @Inject private var transport: CombinedTransport
-    @Inject private var store: GQLStore
-    @Inject private var apolloStore: ApolloStore
-    @Inject private var logger: Logger
+
+    private let transport: CombinedTransport
+    private let store: GQLStore
+    private let apolloStore: ApolloStore
+    private var logger: Logger
     
     private lazy var apollo: ApolloClient = makeApolloClient()
     

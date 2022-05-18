@@ -3,6 +3,12 @@ import Foundation
 import NablaUtils
 
 class GQLStoreImpl: GQLStore {
+    // MARK: - Initializer
+
+    init(apolloStore: ApolloStore) {
+        apollo = apolloStore
+    }
+
     // MARK: - Internal
     
     func createCache<Q: GraphQLQuery>(
@@ -106,7 +112,7 @@ class GQLStoreImpl: GQLStore {
     
     // MARK: - Private
     
-    @Inject private var apollo: ApolloStore
+    private let apollo: ApolloStore
     
     private static func makeCompletionHandler<T>(
         completion: @escaping (Result<T, GQLError.CacheError>) -> Void

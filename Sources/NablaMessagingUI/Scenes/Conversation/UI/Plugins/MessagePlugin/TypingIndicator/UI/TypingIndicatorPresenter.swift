@@ -10,12 +10,14 @@ final class TypingIndicatorPresenter:
     // MARK: - Init
     
     init(
+        logger: Logger,
         item: TypingIndicatorViewItem,
         conversationId: UUID,
         client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(
+            logger: logger,
             item: item,
             conversationId: conversationId,
             client: client,

@@ -6,7 +6,9 @@ import UIKit
 final class ConversationViewController: UIViewController, ConversationViewContract {
     // MARK: - Init
     
-    init(providers: [ConversationCellProvider]) {
+    init(logger: Logger,
+         providers: [ConversationCellProvider]) {
+        self.logger = logger
         self.providers = providers
         super.init(nibName: nil, bundle: nil)
         navigationItem.titleView = titleView
@@ -92,7 +94,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, DiffableConversationViewItem>
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, DiffableConversationViewItem>
     
-    @Inject private var logger: Logger
+    private let logger: Logger
     private let providers: [ConversationCellProvider]
     private var state: ConversationViewState = .loading {
         didSet {

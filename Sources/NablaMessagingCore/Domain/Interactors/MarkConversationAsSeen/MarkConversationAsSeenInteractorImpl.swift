@@ -2,14 +2,22 @@ import Foundation
 import NablaUtils
 
 final class MarkConversationAsSeenInteractorImpl: MarkConversationAsSeenInteractor {
+    // MARK: - Initializer
+
+    init(conversationItemRepository: ConversationItemRepository) {
+        repository = conversationItemRepository
+    }
+
+    // MARK: - MarkConversationAsSeenInteractor
+
     func execute(
         conversationId: UUID,
         handler: ResultHandler<Void, NablaMarkConversationAsSeenError>
     ) -> Cancellable {
-        conversationItemRepository.markConversationAsSeen(conversationId: conversationId, handler: handler)
+        repository.markConversationAsSeen(conversationId: conversationId, handler: handler)
     }
     
     // MARK: - Private
     
-    @Inject private var conversationItemRepository: ConversationItemRepository
+    private let repository: ConversationItemRepository
 }

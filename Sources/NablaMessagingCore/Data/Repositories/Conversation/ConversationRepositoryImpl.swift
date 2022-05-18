@@ -2,6 +2,12 @@ import Foundation
 import NablaUtils
 
 class ConversationRepositoryImpl: ConversationRepository {
+    // MARK: - Initializer
+
+    init(remoteDataSource: ConversationRemoteDataSource) {
+        self.remoteDataSource = remoteDataSource
+    }
+
     // MARK: - Internal
     
     func watchConversation(
@@ -63,8 +69,8 @@ class ConversationRepositoryImpl: ConversationRepository {
     
     // MARK: - Private
     
-    @Inject private var remoteDataSource: ConversationRemoteDataSource
-    
+    private let remoteDataSource: ConversationRemoteDataSource
+
     private weak var conversationsEventsSubscription: Cancellable?
     private let remoteTypingDebouncer: Debouncer = .init(
         delay: ProviderInConversation.Constants.typingTimeWindowTimeInterval,

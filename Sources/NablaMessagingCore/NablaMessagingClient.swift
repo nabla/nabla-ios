@@ -7,11 +7,15 @@ public class NablaMessagingClient {
     
     public static let shared = NablaMessagingClient(client: .shared)
 
+    public var logger: Logger {
+        coreContainer.logger
+    }
+
     /// Create a new conversation on behalf of the current user.
     /// - Parameter handler: Handler called when the ``Conversation`` is created or an ``Error`` if something went wrong.
     /// - Returns: A ``Cancellable`` of the task
     public func createConversation(handler: @escaping (Result<Conversation, NablaCreateConversationError>) -> Void) -> Cancellable {
-        createConversationInteractor.execute(handler: .init(handler))
+        container.createConversationInteractor.execute(handler: .init(handler))
     }
 
     /// Watch the list of messages in a conversation.
@@ -24,7 +28,7 @@ public class NablaMessagingClient {
         ofConversationWithId conversationId: UUID,
         handler: @escaping (Result<ConversationItems, NablaWatchConversationItemsError>) -> Void
     ) -> PaginatedWatcher {
-        watchConversationItemsInteractor.execute(conversationId: conversationId, handler: .init(handler))
+        container.watchConversationItemsInteractor.execute(conversationId: conversationId, handler: .init(handler))
     }
 
     /// Change the current user typing status in the conversation.
@@ -50,7 +54,7 @@ public class NablaMessagingClient {
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaSetIsTypingError>) -> Void
     ) -> Cancellable {
-        setIsTypingInteractor.execute(isTyping: isTyping, conversationId: conversationId, handler: .init(handler))
+        container.setIsTypingInteractor.execute(isTyping: isTyping, conversationId: conversationId, handler: .init(handler))
     }
 
     /// Acknowledge that the current user has seen all messages in it.
@@ -62,14 +66,14 @@ public class NablaMessagingClient {
         _ conversationId: UUID,
         handler: @escaping ((Result<Void, NablaMarkConversationAsSeenError>) -> Void)
     ) -> Cancellable {
-        markConversationAsSeenInteractor.execute(conversationId: conversationId, handler: .init(handler))
+        container.markConversationAsSeenInteractor.execute(conversationId: conversationId, handler: .init(handler))
     }
 
     /// Watch the list of conversations the current user is involved in.
     /// - Parameter handler: The callback to call when new items are received.
     /// - Returns: A ``PaginatedWatcher`` of the task
     public func watchConversations(handler: @escaping (Result<ConversationList, NablaWatchConversationsError>) -> Void) -> PaginatedWatcher {
-        watchConversationsInteractor.execute(handler: .init(handler))
+        container.watchConversationsInteractor.execute(handler: .init(handler))
     }
 
     /// Watch a conversation details.
@@ -80,7 +84,7 @@ public class NablaMessagingClient {
         _ conversationId: UUID,
         handler: @escaping (Result<Conversation, NablaWatchConversationError>) -> Void
     ) -> Cancellable {
-        watchConversationInteractor.execute(conversationId, handler: .init(handler))
+        container.watchConversationInteractor.execute(conversationId, handler: .init(handler))
     }
 
     /// Send a new message in the conversation referenced by its identifier.
@@ -101,7 +105,7 @@ public class NablaMessagingClient {
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaSendMessageError>) -> Void
     ) -> Cancellable {
-        sendMessageInteractor.execute(message: message, conversationId: conversationId, handler: .init(handler))
+        container.sendMessageInteractor.execute(message: message, conversationId: conversationId, handler: .init(handler))
     }
 
     /// Retry sending a message for which `LocalConversationItem.state`` is ``ConversationItemState.failed``.
@@ -115,7 +119,7 @@ public class NablaMessagingClient {
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaRetrySendingMessageError>) -> Void
     ) -> Cancellable {
-        retrySendingMessageInteractor.execute(itemId: itemId, conversationId: conversationId, handler: .init(handler))
+        container.retrySendingMessageInteractor.execute(itemId: itemId, conversationId: conversationId, handler: .init(handler))
     }
 
     /// Delete a message in the conversation. Current user should be its author.
@@ -135,20 +139,19 @@ public class NablaMessagingClient {
         conversationId: UUID,
         handler: @escaping (Result<Void, NablaDeleteMessageError>) -> Void
     ) -> Cancellable {
-        deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, handler: .init(handler))
+        container.deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, handler: .init(handler))
     }
     
-    public init(client _: NablaClient) {}
-    
+    public init(client: NablaClient) {
+        coreContainer = client.container
+        container = MessagingContainer(coreContainer: client.container)
+    }
+
+    // MARK: - Internal
+
+    private(set) var container: MessagingContainer
+
     // MARK: - Private
-    
-    @Inject private var createConversationInteractor: CreateConversationInteractor
-    @Inject private var watchConversationItemsInteractor: WatchConversationItemsInteractor
-    @Inject private var sendMessageInteractor: SendMessageInteractor
-    @Inject private var retrySendingMessageInteractor: RetrySendingMessageInteractor
-    @Inject private var deleteMessageInteractor: DeleteMessageInteractor
-    @Inject private var setIsTypingInteractor: SetIsTypingInteractor
-    @Inject private var markConversationAsSeenInteractor: MarkConversationAsSeenInteractor
-    @Inject private var watchConversationsInteractor: WatchConversationsInteractor
-    @Inject private var watchConversationInteractor: WatchConversationInteractor
+
+    private var coreContainer: CoreContainer
 }

@@ -19,7 +19,7 @@ public struct HTTPRequest {
     private(set) var endPoint: String
     private(set) var parameters: [String: Any]
     private(set) var body: Data?
-    private(set) var headers: [String: String?]
+    private(set) var headers: [String: String]
     private(set) var keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy
     
     public init(
@@ -27,7 +27,7 @@ public struct HTTPRequest {
         endPoint: String,
         parameters: [String: Any] = [:],
         body: Data? = nil,
-        headers: [String: String?] = [:],
+        headers: [String: String] = [:],
         keyDecodingStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase,
         requestId: String? = nil
     ) {

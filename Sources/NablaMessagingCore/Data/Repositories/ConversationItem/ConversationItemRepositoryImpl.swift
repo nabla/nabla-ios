@@ -2,11 +2,31 @@ import Foundation
 import NablaUtils
 
 class ConversationItemRepositoryImpl: ConversationItemRepository {
+    // MARK: - Initializer
+
+    init(
+        remoteDataSource: ConversationItemRemoteDataSource,
+        localDataSource: ConversationItemLocalDataSource,
+        fileUploadRemoteDataSource: FileUploadRemoteDataSource,
+        uploadClient: UploadClient,
+        logger: Logger
+    ) {
+        self.remoteDataSource = remoteDataSource
+        self.localDataSource = localDataSource
+        self.fileUploadRemoteDataSource = fileUploadRemoteDataSource
+        self.uploadClient = uploadClient
+        self.logger = logger
+    }
+
+    // MARK: - ConversationItemRepository
+
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,
         handler: ResultHandler<ConversationItems, NablaWatchConversationItemsError>
     ) -> PaginatedWatcher {
         let merger = ConversationItemsMerger(
+            remoteDataSource: remoteDataSource,
+            localDataSource: localDataSource,
             conversationId: conversationId,
             handler: handler.pullbackError { .technicalError(.init(gqlError: $0)) }
         )
@@ -98,11 +118,12 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     
     // MARK: - Private
     
-    @Inject private var remoteDataSource: ConversationItemRemoteDataSource
-    @Inject private var localDataSource: ConversationItemLocalDataSource
-    @Inject private var fileUploadRemoteDataSource: FileUploadRemoteDataSource
-    @Inject private var uploadClient: UploadClient
-    @Inject private var logger: Logger
+    private let remoteDataSource: ConversationItemRemoteDataSource
+    private let localDataSource: ConversationItemLocalDataSource
+    private let fileUploadRemoteDataSource: FileUploadRemoteDataSource
+    private let uploadClient: UploadClient
+    private let logger: Logger
+
     private var conversationEventsSubscriptions = [UUID: WeakCancellable]()
     
     private func makeOrReuseConversationEventsSubscription(for conversationId: UUID) -> Cancellable {

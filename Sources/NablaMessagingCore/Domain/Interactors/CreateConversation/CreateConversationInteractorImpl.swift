@@ -2,6 +2,12 @@ import Foundation
 import NablaUtils
 
 final class CreateConversationInteractorImpl: CreateConversationInteractor {
+    // MARK: - Initializer
+
+    init(conversationRepository: ConversationRepository) {
+        repository = conversationRepository
+    }
+
     // MARK: - Internal
     
     func execute(handler: ResultHandler<Conversation, NablaCreateConversationError>) -> Cancellable {
@@ -10,5 +16,5 @@ final class CreateConversationInteractorImpl: CreateConversationInteractor {
     
     // MARK: - Private
     
-    @Inject private var repository: ConversationRepository
+    private let repository: ConversationRepository
 }

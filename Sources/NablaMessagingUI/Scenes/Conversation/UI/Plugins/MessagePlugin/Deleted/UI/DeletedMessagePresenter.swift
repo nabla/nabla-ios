@@ -11,12 +11,14 @@ final class DeletedMessagePresenter:
     // MARK: - Init
     
     init(
+        logger: Logger,
         item: DeletedMessageViewItem,
         conversationId: UUID,
         client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(
+            logger: logger,
             item: item,
             conversationId: conversationId,
             client: client,

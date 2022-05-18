@@ -21,7 +21,7 @@ class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
         ofConversationWithId conversationId: UUID,
         callback: @escaping ([LocalConversationItem]) -> Void
     ) -> Cancellable {
-        LocalDataSourceWatcher(conversationId: conversationId, callback: callback)
+        LocalDataSourceWatcher(localDataSource: self, conversationId: conversationId, callback: callback)
     }
     
     func addConversationItem(
@@ -74,9 +74,11 @@ private class LocalDataSourceWatcher: Cancellable {
     }
     
     init(
+        localDataSource: ConversationItemLocalDataSource,
         conversationId: UUID,
         callback: @escaping ([LocalConversationItem]) -> Void
     ) {
+        self.localDataSource = localDataSource
         self.conversationId = conversationId
         self.callback = callback
         observeUpdates()
@@ -89,7 +91,7 @@ private class LocalDataSourceWatcher: Cancellable {
     
     // MARK: - Private
     
-    @Inject private var localDataSource: ConversationItemLocalDataSource
+    private let localDataSource: ConversationItemLocalDataSource
     
     private let conversationId: UUID
     private let callback: ([LocalConversationItem]) -> Void

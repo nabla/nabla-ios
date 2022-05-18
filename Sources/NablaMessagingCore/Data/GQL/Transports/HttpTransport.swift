@@ -3,14 +3,24 @@ import Foundation
 import NablaUtils
 
 class HttpTransport {
+    // MARK: - Initializer
+
+    init(
+        environment: Environment,
+        interceptorProvider: InterceptorProvider
+    ) {
+        self.environment = environment
+        self.interceptorProvider = interceptorProvider
+    }
+
     // MARK: - Internal
     
     private(set) lazy var apollo: UploadingNetworkTransport = makeApolloTransport()
     
     // MARK: - Private
     
-    @Inject private var environment: Environment
-    @Inject private var interceptorProvider: InterceptorProvider
+    private let environment: Environment
+    private let interceptorProvider: InterceptorProvider
     
     private func makeApolloTransport() -> UploadingNetworkTransport {
         RequestChainNetworkTransport(

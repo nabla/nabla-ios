@@ -2,6 +2,14 @@ import Foundation
 import NablaUtils
 
 final class SendMessageInteractorImpl: SendMessageInteractor {
+    // MARK: - Initializer
+
+    init(conversationItemRepository: ConversationItemRepository) {
+        repository = conversationItemRepository
+    }
+
+    // MARK: - SendMessageInteractor
+
     func execute(
         message: MessageInput,
         conversationId: UUID,
@@ -11,7 +19,7 @@ final class SendMessageInteractorImpl: SendMessageInteractor {
             handler(.failure(.invalidMessage))
             return Failure()
         }
-        return conversationItemRepository.sendMessage(
+        return repository.sendMessage(
             message,
             inConversationWithId: conversationId,
             handler: handler
@@ -19,8 +27,8 @@ final class SendMessageInteractorImpl: SendMessageInteractor {
     }
     
     // MARK: - Private
-    
-    @Inject private var conversationItemRepository: ConversationItemRepository
+
+    private let repository: ConversationItemRepository
 
     private func isMessageValid(_ message: MessageInput) -> Bool {
         switch message {

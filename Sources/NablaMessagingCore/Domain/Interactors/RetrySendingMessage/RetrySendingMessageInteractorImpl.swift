@@ -2,6 +2,14 @@ import Foundation
 import NablaUtils
 
 final class RetrySendingMessageInteractorImpl: RetrySendingMessageInteractor {
+    // MARK: - Initializer
+
+    init(conversationItemRepository: ConversationItemRepository) {
+        repository = conversationItemRepository
+    }
+
+    // MARK: - RetrySendingMessageInteractor
+
     func execute(
         itemId: UUID,
         conversationId: UUID,
@@ -12,5 +20,5 @@ final class RetrySendingMessageInteractorImpl: RetrySendingMessageInteractor {
     
     // MARK: - Private
     
-    @Inject private var repository: ConversationItemRepository
+    private let repository: ConversationItemRepository
 }

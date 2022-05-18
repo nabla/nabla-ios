@@ -6,9 +6,11 @@ final class ImageMessageCellProvider: ConversationCellProvider {
     // MARK: Initializer
     
     init(
+        logger: Logger,
         conversationId: UUID,
         client: NablaMessagingClient
     ) {
+        self.logger = logger
         self.conversationId = conversationId
         self.client = client
     }
@@ -44,6 +46,7 @@ final class ImageMessageCellProvider: ConversationCellProvider {
     private typealias Cell = ConversationMessageCell<ImageMessageContentView>
     
     private let client: NablaMessagingClient
+    private let logger: Logger
     private let conversationId: UUID
     
     private var presenters: [UUID: ImageMessagePresenter] = [:]
@@ -57,6 +60,7 @@ final class ImageMessageCellProvider: ConversationCellProvider {
             return presenter
         } else {
             let presenter = ImageMessagePresenter(
+                logger: logger,
                 item: item,
                 conversationId: conversationId,
                 client: client,

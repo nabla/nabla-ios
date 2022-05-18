@@ -10,6 +10,7 @@ final class ImageMessagePresenter:
     // MARK: - Init
     
     init(
+        logger: Logger,
         item: ImageMessageViewItem,
         conversationId: UUID,
         client: NablaMessagingClient,
@@ -17,6 +18,7 @@ final class ImageMessagePresenter:
     ) {
         self.delegate = delegate
         super.init(
+            logger: logger,
             item: item,
             conversationId: conversationId,
             client: client,

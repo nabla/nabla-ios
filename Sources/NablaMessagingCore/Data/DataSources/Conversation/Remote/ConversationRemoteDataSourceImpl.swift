@@ -2,6 +2,16 @@ import Foundation
 import NablaUtils
 
 final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
+    // MARK: - Initializer
+
+    init(
+        gqlClient: GQLClient,
+        gqlStore: GQLStore
+    ) {
+        self.gqlClient = gqlClient
+        self.gqlStore = gqlStore
+    }
+    
     // MARK: - Internal
     
     func createConversation(handler: ResultHandler<RemoteConversation, GQLError>) -> Cancellable {
@@ -24,6 +34,8 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     
     func watchConversations(handler: ResultHandler<RemoteConversationList, GQLError>) -> PaginatedWatcher {
         ConversationListWatcher(
+            gqlClient: gqlClient,
+            gqlStore: gqlStore,
             numberOfItemsPerPage: Constants.numberOfItemsPerPage,
             handler: handler
         )
@@ -61,8 +73,8 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
         )
     }
     
-    @Inject private var gqlClient: GQLClient
-    @Inject private var gqlStore: GQLStore
+    private let gqlClient: GQLClient
+    private let gqlStore: GQLStore
     
     private func handleConversationsEvent(_ event: RemoteConversationsEvent) {
         if let conversationCreatedEvent = event.asConversationCreatedEvent {

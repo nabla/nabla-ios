@@ -33,10 +33,9 @@ struct URLRequestMapper {
         
         var headers = [
             HTTPHeaders.Accept: "application/json",
-        ].merging(HTTPHeaders.extra, uniquingKeysWith: { lhs, _ in lhs })
+        ]
         
         for (key, value) in httpRequest.headers {
-            guard let value = value else { continue }
             headers.updateValue(value, forKey: key)
         }
         

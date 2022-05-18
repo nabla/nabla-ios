@@ -16,6 +16,16 @@ struct UploadData {
 }
 
 class UploadClient {
+    // MARK: - Initializer
+
+    init(
+        httpManager: HTTPManager,
+        authenticator: Authenticator
+    ) {
+        self.httpManager = httpManager
+        self.authenticator = authenticator
+    }
+
     // MARK: - Public
     
     func upload(_ data: UploadData, handler: ResultHandler<UUID, UploadClientError>) {
@@ -36,8 +46,8 @@ class UploadClient {
     
     // MARK: - Private
     
-    @Inject private var httpManager: HTTPManager
-    @Inject private var authenticator: Authenticator
+    private let httpManager: HTTPManager
+    private let authenticator: Authenticator
     
     private func makeHeaders(authToken: String) -> [String: String] {
         [

@@ -18,12 +18,32 @@ class WebSocketTransport {
     
     private(set) lazy var apollo: ApolloWebSocketTransport = makeApolloTransport()
     
-    init() {
+    init(
+        environment: Environment,
+        store: GQLStore,
+        authenticator: Authenticator,
+        apolloStore: ApolloStore,
+        logger: Logger
+    ) {
+        self.environment = environment
+        self.store = store
+        self.authenticator = authenticator
+        self.logger = logger
+        self.apolloStore = apolloStore
         apollo.delegate = self
-        authenticator.addObserver(self, selector: #selector(updateAuthenticationHeader))
-        HTTPHeaders.addObserver(self, selector: #selector(updateStaticHeaders), notification: .extraHeadersChanged)
+        self.authenticator.addObserver(self, selector: #selector(updateAuthenticationHeader))
         updateStaticHeaders()
         updateAuthenticationHeader()
+    }
+
+    func addExtraHeader(key: String, value: String) {
+        extraHeaders[key] = value
+        updateStaticHeaders()
+    }
+
+    func removeExtraHeader(key: String, value _: String) {
+        extraHeaders.removeValue(forKey: key)
+        updateStaticHeaders()
     }
     
     deinit {
@@ -31,11 +51,14 @@ class WebSocketTransport {
     }
     
     // MARK: - Private
-    
-    @Inject private var environment: Environment
-    @Inject private var apolloStore: ApolloStore
-    @Inject private var authenticator: Authenticator
-    @Inject private var logger: Logger
+
+    private let environment: Environment
+    private let store: GQLStore
+    private let apolloStore: ApolloStore
+    private let authenticator: Authenticator
+    private let logger: Logger
+
+    private var extraHeaders: [String: String] = [:]
     
     private func makeApolloTransport() -> ApolloWebSocketTransport {
         let apollo = ApolloWebSocketTransport(
@@ -60,7 +83,7 @@ class WebSocketTransport {
     
     @objc private func updateStaticHeaders() {
         apollo.updateHeaderValues(
-            HTTPHeaders.extra,
+            extraHeaders,
             reconnectIfConnected: true
         )
     }

@@ -2,6 +2,14 @@ import Foundation
 import NablaUtils
 
 final class DeleteMessageInteractorImpl: DeleteMessageInteractor {
+    // MARK: - Initializer
+
+    init(conversationItemRepository: ConversationItemRepository) {
+        repository = conversationItemRepository
+    }
+
+    // MARK: - DeleteMessageInteractor
+
     func execute(
         messageId: UUID,
         conversationId: UUID,
@@ -16,5 +24,5 @@ final class DeleteMessageInteractorImpl: DeleteMessageInteractor {
     
     // MARK: - Private
     
-    @Inject private var repository: ConversationItemRepository
+    private let repository: ConversationItemRepository
 }

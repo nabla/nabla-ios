@@ -9,6 +9,8 @@ public protocol URLCache {
 
 public struct URLCacheImplementation: URLCache {
     let cache = NSCache<NSURL, NSData>()
+
+    public init() {}
     
     public func get(_ key: URL) -> NSData? {
         cache.object(forKey: key as NSURL)

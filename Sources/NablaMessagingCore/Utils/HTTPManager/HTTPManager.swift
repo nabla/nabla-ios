@@ -1,9 +1,7 @@
 import Foundation
 
 final class HTTPManager {
-    private let session: URLSession
-    private let requestBehavior: RequestBehavior
-    private let urlRequestMapper: URLRequestMapper
+    // MARK: - Initializer
     
     public init(
         baseURLProvider: BaseURLProvider,
@@ -47,7 +45,7 @@ final class HTTPManager {
     ) -> Cancellable {
         let updatedRequest = requestBehavior.modify(request: baseRequest)
         
-        guard let urlRequest = urlRequestMapper.map(httpRequest: baseRequest) else {
+        guard let urlRequest = urlRequestMapper.map(httpRequest: updatedRequest) else {
             fatalError()
         }
         
@@ -62,6 +60,12 @@ final class HTTPManager {
             completion(alteredResponse)
         }
     }
+
+    // MARK: - Private
+
+    private let session: URLSession
+    private let requestBehavior: RequestBehavior
+    private let urlRequestMapper: URLRequestMapper
 }
 
 extension URLSessionDataTask: Cancellable {}

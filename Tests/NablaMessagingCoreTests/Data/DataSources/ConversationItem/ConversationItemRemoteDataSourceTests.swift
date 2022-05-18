@@ -6,14 +6,12 @@ import XCTest
 class ConversationItemRemoteDataSourceTests: XCTestCase {
     private var mockGqlClient: GQLClientMock!
     private var mockGqlStore: GQLStoreMock!
+    private var logger = ConsoleLogger()
 
     override func setUp() {
         super.setUp()
         mockGqlClient = GQLClientMock()
         mockGqlStore = GQLStoreMock()
-        
-        Resolver.shared.register(type: GQLClient.self, mockGqlClient)
-        Resolver.shared.register(type: GQLStore.self, mockGqlStore)
         
         Matcher.default.register(GQL.MaskAsSeenMutation.self) { lhs, rhs in
             lhs.conversationId == rhs.conversationId
@@ -28,7 +26,7 @@ class ConversationItemRemoteDataSourceTests: XCTestCase {
     func testMarkConversationAsSeenCallsClientWithCorrectMutation() {
         // GIVEN
         let conversationId = UUID()
-        let sut = ConversationItemRemoteDataSourceImpl()
+        let sut = ConversationItemRemoteDataSourceImpl(gqlClient: mockGqlClient, gqlStore: mockGqlStore, logger: logger)
         Given(mockGqlClient, .perform(mutation: .any(GQL.MaskAsSeenMutation.self), handler: .any, willReturn: CancellableMock()))
         // WHEN
         _ = sut.markConversationAsSeen(conversationId: conversationId, handler: .void)

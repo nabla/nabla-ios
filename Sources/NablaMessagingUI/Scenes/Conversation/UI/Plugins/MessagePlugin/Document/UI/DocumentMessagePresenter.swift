@@ -10,12 +10,14 @@ final class DocumentMessagePresenter:
     // MARK: - Init
         
     init(
+        logger: Logger,
         item: DocumentMessageViewItem,
         conversationId: UUID,
         client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(
+            logger: logger,
             item: item,
             conversationId: conversationId,
             client: client,

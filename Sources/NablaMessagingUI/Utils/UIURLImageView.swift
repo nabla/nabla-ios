@@ -14,7 +14,7 @@ public class UIURLImageView: UIImageView {
     
     // MARK: - Private
     
-    @Inject private var cache: NablaMessagingCore.URLCache
+    private let cache: NablaMessagingCore.URLCache = URLCacheImplementation()
     
     private func update(url: URL?) {
         image = nil

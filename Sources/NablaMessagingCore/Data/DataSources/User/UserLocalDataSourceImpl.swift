@@ -22,8 +22,10 @@ class UserLocalDataSourceImpl: UserLocalDataSource {
     }
     
     init(
-        store: KeyValueStore = KeyValueStoreImpl(namespace: "UserLocalDataSourceImpl")
+        logger: Logger,
+        store: KeyValueStore
     ) {
+        self.logger = logger
         self.store = store
     }
     
@@ -33,7 +35,7 @@ class UserLocalDataSourceImpl: UserLocalDataSource {
         static let currentUserStoreKey = "currentUser"
     }
     
-    @Inject private var logger: Logger
+    private let logger: Logger
     
     private let store: KeyValueStore
 }

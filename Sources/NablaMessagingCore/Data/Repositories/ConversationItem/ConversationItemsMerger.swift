@@ -43,9 +43,13 @@ class ConversationItemsMerger: PaginatedWatcher {
     }
     
     init(
+        remoteDataSource: ConversationItemRemoteDataSource,
+        localDataSource: ConversationItemLocalDataSource,
         conversationId: UUID,
         handler: ResultHandler<ConversationItems, GQLError>
     ) {
+        self.remoteDataSource = remoteDataSource
+        self.localDataSource = localDataSource
         self.conversationId = conversationId
         self.handler = handler
     }
@@ -56,8 +60,8 @@ class ConversationItemsMerger: PaginatedWatcher {
     
     // MARK: - Private
     
-    @Inject private var remoteDataSource: ConversationItemRemoteDataSource
-    @Inject private var localDataSource: ConversationItemLocalDataSource
+    private let remoteDataSource: ConversationItemRemoteDataSource
+    private let localDataSource: ConversationItemLocalDataSource
     
     private let conversationId: UUID
     private let handler: ResultHandler<ConversationItems, GQLError>

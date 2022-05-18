@@ -6,9 +6,11 @@ final class DocumentMessageCellProvider: ConversationCellProvider {
     // MARK: Initializer
     
     init(
+        logger: Logger,
         conversationId: UUID,
         client: NablaMessagingClient
     ) {
+        self.logger = logger
         self.conversationId = conversationId
         self.client = client
     }
@@ -42,7 +44,8 @@ final class DocumentMessageCellProvider: ConversationCellProvider {
     // MARK: - Private
     
     private typealias Cell = ConversationMessageCell<DocumentMessageContentView>
-    
+
+    private let logger: Logger
     private let client: NablaMessagingClient
     private let conversationId: UUID
     
@@ -57,6 +60,7 @@ final class DocumentMessageCellProvider: ConversationCellProvider {
             return presenter
         } else {
             let presenter = DocumentMessagePresenter(
+                logger: logger,
                 item: item,
                 conversationId: conversationId,
                 client: client,

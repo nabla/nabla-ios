@@ -1,10 +1,27 @@
 import Foundation
 import NablaUtils
 
+private enum Constants {
+    static let defaultName = "singleton"
+}
+
 /// You should always call``NablaClient.initialize`` as soon as possible.
 /// Before any interaction with messaging features make sure you
 /// successfully authenticated your user by calling ``NablaClient.shared.authenticate(provider:)``.
 public class NablaClient {
+    // MARK: - Initializer
+
+    /// Create an instance of NablaClient to use.
+    /// - Parameters:
+    ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
+    ///   - name: Namespace for your the stored objects.
+    ///   - configuration: Optional API configuration. This is for internal usage and you should probably never pass any value.
+    init(apiKey: String, name: String, configuration: Configuration? = nil) {
+        container = CoreContainer(name: name, configuration: configuration ?? DefaultConfiguration())
+
+        addHTTPHeader(name: HTTPHeaders.NablaApiKey, value: Self.formatApiKey(apiKey))
+    }
+
     // MARK: - Public
 
     /// Shared instance of NablaClient client to use.
@@ -26,9 +43,11 @@ public class NablaClient {
             assertionFailure("NablaClient.initialize(configuration:) can only be called once")
             return
         }
-        HTTPHeaders.extra[HTTPHeaders.NablaApiKey] = formatApiKey(apiKey)
-        assemble(configuration: configuration ?? DefaultConfiguration())
-        _shared = NablaClient()
+        _shared = NablaClient(
+            apiKey: apiKey,
+            name: Constants.defaultName,
+            configuration: configuration ?? DefaultConfiguration()
+        )
     }
 
     /// Authenticate the current user.
@@ -39,24 +58,25 @@ public class NablaClient {
         userId: UUID,
         provider: SessionTokenProvider
     ) {
-        if let currentUser = userRepository.getCurrentUser(), currentUser.id != userId {
-            logger.info(message: "Authenticating a new user, will log previous one out first.")
+        if let currentUser = container.userRepository.getCurrentUser(), currentUser.id != userId {
+            container.logger.info(message: "Authenticating a new user, will log previous one out first.")
             logOut()
         }
-        userRepository.setCurrentUser(User(id: userId))
-        authenticator.authenticate(userId: userId, provider: provider)
+        container.userRepository.setCurrentUser(User(id: userId))
+        container.authenticator.authenticate(userId: userId, provider: provider)
     }
 
     /// Log the current user out
     public func logOut() {
-        userRepository.setCurrentUser(nil)
-        authenticator.logOut()
-        gqlStore.clearCache { [logger] result in
+        container.userRepository.setCurrentUser(nil)
+        container.authenticator.logOut()
+        container.gqlStore.clearCache { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success:
                 break
             case let .failure(error):
-                logger.error(message: "Failed to clear cache on logout: \(error)")
+                self.container.logger.error(message: "Failed to clear cache on logout: \(error)")
             }
         }
     }
@@ -66,7 +86,7 @@ public class NablaClient {
     /// in order to refresh the on screen information when your application comes back to foreground
     /// - Parameter triggers: The triggers to add.
     public func addRefetchTriggers(_ triggers: RefetchTrigger...) {
-        gqlClient.addRefetchTriggers(triggers)
+        container.gqlClient.addRefetchTriggers(triggers)
     }
 
     /// Add default HTTP Headers to calls. This is for internal usage and you should probably never call it.
@@ -74,31 +94,20 @@ public class NablaClient {
     ///   - name: The name of the header
     ///   - value: The value of the header
     public func addHTTPHeader(name: String, value: String) {
-        HTTPHeaders.extra[name] = value
+        container.webSocketTransport.addExtraHeader(key: name, value: value)
+        container.extraHeadersRequestBehavior.addHeader(key: name, value: value)
+        if let httpInterceptor = container.interceptorProvider as? HttpInterceptorProvider {
+            httpInterceptor.addExtraHeader(key: name, value: value)
+        }
     }
+
+    // MARK: - Internal
+
+    private(set) var container: CoreContainer
     
     // MARK: - Private
     
-    @Inject private var authenticator: Authenticator
-    @Inject private var gqlClient: GQLClient
-    @Inject private var gqlStore: GQLStore
-    @Inject private var userRepository: UserRepository
-    @Inject private var logger: Logger
-    
     private static var _shared: NablaClient?
-    
-    private static func assemble(configuration: Configuration = DefaultConfiguration()) {
-        let assembler = Assembler(assemblies: [
-            AuthenticationAssembly(),
-            DataSourceAssembly(),
-            RepositoryAssembly(),
-            InteractorAssembly(),
-            HelperAssembly(configuration: configuration),
-            NetworkAssembly(),
-            GQLAssembly(),
-        ])
-        assembler.assemble()
-    }
     
     private static func formatApiKey(_ apiKey: String) -> String {
         apiKey.replacingOccurrences(of: "Authorization: Bearer ", with: "")

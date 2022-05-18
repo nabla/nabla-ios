@@ -2,6 +2,12 @@ import Foundation
 import NablaUtils
 
 class UserRepositoryImpl: UserRepository {
+    // MARK: - Initializer
+
+    init(localDataSource: UserLocalDataSource) {
+        self.localDataSource = localDataSource
+    }
+
     // MARK: - Internal
     
     func getCurrentUser() -> User? {
@@ -16,7 +22,7 @@ class UserRepositoryImpl: UserRepository {
     
     // MARK: - Private
     
-    @Inject private var localDataSource: UserLocalDataSource
+    private let localDataSource: UserLocalDataSource
     
     private func transform(_ user: User) -> LocalUser {
         LocalUser(

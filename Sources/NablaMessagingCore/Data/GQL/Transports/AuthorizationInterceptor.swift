@@ -3,6 +3,12 @@ import Foundation
 import NablaUtils
 
 class AuthorizationInterceptor: ApolloInterceptor {
+    // MARK: - Initializer
+
+    init(authenticator: Authenticator) {
+        self.authenticator = authenticator
+    }
+
     // MARK: - Internal
     
     func interceptAsync<Operation>(
@@ -30,5 +36,5 @@ class AuthorizationInterceptor: ApolloInterceptor {
     
     // MARK: - Private
     
-    @Inject private var authenticator: Authenticator
+    private let authenticator: Authenticator
 }

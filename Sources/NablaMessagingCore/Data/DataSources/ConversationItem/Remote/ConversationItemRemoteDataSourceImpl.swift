@@ -2,6 +2,18 @@ import Foundation
 import NablaUtils
 
 class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
+    // MARK: - Initializer
+
+    init(
+        gqlClient: GQLClient,
+        gqlStore: GQLStore,
+        logger: Logger
+    ) {
+        self.gqlClient = gqlClient
+        self.gqlStore = gqlStore
+        self.logger = logger
+    }
+
     // MARK: - Internal
     
     func watchConversationItems(
@@ -9,6 +21,9 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         handler: ResultHandler<RemoteConversationItems, GQLError>
     ) -> PaginatedWatcher {
         ConversationItemsWatcher(
+            gqlClient: gqlClient,
+            gqlStore: gqlStore,
+            logger: logger,
             conversationId: conversationId,
             numberOfItemsPerPage: Constants.numberOfItemsPerPage,
             handler: handler
@@ -85,8 +100,9 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     // MARK: - Private
     
-    @Inject private var gqlClient: GQLClient
-    @Inject private var gqlStore: GQLStore
+    private let gqlClient: GQLClient
+    private let gqlStore: GQLStore
+    private let logger: Logger
     
     private enum Constants {
         static let numberOfItemsPerPage = 50
@@ -150,13 +166,23 @@ extension GQL.GetConversationItemsQuery: PaginatedQuery {
 }
 
 private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationItemsQuery> {
+    // MARK: - Initializer
+
     init(
+        gqlClient: GQLClient,
+        gqlStore: GQLStore,
+        logger: Logger,
         conversationId: UUID,
         numberOfItemsPerPage: Int,
         handler: ResultHandler<RemoteConversationItems, GQLError>
     ) {
+        self.gqlClient = gqlClient
+        self.gqlStore = gqlStore
+        self.logger = logger
         self.conversationId = conversationId
         super.init(
+            gqlClient: gqlClient,
+            gqlStore: gqlStore,
             numberOfItemsPerPage: numberOfItemsPerPage,
             handler: handler
         )
@@ -188,8 +214,9 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
     }
     
     // MARK: - Private
-    
-    @Inject private var logger: Logger
-    
+
+    private let gqlClient: GQLClient
+    private let gqlStore: GQLStore
+    private let logger: Logger
     private let conversationId: UUID
 }

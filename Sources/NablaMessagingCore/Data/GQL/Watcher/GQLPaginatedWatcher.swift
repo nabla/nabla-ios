@@ -38,9 +38,13 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     }
     
     init(
+        gqlClient: GQLClient,
+        gqlStore: GQLStore,
         numberOfItemsPerPage: Int,
         handler: ResultHandler<Query.Data, GQLError>
     ) {
+        self.gqlClient = gqlClient
+        self.gqlStore = gqlStore
         self.numberOfItemsPerPage = numberOfItemsPerPage
         self.handler = handler
         
@@ -77,8 +81,8 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     
     // MARK: - Private
     
-    @Inject private var gqlClient: GQLClient
-    @Inject private var gqlStore: GQLStore
+    private let gqlClient: GQLClient
+    private let gqlStore: GQLStore
     
     private let numberOfItemsPerPage: Int
     private let handler: ResultHandler<Query.Data, GQLError>

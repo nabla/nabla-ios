@@ -124,10 +124,12 @@ final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: Init
     
     init(
+        logger: Logger,
         conversation: Conversation,
         view: ConversationViewContract,
         client: NablaMessagingClient
     ) {
+        self.logger = logger
         self.view = view
         self.client = client
         self.conversation = conversation
@@ -138,7 +140,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private let client: NablaMessagingClient
     private var conversation: Conversation
 
-    @Inject private var logger: Logger
+    private let logger: Logger
 
     private weak var view: ConversationViewContract?
     private var conversationItems: ConversationItems?

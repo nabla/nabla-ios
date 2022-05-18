@@ -11,12 +11,14 @@ final class TextMessagePresenter:
     // MARK: - Init
     
     init(
+        logger: Logger,
         item: TextMessageViewItem,
         conversationId: UUID,
         client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(
+            logger: logger,
             item: item,
             conversationId: conversationId,
             client: client,

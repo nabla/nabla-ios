@@ -23,7 +23,7 @@ class ImageDetailViewController: UIViewController, ImageDetailViewContract {
     }
     
     // MARK: - Private
-    
+
     private lazy var imageView: UIURLImageView = makeImageView()
     
     private func setUp() {

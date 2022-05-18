@@ -2,9 +2,15 @@ import Foundation
 import NablaUtils
 
 class ReachabilityRefetchTrigger: RefetchTrigger {
+    // MARK: - Initializer
+
+    init(environment: Environment) {
+        self.environment = environment
+    }
+
     // MARK: - Private
     
-    @Inject private var environment: Environment
+    private let environment: Environment
     
     private var performedInitialCheck = false
     private lazy var reachability: Reachability? = makeReachability()

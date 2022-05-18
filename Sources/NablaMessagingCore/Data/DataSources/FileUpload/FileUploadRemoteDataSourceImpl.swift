@@ -2,6 +2,12 @@ import Foundation
 import NablaUtils
 
 class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
+    // MARK: - Initializer
+
+    init(uploadClient: UploadClient) {
+        self.uploadClient = uploadClient
+    }
+
     // MARK: - FileUploadRemoteDataSource
     
     func upload(
@@ -27,5 +33,5 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
     
     // MARK: - Private
     
-    @Inject private var uploadClient: UploadClient
+    private let uploadClient: UploadClient
 }

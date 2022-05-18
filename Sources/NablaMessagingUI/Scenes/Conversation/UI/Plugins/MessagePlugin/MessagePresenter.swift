@@ -15,12 +15,14 @@ class MessagePresenter<
     // MARK: - Init
     
     init(
+        logger: Logger,
         item: Item,
         conversationId: UUID,
         client: NablaMessagingClient,
         delegate: ConversationCellPresenterDelegate,
         transformContent: @escaping (Item) -> ContentView.ContentViewModel
     ) {
+        self.logger = logger
         self.item = item
         self.conversationId = conversationId
         self.client = client
@@ -66,7 +68,7 @@ class MessagePresenter<
     
     // MARK: - Private
 
-    @Inject private var logger: Logger
+    private let logger: Logger
     
     private let conversationId: UUID
     private let client: NablaMessagingClient

@@ -2,6 +2,12 @@ import Foundation
 import NablaUtils
 
 class AuthenticatorImpl: Authenticator {
+    // MARK: - Initialiazer
+
+    init(httpManager: HTTPManager) {
+        self.httpManager = httpManager
+    }
+
     // MARK: - Internal
     
     func authenticate(
@@ -66,8 +72,7 @@ class AuthenticatorImpl: Authenticator {
     }
     
     private let notificationCenter = NotificationCenter()
-    
-    @Inject private var httpManager: HTTPManager
+    private let httpManager: HTTPManager
     
     private var provider: SessionTokenProvider?
     private var session: Session?
