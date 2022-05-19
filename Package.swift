@@ -47,10 +47,18 @@ let package = Package(
                 .process("Resources"),
             ]
         ),
+        .target(
+            name: "NablaMessagingCoreTestsUtils",
+            dependencies: [
+                .target(name: "NablaMessagingCore"),
+            ],
+            path: "Tests/NablaMessagingCoreTestsUtils"
+        ),
         .testTarget(
             name: "NablaMessagingCoreTests",
             dependencies: [
                 .target(name: "NablaMessagingCore"),
+                .target(name: "NablaMessagingCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
             ]
         ),
@@ -70,7 +78,10 @@ let package = Package(
         ),
         .testTarget(
             name: "NablaMessagingUITests",
-            dependencies: ["NablaMessagingUI"]
+            dependencies: [
+                .target(name: "NablaMessagingUI"),
+                .target(name: "NablaMessagingCoreTestsUtils"),
+            ]
         ),
         .target(
             name: "NablaUtils",

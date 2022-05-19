@@ -1,7 +1,7 @@
 import Foundation
 @testable import NablaMessagingCore
 
-extension Provider {
+public extension Provider {
     static func mock() -> Provider {
         providerCount += 1
         return Provider(

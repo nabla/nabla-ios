@@ -1,17 +1,16 @@
 import Foundation
 @testable import NablaMessagingCore
 
-extension TextMessageItem {
+extension LocalTextMessageItem {
     static func mock(
         dateOffset: TimeInterval = 0,
-        sender: ConversationMessageSender = .deleted
-    ) -> TextMessageItem {
+        sendingState: ConversationMessageSendingState = .sending
+    ) -> LocalTextMessageItem {
         itemCount += 1
-        return TextMessageItem(
-            id: .init(),
+        return LocalTextMessageItem(
+            clientId: .init(),
             date: Date(timeIntervalSinceReferenceDate: dateOffset),
-            sender: sender,
-            sendingState: .sent,
+            sendingState: sendingState,
             content: "Hello world \(itemCount)"
         )
     }

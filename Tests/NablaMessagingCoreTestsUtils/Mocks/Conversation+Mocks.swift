@@ -1,6 +1,6 @@
 @testable import NablaMessagingCore
 
-extension Conversation {
+public extension Conversation {
     static func mock() -> Conversation {
         conversationCount += 1
         return Conversation(

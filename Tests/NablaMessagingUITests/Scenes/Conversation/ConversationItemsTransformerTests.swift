@@ -1,4 +1,5 @@
 @testable import NablaMessagingCore
+import NablaMessagingCoreTestsUtils
 @testable import NablaMessagingUI
 import XCTest
 
@@ -7,7 +8,7 @@ class ConversationItemsTransformerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        conversation = Conversation.mock()
+        conversation = .mock()
     }
     
     func testEmptyConversation() {
