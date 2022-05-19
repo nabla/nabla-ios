@@ -27,7 +27,7 @@ public extension GQL {
           }
           ... on System {
             __typename
-            empty: _
+            name
           }
           ... on DeletedProvider {
             __typename
@@ -142,8 +142,8 @@ public extension GQL {
         return Author(unsafeResultMap: ["__typename": "Patient", "id": id])
       }
 
-      public static func makeSystem(empty: EmptyObject) -> Author {
-        return Author(unsafeResultMap: ["__typename": "System", "empty": empty])
+      public static func makeSystem(name: String) -> Author {
+        return Author(unsafeResultMap: ["__typename": "System", "name": name])
       }
 
       public static func makeDeletedProvider(empty: EmptyObject) -> Author {
@@ -309,7 +309,7 @@ public extension GQL {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLField("_", alias: "empty", type: .nonNull(.scalar(EmptyObject.self))),
+            GraphQLField("name", type: .nonNull(.scalar(String.self))),
           ]
         }
 
@@ -319,8 +319,8 @@ public extension GQL {
           self.resultMap = unsafeResultMap
         }
 
-        public init(empty: EmptyObject) {
-          self.init(unsafeResultMap: ["__typename": "System", "empty": empty])
+        public init(name: String) {
+          self.init(unsafeResultMap: ["__typename": "System", "name": name])
         }
 
         public var __typename: String {
@@ -332,12 +332,12 @@ public extension GQL {
           }
         }
 
-        public var empty: EmptyObject {
+        public var name: String {
           get {
-            return resultMap["empty"]! as! EmptyObject
+            return resultMap["name"]! as! String
           }
           set {
-            resultMap.updateValue(newValue, forKey: "empty")
+            resultMap.updateValue(newValue, forKey: "name")
           }
         }
       }

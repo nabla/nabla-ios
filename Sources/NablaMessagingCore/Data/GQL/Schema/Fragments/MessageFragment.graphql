@@ -10,7 +10,7 @@ fragment MessageFragment on Message {
             ...PatientFragment
         }
         ... on System {
-            empty: _
+            name
         }
         ... on DeletedProvider {
             empty: _
