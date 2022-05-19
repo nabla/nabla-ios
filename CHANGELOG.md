@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [1.0-alpha02] - 2022-05-19
+
+### Added
 - This CHANGELOG file
 - `NablaMessagingUI` conversation screen now separates older messages from newer with a date separator
 - `NablaMessagingUI` avatar component now displays Provider initials when no avatar picture is available
