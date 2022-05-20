@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 class ReachabilityRefetchTrigger: RefetchTrigger {
     // MARK: - Initializer

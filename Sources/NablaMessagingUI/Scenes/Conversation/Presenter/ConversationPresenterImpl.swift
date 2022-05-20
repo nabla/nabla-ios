@@ -1,6 +1,8 @@
 import Foundation
 import NablaMessagingCore
-import NablaUtils
+#if canImport(NablaUtils)
+    import NablaUtils
+#endif
 
 final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal

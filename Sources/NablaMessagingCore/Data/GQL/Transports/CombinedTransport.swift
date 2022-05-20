@@ -3,7 +3,6 @@ import Apollo
     import ApolloWebSocket
 #endif
 import Foundation
-import NablaUtils
 
 class CombinedTransport {
     // MARK: - Initializer

@@ -29,7 +29,6 @@ Add the following dependencies in your `Podfile`
 ```ruby
 pod 'NablaMessagingUI', git: 'https://github.com/nabla/nabla-ios'
 pod 'NablaMessagingCore', git: 'https://github.com/nabla/nabla-ios'
-pod 'NablaUtils', git: 'https://github.com/nabla/nabla-ios'
 ```
 
 And then run `pod install` to update your project.

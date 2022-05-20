@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 final class MarkConversationAsSeenInteractorImpl: AuthenticatedInteractor, MarkConversationAsSeenInteractor {
     // MARK: - Initializer

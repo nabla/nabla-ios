@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 class AuthenticatedInteractor {
     init(authenticator: Authenticator) {

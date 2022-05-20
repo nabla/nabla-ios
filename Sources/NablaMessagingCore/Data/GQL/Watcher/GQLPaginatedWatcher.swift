@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 protocol PaginatedQuery: GQLQuery {
     static func getCursor(from data: Data) -> String?

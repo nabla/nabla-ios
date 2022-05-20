@@ -13,7 +13,7 @@ public final class Debouncer {
         cancel()
         
         workItem = DispatchWorkItem(block: block)
-        
+
         if let workItem = workItem {
             queue.asyncAfter(deadline: .now() + delay, execute: workItem)
         }

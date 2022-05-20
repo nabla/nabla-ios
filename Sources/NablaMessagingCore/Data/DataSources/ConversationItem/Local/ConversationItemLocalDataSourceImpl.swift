@@ -1,5 +1,7 @@
 import Foundation
-import NablaUtils
+#if canImport(NablaUtils)
+    import NablaUtils
+#endif
 
 private enum Constants {
     static let localItemsDidChangeNotification = Notification.Name(rawValue: "com.nabla.localConversationItemsDidChangeNotification")

@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 enum UploadClientError: Error {
     case noAccessToken

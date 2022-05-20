@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 /// Main entry-point for SDK messaging features.
 public class NablaMessagingClient {

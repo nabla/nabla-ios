@@ -1,6 +1,5 @@
 import Foundation
 import NablaMessagingCore
-import NablaUtils
 
 final class ConversationListPresenterImpl: ConversationListPresenter {
     // MARK: - Public

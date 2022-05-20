@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 class UserLocalDataSourceImpl: UserLocalDataSource {
     // MARK: - Internal

@@ -1,5 +1,7 @@
 import Foundation
-import NablaUtils
+#if canImport(NablaUtils)
+    import NablaUtils
+#endif
 
 class ConversationRepositoryImpl: ConversationRepository {
     // MARK: - Initializer

@@ -1,6 +1,5 @@
 import Apollo
 import Foundation
-import NablaUtils
 
 class GQLStoreImpl: GQLStore {
     // MARK: - Initializer

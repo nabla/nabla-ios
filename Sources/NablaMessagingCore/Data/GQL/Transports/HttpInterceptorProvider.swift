@@ -1,6 +1,5 @@
 import Apollo
 import Foundation
-import NablaUtils
 
 class HttpInterceptorProvider: InterceptorProvider {
     // MARK: - Initializer

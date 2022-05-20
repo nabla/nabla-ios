@@ -1,5 +1,5 @@
 import NablaMessagingCore
-import NablaUtils
+
 import UIKit
 
 public class UIURLImageView: UIImageView {

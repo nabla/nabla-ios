@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 final class RetrySendingMessageInteractorImpl: AuthenticatedInteractor, RetrySendingMessageInteractor {
     // MARK: - Initializer

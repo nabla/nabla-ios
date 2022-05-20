@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 class ConversationItemsMerger: PaginatedWatcher {
     // MARK: - Internal

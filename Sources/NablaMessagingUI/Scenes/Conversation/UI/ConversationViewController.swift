@@ -1,6 +1,6 @@
 import Foundation
 import NablaMessagingCore
-import NablaUtils
+
 import UIKit
 
 final class ConversationViewController: UIViewController, ConversationViewContract {

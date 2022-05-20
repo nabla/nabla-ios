@@ -1,6 +1,5 @@
 import Apollo
 import Foundation
-import NablaUtils
 
 class AuthorizationInterceptor: ApolloInterceptor {
     // MARK: - Initializer

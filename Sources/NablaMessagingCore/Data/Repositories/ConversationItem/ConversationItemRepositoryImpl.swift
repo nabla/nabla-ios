@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 class ConversationItemRepositoryImpl: ConversationItemRepository {
     // MARK: - Initializer

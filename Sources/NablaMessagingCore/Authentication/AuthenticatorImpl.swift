@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 class AuthenticatorImpl: Authenticator {
     // MARK: - Initialiazer

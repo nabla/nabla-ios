@@ -1,6 +1,5 @@
 import Apollo
 import Foundation
-import NablaUtils
 
 class HttpTransport {
     // MARK: - Initializer

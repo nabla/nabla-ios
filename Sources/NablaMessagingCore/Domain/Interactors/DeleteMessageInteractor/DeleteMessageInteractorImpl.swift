@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 final class DeleteMessageInteractorImpl: AuthenticatedInteractor, DeleteMessageInteractor {
     // MARK: - Initializer

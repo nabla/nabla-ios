@@ -3,7 +3,6 @@ import Apollo
     import ApolloWebSocket
 #endif
 import Foundation
-import NablaUtils
 
 #if canImport(ApolloWebSocket)
     typealias ApolloWebSocketTransport = ApolloWebSocket.WebSocketTransport

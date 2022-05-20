@@ -1,5 +1,4 @@
 import Foundation
-import NablaUtils
 
 private enum Constants {
     static let defaultName = "singleton"
