@@ -8,6 +8,11 @@ public struct Provider: Hashable {
     public let lastName: String
 }
 
+public struct SystemProvider: Hashable {
+    public let avatarURL: String?
+    public let name: String
+}
+
 public extension Provider {
     var initials: String? {
         String([firstName, lastName].compactMap(\.first)).nilIfEmpty

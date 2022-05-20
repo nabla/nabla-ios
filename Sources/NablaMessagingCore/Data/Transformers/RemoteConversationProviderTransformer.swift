@@ -10,4 +10,11 @@ enum RemoteConversationProviderTransformer {
             lastName: provider.lastName
         )
     }
+
+    static func transform(_ system: GQL.SystemMessageFragment) -> SystemProvider {
+        .init(
+            avatarURL: system.avatar?.url.fragments.ephemeralUrlFragment.url,
+            name: system.name
+        )
+    }
 }

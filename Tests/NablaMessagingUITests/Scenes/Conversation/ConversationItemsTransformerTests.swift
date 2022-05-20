@@ -54,9 +54,10 @@ class ConversationItemsTransformerTests: XCTestCase {
     }
     
     func testTwoConsecutiveMessagesSentBySystemAreContiguous() {
+        let provider = SystemProvider(avatarURL: nil, name: "nablo")
         // GIVEN
-        let item1 = TextMessageItem.mock(sender: .system)
-        let item2 = TextMessageItem.mock(sender: .system)
+        let item1 = TextMessageItem.mock(sender: .system(provider))
+        let item2 = TextMessageItem.mock(sender: .system(provider))
         let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
         let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)

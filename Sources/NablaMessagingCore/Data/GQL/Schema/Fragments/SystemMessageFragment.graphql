@@ -1,0 +1,8 @@
+fragment SystemMessageFragment on System {
+    avatar {
+        url {
+            ...EphemeralUrlFragment
+        }
+    }
+    name
+}

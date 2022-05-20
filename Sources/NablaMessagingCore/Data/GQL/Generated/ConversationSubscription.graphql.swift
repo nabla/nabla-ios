@@ -53,6 +53,7 @@ public extension GQL {
       document.append("\n" + ProviderFragment.fragmentDefinition)
       document.append("\n" + EphemeralUrlFragment.fragmentDefinition)
       document.append("\n" + PatientFragment.fragmentDefinition)
+      document.append("\n" + SystemMessageFragment.fragmentDefinition)
       document.append("\n" + MessageContentFragment.fragmentDefinition)
       document.append("\n" + TextMessageContentFragment.fragmentDefinition)
       document.append("\n" + ImageMessageContentFragment.fragmentDefinition)

@@ -27,7 +27,7 @@ public extension GQL {
           }
           ... on System {
             __typename
-            name
+            ...SystemMessageFragment
           }
           ... on DeletedProvider {
             __typename
@@ -140,10 +140,6 @@ public extension GQL {
 
       public static func makePatient(id: GQL.UUID) -> Author {
         return Author(unsafeResultMap: ["__typename": "Patient", "id": id])
-      }
-
-      public static func makeSystem(name: String) -> Author {
-        return Author(unsafeResultMap: ["__typename": "System", "name": name])
       }
 
       public static func makeDeletedProvider(empty: EmptyObject) -> Author {
@@ -309,7 +305,7 @@ public extension GQL {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLField("name", type: .nonNull(.scalar(String.self))),
+            GraphQLFragmentSpread(SystemMessageFragment.self),
           ]
         }
 
@@ -317,10 +313,6 @@ public extension GQL {
 
         public init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
-        }
-
-        public init(name: String) {
-          self.init(unsafeResultMap: ["__typename": "System", "name": name])
         }
 
         public var __typename: String {
@@ -332,12 +324,29 @@ public extension GQL {
           }
         }
 
-        public var name: String {
+        public var fragments: Fragments {
           get {
-            return resultMap["name"]! as! String
+            return Fragments(unsafeResultMap: resultMap)
           }
           set {
-            resultMap.updateValue(newValue, forKey: "name")
+            resultMap += newValue.resultMap
+          }
+        }
+
+        public struct Fragments {
+          public private(set) var resultMap: ResultMap
+
+          public init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
+          }
+
+          public var systemMessageFragment: SystemMessageFragment {
+            get {
+              return SystemMessageFragment(unsafeResultMap: resultMap)
+            }
+            set {
+              resultMap += newValue.resultMap
+            }
           }
         }
       }

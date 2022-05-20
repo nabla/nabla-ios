@@ -89,10 +89,10 @@ class MessagePresenter<
                 avatar: .init(url: provider.avatarURL, text: provider.initials),
                 isContiguous: item.isContiguous
             ))
-        case .system:
+        case let .system(system):
             return .them(.init(
-                author: L10n.conversationSystemSender,
-                avatar: .init(url: nil, text: nil),
+                author: system.name,
+                avatar: .init(url: system.avatarURL, text: system.name),
                 isContiguous: item.isContiguous
             ))
         case .deleted:

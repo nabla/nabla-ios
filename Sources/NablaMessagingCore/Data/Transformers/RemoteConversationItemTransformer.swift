@@ -70,8 +70,8 @@ enum RemoteConversationItemTransformer {
             return .provider(RemoteConversationProviderTransformer.transform(provider))
         } else if author.asPatient != nil {
             return .patient
-        } else if author.asSystem != nil {
-            return .system
+        } else if let system = author.asSystem?.fragments.systemMessageFragment {
+            return .system(RemoteConversationProviderTransformer.transform(system))
         } else if author.asDeletedProvider != nil {
             return .deleted
         } else {
