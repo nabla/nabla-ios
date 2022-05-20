@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+ - `ConversationActivity` in conversations. A message is displayed when a provider joins a conversation.
+ - `ConversationViewController` now displays system messages, with the right name and avatar.
 
 ### Changed
+- `ConversationMessageSender.sender` now exposes a `SystemProvider` parameter which contains the name of the organization and the avatar url.
 
 ### Fixed
 
