@@ -5,13 +5,16 @@ enum RemoteConversationItemTransformer {
         if let message = remoteConversationItem.asMessage?.fragments.messageFragment {
             return transform(message)
         }
+        if let activity = remoteConversationItem.asConversationActivity?.fragments.conversationActivityFragment {
+            return transform(activity)
+        }
         assertionFailure("Unknown remote conversation item type: \(remoteConversationItem.__typename)")
         return nil
     }
     
     private static func transform(_ message: GQL.MessageFragment) -> ConversationItem? {
-        let messageContentFragment = message.content?.fragments.messageContentFragment
-        if let textContent = messageContentFragment?.asTextMessageContent?.fragments.textMessageContentFragment {
+        let messageContentFragment = message.content.fragments.messageContentFragment
+        if let textContent = messageContentFragment.asTextMessageContent?.fragments.textMessageContentFragment {
             return TextMessageItem(
                 id: message.id,
                 date: message.createdAt,
@@ -19,7 +22,7 @@ enum RemoteConversationItemTransformer {
                 sendingState: .sent,
                 content: textContent.text
             )
-        } else if messageContentFragment?.asDeletedMessageContent != nil {
+        } else if messageContentFragment.asDeletedMessageContent != nil {
             return DeletedMessageItem(
                 id: message.id,
                 date: message.createdAt,
@@ -27,7 +30,7 @@ enum RemoteConversationItemTransformer {
                 sendingState: .sent
             )
         } else if
-            let imageContent = message.content?.fragments.messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
+            let imageContent = message.content.fragments.messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
             let url = URL(string: imageContent.imageFileUpload.url.url),
             let mimeType = MimeType(rawValue: imageContent.imageFileUpload.mimeType) {
             return ImageMessageItem(
@@ -44,7 +47,7 @@ enum RemoteConversationItemTransformer {
                 )
             )
         } else if
-            let documentContent = message.content?.fragments.messageContentFragment.asDocumentMessageContent?.fragments.documentMessageContentFragment,
+            let documentContent = message.content.fragments.messageContentFragment.asDocumentMessageContent?.fragments.documentMessageContentFragment,
             let url = URL(string: documentContent.documentFileUpload.url.url),
             let mimeType = MimeType(rawValue: documentContent.documentFileUpload.mimeType) {
             return DocumentMessageItem(
@@ -61,13 +64,14 @@ enum RemoteConversationItemTransformer {
                 )
             )
         }
+
         assertionFailure("Unknown message content \(String(describing: message.content))")
         return nil
     }
     
     private static func transform(_ author: GQL.MessageFragment.Author) -> ConversationMessageSender {
         if let provider = author.asProvider?.fragments.providerFragment {
-            return .provider(RemoteConversationProviderTransformer.transform(provider))
+            return .provider(RemoteConversationProviderTransformer.transform(provider: provider))
         } else if author.asPatient != nil {
             return .patient
         } else if let system = author.asSystem?.fragments.systemMessageFragment {
@@ -78,5 +82,14 @@ enum RemoteConversationItemTransformer {
             assertionFailure("[Should not get here] Received an unknown author type \(author.__typename)")
             return .deleted
         }
+    }
+
+    private static func transform(_ activity: GQL.ConversationActivityFragment) -> ConversationItem? {
+        let provider = activity.content.provider.fragments.maybeProviderFragment
+        return ConversationActivity(
+            id: activity.id,
+            date: activity.activityTime,
+            activity: .providerJoined(RemoteConversationProviderTransformer.transform(maybeProvider: provider))
+        )
     }
 }

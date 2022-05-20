@@ -1,0 +1,53 @@
+import Foundation
+import NablaMessagingCore
+#if canImport(NablaUtils)
+    import NablaUtils
+#endif
+
+final class ConversationActivityPresenter: Presenter {
+    var item: ConversationActivityViewItem
+    
+    // MARK: - Init
+    
+    init(delegate _: ConversationCellPresenterDelegate, item: ConversationActivityViewItem) {
+        self.item = item
+    }
+    
+    // MARK: - Presenter
+    
+    func start() {
+        updateView()
+    }
+    
+    // MARK: - Internal
+    
+    func attachView(_ view: ConversationTextSeparatorCellContract) {
+        self.view = view
+    }
+    
+    // MARK: - Private
+    
+    private weak var view: ConversationTextSeparatorCellContract?
+    
+    private func updateView() {
+        view?.configure(with: .init(text: Self.transform(item: item)))
+    }
+
+    private static func transform(item: ConversationActivityViewItem) -> String {
+        switch item.activity {
+        case let .providerJoined(provider):
+            return L10n.conversationProviderJoined(provider.name)
+        }
+    }
+}
+
+private extension MaybeProvider {
+    var name: String {
+        switch self {
+        case .deletedProvider:
+            return L10n.conversationActivityDeletedProviderName
+        case let .provider(provider):
+            return [provider.prefix, provider.lastName].compactMap(identity).joined(separator: " ")
+        }
+    }
+}

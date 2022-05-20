@@ -20,7 +20,7 @@ public enum NablaViewFactory {
             logger: client.logger,
             providers: [
                 DateSeparatorCellProvider(),
-                EventCellProvider(),
+                ConversationActivityCellProvider(),
                 TextMessageCellProvider(logger: client.logger, conversationId: conversation.id, client: client),
                 TypingIndicatorCellProvider(logger: client.logger, conversationId: conversation.id, client: client),
                 DeletedMessageCellProvider(logger: client.logger, conversationId: conversation.id, client: client),

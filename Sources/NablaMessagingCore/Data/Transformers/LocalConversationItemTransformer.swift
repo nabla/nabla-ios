@@ -36,6 +36,7 @@ enum LocalConversationItemTransformer {
                 content: documentMessageItem.content.media
             )
         }
+
         assertionFailure("Unknown local conversation item \(localConversationItem)")
         return nil
     }

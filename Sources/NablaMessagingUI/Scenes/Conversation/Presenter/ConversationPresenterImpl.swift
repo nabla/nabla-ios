@@ -220,7 +220,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             )
         )
     }
-
+    
     private func transformAndUpdateState(conversationItems: ConversationItems, conversation: Conversation) {
         let items = ConversationItemsTransformer.transform(conversationItems: conversationItems, conversation: conversation)
         set(state: .loaded(items: items))

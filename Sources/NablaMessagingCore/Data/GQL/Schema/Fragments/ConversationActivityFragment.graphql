@@ -1,0 +1,11 @@
+fragment ConversationActivityFragment on ConversationActivity {
+  id
+  activityTime
+  content {
+    ... on ProviderJoinedConversation {
+      provider {
+        ...MaybeProviderFragment
+      }
+    }
+  }
+}

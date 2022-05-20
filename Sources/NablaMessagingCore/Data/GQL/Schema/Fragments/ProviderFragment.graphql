@@ -7,3 +7,12 @@ fragment ProviderFragment on Provider {
     firstName
     lastName
 }
+
+fragment MaybeProviderFragment on MaybeProvider {
+    ... on Provider {
+        ...ProviderFragment
+    }
+    ... on DeletedProvider {
+        _
+    }
+}

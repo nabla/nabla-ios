@@ -27,7 +27,7 @@ enum ConversationTransformer {
                 let providerInConversationFragment = provider.fragments.providerInConversationFragment
                 
                 return ProviderInConversation(
-                    provider: RemoteConversationProviderTransformer.transform(providerFragment),
+                    provider: RemoteConversationProviderTransformer.transform(provider: providerFragment),
                     typingAt: providerInConversationFragment.typingAt,
                     seenUntil: providerInConversationFragment.seenUntil
                 )

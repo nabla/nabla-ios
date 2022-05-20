@@ -42,10 +42,6 @@ public extension GQL {
       self.resultMap = unsafeResultMap
     }
 
-    public static func makeConversationActivity(id: GQL.UUID) -> ConversationItemFragment {
-      return ConversationItemFragment(unsafeResultMap: ["__typename": "ConversationActivity", "id": id])
-    }
-
     public var __typename: String {
       get {
         return resultMap["__typename"]! as! String
@@ -145,10 +141,6 @@ public extension GQL {
 
       public init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
-      }
-
-      public init(id: GQL.UUID) {
-        self.init(unsafeResultMap: ["__typename": "ConversationActivity", "id": id])
       }
 
       public var __typename: String {

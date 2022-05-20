@@ -8,6 +8,11 @@ public struct Provider: Hashable {
     public let lastName: String
 }
 
+public enum MaybeProvider: Hashable {
+    case deletedProvider
+    case provider(Provider)
+}
+
 public struct SystemProvider: Hashable {
     public let avatarURL: String?
     public let name: String

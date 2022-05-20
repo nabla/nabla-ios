@@ -45,6 +45,7 @@ public extension GQL {
       document.append("\n" + ImageMessageContentFragment.fragmentDefinition)
       document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
       document.append("\n" + ConversationActivityFragment.fragmentDefinition)
+      document.append("\n" + MaybeProviderFragment.fragmentDefinition)
       return document
     }
 
@@ -246,10 +247,6 @@ public extension GQL {
 
               public init(unsafeResultMap: ResultMap) {
                 self.resultMap = unsafeResultMap
-              }
-
-              public static func makeConversationActivity(id: GQL.UUID) -> Datum {
-                return Datum(unsafeResultMap: ["__typename": "ConversationActivity", "id": id])
               }
 
               public var __typename: String {

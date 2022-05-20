@@ -119,7 +119,7 @@ public extension GQL {
             return [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
               GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
-              GraphQLField("content", type: .object(Content.selections)),
+              GraphQLField("content", type: .nonNull(.object(Content.selections))),
             ]
           }
 
@@ -129,8 +129,8 @@ public extension GQL {
             self.resultMap = unsafeResultMap
           }
 
-          public init(id: GQL.UUID, content: Content? = nil) {
-            self.init(unsafeResultMap: ["__typename": "Message", "id": id, "content": content.flatMap { (value: Content) -> ResultMap in value.resultMap }])
+          public init(id: GQL.UUID, content: Content) {
+            self.init(unsafeResultMap: ["__typename": "Message", "id": id, "content": content.resultMap])
           }
 
           public var __typename: String {
@@ -151,12 +151,12 @@ public extension GQL {
             }
           }
 
-          public var content: Content? {
+          public var content: Content {
             get {
-              return (resultMap["content"] as? ResultMap).flatMap { Content(unsafeResultMap: $0) }
+              return Content(unsafeResultMap: resultMap["content"]! as! ResultMap)
             }
             set {
-              resultMap.updateValue(newValue?.resultMap, forKey: "content")
+              resultMap.updateValue(newValue.resultMap, forKey: "content")
             }
           }
 

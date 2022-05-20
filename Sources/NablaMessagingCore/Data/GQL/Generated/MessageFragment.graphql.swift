@@ -50,7 +50,7 @@ public extension GQL {
         GraphQLField("clientId", type: .scalar(GQL.UUID.self)),
         GraphQLField("createdAt", type: .nonNull(.scalar(GQL.DateTime.self))),
         GraphQLField("author", type: .nonNull(.object(Author.selections))),
-        GraphQLField("content", type: .object(Content.selections)),
+        GraphQLField("content", type: .nonNull(.object(Content.selections))),
       ]
     }
 
@@ -60,8 +60,8 @@ public extension GQL {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, clientId: GQL.UUID? = nil, createdAt: GQL.DateTime, author: Author, content: Content? = nil) {
-      self.init(unsafeResultMap: ["__typename": "Message", "id": id, "clientId": clientId, "createdAt": createdAt, "author": author.resultMap, "content": content.flatMap { (value: Content) -> ResultMap in value.resultMap }])
+    public init(id: GQL.UUID, clientId: GQL.UUID? = nil, createdAt: GQL.DateTime, author: Author, content: Content) {
+      self.init(unsafeResultMap: ["__typename": "Message", "id": id, "clientId": clientId, "createdAt": createdAt, "author": author.resultMap, "content": content.resultMap])
     }
 
     public var __typename: String {
@@ -109,12 +109,12 @@ public extension GQL {
       }
     }
 
-    public var content: Content? {
+    public var content: Content {
       get {
-        return (resultMap["content"] as? ResultMap).flatMap { Content(unsafeResultMap: $0) }
+        return Content(unsafeResultMap: resultMap["content"]! as! ResultMap)
       }
       set {
-        resultMap.updateValue(newValue?.resultMap, forKey: "content")
+        resultMap.updateValue(newValue.resultMap, forKey: "content")
       }
     }
 

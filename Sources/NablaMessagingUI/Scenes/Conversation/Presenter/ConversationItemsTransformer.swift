@@ -18,6 +18,8 @@ final class ConversationItemsTransformer {
                 return transform(imageMessage)
             } else if let documentMessage = item as? DocumentMessageItem {
                 return transform(documentMessage)
+            } else if let activity = item as? ConversationActivity {
+                return transform(activity)
             }
             return nil
         }
@@ -71,6 +73,14 @@ final class ConversationItemsTransformer {
             sender: documentMessage.sender,
             sendingState: documentMessage.sendingState,
             document: documentMessage.content
+        )
+    }
+
+    static func transform(_ activity: ConversationActivity) -> ConversationViewItem {
+        ConversationActivityViewItem(
+            id: activity.id,
+            date: activity.date,
+            activity: activity.activity
         )
     }
     

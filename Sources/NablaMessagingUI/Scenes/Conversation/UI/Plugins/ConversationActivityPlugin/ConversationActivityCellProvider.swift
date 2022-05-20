@@ -1,10 +1,10 @@
 import Foundation
 import UIKit
 
-final class EventCellProvider: ConversationCellProvider {
+final class ConversationActivityCellProvider: ConversationCellProvider {
     private typealias Cell = ConversationTextSeparatorCell
     
-    private var presenters: [UUID: EventPresenter] = [:]
+    private var presenters: [UUID: ConversationActivityPresenter] = [:]
     
     func prepare(collectionView: UICollectionView) {
         collectionView.register(Cell.self)
@@ -16,7 +16,7 @@ final class EventCellProvider: ConversationCellProvider {
         item: ConversationViewItem,
         delegate: ConversationCellPresenterDelegate
     ) -> UICollectionViewCell? {
-        guard let item = item as? EventViewItem else {
+        guard let item = item as? ConversationActivityViewItem else {
             return nil
         }
         
@@ -31,14 +31,14 @@ final class EventCellProvider: ConversationCellProvider {
     }
     
     private func findOrCreatePresenter(
-        item: EventViewItem,
+        item: ConversationActivityViewItem,
         delegate: ConversationCellPresenterDelegate
-    ) -> EventPresenter {
+    ) -> ConversationActivityPresenter {
         if let presenter = presenters[item.id] {
             presenter.item = item
             return presenter
         } else {
-            let presenter = EventPresenter(delegate: delegate, item: item)
+            let presenter = ConversationActivityPresenter(delegate: delegate, item: item)
             presenters[item.id] = presenter
             return presenter
         }

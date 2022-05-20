@@ -1,7 +1,7 @@
 import Foundation
 
 enum RemoteConversationProviderTransformer {
-    static func transform(_ provider: GQL.ProviderFragment) -> Provider {
+    static func transform(provider: GQL.ProviderFragment) -> Provider {
         .init(
             id: provider.id,
             avatarURL: provider.avatarUrl?.fragments.ephemeralUrlFragment.url,
@@ -9,6 +9,18 @@ enum RemoteConversationProviderTransformer {
             firstName: provider.firstName,
             lastName: provider.lastName
         )
+    }
+
+    static func transform(maybeProvider: GQL.MaybeProviderFragment) -> MaybeProvider {
+        if maybeProvider.asDeletedProvider != nil {
+            return .deletedProvider
+        } else if let providerFragment = maybeProvider.asProvider?.fragments.providerFragment {
+            let provider = Self.transform(provider: providerFragment)
+            return .provider(provider)
+        }
+
+        assertionFailure("[Should not get here] Received an unknown provider type \(maybeProvider.__typename)")
+        return .deletedProvider
     }
 
     static func transform(_ system: GQL.SystemMessageFragment) -> SystemProvider {

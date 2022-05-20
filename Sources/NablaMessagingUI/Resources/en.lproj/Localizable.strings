@@ -29,3 +29,5 @@
 "conversation_date_separator_date_time" = "%@ at %@";
 "conversation_date_separator_date_today" = "Today";
 "conversation_date_separator_date_yesterday" = "Yesterday";
+"conversation_provider_joined" = "%@ has joined the chat";
+"conversation_activity_deleted_provider_name" = "[Deleted provider]";

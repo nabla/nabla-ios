@@ -14,6 +14,8 @@ internal enum L10n {
   internal static let conversationActionCopy = L10n.tr("Localizable", "conversation_action_copy")
   /// Delete
   internal static let conversationActionDelete = L10n.tr("Localizable", "conversation_action_delete")
+  /// [Deleted provider]
+  internal static let conversationActivityDeletedProviderName = L10n.tr("Localizable", "conversation_activity_deleted_provider_name")
   /// Camera
   internal static let conversationAddMediaCamera = L10n.tr("Localizable", "conversation_add_media_camera")
   /// Cancel
@@ -58,6 +60,10 @@ internal enum L10n {
   internal static let conversationLoadMoreErrorMessage = L10n.tr("Localizable", "conversation_load_more_error_message")
   /// Error
   internal static let conversationLoadMoreErrorTitle = L10n.tr("Localizable", "conversation_load_more_error_title")
+  /// %@ has joined the chat
+  internal static func conversationProviderJoined(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "conversation_provider_joined", String(describing: p1))
+  }
   /// Failed to send, tap to try again…
   internal static let conversationStatusFailed = L10n.tr("Localizable", "conversation_status_failed")
   /// Sending…
