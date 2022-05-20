@@ -29,6 +29,7 @@ let package = Package(
         
         // Tests
         .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", from: "4.1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.9.0"),
     ],
     targets: [
         .target(
@@ -80,6 +81,7 @@ let package = Package(
             name: "NablaMessagingUITests",
             dependencies: [
                 .target(name: "NablaMessagingUI"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
             ]
         ),

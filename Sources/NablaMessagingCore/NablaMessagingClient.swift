@@ -64,7 +64,7 @@ public class NablaMessagingClient {
     /// - Returns: A ``Cancellable`` of the task
     public func markConversationAsSeen(
         _ conversationId: UUID,
-        handler: @escaping ((Result<Void, NablaError>) -> Void)
+        handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
         container.markConversationAsSeenInteractor.execute(conversationId: conversationId, handler: .init(handler))
     }
@@ -141,7 +141,7 @@ public class NablaMessagingClient {
     ) -> Cancellable {
         container.deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, handler: .init(handler))
     }
-    
+
     public init(client: NablaClient) {
         coreContainer = client.container
         container = MessagingContainer(coreContainer: client.container)

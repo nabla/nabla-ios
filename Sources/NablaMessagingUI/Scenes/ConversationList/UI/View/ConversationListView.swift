@@ -28,40 +28,34 @@ public class ConversationListView: UIView, ConversationListViewContract {
     // MARK: - ConversationListViewContract
     
     func configure(with state: ConversationListViewState) {
-        DispatchQueue.main.async {
-            switch state {
-            case let .loaded(viewModel):
-                let animated = !self.viewModel.items.isEmpty
-                self.viewModel = viewModel
-                self.tableView.reload(animated: animated)
-                self.loadingIndicator.isHidden = true
-                self.errorView.isHidden = true
-                self.tableView.isHidden = false
-            case let .error(errorViewModel):
-                self.errorView.configure(with: errorViewModel)
-                self.loadingIndicator.isHidden = true
-                self.errorView.isHidden = false
-                self.tableView.isHidden = true
-            case .loading:
-                self.loadingIndicator.isHidden = false
-                self.errorView.isHidden = true
-                self.tableView.isHidden = true
-            }
+        switch state {
+        case let .loaded(viewModel):
+            let animated = !self.viewModel.items.isEmpty
+            self.viewModel = viewModel
+            tableView.reload(animated: animated)
+            loadingIndicator.isHidden = true
+            errorView.isHidden = true
+            tableView.isHidden = false
+        case let .error(errorViewModel):
+            errorView.configure(with: errorViewModel)
+            loadingIndicator.isHidden = true
+            errorView.isHidden = false
+            tableView.isHidden = true
+        case .loading:
+            loadingIndicator.isHidden = false
+            errorView.isHidden = true
+            tableView.isHidden = true
         }
     }
     
     func displayLoadingMore() {
-        DispatchQueue.main.async {
-            self.tableView.tableFooterView = self.loadingFooterView
-            let bottomOffset = CGPoint(x: 0, y: self.tableView.contentSize.height - self.tableView.bounds.size.height)
-            self.tableView.setContentOffset(bottomOffset, animated: true)
-        }
+        tableView.tableFooterView = loadingFooterView
+        let bottomOffset = CGPoint(x: 0, y: tableView.contentSize.height - tableView.bounds.size.height)
+        tableView.setContentOffset(bottomOffset, animated: true)
     }
     
     func hideLoadingMore() {
-        DispatchQueue.main.async {
-            self.tableView.tableFooterView = nil
-        }
+        tableView.tableFooterView = nil
     }
     
     // MARK: - Private
@@ -74,6 +68,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
     private var viewModel: ConversationListViewModel = .empty
     
     private func setUp() {
+        backgroundColor = NablaTheme.ConversationListView.backgroundColor
         addSubview(tableView)
         tableView.pinToSuperView()
         addSubview(loadingIndicator)

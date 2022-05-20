@@ -85,24 +85,38 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
                 message: L10n.conversationListLoadErrorLabel,
                 buttonTitle: L10n.conversationListButtonRetry
             )
-            viewContract?.configure(with: .error(viewModel))
+            configureView(with: .error(viewModel))
         }
     }
-    
+
     private func displayContent() {
         let viewModel = ConversationListViewModelMapper().map(conversations: list.conversations)
-        viewContract?.configure(with: .loaded(viewModel: viewModel))
+        configureView(with: .loaded(viewModel: viewModel))
     }
-    
+
     private func displayLoading() {
         if list.conversations.isEmpty {
-            viewContract?.configure(with: .loading)
+            configureView(with: .loading)
         } else {
-            viewContract?.displayLoadingMore()
+            displayLoadingMore()
         }
     }
-    
+
+    private func displayLoadingMore() -> Void? {
+        DispatchQueue.main.async {
+            self.viewContract?.displayLoadingMore()
+        }
+    }
+
     private func hideLoading() {
-        viewContract?.hideLoadingMore()
+        DispatchQueue.main.async {
+            self.viewContract?.hideLoadingMore()
+        }
+    }
+
+    private func configureView(with state: ConversationListViewState) {
+        DispatchQueue.main.async {
+            self.viewContract?.configure(with: state)
+        }
     }
 }
