@@ -13,11 +13,6 @@ public enum MaybeProvider: Hashable {
     case provider(Provider)
 }
 
-public struct SystemProvider: Hashable {
-    public let avatarURL: String?
-    public let name: String
-}
-
 public extension Provider {
     var initials: String? {
         String([firstName, lastName].compactMap(\.first)).nilIfEmpty

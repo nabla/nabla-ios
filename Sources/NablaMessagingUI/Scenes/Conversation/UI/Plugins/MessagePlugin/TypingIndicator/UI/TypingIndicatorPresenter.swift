@@ -13,7 +13,7 @@ final class TypingIndicatorPresenter:
         logger: Logger,
         item: TypingIndicatorViewItem,
         conversationId: UUID,
-        client: NablaMessagingClient,
+        client: NablaMessagingClientProtocol,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(

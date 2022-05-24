@@ -32,7 +32,7 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
     init(
         logger: Logger,
         conversationId: UUID,
-        client: NablaMessagingClient
+        client: NablaMessagingClientProtocol
     ) {
         self.logger = logger
         self.conversationId = conversationId
@@ -44,7 +44,7 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
     private typealias Cell = ConversationMessageCell<TypingIndicatorContentView>
 
     private let logger: Logger
-    private let client: NablaMessagingClient
+    private let client: NablaMessagingClientProtocol
     private let conversationId: UUID
     private var presenters: [UUID: TypingIndicatorPresenter] = [:]
     

@@ -8,11 +8,28 @@ NablaMessagingCore:
         exclude:
             - ./Sources/**/Generated
     output:
-        ./Tests/NablaMessagingCoreTests/Generated/Mock.generated.swift
+        ./Tests/NablaMessagingCoreTestsUtils/Generated/Mock.generated.swift
     targets:
-        - NablaMessagingCoreTests
+        - NablaMessagingCoreTestUtils
     testable:
         - NablaMessagingCore
     import: []
+    prototype: false
+    sourcery: []
+
+
+NablaMessagingUI:
+    sources:
+        include:
+            - ./Sources/NablaMessagingUI
+        exclude:
+            - ./Sources/**/Generated
+    output:
+        ./Tests/NablaMessagingUITests/Generated/Mock.generated.swift
+    targets:
+        - NablaMessagingUITests
+    testable:
+        - NablaMessagingUI
+    import: ["NablaMessagingCore"]
     prototype: false
     sourcery: []

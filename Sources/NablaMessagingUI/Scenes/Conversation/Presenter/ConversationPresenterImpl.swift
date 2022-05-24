@@ -129,7 +129,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
         logger: Logger,
         conversation: Conversation,
         view: ConversationViewContract,
-        client: NablaMessagingClient
+        client: NablaMessagingClientProtocol
     ) {
         self.logger = logger
         self.view = view
@@ -139,7 +139,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     
     // MARK: - Private
     
-    private let client: NablaMessagingClient
+    private let client: NablaMessagingClientProtocol
     private var conversation: Conversation
 
     private let logger: Logger

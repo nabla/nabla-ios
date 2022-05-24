@@ -14,20 +14,15 @@ public enum NablaViewFactory {
         view.presenter = presenter
         return view
     }
-    
-    public static func createConversationViewController(_ conversation: Conversation, client: NablaMessagingClient = .shared) -> UIViewController {
-        let viewController = ConversationViewController(
-            logger: client.logger,
-            providers: [
-                DateSeparatorCellProvider(),
-                ConversationActivityCellProvider(),
-                TextMessageCellProvider(logger: client.logger, conversationId: conversation.id, client: client),
-                TypingIndicatorCellProvider(logger: client.logger, conversationId: conversation.id, client: client),
-                DeletedMessageCellProvider(logger: client.logger, conversationId: conversation.id, client: client),
-                ImageMessageCellProvider(logger: client.logger, conversationId: conversation.id, client: client),
-                DocumentMessageCellProvider(logger: client.logger, conversationId: conversation.id, client: client),
-                HasMoreIndicatorCellProvider(conversationId: conversation.id),
-            ]
+  
+    public static func createConversationViewController(
+        _ conversation: Conversation,
+        client: NablaMessagingClient = .shared
+    ) -> UIViewController {
+        let viewController = ConversationViewController.create(
+            conversationId: conversation.id,
+            client: client,
+            logger: client.logger
         )
         viewController.presenter = ConversationPresenterImpl(
             logger: client.logger,

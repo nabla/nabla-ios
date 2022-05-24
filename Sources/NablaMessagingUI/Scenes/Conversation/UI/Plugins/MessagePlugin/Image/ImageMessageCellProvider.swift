@@ -8,7 +8,7 @@ final class ImageMessageCellProvider: ConversationCellProvider {
     init(
         logger: Logger,
         conversationId: UUID,
-        client: NablaMessagingClient
+        client: NablaMessagingClientProtocol
     ) {
         self.logger = logger
         self.conversationId = conversationId
@@ -45,7 +45,7 @@ final class ImageMessageCellProvider: ConversationCellProvider {
     
     private typealias Cell = ConversationMessageCell<ImageMessageContentView>
     
-    private let client: NablaMessagingClient
+    private let client: NablaMessagingClientProtocol
     private let logger: Logger
     private let conversationId: UUID
     

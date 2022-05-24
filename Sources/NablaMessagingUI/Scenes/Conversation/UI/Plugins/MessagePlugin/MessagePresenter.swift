@@ -20,7 +20,7 @@ class MessagePresenter<
         logger: Logger,
         item: Item,
         conversationId: UUID,
-        client: NablaMessagingClient,
+        client: NablaMessagingClientProtocol,
         delegate: ConversationCellPresenterDelegate,
         transformContent: @escaping (Item) -> ContentView.ContentViewModel
     ) {
@@ -73,7 +73,7 @@ class MessagePresenter<
     private let logger: Logger
     
     private let conversationId: UUID
-    private let client: NablaMessagingClient
+    private let client: NablaMessagingClientProtocol
     private let transformContent: (Item) -> ContentView.ContentViewModel
     
     private weak var view: MessageCellContract?
@@ -92,7 +92,7 @@ class MessagePresenter<
         case let .system(system):
             return .them(.init(
                 author: system.name,
-                avatar: .init(url: system.avatarURL, text: system.name),
+                avatar: .init(url: system.avatarURL, text: system.initials),
                 isContiguous: item.isContiguous
             ))
         case .deleted:

@@ -14,7 +14,7 @@ final class DeletedMessagePresenter:
         logger: Logger,
         item: DeletedMessageViewItem,
         conversationId: UUID,
-        client: NablaMessagingClient,
+        client: NablaMessagingClientProtocol,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(

@@ -1,6 +1,7 @@
 import Foundation
 import NablaMessagingCore
 
+// sourcery: AutoMockable
 protocol ConversationPresenter: Presenter {
     func didTapOnSend(text: String, medias: [Media])
     func didUpdateDraftText(_ text: String)

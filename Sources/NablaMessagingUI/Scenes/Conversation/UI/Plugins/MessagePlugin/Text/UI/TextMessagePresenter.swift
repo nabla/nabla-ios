@@ -14,7 +14,7 @@ final class TextMessagePresenter:
         logger: Logger,
         item: TextMessageViewItem,
         conversationId: UUID,
-        client: NablaMessagingClient,
+        client: NablaMessagingClientProtocol,
         delegate: ConversationCellPresenterDelegate
     ) {
         super.init(

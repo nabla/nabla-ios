@@ -38,6 +38,6 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Sources/NablaMessagingCore/Data/GQL/Generated
   - Sources/NablaMessagingCore/Vendors
   - Sources/NablaMessagingUI/Generated
-  - Tests/NablaMessagingCoreTests/Generated
+  - Tests/NablaMessagingCoreTestsUtils/Generated
   - Tests/NablaMessagingUITests/Generated
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown, github-actions-logging)

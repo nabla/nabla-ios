@@ -18,7 +18,7 @@ final class ConversationListViewTests: XCTestCase {
         sut = ConversationListView(frame: .zero)
     }
 
-    func testConfigureWithLoading() {
+    func testConversationLVConfigureWithLoading() {
         // GIVEN
         // WHEN
         sut.configure(with: .loading)
@@ -26,7 +26,7 @@ final class ConversationListViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
     }
     
-    func testConfigureWithErrorMessage() {
+    func testConversationLVConfigureWithErrorMessage() {
         // GIVEN
         // WHEN
         sut.configure(with: .error(.init(message: "Error Message 🤷‍♂️", buttonTitle: nil)))
@@ -34,7 +34,7 @@ final class ConversationListViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
     }
     
-    func testConfigureWithErrorMessageAndRetryTitle() {
+    func testConversationLVConfigureWithErrorMessageAndRetryTitle() {
         // GIVEN
         // WHEN
         sut.configure(with: .error(.init(message: "Error Message 🤷‍♂️", buttonTitle: "Retry")))
@@ -42,7 +42,7 @@ final class ConversationListViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
     }
     
-    func testConfigureWithLoadedNoItems() {
+    func testConversationLVConfigureWithLoadedNoItems() {
         // GIVEN
         // WHEN
         sut.configure(with: .loaded(viewModel: .init(items: [])))
@@ -50,7 +50,7 @@ final class ConversationListViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
     }
     
-    func testConfigureWithLoadedItems() {
+    func testConversationLVConfigureWithLoadedItems() {
         // GIVEN
         // WHEN
         sut.configure(with: .loaded(viewModel: .init(items: [item])))
@@ -58,7 +58,7 @@ final class ConversationListViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
     }
 
-    func testDisplayLoadingMore() {
+    func testConversationLVDisplayLoadingMore() {
         // GIVEN
         sut.configure(with: .loaded(viewModel: .init(items: [item])))
         // WHEN

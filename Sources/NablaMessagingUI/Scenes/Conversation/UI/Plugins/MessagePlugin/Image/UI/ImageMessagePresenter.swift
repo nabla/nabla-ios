@@ -13,7 +13,7 @@ final class ImageMessagePresenter:
         logger: Logger,
         item: ImageMessageViewItem,
         conversationId: UUID,
-        client: NablaMessagingClient,
+        client: NablaMessagingClientProtocol,
         delegate: ConversationCellPresenterDelegate
     ) {
         self.delegate = delegate

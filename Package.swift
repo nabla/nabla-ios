@@ -81,8 +81,13 @@ let package = Package(
             name: "NablaMessagingUITests",
             dependencies: [
                 .target(name: "NablaMessagingUI"),
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
+                .product(name: "SwiftyMocky", package: "SwiftyMocky"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+            ],
+            resources: [
+                .process("SnapshotTests/Conversation/__Snapshots__"),
+                .process("SnapshotTests/ConversationList/__Snapshots__"),
             ]
         ),
         .target(
