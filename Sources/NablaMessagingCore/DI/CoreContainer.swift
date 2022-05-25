@@ -21,11 +21,14 @@ class CoreContainer {
     private(set) lazy var gqlStore: GQLStore = GQLStoreImpl(apolloStore: apolloStore)
 
     private(set) lazy var userRepository: UserRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
+    
+    lazy var urlSessionClient: URLSessionClient = .init()
 
     private(set) lazy var httpManager: HTTPManager = .init(
         baseURLProvider: URLProvider(
             baseURL: environment.serverUrl
         ),
+        session: configuration.session,
         requestBehavior: extraHeadersRequestBehavior
     )
 
@@ -38,9 +41,9 @@ class CoreContainer {
     )
 
     private(set) lazy var interceptorProvider: InterceptorProvider = HttpInterceptorProvider(
-        httpManager: httpManager,
         authenticator: authenticator,
-        apolloStore: apolloStore
+        apolloStore: apolloStore,
+        urlSessionClient: urlSessionClient
     )
 
     private(set) lazy var logger: Logger = ConsoleLogger()

@@ -5,13 +5,12 @@ class HttpInterceptorProvider: InterceptorProvider {
     // MARK: - Initializer
 
     init(
-        httpManager: HTTPManager,
         authenticator: Authenticator,
-        apolloStore: ApolloStore
+        apolloStore: ApolloStore,
+        urlSessionClient: URLSessionClient
     ) {
-        self.httpManager = httpManager
         self.authenticator = authenticator
-        self.apolloStore = apolloStore
+        defaultProvider = DefaultInterceptorProvider(client: urlSessionClient, store: apolloStore)
     }
 
     // MARK: - Internal
@@ -34,10 +33,8 @@ class HttpInterceptorProvider: InterceptorProvider {
     // MARK: - Private
 
     private let authenticator: Authenticator
-    private let httpManager: HTTPManager
-    private let apolloStore: ApolloStore
 
     private var extraHeaders: [String: String] = [:]
     
-    private lazy var defaultProvider = DefaultInterceptorProvider(store: apolloStore)
+    private let defaultProvider: DefaultInterceptorProvider
 }

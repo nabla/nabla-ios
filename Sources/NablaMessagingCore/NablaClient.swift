@@ -14,10 +14,15 @@ public class NablaClient {
     /// - Parameters:
     ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
     ///   - name: Namespace for your the stored objects.
-    ///   - configuration: Optional API configuration. This is for internal usage and you should probably never pass any value.
-    init(apiKey: String, name: String, configuration: Configuration? = nil) {
-        container = CoreContainer(name: name, configuration: configuration ?? DefaultConfiguration())
-
+    public convenience init(apiKey: String, name: String, configuration: Configuration? = nil) {
+        let configuration = configuration ?? DefaultConfiguration()
+        let container = CoreContainer(name: name, configuration: configuration)
+        self.init(apiKey: apiKey, container: container)
+    }
+    
+    /// Internal use only
+    init(apiKey: String, container: CoreContainer) {
+        self.container = container
         addHTTPHeader(name: HTTPHeaders.NablaApiKey, value: Self.formatApiKey(apiKey))
     }
 

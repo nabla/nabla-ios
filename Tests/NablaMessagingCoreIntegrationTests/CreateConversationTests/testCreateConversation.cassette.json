@@ -1,0 +1,61 @@
+{
+  "name" : "testCreateConversation.cassette",
+  "interactions" : [
+    {
+      "request" : {
+        "method" : "POST",
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "body" : {
+          "Tests-Request-Index" : 0,
+          "query" : "mutation CreateConversation {\n  createConversation {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  description\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}",
+          "operationName" : "CreateConversation",
+          "variables" : null
+        },
+        "headers" : {
+          "X-APOLLO-OPERATION-NAME" : "CreateConversation",
+          "X-Nabla-API-Key" : "test-api-key",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5NmMzZGJjNy03NDRmLTQ0YTAtOWQ3Yi04YTRjNDkzYzczNzAiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY1MzQwODQxNiwic2Vzc2lvbl91dWlkIjoiMDY3ZjczOTUtMTMxZC00NGViLWJjZTgtZTY1MjAyYmY5MTZhIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.1IeGSx5M-DhuHL47r7U3KLNvjLCPDKDq-EHEMV-1720",
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "Content-Type" : "application\/json",
+          "apollographql-client-version" : "13.3-20076"
+        }
+      },
+      "response" : {
+        "body" : {
+          "data" : {
+            "createConversation" : {
+              "conversation" : {
+                "inboxPreviewTitle" : "Ask us anything",
+                "id" : "91b83767-390f-4aca-a5ea-e25166d0306b",
+                "title" : null,
+                "lastMessagePreview" : null,
+                "updatedAt" : "2022-05-24T18:02:36.458+02:00",
+                "description" : null,
+                "unreadMessageCount" : 0,
+                "__typename" : "Conversation",
+                "providers" : [
+
+                ]
+              },
+              "__typename" : "CreateConversationOutput"
+            }
+          }
+        },
+        "headers" : {
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Content-Length" : "340",
+          "Vary" : "Origin",
+          "Connection" : "keep-alive",
+          "X-Request-ID" : "573af19f-0efa-447e-a2af-664f7dc57e4f",
+          "X-Nabla-Minimum-Code-Version" : "323"
+        },
+        "status" : 200,
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
+      },
+      "recorded_at" : 1653408156.4749188
+    }
+  ]
+}

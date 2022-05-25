@@ -30,6 +30,7 @@ let package = Package(
         // Tests
         .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", from: "4.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.9.0"),
+        .package(url: "https://github.com/venmo/DVR", from: "2.1.0"),
     ],
     targets: [
         .target(
@@ -52,6 +53,7 @@ let package = Package(
             name: "NablaMessagingCoreTestsUtils",
             dependencies: [
                 .target(name: "NablaMessagingCore"),
+                .product(name: "SwiftyMocky", package: "SwiftyMocky"),
             ],
             path: "Tests/NablaMessagingCoreTestsUtils"
         ),
@@ -60,7 +62,18 @@ let package = Package(
             dependencies: [
                 .target(name: "NablaMessagingCore"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
-                .product(name: "SwiftyMocky", package: "SwiftyMocky"),
+            ]
+        ),
+        .testTarget(
+            name: "NablaMessagingCoreIntegrationTests",
+            dependencies: [
+                .target(name: "NablaMessagingCore"),
+                .target(name: "NablaMessagingCoreTestsUtils"),
+                .product(name: "DVR", package: "DVR"),
+                .product(name: "Apollo", package: "apollo-ios"),
+            ],
+            resources: [
+                .process("CreateConversationTests"),
             ]
         ),
         .target(

@@ -13,14 +13,16 @@ class AuthenticatorImpl: Authenticator {
         userId: UUID,
         provider: SessionTokenProvider
     ) {
-        self.provider = provider
-        session = Session(userId: userId, tokens: nil)
-        notifyTokensChanged()
+        session = Session(
+            userId: userId,
+            provider: provider,
+            tokens: nil
+        )
     }
     
     func logOut() {
         session = nil
-        provider = nil
+        notifyTokensChanged()
     }
     
     func getAccessToken(handler: ResultHandler<AuthenticationState, NablaAuthenticationError>) {
@@ -65,7 +67,7 @@ class AuthenticatorImpl: Authenticator {
     }
 
     func isSessionInitialized() -> Bool {
-        provider != nil
+        session != nil
     }
 
     // MARK: - Private
@@ -77,7 +79,6 @@ class AuthenticatorImpl: Authenticator {
     private let notificationCenter = NotificationCenter()
     private let httpManager: HTTPManager
     
-    private var provider: SessionTokenProvider?
     private var session: Session?
     private var renewTask: SharedTask<Result<Tokens, NablaAuthenticationError>>?
     
@@ -116,16 +117,11 @@ class AuthenticatorImpl: Authenticator {
             fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
             return
         }
-        
-        guard let provider = provider else {
-            completion(.failure(.missingAuthenticationProvider))
-            return
-        }
-        requireTokens(userId: session.userId, provider: provider, completion: completion)
+        requireTokens(session: session, completion: completion)
     }
     
-    private func requireTokens(userId: UUID, provider: SessionTokenProvider, completion: (Result<Tokens, NablaAuthenticationError>) -> Void) {
-        provider.provideTokens(forUserId: userId) { token in
+    private func requireTokens(session: Session, completion: (Result<Tokens, NablaAuthenticationError>) -> Void) {
+        session.provider.provideTokens(forUserId: session.userId) { token in
             if let token = token {
                 completion(.success(token))
             } else {
