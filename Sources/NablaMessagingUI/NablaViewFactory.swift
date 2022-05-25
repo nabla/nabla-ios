@@ -3,7 +3,32 @@ import NablaMessagingCore
 import UIKit
 
 public enum NablaViewFactory {
-    public static func createConversationListView(delegate: ConversationListDelegate, client: NablaMessagingClient = .shared) -> ConversationListView {
+    public static func createConversationListView(
+        delegate: ConversationListDelegate,
+        client: NablaMessagingClient = .shared
+    ) -> ConversationListView {
+        createConversationListView(
+            delegate: delegate,
+            client: client as NablaMessagingClientProtocol
+        )
+    }
+  
+    public static func createConversationViewController(
+        _ conversation: Conversation,
+        client: NablaMessagingClient = .shared
+    ) -> UIViewController {
+        createConversationViewController(
+            conversation,
+            client: client as NablaMessagingClientProtocol
+        )
+    }
+
+    // MARK: - Internal
+
+    static func createConversationListView(
+        delegate: ConversationListDelegate,
+        client: NablaMessagingClientProtocol
+    ) -> ConversationListView {
         let view = ConversationListView(frame: .zero)
         let presenter = ConversationListPresenterImpl(
             logger: client.logger,
@@ -14,10 +39,10 @@ public enum NablaViewFactory {
         view.presenter = presenter
         return view
     }
-  
-    public static func createConversationViewController(
+
+    static func createConversationViewController(
         _ conversation: Conversation,
-        client: NablaMessagingClient = .shared
+        client: NablaMessagingClientProtocol
     ) -> UIViewController {
         let viewController = ConversationViewController.create(
             conversationId: conversation.id,

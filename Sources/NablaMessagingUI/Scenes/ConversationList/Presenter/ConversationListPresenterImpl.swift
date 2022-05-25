@@ -10,7 +10,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         logger: Logger,
         viewContract: ConversationListViewContract,
         delegate: ConversationListDelegate,
-        client: NablaMessagingClient
+        client: NablaMessagingClientProtocol
     ) {
         self.logger = logger
         self.viewContract = viewContract
@@ -43,7 +43,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     // MARK: - Private
 
     private let logger: Logger
-    private let client: NablaMessagingClient
+    private let client: NablaMessagingClientProtocol
     private weak var viewContract: ConversationListViewContract?
     
     private var list: ConversationList = .empty {
