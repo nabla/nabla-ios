@@ -22,7 +22,6 @@
 "conversation_delete_error_title" = "Erreur";
 "conversation_delete_error_message" = "Une erreur est survenue lors de la suppression du message, veuillez réessayer.";
 "conversation_delete_error_alert_action" = "OK";
-"conversation_status_failed" = "Échec";
 "conversation_status_sending" = "Envoi en cours…";
 "conversation_status_failed" = "L’envoi a échoué, tapez pour réessayer…";
 "conversation_date_separator_date_time" = "%@ à %@";
