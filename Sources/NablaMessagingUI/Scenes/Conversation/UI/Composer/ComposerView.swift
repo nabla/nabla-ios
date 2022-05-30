@@ -48,7 +48,7 @@ final class ComposerView: UIView {
         addSubview(placeHolderLabel)
         
         NSLayoutConstraint.activate([
-            placeHolderLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: Constants.controlsSize / 4),
+            placeHolderLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: Constants.controlsSize / 4 + 4),
             placeHolderLabel.centerYAnchor.constraint(equalTo: textView.centerYAnchor),
         ])
         

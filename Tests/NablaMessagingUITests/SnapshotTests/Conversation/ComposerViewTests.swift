@@ -37,7 +37,7 @@ final class ComposerViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: size))
     }
 
-    // TODO: (@ams) Check what the image is not loading even though we wait
+    // TODO: (@ams) Check why the image is not loading even though we wait
     func testComposerViewAddMedia() {
         // GIVEN
         sut.placeHolder = .placeholderStub
