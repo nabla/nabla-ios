@@ -61,6 +61,6 @@ final class ConversationViewControllerTests: XCTestCase {
             HasMoreIndicatorViewItem(),
         ]))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 5, on: .image(size: size)))
+        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
     }
 }

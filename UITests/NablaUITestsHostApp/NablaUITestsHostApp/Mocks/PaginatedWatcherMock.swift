@@ -1,8 +1,9 @@
 import NablaMessagingCore
 
 final class PaginatedWatcherMock: PaginatedWatcher {
-    func loadMore(completion _: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
-        CancellableMock()
+    var loadMoreClosure: ((_ completion: @escaping ((Result<Void, Error>) -> Void)) -> Cancellable)?
+    func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        loadMoreClosure?(completion) ?? CancellableMock()
     }
 
     func loadMore(numberOfItems _: Int, completion _: @escaping (Result<Void, Error>) -> Void) -> Cancellable {

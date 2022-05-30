@@ -2,6 +2,12 @@ import Foundation
 
 enum LaunchArgument: String {
     case testCreateConversation
+    case testConversationListPagination
+    case testTypingIndicatorAppears
+    case testSendMessage
+    case testFailSendMessageAndRetry
+    case testSendMessageAndDelete
+    case testSendMediaMessage
 }
 
 extension ProcessInfo {

@@ -6,114 +6,98 @@ import NablaMessagingCore
 final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     var logger: Logger = LoggerMock()
 
-    var createConversationCallCount = 0
-    var createConversationParams: [(handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
-    var createConversationClosure: ((_ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable?)?
+    var createConversationReceivedInvocations: [(handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
+    var createConversationClosure: ((_ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
     func createConversation(
         handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
-        createConversationCallCount += 1
-        createConversationParams.append((handler: handler, ()))
+        createConversationReceivedInvocations.append((handler: handler, ()))
         return createConversationClosure?(handler) ?? CancellableMock()
     }
 
-    var watchItemsCallCount = 0
-    var watchItemsParams: [(conversationId: UUID, handler: (Result<ConversationItems, NablaError>) -> Void, Void)] = []
-    var watchItemsResult: PaginatedWatcherMock?
+    var watchItemsReceivedInvocations: [(conversationId: UUID, handler: (Result<ConversationItems, NablaError>) -> Void)] = []
+    var watchItemsClosure: ((_ conversationId: UUID, _ handler: @escaping (Result<ConversationItems, NablaError>) -> Void) -> PaginatedWatcher)?
     func watchItems(
         ofConversationWithId conversationId: UUID,
         handler: @escaping (Result<ConversationItems, NablaError>) -> Void
     ) -> PaginatedWatcher {
-        watchItemsCallCount += 1
-        watchItemsParams.append((conversationId: conversationId, handler: handler, ()))
-        return watchItemsResult ?? PaginatedWatcherMock()
+        watchItemsReceivedInvocations.append((conversationId: conversationId, handler: handler))
+        return watchItemsClosure?(conversationId, handler) ?? PaginatedWatcherMock()
     }
 
-    var setIsTypingCallCount = 0
-    var setIsTypingParams: [(isTyping: Bool, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void, Void)] = []
-    var setIsTypingResult: Cancellable?
+    var setIsTypingReceivedInvocations: [(isTyping: Bool, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []
+    var setIsTypingClosure: ((_ isTyping: Bool, _ conversationId: UUID, _ handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable)?
     func setIsTyping(
         _ isTyping: Bool,
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
-        setIsTypingCallCount += 1
-        setIsTypingParams.append((isTyping: isTyping, conversationId: conversationId, handler: handler, ()))
-        return setIsTypingResult ?? CancellableMock()
+        setIsTypingReceivedInvocations.append((isTyping: isTyping, conversationId: conversationId, handler: handler))
+        return setIsTypingClosure?(isTyping, conversationId, handler) ?? CancellableMock()
     }
 
-    var markConversationAsSeenCallCount = 0
-    var markConversationAsSeenParams: [(conversationId: UUID, handler: (Result<Void, NablaError>) -> Void, Void)] = []
-    var markConversationAsSeenResult: Cancellable?
+    var markConversationAsSeenReceivedInvocations: [(conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []
+    var markConversationAsSeenClosure: ((_ conversationId: UUID, _ handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable)?
     func markConversationAsSeen(
         _ conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
-        markConversationAsSeenCallCount += 1
-        markConversationAsSeenParams.append((conversationId: conversationId, handler: handler, ()))
-        return markConversationAsSeenResult ?? CancellableMock()
+        markConversationAsSeenReceivedInvocations.append((conversationId: conversationId, handler: handler))
+        return markConversationAsSeenClosure?(conversationId, handler) ?? CancellableMock()
     }
 
-    var watchConversationsCallCount = 0
     var watchConversationsParams: [(handler: (Result<ConversationList, NablaError>) -> Void, Void)] = []
     var watchConversationsClosure: ((_ handler: @escaping (Result<ConversationList, NablaError>) -> Void) -> PaginatedWatcher)?
     func watchConversations(
         handler: @escaping (Result<ConversationList, NablaError>) -> Void
     ) -> PaginatedWatcher {
-        watchConversationsCallCount += 1
         watchConversationsParams.append((handler: handler, ()))
         return watchConversationsClosure?(handler) ?? PaginatedWatcherMock()
     }
 
-    var watchConversationCallCount = 0
-    var watchConversationParams: [(conversationId: UUID, handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
-    var watchConversationResult: Cancellable?
+    var watchConversationParams: [(conversationId: UUID, handler: (Result<Conversation, NablaError>) -> Void)] = []
+    var watchConversationClosure: ((_ conversationId: UUID, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
     func watchConversation(
         _ conversationId: UUID,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
-        watchConversationCallCount += 1
-        watchConversationParams.append((conversationId: conversationId, handler: handler, ()))
-        return watchConversationResult ?? CancellableMock()
+        watchConversationParams.append((conversationId: conversationId, handler: handler))
+        return watchConversationClosure?(conversationId, handler) ?? CancellableMock()
     }
 
-    var sendMessageCallCount = 0
-    var sendMessageParams: [(message: MessageInput, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void, Void)] = []
-    var sendMessageResult: Cancellable?
+    var sendMessageParams: [(message: MessageInput, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []
+    var sendMessageClosure: ((_ message: MessageInput,
+                              _ conversationId: UUID,
+                              _ handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable)?
     func sendMessage(
         _ message: MessageInput,
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
-        sendMessageCallCount += 1
-        sendMessageParams.append((message: message, conversationId: conversationId, handler: handler, ()))
-        return sendMessageResult ?? CancellableMock()
+        sendMessageParams.append((message: message, conversationId: conversationId, handler: handler))
+        return sendMessageClosure?(message, conversationId, handler) ?? CancellableMock()
     }
 
-    var retrySendingCallCount = 0
-    var retrySendingParams: [(itemId: UUID, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void, Void)] = []
-    var retrySendingResult: Cancellable?
+    var retrySendingParams: [(itemId: UUID, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []
+    var retrySendingClosure: ((_ itemId: UUID, _ conversationId: UUID, _ handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable)?
     func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
-        retrySendingCallCount += 1
-        retrySendingParams.append((itemId: itemId, conversationId: conversationId, handler: handler, ()))
-        return retrySendingResult ?? CancellableMock()
+        retrySendingParams.append((itemId: itemId, conversationId: conversationId, handler: handler))
+        return retrySendingClosure?(itemId, conversationId, handler) ?? CancellableMock()
     }
 
-    var deleteMessageCallCount = 0
-    var deleteMessageParams: [(messageId: UUID, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void, Void)] = []
-    var deleteMessageResult: Cancellable?
+    var deleteMessageParams: [(messageId: UUID, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []
+    var deleteMessageClosure: ((_ messageId: UUID, _ conversationId: UUID, _ handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable)?
     func deleteMessage(
         withId messageId: UUID,
         conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
-        deleteMessageCallCount += 1
-        deleteMessageParams.append((messageId: messageId, conversationId: conversationId, handler: handler, ()))
-        return deleteMessageResult ?? CancellableMock()
+        deleteMessageParams.append((messageId: messageId, conversationId: conversationId, handler: handler))
+        return deleteMessageClosure?(messageId, conversationId, handler) ?? CancellableMock()
     }
 }
 
