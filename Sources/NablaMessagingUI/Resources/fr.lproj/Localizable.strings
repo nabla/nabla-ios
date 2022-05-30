@@ -6,11 +6,12 @@
 
 // Conversation
 "conversation_composer_placeholder" = "Tapez votre message";
-"conversation_action_copy" = "Copier";
-"conversation_action_delete" = "Supprimer";
+"conversation_action_copy_message" = "Copier";
+"conversation_action_delete_message" = "Supprimer";
 "conversation_deleted_message" = "Message supprimé";
-"conversation_deleted_sender" = "Supprimé";
-"conversation_system_sender" = "Système";
+"conversation_message_deleted_sender" = "Supprimé";
+"conversation_message_system_sender" = "Système";
+"conversation_message_unknown_sender" = "Utilisateur inconnu";
 "conversation_add_media_camera" = "Appareil photo";
 "conversation_add_media_library" = "Bibliothèque photo";
 "conversation_add_media_document" = "Document";
@@ -19,11 +20,11 @@
 "conversation_load_more_error_title" = "Erreur";
 "conversation_load_more_error_message" = "Une erreur est survenue lors du chargement des messages.";
 "conversation_load_more_error_alert_action" = "OK";
-"conversation_delete_error_title" = "Erreur";
-"conversation_delete_error_message" = "Une erreur est survenue lors de la suppression du message, veuillez réessayer.";
-"conversation_delete_error_alert_action" = "OK";
-"conversation_status_sending" = "Envoi en cours…";
-"conversation_status_failed" = "L’envoi a échoué, tapez pour réessayer…";
+"conversation_delete_message_error_title" = "Erreur";
+"conversation_delete_message_error_message" = "Une erreur est survenue lors de la suppression du message, veuillez réessayer.";
+"conversation_delete_message_error_alert_action" = "OK";
+"conversation_message_status_sending" = "Envoi en cours…";
+"conversation_message_status_failed" = "L’envoi a échoué, tapez pour réessayer…";
 "conversation_date_separator_date_time" = "%@ à %@";
 "conversation_date_separator_date_today" = "Aujourdhui";
 "conversation_date_separator_date_yesterday" = "Hier";
