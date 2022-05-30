@@ -22,12 +22,11 @@
 "conversation_delete_error_title" = "Error";
 "conversation_delete_error_message" = "An error occurred while deleting the message, please try again.";
 "conversation_delete_error_alert_action" = "OK";
-"conversation_status_sending" = "Sending";
 "conversation_status_failed" = "Failed";
 "conversation_status_sending" = "Sending…";
 "conversation_status_failed" = "Failed to send, tap to try again…";
 "conversation_date_separator_date_time" = "%@ at %@";
 "conversation_date_separator_date_today" = "Today";
 "conversation_date_separator_date_yesterday" = "Yesterday";
-"conversation_provider_joined" = "%@ has joined the chat";
+"conversation_provider_joined" = "%@ has joined the conversation";
 "conversation_activity_deleted_provider_name" = "[Deleted provider]";
