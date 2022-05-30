@@ -6,11 +6,12 @@
 
 // Conversation
 "conversation_composer_placeholder" = "Type your message";
-"conversation_action_copy" = "Copy";
-"conversation_action_delete" = "Delete";
+"conversation_action_copy_message" = "Copy";
+"conversation_action_delete_message" = "Delete";
 "conversation_deleted_message" = "Deleted message";
-"conversation_deleted_sender" = "Deleted";
-"conversation_system_sender" = "System";
+"conversation_message_deleted_sender" = "Deleted";
+"conversation_message_system_sender" = "System";
+"conversation_message_unknown_sender" = "Unknown user";
 "conversation_add_media_camera" = "Camera";
 "conversation_add_media_library" = "Photo Library";
 "conversation_add_media_document" = "Document";
@@ -19,12 +20,11 @@
 "conversation_load_more_error_title" = "Error";
 "conversation_load_more_error_message" = "An error occurred while loading the messages.";
 "conversation_load_more_error_alert_action" = "OK";
-"conversation_delete_error_title" = "Error";
-"conversation_delete_error_message" = "An error occurred while deleting the message, please try again.";
-"conversation_delete_error_alert_action" = "OK";
-"conversation_status_failed" = "Failed";
-"conversation_status_sending" = "Sending…";
-"conversation_status_failed" = "Failed to send, tap to try again…";
+"conversation_delete_message_error_title" = "Error";
+"conversation_delete_message_error_message" = "An error occurred while deleting the message, please try again.";
+"conversation_delete_message_error_alert_action" = "OK";
+"conversation_message_status_sending" = "Sending…";
+"conversation_message_status_failed" = "Failed to send, tap to try again…";
 "conversation_date_separator_date_time" = "%@ at %@";
 "conversation_date_separator_date_today" = "Today";
 "conversation_date_separator_date_yesterday" = "Yesterday";

@@ -80,7 +80,7 @@ enum RemoteConversationItemTransformer {
             return .deleted
         } else {
             assertionFailure("[Should not get here] Received an unknown author type \(author.__typename)")
-            return .deleted
+            return .unknown
         }
     }
 

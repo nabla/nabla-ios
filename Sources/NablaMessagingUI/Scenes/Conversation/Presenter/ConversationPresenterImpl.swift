@@ -98,9 +98,9 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self.logger.error(message: "Could not delete message with error: \(error.localizedDescription)")
                 self.view?.showErrorAlert(
                     viewModel: .init(
-                        title: L10n.conversationDeleteErrorTitle,
-                        message: L10n.conversationDeleteErrorMessage,
-                        defaultAction: L10n.conversationDeleteErrorAlertAction
+                        title: L10n.conversationDeleteMessageErrorTitle,
+                        message: L10n.conversationDeleteMessageErrorMessage,
+                        defaultAction: L10n.conversationDeleteMessageErrorAlertAction
                     )
                 )
             }

@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - `ConversationViewController` now displays system messages, with the right name and avatar.
 
 ### Changed
-- `ConversationMessageSender.sender` now exposes a `SystemProvider` parameter which contains the name of the organization and the avatar url.
+- `ConversationMessageSender.system` now exposes a `SystemProvider` parameter which contains the name of the organization and the avatar url.
+- `ConversationMessageSender` now exposes a new `.unknown` case for sender types that are not handled by this version of the SDK.
 
 ### Fixed
 

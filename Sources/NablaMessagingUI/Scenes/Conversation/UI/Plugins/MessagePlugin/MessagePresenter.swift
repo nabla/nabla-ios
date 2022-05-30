@@ -58,7 +58,7 @@ class MessagePresenter<
     func makeMenuElements(_ item: Item) -> [UIMenuElement] {
         if item.sender == .patient, item.sendingState == .sent {
             let deleteAction = UIAction(
-                title: L10n.conversationActionDelete,
+                title: L10n.conversationActionDeleteMessage,
                 image: UIImage(systemName: "trash"),
                 attributes: .destructive,
                 handler: { [weak self] _ in self?.delegate?.didDeleteItem(withId: item.id) }
@@ -97,7 +97,13 @@ class MessagePresenter<
             ))
         case .deleted:
             return .them(.init(
-                author: L10n.conversationDeletedSender,
+                author: L10n.conversationMessageDeletedSender,
+                avatar: .init(url: nil, text: nil),
+                isContiguous: item.isContiguous
+            ))
+        case .unknown:
+            return .them(.init(
+                author: L10n.conversationMessageUnknownSender,
                 avatar: .init(url: nil, text: nil),
                 isContiguous: item.isContiguous
             ))
@@ -118,11 +124,11 @@ class MessagePresenter<
     private func transformFooter() -> ConversationMessageFooterViewModel? {
         switch item.sendingState {
         case .sending:
-            return .init(text: L10n.conversationStatusSending, color: .lightGray)
+            return .init(text: L10n.conversationMessageStatusSending, color: .lightGray)
         case .sent, .toBeSent:
             return nil
         case .failed:
-            return .init(text: L10n.conversationStatusFailed, color: .red)
+            return .init(text: L10n.conversationMessageStatusFailed, color: .red)
         }
     }
     

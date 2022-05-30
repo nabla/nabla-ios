@@ -11,9 +11,9 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
   /// Copy
-  internal static let conversationActionCopy = L10n.tr("Localizable", "conversation_action_copy")
+  internal static let conversationActionCopyMessage = L10n.tr("Localizable", "conversation_action_copy_message")
   /// Delete
-  internal static let conversationActionDelete = L10n.tr("Localizable", "conversation_action_delete")
+  internal static let conversationActionDeleteMessage = L10n.tr("Localizable", "conversation_action_delete_message")
   /// [Deleted provider]
   internal static let conversationActivityDeletedProviderName = L10n.tr("Localizable", "conversation_activity_deleted_provider_name")
   /// Camera
@@ -35,15 +35,13 @@ internal enum L10n {
   /// Yesterday
   internal static let conversationDateSeparatorDateYesterday = L10n.tr("Localizable", "conversation_date_separator_date_yesterday")
   /// OK
-  internal static let conversationDeleteErrorAlertAction = L10n.tr("Localizable", "conversation_delete_error_alert_action")
+  internal static let conversationDeleteMessageErrorAlertAction = L10n.tr("Localizable", "conversation_delete_message_error_alert_action")
   /// An error occurred while deleting the message, please try again.
-  internal static let conversationDeleteErrorMessage = L10n.tr("Localizable", "conversation_delete_error_message")
+  internal static let conversationDeleteMessageErrorMessage = L10n.tr("Localizable", "conversation_delete_message_error_message")
   /// Error
-  internal static let conversationDeleteErrorTitle = L10n.tr("Localizable", "conversation_delete_error_title")
+  internal static let conversationDeleteMessageErrorTitle = L10n.tr("Localizable", "conversation_delete_message_error_title")
   /// Deleted message
   internal static let conversationDeletedMessage = L10n.tr("Localizable", "conversation_deleted_message")
-  /// Deleted
-  internal static let conversationDeletedSender = L10n.tr("Localizable", "conversation_deleted_sender")
   /// Retry
   internal static let conversationListButtonRetry = L10n.tr("Localizable", "conversation_list_button_retry")
   /// New conversation
@@ -60,16 +58,20 @@ internal enum L10n {
   internal static let conversationLoadMoreErrorMessage = L10n.tr("Localizable", "conversation_load_more_error_message")
   /// Error
   internal static let conversationLoadMoreErrorTitle = L10n.tr("Localizable", "conversation_load_more_error_title")
-  /// %@ has joined the chat
+  /// Deleted
+  internal static let conversationMessageDeletedSender = L10n.tr("Localizable", "conversation_message_deleted_sender")
+  /// Failed to send, tap to try again…
+  internal static let conversationMessageStatusFailed = L10n.tr("Localizable", "conversation_message_status_failed")
+  /// Sending…
+  internal static let conversationMessageStatusSending = L10n.tr("Localizable", "conversation_message_status_sending")
+  /// System
+  internal static let conversationMessageSystemSender = L10n.tr("Localizable", "conversation_message_system_sender")
+  /// Unknown user
+  internal static let conversationMessageUnknownSender = L10n.tr("Localizable", "conversation_message_unknown_sender")
+  /// %@ has joined the conversation
   internal static func conversationProviderJoined(_ p1: Any) -> String {
     return L10n.tr("Localizable", "conversation_provider_joined", String(describing: p1))
   }
-  /// Failed to send, tap to try again…
-  internal static let conversationStatusFailed = L10n.tr("Localizable", "conversation_status_failed")
-  /// Sending…
-  internal static let conversationStatusSending = L10n.tr("Localizable", "conversation_status_sending")
-  /// System
-  internal static let conversationSystemSender = L10n.tr("Localizable", "conversation_system_sender")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

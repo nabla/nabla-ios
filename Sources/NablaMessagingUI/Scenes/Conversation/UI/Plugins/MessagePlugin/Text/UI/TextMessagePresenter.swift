@@ -30,7 +30,7 @@ final class TextMessagePresenter:
     override func makeMenuElements(_ item: TextMessageViewItem) -> [UIMenuElement] {
         let menuElements = super.makeMenuElements(item)
         let copyAction = UIAction(
-            title: L10n.conversationActionCopy,
+            title: L10n.conversationActionCopyMessage,
             image: UIImage(systemName: "doc.on.doc"),
             handler: { _ in UIPasteboard.general.string = item.text }
         )

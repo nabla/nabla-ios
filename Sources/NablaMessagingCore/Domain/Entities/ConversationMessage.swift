@@ -10,6 +10,7 @@ public enum ConversationMessageSender: Hashable {
     case provider(Provider)
     case system(SystemProvider)
     case deleted
+    case unknown // For cases that this version of the SDK doesn't handle
 }
 
 public enum ConversationMessageSendingState: Hashable {
