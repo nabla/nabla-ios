@@ -31,6 +31,10 @@ final class ComposerView: UIView {
         }
     }
     
+    var showRecordAudioButton = true {
+        didSet { updateAudioRecordingVisibility() }
+    }
+    
     private(set) var medias: [Media] = []
     
     // MARK: - Init
@@ -220,8 +224,10 @@ final class ComposerView: UIView {
     private func updateAudioRecordingVisibility() {
         if isRecording {
             setVisibleViews([deleteAudioRecordingButton, audioRecorderComposerView])
-        } else {
+        } else if showRecordAudioButton {
             setVisibleViews([addMedia, recordAudioButton, textView, placeHolderLabel])
+        } else {
+            setVisibleViews([addMedia, textView, placeHolderLabel])
         }
     }
 

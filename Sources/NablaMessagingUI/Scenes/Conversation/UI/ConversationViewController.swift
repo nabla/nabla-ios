@@ -6,8 +6,10 @@ import UIKit
 final class ConversationViewController: UIViewController, ConversationViewContract {
     // MARK: - Init
     
-    init(logger: Logger,
-         providers: [ConversationCellProvider]) {
+    init(
+        logger: Logger,
+        providers: [ConversationCellProvider]
+    ) {
         self.logger = logger
         self.providers = providers
         super.init(nibName: nil, bundle: nil)
@@ -36,6 +38,10 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     var presenter: ConversationPresenter!
     
     // MARK: - ConversationViewContract
+    
+    var showRecordAudioMessageButton = true {
+        didSet { composerView.showRecordAudioButton = showRecordAudioMessageButton }
+    }
     
     func configure(withConversation conversation: ConversationViewModel) {
         titleView.title = conversation.title

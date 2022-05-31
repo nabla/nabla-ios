@@ -8,6 +8,12 @@ final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
 
     func start() {
+        if canRecordAudio {
+            view?.showRecordAudioMessageButton = true
+        } else {
+            logger.warning(message: "Missing `NSMicrophoneUsageDescription` key in info.plist to enable audio message recording")
+            view?.showRecordAudioMessageButton = false
+        }
         let conversationViewModel = Self.transform(conversation: conversation)
         view?.configure(withConversation: conversationViewModel)
         watchItems()
@@ -191,6 +197,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private let localTypingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
 
     private var sendMediaCancellable: [Cancellable] = []
+    
+    private var canRecordAudio: Bool {
+        Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String != nil
+    }
 
     private func watchItems() {
         set(state: .loading)

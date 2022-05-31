@@ -21,6 +21,8 @@ struct ConversationViewModel {
 }
 
 protocol ConversationViewContract: AnyObject {
+    var showRecordAudioMessageButton: Bool { get set }
+    
     func configure(withConversation: ConversationViewModel)
     func configure(withState state: ConversationViewState)
     func emptyComposer()

@@ -27,18 +27,22 @@ class AudioRecorderComposerPresenterImpl: AudioRecorderComposerPresenter {
     // MARK: - AudioRecorderComposerPresenter
 
     func userDidRequestStartRecording() {
-        recorder.requestPermission(
-            completionIfAccepted: { [weak self] in
-                guard let self = self else { return }
-                self.recorder.startRecording()
-                self.delegate?.audioRecorderComposerPresenterDidStartRecording(self)
-            },
-            completionIfRefused: { [weak self] in
-                guard let self = self else { return }
+        recorder.requestPermission { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(allowed):
+                if allowed {
+                    self.recorder.startRecording()
+                    self.delegate?.audioRecorderComposerPresenterDidStartRecording(self)
+                } else {
+                    self.logger.info(message: "User denied microphone access")
+                    self.delegate?.audioRecorderComposerPresenterCanNotStartRecording(self)
+                }
+            case let .failure(error):
+                self.logger.error(message: "Unable to start recording audio message: \(error)")
                 self.delegate?.audioRecorderComposerPresenterCanNotStartRecording(self)
-            },
-            completionQueue: .main
-        )
+            }
+        }
     }
 
     func userDidRequestStopRecording() {

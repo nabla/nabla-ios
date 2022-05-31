@@ -34,9 +34,9 @@ class AudioRecorder: NSObject {
     // MARK: - Public
 
     func requestPermission(
-        completionIfAccepted: (() -> Void)? = nil,
-        completionIfRefused: (() -> Void)? = nil,
-        completionQueue: DispatchQueue = DispatchQueue.main
+        completionQueue: DispatchQueue = .main,
+        completion: @escaping (Result<Bool, Error>) -> Void
+        
     ) {
         do {
             try recordingSession.setCategory(.playAndRecord, mode: .default)
@@ -45,28 +45,31 @@ class AudioRecorder: NSObject {
             case .undetermined:
                 recordingSession.requestRecordPermission { allowed in
                     completionQueue.async {
-                        if allowed {
-                            completionIfAccepted?()
-                        } else {
-                            completionIfRefused?()
-                        }
+                        completion(.success(allowed))
                     }
                 }
             case .denied:
-                guard
-                    let url = URL(string: UIApplication.openSettingsURLString),
-                    UIApplication.shared.canOpenURL(url) else {
-                    completionIfRefused?()
-                    return
+                if let url = URL(string: UIApplication.openSettingsURLString),
+                   UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 }
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                completionQueue.async {
+                    completion(.success(false))
+                }
             case .granted:
-                completionIfAccepted?()
+                completionQueue.async {
+                    completion(.success(true))
+                }
             @unknown default:
-                break
+                completionQueue.async {
+                    completion(.success(false))
+                }
             }
         } catch {
             logger.warning(message: "[AudioRecorder] cannot set audio category: \(error)")
+            completionQueue.async {
+                completion(.failure(error))
+            }
         }
     }
 
