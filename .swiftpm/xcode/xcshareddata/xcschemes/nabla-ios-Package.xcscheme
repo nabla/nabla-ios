@@ -146,6 +146,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "nabla-ios_NablaMessagingCoreIntegrationTests"
+               BuildableName = "nabla-ios_NablaMessagingCoreIntegrationTests"
+               BlueprintName = "nabla-ios_NablaMessagingCoreIntegrationTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -153,7 +167,8 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      language = "en">
+      language = "en"
+      region = "FR">
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -183,6 +198,16 @@
                BlueprintIdentifier = "NablaUtilsTests"
                BuildableName = "NablaUtilsTests"
                BlueprintName = "NablaUtilsTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "NablaMessagingCoreIntegrationTests"
+               BuildableName = "NablaMessagingCoreIntegrationTests"
+               BlueprintName = "NablaMessagingCoreIntegrationTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
