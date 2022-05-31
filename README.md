@@ -36,12 +36,8 @@ And then run `pod install` to update your project.
 
 ## Sample app
 
-You can find an example of a complete integration of the Messaging UI SDK in our [demo app](https://github.com/nabla/nabla-ios/tree/main/Example/NablaExampleApp/NablaExampleApp).
-
-To make the sample app work, you'll need to:
-- Open AppDelegate.swift and put your provided API key in the NablaClient initializer.
-- Open FakeAuthenticator and fill in informations for you access token & refresh token.
+You can find an example of a basic integration of the Messaging UI SDK in our [demo app](https://github.com/nabla/nabla-ios/tree/main/Example/NablaExampleApp).
 
 ## Need more help?
 
-If you need any help for setting up the SDK or using the Nabla platform, please contact us on [our website](https://www.nabla.dev/). We are available to answer any question.
+If you need any help with the set-up of the SDK or the Nabla platform, please contact us on [our website](https://nabla.com). We are available to answer any question.
