@@ -12,8 +12,8 @@ Pod::Spec.new do |spec|
       Right now the library is in alpha, meaning all core features are here and ready to be used but API might change during the journey to a stable 1.0 version.
   DESC
 
-  spec.homepage           = "https://www.nabla.dev"
-  spec.documentation_url  = "https://docs.nabla.dev"
+  spec.homepage           = "https://www.nabla.com"
+  spec.documentation_url  = "https://docs.nabla.com"
   spec.license            = { :type => "MIT", :file => "LICENSE" }
   spec.author             = "Nabla Technologies"
   spec.platform           = :ios, "13.0"
