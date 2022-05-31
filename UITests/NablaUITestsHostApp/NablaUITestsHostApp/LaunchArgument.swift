@@ -8,6 +8,7 @@ enum LaunchArgument: String {
     case testFailSendMessageAndRetry
     case testSendMessageAndDelete
     case testSendMediaMessage
+    case testFocusOnTextMessage
 }
 
 extension ProcessInfo {

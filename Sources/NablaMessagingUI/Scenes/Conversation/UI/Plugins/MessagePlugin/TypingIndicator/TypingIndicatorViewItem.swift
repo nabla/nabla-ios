@@ -7,4 +7,5 @@ struct TypingIndicatorViewItem: ConversationViewMessageItem, Hashable {
     let sender: NablaMessagingCore.ConversationMessageSender
     let sendingState: ConversationMessageSendingState = .sent
     var isContiguous: Bool = false
+    var isFocused: Bool = false
 }

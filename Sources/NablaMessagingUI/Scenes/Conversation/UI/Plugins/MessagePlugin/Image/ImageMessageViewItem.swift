@@ -8,4 +8,5 @@ struct ImageMessageViewItem: ConversationViewMessageItem, Hashable {
     let sendingState: ConversationMessageSendingState
     let image: Media
     var isContiguous: Bool = false
+    var isFocused: Bool = false
 }

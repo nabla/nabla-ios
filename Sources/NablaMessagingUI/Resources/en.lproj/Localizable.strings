@@ -24,6 +24,7 @@
 "conversation_delete_message_error_message" = "An error occurred while deleting the message, please try again.";
 "conversation_delete_message_error_alert_action" = "OK";
 "conversation_message_status_sending" = "Sending…";
+"conversation_message_status_sent" = "Sent";
 "conversation_message_status_failed" = "Failed to send, tap to try again…";
 "conversation_date_separator_date_time" = "%@ at %@";
 "conversation_date_separator_date_today" = "Today";

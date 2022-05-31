@@ -16,7 +16,6 @@ final class AudioMessagePresenter:
         client: NablaMessagingClientProtocol,
         delegate: ConversationCellPresenterDelegate
     ) {
-        self.delegate = delegate
         self.logger = logger
         super.init(
             logger: logger,
@@ -31,8 +30,6 @@ final class AudioMessagePresenter:
     
     // MARK: - Private
     
-    private weak var delegate: ConversationCellPresenterDelegate?
-
     private let logger: Logger
 
     private lazy var audioPlayer: AudioPlayer = {

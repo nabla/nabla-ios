@@ -32,8 +32,6 @@ final class DocumentMessagePresenter:
     
     // MARK: - Private
     
-    private weak var delegate: ConversationCellPresenterDelegate?
-    
     private static func transform(item: DocumentMessageViewItem) -> DocumentMessageContentView.ContentViewModel {
         .init(url: item.document.thumbnailUrl, filename: item.document.fileName)
     }

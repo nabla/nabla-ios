@@ -41,6 +41,8 @@ extension AppDelegate {
             NablaMessagingClientProtocolMock.shared.setupForTestSendMessageAndDelete()
         } else if ProcessInfo.processInfo.containsLaunchArgument(.testSendMediaMessage) {
             NablaMessagingClientProtocolMock.shared.setupForTestSendMediaMessage()
+        } else if ProcessInfo.processInfo.containsLaunchArgument(.testFocusOnTextMessage) {
+            NablaMessagingClientProtocolMock.shared.setupForTestFocusOnTextMessage()
         }
     }
 }

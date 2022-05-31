@@ -149,4 +149,30 @@ final class ConversationViewControllerUITests: XCTestCase {
             XCTAssertEqual(1, app.cells.images.allElementsBoundByIndex.count)
         }
     }
+    
+    func testFocusOnTextMessage() throws {
+        // GIVEN
+        let app = XCUIApplication()
+        app.addLaunchArgument(.testFocusOnTextMessage)
+        app.launch()
+        app.createAndNavigateToTheNewConversation()
+        
+        // WHEN & THEN
+        XCTContext.runActivity(named: "Tap on first message and check Sent appears") { _ in
+            app.staticTexts["Hello"].waitUntilExists().tap()
+            app.buttons["Sent"].waitUntilExistsAssert()
+        }
+        
+        XCTContext.runActivity(named: "Tap again and check Sent disappears") { _ in
+            app.staticTexts["Hello"].waitUntilExists().tap()
+            app.buttons["Sent"].waitUntilDisappearsAssert()
+        }
+        
+        XCTContext.runActivity(named: "Tap on second message and check we have a second date separator") { _ in
+            app.staticTexts["World!"].tap()
+            app.buttons["Sent"].waitUntilExistsAssert()
+            let dateSeparators = app.staticTexts.containing(.init(format: "label BEGINSWITH 'Today at '"))
+            XCTAssertEqual(2, dateSeparators.count)
+        }
+    }
 }

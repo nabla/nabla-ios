@@ -64,6 +64,8 @@ internal enum L10n {
   internal static let conversationMessageStatusFailed = L10n.tr("Localizable", "conversation_message_status_failed")
   /// Sending…
   internal static let conversationMessageStatusSending = L10n.tr("Localizable", "conversation_message_status_sending")
+  /// Sent
+  internal static let conversationMessageStatusSent = L10n.tr("Localizable", "conversation_message_status_sent")
   /// System
   internal static let conversationMessageSystemSender = L10n.tr("Localizable", "conversation_message_system_sender")
   /// Unknown user

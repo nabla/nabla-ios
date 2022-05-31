@@ -8,4 +8,5 @@ struct AudioMessageViewItem: ConversationViewMessageItem, Hashable {
     let sendingState: ConversationMessageSendingState
     let audio: AudioFile
     var isContiguous: Bool = false
+    var isFocused: Bool = false
 }

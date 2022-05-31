@@ -37,6 +37,12 @@ final class TextMessagePresenter:
         return [copyAction] + menuElements
     }
 
+    override func userDidTapContent() {
+        super.userDidTapContent()
+
+        delegate?.didTapTextItem(withId: item.id)
+    }
+
     // MARK: - Private
     
     // TODO: - Move the transform to a separate class ?

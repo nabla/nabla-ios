@@ -16,7 +16,6 @@ final class ImageMessagePresenter:
         client: NablaMessagingClientProtocol,
         delegate: ConversationCellPresenterDelegate
     ) {
-        self.delegate = delegate
         super.init(
             logger: logger,
             item: item,
@@ -32,8 +31,6 @@ final class ImageMessagePresenter:
     }
     
     // MARK: - Private
-    
-    private weak var delegate: ConversationCellPresenterDelegate?
     
     // TODO: - Move the transform to a separate class ?
     private static func transform(item: ImageMessageViewItem) -> ImageMessageContentView.ContentViewModel {

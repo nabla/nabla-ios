@@ -36,4 +36,5 @@ protocol ConversationViewMessageItem: ConversationViewItem {
     var sendingState: ConversationMessageSendingState { get }
     var date: Date { get }
     var isContiguous: Bool { get set }
+    var isFocused: Bool { get set }
 }

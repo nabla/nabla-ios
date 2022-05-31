@@ -7,4 +7,5 @@ struct DeletedMessageViewItem: ConversationViewMessageItem, Hashable {
     let sender: NablaMessagingCore.ConversationMessageSender
     let sendingState: ConversationMessageSendingState
     var isContiguous: Bool = false
+    var isFocused: Bool = false
 }

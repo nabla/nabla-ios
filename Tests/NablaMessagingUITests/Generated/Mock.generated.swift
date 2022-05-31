@@ -68,6 +68,12 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?(`text`)
     }
 
+    open func didFinishRecordingAudioFile(_ file: AudioFile) {
+        addInvocation(.m_didFinishRecordingAudioFile__file(Parameter<AudioFile>.value(`file`)))
+		let perform = methodPerformValue(.m_didFinishRecordingAudioFile__file(Parameter<AudioFile>.value(`file`))) as? (AudioFile) -> Void
+		perform?(`file`)
+    }
+
     open func didTapDeleteMessageButton(withId messageId: UUID) {
         addInvocation(.m_didTapDeleteMessageButton__withId_messageId(Parameter<UUID>.value(`messageId`)))
 		let perform = methodPerformValue(.m_didTapDeleteMessageButton__withId_messageId(Parameter<UUID>.value(`messageId`))) as? (UUID) -> Void
@@ -80,10 +86,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?(`media`)
     }
 
-    open func didFinishRecordingAudioFile(_ file: AudioFile) {
-        addInvocation(.m_didFinishRecordingAudioFile(Parameter<AudioFile>.value(`file`)))
-        let perform = methodPerformValue(.m_didFinishRecordingAudioFile(Parameter<AudioFile>.value(`file`))) as? (AudioFile) -> Void
-        perform?(`file`)
+    open func didTapTextItem(withId: UUID) {
+        addInvocation(.m_didTapTextItem__withId_withId(Parameter<UUID>.value(`withId`)))
+		let perform = methodPerformValue(.m_didTapTextItem__withId_withId(Parameter<UUID>.value(`withId`))) as? (UUID) -> Void
+		perform?(`withId`)
     }
 
     open func didTapCameraButton() {
@@ -127,9 +133,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
     fileprivate enum MethodType {
         case m_didTapOnSend__text_textmedias_medias(Parameter<String>, Parameter<[Media]>)
         case m_didUpdateDraftText__text(Parameter<String>)
+        case m_didFinishRecordingAudioFile__file(Parameter<AudioFile>)
         case m_didTapDeleteMessageButton__withId_messageId(Parameter<UUID>)
         case m_didTapMedia__media(Parameter<Media>)
-        case m_didFinishRecordingAudioFile(Parameter<AudioFile>)
+        case m_didTapTextItem__withId_withId(Parameter<UUID>)
         case m_didTapCameraButton
         case m_didTapPhotoLibraryButton
         case m_didTapDocumentLibraryButton
@@ -150,6 +157,11 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsText, rhs: rhsText, with: matcher), lhsText, rhsText, "_ text"))
 				return Matcher.ComparisonResult(results)
 
+            case (.m_didFinishRecordingAudioFile__file(let lhsFile), .m_didFinishRecordingAudioFile__file(let rhsFile)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsFile, rhs: rhsFile, with: matcher), lhsFile, rhsFile, "_ file"))
+				return Matcher.ComparisonResult(results)
+
             case (.m_didTapDeleteMessageButton__withId_messageId(let lhsMessageid), .m_didTapDeleteMessageButton__withId_messageId(let rhsMessageid)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessageid, rhs: rhsMessageid, with: matcher), lhsMessageid, rhsMessageid, "withId messageId"))
@@ -158,6 +170,11 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case (.m_didTapMedia__media(let lhsMedia), .m_didTapMedia__media(let rhsMedia)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMedia, rhs: rhsMedia, with: matcher), lhsMedia, rhsMedia, "_ media"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_didTapTextItem__withId_withId(let lhsWithid), .m_didTapTextItem__withId_withId(let rhsWithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsWithid, rhs: rhsWithid, with: matcher), lhsWithid, rhsWithid, "withId"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_didTapCameraButton, .m_didTapCameraButton): return .match
@@ -179,9 +196,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             switch self {
             case let .m_didTapOnSend__text_textmedias_medias(p0, p1): return p0.intValue + p1.intValue
             case let .m_didUpdateDraftText__text(p0): return p0.intValue
+            case let .m_didFinishRecordingAudioFile__file(p0): return p0.intValue
             case let .m_didTapDeleteMessageButton__withId_messageId(p0): return p0.intValue
             case let .m_didTapMedia__media(p0): return p0.intValue
-            case let .m_didFinishRecordingAudioFile(p0): return p0.intValue
+            case let .m_didTapTextItem__withId_withId(p0): return p0.intValue
             case .m_didTapCameraButton: return 0
             case .m_didTapPhotoLibraryButton: return 0
             case .m_didTapDocumentLibraryButton: return 0
@@ -194,9 +212,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             switch self {
             case .m_didTapOnSend__text_textmedias_medias: return ".didTapOnSend(text:medias:)"
             case .m_didUpdateDraftText__text: return ".didUpdateDraftText(_:)"
+            case .m_didFinishRecordingAudioFile__file: return ".didFinishRecordingAudioFile(_:)"
             case .m_didTapDeleteMessageButton__withId_messageId: return ".didTapDeleteMessageButton(withId:)"
-            case .m_didFinishRecordingAudioFile: return ".didFinishRecordingAudioFile(file:)"
             case .m_didTapMedia__media: return ".didTapMedia(_:)"
+            case .m_didTapTextItem__withId_withId: return ".didTapTextItem(withId:)"
             case .m_didTapCameraButton: return ".didTapCameraButton()"
             case .m_didTapPhotoLibraryButton: return ".didTapPhotoLibraryButton()"
             case .m_didTapDocumentLibraryButton: return ".didTapDocumentLibraryButton()"
@@ -223,8 +242,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 
         public static func didTapOnSend(text: Parameter<String>, medias: Parameter<[Media]>) -> Verify { return Verify(method: .m_didTapOnSend__text_textmedias_medias(`text`, `medias`))}
         public static func didUpdateDraftText(_ text: Parameter<String>) -> Verify { return Verify(method: .m_didUpdateDraftText__text(`text`))}
+        public static func didFinishRecordingAudioFile(_ file: Parameter<AudioFile>) -> Verify { return Verify(method: .m_didFinishRecordingAudioFile__file(`file`))}
         public static func didTapDeleteMessageButton(withId messageId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapDeleteMessageButton__withId_messageId(`messageId`))}
         public static func didTapMedia(_ media: Parameter<Media>) -> Verify { return Verify(method: .m_didTapMedia__media(`media`))}
+        public static func didTapTextItem(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapTextItem__withId_withId(`withId`))}
         public static func didTapCameraButton() -> Verify { return Verify(method: .m_didTapCameraButton)}
         public static func didTapPhotoLibraryButton() -> Verify { return Verify(method: .m_didTapPhotoLibraryButton)}
         @available(iOS 14, *)
@@ -244,11 +265,17 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         public static func didUpdateDraftText(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_didUpdateDraftText__text(`text`), performs: perform)
         }
+        public static func didFinishRecordingAudioFile(_ file: Parameter<AudioFile>, perform: @escaping (AudioFile) -> Void) -> Perform {
+            return Perform(method: .m_didFinishRecordingAudioFile__file(`file`), performs: perform)
+        }
         public static func didTapDeleteMessageButton(withId messageId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
             return Perform(method: .m_didTapDeleteMessageButton__withId_messageId(`messageId`), performs: perform)
         }
         public static func didTapMedia(_ media: Parameter<Media>, perform: @escaping (Media) -> Void) -> Perform {
             return Perform(method: .m_didTapMedia__media(`media`), performs: perform)
+        }
+        public static func didTapTextItem(withId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_didTapTextItem__withId_withId(`withId`), performs: perform)
         }
         public static func didTapCameraButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_didTapCameraButton, performs: perform)

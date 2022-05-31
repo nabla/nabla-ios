@@ -11,8 +11,8 @@ class MessagePresenter<
     MessageCellContract: ConversationMessageCellContract
 >: ConversationMessagePresenter where MessageCellContract.ContentView == ContentView {
     var item: Item
-    private(set) weak var view: MessageCellContract?
-    
+    weak var delegate: ConversationCellPresenterDelegate?
+
     // MARK: - Init
     
     init(
@@ -56,7 +56,7 @@ class MessagePresenter<
             menuElements: makeMenuElements(item)
         ))
     }
-    
+
     // MARK: - Internal
     
     func attachView(_ view: MessageCellContract) {
@@ -84,9 +84,9 @@ class MessagePresenter<
     private let client: NablaMessagingClientProtocol
     private let transformContent: (Item) -> ContentView.ContentViewModel
 
-    private weak var delegate: ConversationCellPresenterDelegate?
-    
     private var retrySendingAction: Cancellable?
+
+    private(set) weak var view: MessageCellContract?
     
     private func transformSender() -> ConversationMessageSender {
         switch item.sender {
@@ -118,11 +118,13 @@ class MessagePresenter<
             return .me(isContiguous: item.isContiguous)
         }
     }
-    
+
     private func transformFooter() -> ConversationMessageFooterViewModel? {
         switch item.sendingState {
         case .sending:
             return .init(text: L10n.conversationMessageStatusSending, color: .lightGray)
+        case .sent where item.isFocused:
+            return .init(text: L10n.conversationMessageStatusSent, color: .lightGray)
         case .sent, .toBeSent:
             return nil
         case .failed:

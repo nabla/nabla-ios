@@ -14,6 +14,7 @@
 		E4CD91772819D29F00562EC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4CD91762819D29F00562EC5 /* Assets.xcassets */; };
 		E4CD917A2819D29F00562EC5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CD91782819D29F00562EC5 /* LaunchScreen.storyboard */; };
 		E4CD91852819D37300562EC5 /* NablaMessagingCore in Frameworks */ = {isa = PBXBuildFile; productRef = E4CD91842819D37300562EC5 /* NablaMessagingCore */; };
+		FF4E8BE328450775003E487A /* NablaMessagingProtocolMock+testFocusOnTextMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4E8BE228450775003E487A /* NablaMessagingProtocolMock+testFocusOnTextMessage.swift */; };
 		FF4F6355283E4A8D00CDEF86 /* NablaMessagingProtocolMock+testConversationListPagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4F6354283E4A8D00CDEF86 /* NablaMessagingProtocolMock+testConversationListPagination.swift */; };
 		FF4F6358283E531D00CDEF86 /* Conversation+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4F6357283E531D00CDEF86 /* Conversation+Mock.swift */; };
 		FF4F635B283E560000CDEF86 /* ConversationViewControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4F6359283E560000CDEF86 /* ConversationViewControllerUITests.swift */; };
@@ -52,6 +53,7 @@
 		E4CD91792819D29F00562EC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E4CD917B2819D29F00562EC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4CD91822819D35C00562EC5 /* ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ios; path = ../..; sourceTree = "<group>"; };
+		FF4E8BE228450775003E487A /* NablaMessagingProtocolMock+testFocusOnTextMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NablaMessagingProtocolMock+testFocusOnTextMessage.swift"; sourceTree = "<group>"; };
 		FF4F6354283E4A8D00CDEF86 /* NablaMessagingProtocolMock+testConversationListPagination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NablaMessagingProtocolMock+testConversationListPagination.swift"; sourceTree = "<group>"; };
 		FF4F6357283E531D00CDEF86 /* Conversation+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Conversation+Mock.swift"; sourceTree = "<group>"; };
 		FF4F6359283E560000CDEF86 /* ConversationViewControllerUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationViewControllerUITests.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				FF8352BC283E79CA00BB5065 /* NablaMessagingProtocolMock+testSendMediaMessage.swift */,
 				FF4F6360283E657C00CDEF86 /* NablaMessagingProtocolMock+testFailSendMessageAndRetry.swift */,
 				FF8352BE283E7DAF00BB5065 /* NablaMessagingProtocolMock+testTypingIndicatorAppears.swift */,
+				FF4E8BE228450775003E487A /* NablaMessagingProtocolMock+testFocusOnTextMessage.swift */,
 			);
 			path = ConversationViewControllerUITests;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				FF4F6355283E4A8D00CDEF86 /* NablaMessagingProtocolMock+testConversationListPagination.swift in Sources */,
 				FF8352BF283E7DAF00BB5065 /* NablaMessagingProtocolMock+testTypingIndicatorAppears.swift in Sources */,
 				FF8352BB283E76A600BB5065 /* NablaMessagingProtocolMock+testSendMessageAndDelete.swift in Sources */,
+				FF4E8BE328450775003E487A /* NablaMessagingProtocolMock+testFocusOnTextMessage.swift in Sources */,
 				FF8049ED283E16790076EFF8 /* LaunchArgument.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

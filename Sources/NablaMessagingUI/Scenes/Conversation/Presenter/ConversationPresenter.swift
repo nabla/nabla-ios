@@ -8,6 +8,7 @@ protocol ConversationPresenter: Presenter {
     func didFinishRecordingAudioFile(_ file: AudioFile)
     func didTapDeleteMessageButton(withId messageId: UUID)
     func didTapMedia(_ media: Media)
+    func didTapTextItem(withId: UUID)
     func didTapCameraButton()
     func didTapPhotoLibraryButton()
     @available(iOS 14, *) func didTapDocumentLibraryButton()

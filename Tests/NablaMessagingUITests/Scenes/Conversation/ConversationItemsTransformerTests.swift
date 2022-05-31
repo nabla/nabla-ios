@@ -3,19 +3,34 @@ import NablaMessagingCoreTestsUtils
 @testable import NablaMessagingUI
 import XCTest
 
-class ConversationItemsTransformerTests: XCTestCase {
+final class ConversationItemsTransformerTests: XCTestCase {
     private var conversation: Conversation!
 
     override func setUp() {
         super.setUp()
         conversation = .mock()
     }
-    
+
+    private func transform(
+        items: [ConversationItem],
+        hasMore: Bool = false,
+        focusedTextItemId: UUID? = nil
+    ) -> [ConversationViewItem] {
+        ConversationItemsTransformer.transform(
+            conversationItems: ConversationItems(
+                conversationId: conversation.id,
+                hasMore: hasMore,
+                items: items
+            ),
+            conversation: conversation,
+            focusedTextItemId: focusedTextItemId
+        )
+    }
+
     func testEmptyConversation() {
         // GIVEN
-        let emptyItems = ConversationItems(conversationId: conversation.id, hasMore: false, items: [])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: emptyItems, conversation: conversation)
+        let transformed = transform(items: [])
         // THEN
         XCTRequireEqual(transformed.count, 0)
     }
@@ -25,11 +40,11 @@ class ConversationItemsTransformerTests: XCTestCase {
     func testTwoConsecutiveMessagesWithTheSameAuthorAreContiguous() {
         // GIVEN
         let provider = Provider.mock()
-        let item1 = TextMessageItem.mock(sender: .provider(provider))
-        let item2 = TextMessageItem.mock(sender: .provider(provider))
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [
+            TextMessageItem.mock(sender: .provider(provider)),
+            TextMessageItem.mock(sender: .provider(provider)),
+        ])
         // THEN
         XCTRequireEqual(transformed.count, 3)
         let text1 = XCTRequire(transformed[1], toBe: TextMessageViewItem.self)
@@ -40,11 +55,11 @@ class ConversationItemsTransformerTests: XCTestCase {
     
     func testTwoConsecutiveMessagesSentByPatientAreContiguous() {
         // GIVEN
-        let item1 = TextMessageItem.mock(sender: .patient)
-        let item2 = TextMessageItem.mock(sender: .patient)
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [
+            TextMessageItem.mock(sender: .patient),
+            TextMessageItem.mock(sender: .patient),
+        ])
         // THEN
         XCTRequireEqual(transformed.count, 3)
         let text1 = XCTRequire(transformed[1], toBe: TextMessageViewItem.self)
@@ -54,13 +69,13 @@ class ConversationItemsTransformerTests: XCTestCase {
     }
     
     func testTwoConsecutiveMessagesSentBySystemAreContiguous() {
-        let provider = SystemProvider(avatarURL: nil, name: "nablo")
         // GIVEN
-        let item1 = TextMessageItem.mock(sender: .system(provider))
-        let item2 = TextMessageItem.mock(sender: .system(provider))
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
+        let provider = SystemProvider(avatarURL: nil, name: "nablo")
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [
+            TextMessageItem.mock(sender: .system(provider)),
+            TextMessageItem.mock(sender: .system(provider)),
+        ])
         // THEN
         XCTRequireEqual(transformed.count, 3)
         let text1 = XCTRequire(transformed[1], toBe: TextMessageViewItem.self)
@@ -71,11 +86,11 @@ class ConversationItemsTransformerTests: XCTestCase {
     
     func testTwoConsecutiveMessagesSentByDeletedProviderAreContiguous() {
         // GIVEN
-        let item1 = TextMessageItem.mock(sender: .deleted)
-        let item2 = TextMessageItem.mock(sender: .deleted)
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [
+            TextMessageItem.mock(sender: .deleted),
+            TextMessageItem.mock(sender: .deleted),
+        ])
         // THEN
         XCTRequireEqual(transformed.count, 3)
         let text1 = XCTRequire(transformed[1], toBe: TextMessageViewItem.self)
@@ -86,13 +101,11 @@ class ConversationItemsTransformerTests: XCTestCase {
     
     func testTwoConsecutiveMessagesWithDifferentAuthorsAreNotContiguous() {
         // GIVEN
-        let provider1 = Provider.mock()
-        let item1 = TextMessageItem.mock(sender: .provider(provider1))
-        let provider2 = Provider.mock()
-        let item2 = TextMessageItem.mock(sender: .provider(provider2))
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [
+            TextMessageItem.mock(sender: .provider(.mock())),
+            TextMessageItem.mock(sender: .provider(.mock())),
+        ])
         // THEN
         XCTRequireEqual(transformed.count, 3)
         let text1 = XCTRequire(transformed[1], toBe: TextMessageViewItem.self)
@@ -104,13 +117,13 @@ class ConversationItemsTransformerTests: XCTestCase {
     func testTwoNonConsecutiveMessagesWithTheSameAuthorAreNotContiguous() {
         // GIVEN
         let provider1 = Provider.mock()
-        let item1 = TextMessageItem.mock(sender: .provider(provider1))
         let provider2 = Provider.mock()
-        let item2 = TextMessageItem.mock(sender: .provider(provider2))
-        let item3 = TextMessageItem.mock(sender: .provider(provider1))
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2, item3])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [
+            TextMessageItem.mock(sender: .provider(provider1)),
+            TextMessageItem.mock(sender: .provider(provider2)),
+            TextMessageItem.mock(sender: .provider(provider1)),
+        ])
         // THEN
         XCTRequireEqual(transformed.count, 4)
         let text1 = XCTRequire(transformed[1], toBe: TextMessageViewItem.self)
@@ -127,9 +140,8 @@ class ConversationItemsTransformerTests: XCTestCase {
         let group1 = (1 ... 10).map { _ in TextMessageItem.mock(sender: .provider(provider1)) }
         let provider2 = Provider.mock()
         let group2 = (1 ... 20).map { _ in TextMessageItem.mock(sender: .provider(provider2)) }
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: group1 + group2)
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: group1 + group2)
         // THEN
         XCTRequireEqual(transformed.count, 31)
         
@@ -159,9 +171,8 @@ class ConversationItemsTransformerTests: XCTestCase {
     func testSingleMessagesUseSingleDateSeparator() throws {
         // GIVEN
         let item1 = TextMessageItem.mock(dateOffset: 0)
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [item1])
         // THEN
         XCTRequireEqual(transformed.count, 2)
         XCTAssert(transformed[0] is DateSeparatorViewItem)
@@ -173,9 +184,8 @@ class ConversationItemsTransformerTests: XCTestCase {
         // GIVEN
         let item1 = TextMessageItem.mock(dateOffset: 0)
         let item2 = TextMessageItem.mock(dateOffset: 1)
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [item1, item2])
         // THEN
         XCTRequireEqual(transformed.count, 3)
         XCTAssert(transformed[0] is DateSeparatorViewItem)
@@ -189,9 +199,8 @@ class ConversationItemsTransformerTests: XCTestCase {
         // GIVEN
         let item1 = TextMessageItem.mock(dateOffset: 0)
         let item2 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 1)
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [item1, item2])
         // THEN
         XCTRequireEqual(transformed.count, 4)
         XCTAssert(transformed[0] is DateSeparatorViewItem)
@@ -206,9 +215,8 @@ class ConversationItemsTransformerTests: XCTestCase {
         // GIVEN
         let item1 = TextMessageItem.mock(dateOffset: 0)
         let item2 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 - 1)
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [item1, item2])
         // THEN
         XCTRequireEqual(transformed.count, 3)
         XCTAssert(transformed[0] is DateSeparatorViewItem)
@@ -224,9 +232,8 @@ class ConversationItemsTransformerTests: XCTestCase {
         let item2 = TextMessageItem.mock(dateOffset: 1)
         let item3 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 1)
         let item4 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 2)
-        let items = ConversationItems(conversationId: conversation.id, hasMore: false, items: [item1, item2, item3, item4])
         // WHEN
-        let transformed = ConversationItemsTransformer.transform(conversationItems: items, conversation: conversation)
+        let transformed = transform(items: [item1, item2, item3, item4])
         // THEN
         XCTRequireEqual(transformed.count, 6)
         XCTAssert(transformed[0] is DateSeparatorViewItem)
@@ -239,5 +246,35 @@ class ConversationItemsTransformerTests: XCTestCase {
         XCTAssertEqual(transformed[4].id, item3.id)
         XCTAssert(transformed[5] is TextMessageViewItem)
         XCTAssertEqual(transformed[5].id, item4.id)
+    }
+
+    // MARK: - Focused Text Item
+
+    func testSingleFocusedMessageDoesNotAddDateSeparator() throws {
+        // GIVEN
+        let item1 = TextMessageItem.mock(dateOffset: 0, sender: .patient)
+        // WHEN
+        let transformed = transform(items: [item1], focusedTextItemId: item1.id)
+        // THEN
+        XCTRequireEqual(transformed.count, 2)
+        XCTAssert(transformed[0] is DateSeparatorViewItem)
+        XCTAssert(transformed[1] is TextMessageViewItem)
+        XCTAssertEqual(true, (transformed[1] as? ConversationViewMessageItem)?.isFocused)
+    }
+    
+    func testFocusedTextMessageNotContiguousAddsDateSeparator() throws {
+        // GIVEN
+        let item1 = TextMessageItem.mock(dateOffset: 0, sender: .patient)
+        let item2 = TextMessageItem.mock(dateOffset: 1, sender: .patient)
+        // WHEN
+        let transformed = transform(items: [item1, item2], focusedTextItemId: item2.id)
+        // THEN
+        XCTRequireEqual(transformed.count, 4)
+        XCTAssert(transformed[0] is DateSeparatorViewItem)
+        XCTAssert(transformed[1] is TextMessageViewItem)
+        XCTAssert(transformed[2] is DateSeparatorViewItem)
+        XCTAssertEqual(item2.date, (transformed[2] as? DateSeparatorViewItem)?.date)
+        XCTAssert(transformed[3] is TextMessageViewItem)
+        XCTAssertEqual(true, (transformed[3] as? ConversationViewMessageItem)?.isFocused)
     }
 }

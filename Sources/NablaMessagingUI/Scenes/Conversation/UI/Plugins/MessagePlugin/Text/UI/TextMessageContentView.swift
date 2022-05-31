@@ -30,7 +30,7 @@ final class TextMessageContentView: UIView, MessageContentView {
     func prepareForReuse() {
         label.text = nil
     }
-    
+
     // MARK: - Private
     
     private lazy var label: UILabel = {

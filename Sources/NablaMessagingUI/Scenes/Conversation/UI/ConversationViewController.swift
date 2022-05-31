@@ -299,6 +299,10 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
     func didTapMedia(_ media: Media) {
         presenter?.didTapMedia(media)
     }
+
+    func didTapTextItem(withId id: UUID) {
+        presenter?.didTapTextItem(withId: id)
+    }
 }
 
 extension ConversationViewController: ComposerViewDelegate {

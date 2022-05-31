@@ -6,7 +6,7 @@ import NablaMessagingCore
 
 final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
-    
+
     func start() {
         let conversationViewModel = Self.transform(conversation: conversation)
         view?.configure(withConversation: conversationViewModel)
@@ -134,6 +134,17 @@ final class ConversationPresenterImpl: ConversationPresenter {
         }
     }
 
+    func didTapTextItem(withId id: UUID) {
+        guard case .patient = (conversationItems?.items.first(where: { $0.id == id }) as? TextMessageItem)?.sender else {
+            return
+        }
+        if id == focusedPatientTextItemId {
+            focusedPatientTextItemId = nil
+        } else {
+            focusedPatientTextItemId = id
+        }
+    }
+
     func retry() {
         watchItems()
     }
@@ -163,6 +174,12 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var conversationItems: ConversationItems?
     private var canLoadMoreItems = false
     private var draftText: String = ""
+    private var focusedPatientTextItemId: UUID? {
+        didSet {
+            refreshItems()
+        }
+    }
+
     private var itemsWatcher: PaginatedWatcher?
     private var conversationWatcher: Cancellable?
     private var sendMessageAction: Cancellable?
@@ -174,7 +191,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private let localTypingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
 
     private var sendMediaCancellable: [Cancellable] = []
-    
+
     private func watchItems() {
         set(state: .loading)
         
@@ -192,10 +209,8 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     
                     let conversationViewModel = Self.transform(conversation: conversation)
                     self.set(conversation: conversationViewModel)
-                    
-                    if let conversationItems = self.conversationItems {
-                        self.transformAndUpdateState(conversationItems: conversationItems, conversation: conversation)
-                    }
+
+                    self.refreshItems()
                 }
             }
         )
@@ -208,7 +223,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
             case let .success(conversationItems):
                 self.conversationItems = conversationItems
-                self.transformAndUpdateState(conversationItems: conversationItems, conversation: self.conversation)
+                self.refreshItems()
                 self.markAsSeenAction = self.client.markConversationAsSeen(self.conversation.id, handler: { _ in })
                 self.canLoadMoreItems = conversationItems.hasMore
             }
@@ -238,8 +253,18 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
     
     private func transformAndUpdateState(conversationItems: ConversationItems, conversation: Conversation) {
-        let items = ConversationItemsTransformer.transform(conversationItems: conversationItems, conversation: conversation)
+        let items = ConversationItemsTransformer.transform(
+            conversationItems: conversationItems,
+            conversation: conversation,
+            focusedTextItemId: focusedPatientTextItemId
+        )
         set(state: .loaded(items: items))
+    }
+
+    private func refreshItems() {
+        conversationItems.map {
+            transformAndUpdateState(conversationItems: $0, conversation: conversation)
+        }
     }
 }
 

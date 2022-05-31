@@ -8,4 +8,5 @@ struct DocumentMessageViewItem: ConversationViewMessageItem, Hashable {
     let sendingState: ConversationMessageSendingState
     let document: Media
     var isContiguous: Bool = false
+    var isFocused: Bool = false
 }
