@@ -108,7 +108,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         switch sender {
         case let .me(isContiguous):
             footerLabel.textAlignment = .right
-            container.backgroundColor = NablaTheme.ConversationMessageCell.meBackgroundColor
+            container.backgroundColor = NablaTheme.Conversation.messagePatientBackgroundColor
             if isContiguous {
                 setVisibleViews([leftSpacer])
             } else {
@@ -118,7 +118,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
             footerLabel.textAlignment = .left
             avatarView.configure(with: themViewModel.avatar)
             authorLabel.text = themViewModel.author
-            container.backgroundColor = NablaTheme.ConversationMessageCell.themBackgroundColor
+            container.backgroundColor = NablaTheme.Conversation.messageProviderBackgroundColor
 
             if themViewModel.isContiguous {
                 setVisibleViews([rightSpacer])
@@ -148,7 +148,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func makeContainer() -> UIView {
         let view = UIView()
         view.prepareForAutoLayout()
-        view.layer.cornerRadius = NablaTheme.ConversationMessageCell.cornerRadius
+        view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius
         view.clipsToBounds = true
         view.addSubview(content)
         content.pinToSuperView()
@@ -162,9 +162,9 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func makeAuthorLabel() -> UILabel {
         let label = UILabel()
         label.prepareForAutoLayout()
-        label.font = NablaTheme.ConversationMessageCell.authorLabelFont
+        label.font = NablaTheme.Conversation.messageAuthorLabelFont
         label.numberOfLines = 1
-        label.textColor = NablaTheme.ConversationMessageCell.authorLabelColor
+        label.textColor = NablaTheme.Conversation.messageAuthorLabelColor
         return label
     }
     
@@ -184,7 +184,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func makeFooterLabel() -> UILabel {
         let label = UILabel()
         label.prepareForAutoLayout()
-        label.font = NablaTheme.ConversationMessageCell.footerLabelFont
+        label.font = NablaTheme.Conversation.messageFooterLabelFont
         label.numberOfLines = 0
         label.isHidden = true
         let gesture = UITapGestureRecognizer(target: self, action: #selector(footerTapHandler))

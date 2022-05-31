@@ -38,7 +38,7 @@ class ConversationListItemCell: UITableViewCell, Reusable {
     private lazy var unreadIndicatorView: UIView = createUnreadIndicatorView()
     
     private func setUp() {
-        contentView.backgroundColor = NablaTheme.ConversationListItemCell.backgroundColor
+        contentView.backgroundColor = NablaTheme.ConversationPreview.previewBackgroundColor
         contentView.addSubview(avatarView)
         avatarView.pinToSuperView(edges: .leading, insets: .only(leading: 16))
         avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
@@ -75,28 +75,28 @@ class ConversationListItemCell: UITableViewCell, Reusable {
     
     private func createTitleLabel() -> UILabel {
         let label = UILabel()
-        label.textColor = NablaTheme.ConversationListItemCell.titleColor
-        label.font = NablaTheme.ConversationListItemCell.titleFont
+        label.textColor = NablaTheme.ConversationPreview.previewTitleColor
+        label.font = NablaTheme.ConversationPreview.previewTitleFont
         return label
     }
     
     private func createSubtitleLabel() -> UILabel {
         let label = UILabel()
-        label.textColor = NablaTheme.ConversationListItemCell.subtitleColor
-        label.font = NablaTheme.ConversationListItemCell.subtitleFont
+        label.textColor = NablaTheme.ConversationPreview.previewSubtitleColor
+        label.font = NablaTheme.ConversationPreview.previewSubtitleFont
         return label
     }
     
     private func createTimeLabel() -> UILabel {
         let label = UILabel()
-        label.textColor = NablaTheme.ConversationListItemCell.timeLabelColor
-        label.font = NablaTheme.ConversationListItemCell.timeLabelFont
+        label.textColor = NablaTheme.ConversationPreview.previewTimeLabelColor
+        label.font = NablaTheme.ConversationPreview.previewTimeLabelFont
         return label
     }
     
     private func createUnreadIndicatorView() -> UIView {
         let view = UIView()
-        view.backgroundColor = NablaTheme.ConversationListItemCell.unreadIndicatorColor
+        view.backgroundColor = NablaTheme.ConversationPreview.previewUnreadIndicatorColor
         view.constraintToSize(CGSize(width: Constants.unreadIndicatorSize, height: Constants.unreadIndicatorSize))
         view.layer.cornerRadius = Constants.unreadIndicatorSize / 2
         view.clipsToBounds = true

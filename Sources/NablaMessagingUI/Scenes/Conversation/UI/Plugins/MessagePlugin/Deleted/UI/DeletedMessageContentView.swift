@@ -35,17 +35,17 @@ final class DeletedMessageContentView: UIView, MessageContentView {
         let label = UILabel().prepareForAutoLayout()
         label.numberOfLines = 0
         label.backgroundColor = .clear
-        label.textColor = NablaTheme.DeletedMessageContentView.textColor
-        label.font = NablaTheme.DeletedMessageContentView.font
+        label.textColor = NablaTheme.Conversation.deletedMessagetextColor
+        label.font = NablaTheme.Conversation.deletedMessagefont
         return label
     }()
     
     private lazy var borderedContainer: UIView = {
         let view = UIView().prepareForAutoLayout()
-        view.backgroundColor = NablaTheme.DeletedMessageContentView.backgroundColor
-        view.layer.borderColor = NablaTheme.DeletedMessageContentView.borderColor.cgColor
+        view.backgroundColor = NablaTheme.Conversation.deletedMessagebackgroundColor
+        view.layer.borderColor = NablaTheme.Conversation.deletedMessageBorderColor.cgColor
         view.layer.borderWidth = 0.5
-        view.layer.cornerRadius = NablaTheme.ConversationMessageCell.cornerRadius
+        view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius
         return view
         
     }()

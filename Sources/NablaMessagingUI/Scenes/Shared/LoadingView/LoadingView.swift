@@ -12,7 +12,7 @@ final class LoadingView: UIView {
     init() {
         super.init(frame: .zero)
         
-        activityIndicator.tintColor = NablaTheme.LoadingView.tintColor
+        activityIndicator.tintColor = NablaTheme.Shared.loadingViewIndicatorTintColor
         addSubview(activityIndicator)
         activityIndicator.center(in: self)
     }

@@ -40,11 +40,11 @@ final class AudioMessageContentView: UIView, MessageContentView {
 
         switch sender {
         case .me:
-            durationLabel.textColor = NablaTheme.AudioMessageContentView.meTitleColor
-            playPauseButton.tintColor = NablaTheme.AudioMessageContentView.meTitleColor
+            durationLabel.textColor = NablaTheme.Conversation.audioMessagePatientTitleColor
+            playPauseButton.tintColor = NablaTheme.Conversation.audioMessagePatientTitleColor
         case .them:
-            durationLabel.textColor = NablaTheme.AudioMessageContentView.themTitleColor
-            playPauseButton.tintColor = NablaTheme.AudioMessageContentView.themTitleColor
+            durationLabel.textColor = NablaTheme.Conversation.audioMessageProviderTitleColor
+            playPauseButton.tintColor = NablaTheme.Conversation.audioMessageProviderTitleColor
         }
     }
     
@@ -64,7 +64,7 @@ final class AudioMessageContentView: UIView, MessageContentView {
 
     private func makeDurationLabel() -> UILabel {
         let label = UILabel().prepareForAutoLayout()
-        label.font = NablaTheme.AudioMessageContentView.durationLabelFont
+        label.font = NablaTheme.Conversation.audioMessageDurationLabelFont
         label.constraintWidth(45)
         return label
     }

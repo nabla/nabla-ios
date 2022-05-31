@@ -64,19 +64,19 @@ class AudioRecorderComposerView: UIView, AudioRecorderComposerViewContract {
         addSubview(stackView)
         stackView.centerInSuperView()
 
-        backgroundColor = NablaTheme.AudioRecorderComposerView.backgroundColor
+        backgroundColor = NablaTheme.Conversation.composerBackgroundColor
         clipsToBounds = true
     }
 
     private func makeDurationLabel() -> UILabel {
         let label = UILabel()
-        label.textColor = NablaTheme.AudioRecorderComposerView.durationTextColor
+        label.textColor = NablaTheme.Conversation.audioComposerDurationTextColor
         return label
     }
 
     private func makeRecordingIndicator() -> UIView {
         let view = UIView()
-        view.backgroundColor = NablaTheme.AudioRecorderComposerView.recordIndicatorColor
+        view.backgroundColor = NablaTheme.Conversation.audioComposerRecordIndicatorColor
         view.constraintToSize(.init(width: 8, height: 8))
         view.layer.cornerRadius = 4
         view.clipsToBounds = true

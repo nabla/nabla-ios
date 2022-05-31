@@ -21,9 +21,9 @@ final class TextMessageContentView: UIView, MessageContentView {
         label.text = viewModel.text
         switch sender {
         case .me:
-            label.textColor = NablaTheme.TextMessageContentView.meTextColor
+            label.textColor = NablaTheme.Conversation.textMessagePatientTextColor
         case .them:
-            label.textColor = NablaTheme.TextMessageContentView.themTextColor
+            label.textColor = NablaTheme.Conversation.textMessageProviderTextColor
         }
     }
     
@@ -36,7 +36,7 @@ final class TextMessageContentView: UIView, MessageContentView {
     private lazy var label: UILabel = {
         let label = UILabel().prepareForAutoLayout()
         label.numberOfLines = 0
-        label.font = NablaTheme.TextMessageContentView.font
+        label.font = NablaTheme.Conversation.textMessageFont
         return label
     }()
 }

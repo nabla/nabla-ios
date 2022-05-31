@@ -68,7 +68,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
     private var viewModel: ConversationListViewModel = .empty
     
     private func setUp() {
-        backgroundColor = NablaTheme.ConversationListView.backgroundColor
+        backgroundColor = NablaTheme.ConversationPreview.backgroundColor
         addSubview(tableView)
         tableView.pinToSuperView()
         addSubview(loadingIndicator)
@@ -83,7 +83,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
         tableView.delegate = self
         tableView.register(ConversationListItemCell.self)
         tableView.separatorInset = .only(left: 70)
-        tableView.backgroundColor = NablaTheme.ConversationListView.backgroundColor
+        tableView.backgroundColor = NablaTheme.ConversationPreview.backgroundColor
         return tableView
     }
     

@@ -27,7 +27,7 @@ class ImageDetailViewController: UIViewController, ImageDetailViewContract {
     private lazy var imageView: UIURLImageView = makeImageView()
     
     private func setUp() {
-        view.backgroundColor = NablaTheme.ImageDetailViewController.backgroundColor
+        view.backgroundColor = NablaTheme.ImageDetail.backgroundColor
         view.addSubview(imageView)
         imageView.pinToSuperView()
     }

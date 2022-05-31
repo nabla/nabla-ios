@@ -12,8 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - The creation of audio messages is now supported.
 
 ### Changed
+- `ConversationMessageSender.sender` now exposes a `SystemProvider` parameter which contains the name of the organization and the avatar url.
 - `ConversationMessageSender.system` now exposes a `SystemProvider` parameter which contains the name of the organization and the avatar url.
 - `ConversationMessageSender` now exposes a new `.unknown` case for sender types that are not handled by this version of the SDK.
+- `NablaTheme` simplified it's internal naming.
 
 ### Fixed
 

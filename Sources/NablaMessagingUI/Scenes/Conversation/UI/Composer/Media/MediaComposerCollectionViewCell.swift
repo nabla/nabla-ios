@@ -28,7 +28,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         case .image:
             imageView.url = viewModel.url
         case .pdf:
-            imageView.image = NablaTheme.MediaComposerCollectionViewCell.documentIcon
+            imageView.image = NablaTheme.Conversation.mediaComposerDocumentIcon
         }
     }
     
@@ -53,7 +53,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     
     private func makeImageView() -> UIURLImageView {
         let view = UIURLImageView()
-        view.tintColor = NablaTheme.MediaComposerCollectionViewCell.documentTintColor
+        view.tintColor = NablaTheme.Conversation.mediaComposerDocumentTintColor
         view.contentMode = .scaleAspectFit
         view.isUserInteractionEnabled = true
         return view
@@ -61,15 +61,15 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     
     private func makeDeleteButton() -> UIButton {
         let button = UIButton()
-        button.setImage(NablaTheme.MediaComposerCollectionViewCell.deleteButtonIcon, for: .normal)
-        button.tintColor = NablaTheme.MediaComposerCollectionViewCell.deleteButtonTintColor
+        button.setImage(NablaTheme.Conversation.mediaComposerDeleteButtonIcon, for: .normal)
+        button.tintColor = NablaTheme.Conversation.mediaCompsoerDeleteButtonTintColor
         button.addTarget(self, action: #selector(deleteButtonSelected), for: .touchUpInside)
         return button
     }
     
     private func makeDeleteButtonContainerView() -> UIView {
         let view = UIView()
-        view.backgroundColor = NablaTheme.MediaComposerCollectionViewCell.deleteButtonBackgroundColor
+        view.backgroundColor = NablaTheme.Conversation.mediaComposerDeleteButtonBackgroundColor
         view.addSubview(deleteButton)
         deleteButton.pinToSuperView()
         view.constraintToSize(.init(width: 15, height: 15))
@@ -81,7 +81,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     private func setUp() {
         guard contentView.subviews.isEmpty else { return }
         contentView.isUserInteractionEnabled = false
-        contentView.backgroundColor = NablaTheme.MediaComposerCollectionViewCell.backgroundColor
+        contentView.backgroundColor = NablaTheme.Conversation.mediaComposerBackgroundColor
         
         addSubview(imageView)
         imageView.pinToSuperView()

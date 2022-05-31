@@ -29,11 +29,11 @@ class DocumentMessageContentView: UIView, MessageContentView {
         
         switch sender {
         case .me:
-            label.textColor = NablaTheme.DocumentMessageContentView.meTitleColor
-            iconImageView.tintColor = NablaTheme.DocumentMessageContentView.meTitleColor
+            label.textColor = NablaTheme.Conversation.documentMessagePatientTitleColor
+            iconImageView.tintColor = NablaTheme.Conversation.documentMessagePatientTitleColor
         case .them:
-            label.textColor = NablaTheme.DocumentMessageContentView.themTitleColor
-            iconImageView.tintColor = NablaTheme.DocumentMessageContentView.themTitleColor
+            label.textColor = NablaTheme.Conversation.documentMessageProviderTitleColor
+            iconImageView.tintColor = NablaTheme.Conversation.documentMessageProviderTitleColor
         }
     }
     
@@ -74,13 +74,13 @@ class DocumentMessageContentView: UIView, MessageContentView {
     private func createLabel() -> UILabel {
         let label = UILabel(frame: .zero)
         label.numberOfLines = 1
-        label.font = NablaTheme.DocumentMessageContentView.labelFont
+        label.font = NablaTheme.Conversation.documentMessageTitleFont
         return label
     }
     
     private func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
-        imageView.image = NablaTheme.DocumentMessageContentView.icon
+        imageView.image = NablaTheme.Conversation.documentMessageIcon
         imageView.contentMode = .scaleAspectFit
         imageView.constraintToSize(Constants.thumbnailSize)
         return imageView

@@ -21,7 +21,7 @@ final class HasMoreIndicatorCell: UICollectionViewCell, Reusable, HasMoreIndicat
     
     private let loadingIndicatorView: UIView = {
         let view = UIActivityIndicatorView(style: .medium)
-        view.color = NablaTheme.LoadingView.tintColor
+        view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.startAnimating()
         return view
     }()

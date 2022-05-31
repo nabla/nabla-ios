@@ -40,8 +40,8 @@ final class ConversationTextSeparatorCell: UICollectionViewCell, ConversationTex
     private func makeLabel() -> UILabel {
         let label = UILabel().prepareForAutoLayout()
         label.textAlignment = .center
-        label.font = NablaTheme.ConversationTextSeparatorCell.font
-        label.textColor = NablaTheme.ConversationTextSeparatorCell.color
+        label.font = NablaTheme.Conversation.textSeparatorFont
+        label.textColor = NablaTheme.Conversation.textSeparatorColor
         label.numberOfLines = 2
         return label
     }

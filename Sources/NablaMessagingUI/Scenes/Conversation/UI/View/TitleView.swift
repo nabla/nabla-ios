@@ -40,8 +40,8 @@ final class TitleView: UIView {
     
     private let titleLabel: UILabel = {
         let view = UILabel()
-        view.textColor = NablaTheme.ConversationListItemCell.titleColor
-        view.font = NablaTheme.ConversationListItemCell.titleFont
+        view.textColor = NablaTheme.ConversationPreview.previewTitleColor
+        view.font = NablaTheme.ConversationPreview.previewTitleFont
         return view
     }()
     

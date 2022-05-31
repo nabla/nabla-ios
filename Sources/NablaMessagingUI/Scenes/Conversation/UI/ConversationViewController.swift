@@ -23,8 +23,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = NablaTheme.ConversationViewController.backgroundColor
-        collectionView.backgroundColor = NablaTheme.ConversationViewController.backgroundColor
+        view.backgroundColor = NablaTheme.Conversation.backgroundColor
+        collectionView.backgroundColor = NablaTheme.Conversation.backgroundColor
         collectionView.delegate = self
         providers.forEach { $0.prepare(collectionView: collectionView) }
         errorView.delegate = self
