@@ -427,10 +427,6 @@ public extension GQL {
         return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
       }
 
-      public static func makeAudioMessageContent() -> Content {
-        return Content(unsafeResultMap: ["__typename": "AudioMessageContent"])
-      }
-
       public var __typename: String {
         get {
           return resultMap["__typename"]! as! String

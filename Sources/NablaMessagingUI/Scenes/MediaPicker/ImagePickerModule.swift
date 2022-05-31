@@ -113,7 +113,7 @@ private extension MediaType {
             return .images
         case .video:
             return .videos
-        case .pdf:
+        case .pdf, .audio:
             return .any(of: [])
         }
     }

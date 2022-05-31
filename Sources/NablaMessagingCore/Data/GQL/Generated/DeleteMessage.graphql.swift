@@ -33,6 +33,8 @@ public extension GQL {
       document.append("\n" + TextMessageContentFragment.fragmentDefinition)
       document.append("\n" + ImageMessageContentFragment.fragmentDefinition)
       document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
+      document.append("\n" + AudioMessageContentFragment.fragmentDefinition)
+      document.append("\n" + EphemeralUrlFragment.fragmentDefinition)
       return document
     }
 
@@ -182,10 +184,6 @@ public extension GQL {
 
             public static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
               return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
-            }
-
-            public static func makeAudioMessageContent() -> Content {
-              return Content(unsafeResultMap: ["__typename": "AudioMessageContent"])
             }
 
             public var __typename: String {

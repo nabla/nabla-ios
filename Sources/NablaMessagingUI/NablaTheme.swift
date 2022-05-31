@@ -73,6 +73,10 @@ public enum NablaTheme {
         public static var sendIcon = UIImage(systemName: "arrow.up.circle.fill")
         /// UIImage used for the add media button in the composer in the conversation screen. Default set to UIImage(systemName: "camera.on.rectangle")
         public static var addMediaIcon = UIImage(systemName: "camera.on.rectangle")
+        /// UIImage used for the record audio button in the composer in the conversation screen. Default set to UIImage(systemName: "camera.on.rectangle")
+        public static var recordAudioIcon = UIImage(systemName: "waveform.circle.fill")
+        /// UIImage used for the cancel button to delete a recording in progress. Default set to UIImage(systemName: "trash")
+        public static var deleteAudioRecordingIcon = UIImage(systemName: "trash")
     }
     
     public enum TextMessageContentView {
@@ -153,6 +157,12 @@ public enum NablaTheme {
         /// Color used to display the name of the document for a document message sent by a provider in the conversation screen. Default set to NablaTheme.primaryTextColor
         public static var themTitleColor = NablaTheme.primaryTextColor
     }
+
+    public enum AudioMessageContentView {
+        public static var durationLabelFont = NablaTheme.body
+        public static var meTitleColor = NablaTheme.alternateTextColor
+        public static var themTitleColor = NablaTheme.primaryTextColor
+    }
     
     public enum MediaComposerCollectionViewCell {
         /// UIImage used to represent a document to send in the composer in the conversation screen. Default set to UIImage(systemName: "doc.text")
@@ -183,5 +193,14 @@ public enum NablaTheme {
     public enum ConversationTextSeparatorCell {
         public static var font = NablaTheme.footnote
         public static var color = NablaTheme.secondaryTextColor
+    }
+
+    public enum AudioRecorderComposerView {
+        /// Background color used to display the current recording time on the composer. Default set to NablaTheme.primaryColor
+        public static var backgroundColor = NablaTheme.primaryColor
+        /// Color of the text used to display the current recording time on the composer. Default set to NablaTheme.alternateTextColor
+        public static var durationTextColor = NablaTheme.alternateTextColor
+        /// Color of the recording indicator on the composer. Default set to NablaTheme.alternateTextColor
+        public static var recordIndicatorColor = UIColor.red
     }
 }

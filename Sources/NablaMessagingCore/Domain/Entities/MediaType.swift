@@ -5,6 +5,7 @@ public enum MediaType: CaseIterable {
     case image
     case video
     case pdf
+    case audio
 }
 
 public extension MediaType {
@@ -22,6 +23,10 @@ public extension MediaType {
         case .pdf:
             return [
                 kUTTypePDF as String,
+            ]
+        case .audio:
+            return [
+                kUTTypeAudio as String,
             ]
         }
     }

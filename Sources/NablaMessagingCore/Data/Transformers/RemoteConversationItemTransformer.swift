@@ -63,6 +63,26 @@ enum RemoteConversationItemTransformer {
                     mimeType: mimeType
                 )
             )
+        } else if
+            let audioContent = message.content.fragments.messageContentFragment.asAudioMessageContent?.fragments.audioMessageContentFragment,
+            let url = URL(string: audioContent.audioFileUpload.url.fragments.ephemeralUrlFragment.url),
+            let mimeType = MimeType(rawValue: audioContent.audioFileUpload.mimeType) {
+            return AudioMessageItem(
+                id: message.id,
+                date: message.createdAt,
+                sender: transform(message.author),
+                sendingState: .sent,
+                content: AudioFile(
+                    media: Media(
+                        type: .audio,
+                        fileName: audioContent.audioFileUpload.fileName,
+                        fileUrl: url,
+                        thumbnailUrl: nil,
+                        mimeType: mimeType
+                    ),
+                    durationMs: audioContent.audioFileUpload.durationMs ?? 0
+                )
+            )
         }
 
         assertionFailure("Unknown message content \(String(describing: message.content))")

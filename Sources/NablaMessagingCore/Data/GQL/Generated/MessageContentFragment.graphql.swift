@@ -24,6 +24,10 @@ public extension GQL {
           __typename
           ...DocumentMessageContentFragment
         }
+        ... on AudioMessageContent {
+          __typename
+          ...AudioMessageContentFragment
+        }
         ... on DeletedMessageContent {
           __typename
           empty: _
@@ -36,7 +40,7 @@ public extension GQL {
     public static var selections: [GraphQLSelection] {
       return [
         GraphQLTypeCase(
-          variants: ["TextMessageContent": AsTextMessageContent.selections, "ImageMessageContent": AsImageMessageContent.selections, "DocumentMessageContent": AsDocumentMessageContent.selections, "DeletedMessageContent": AsDeletedMessageContent.selections],
+          variants: ["TextMessageContent": AsTextMessageContent.selections, "ImageMessageContent": AsImageMessageContent.selections, "DocumentMessageContent": AsDocumentMessageContent.selections, "AudioMessageContent": AsAudioMessageContent.selections, "DeletedMessageContent": AsDeletedMessageContent.selections],
           default: [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           ]
@@ -48,10 +52,6 @@ public extension GQL {
 
     public init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
-    }
-
-    public static func makeAudioMessageContent() -> MessageContentFragment {
-      return MessageContentFragment(unsafeResultMap: ["__typename": "AudioMessageContent"])
     }
 
     public static func makeTextMessageContent(text: String) -> MessageContentFragment {
@@ -259,6 +259,70 @@ public extension GQL {
         public var documentMessageContentFragment: DocumentMessageContentFragment {
           get {
             return DocumentMessageContentFragment(unsafeResultMap: resultMap)
+          }
+          set {
+            resultMap += newValue.resultMap
+          }
+        }
+      }
+    }
+
+    public var asAudioMessageContent: AsAudioMessageContent? {
+      get {
+        if !AsAudioMessageContent.possibleTypes.contains(__typename) { return nil }
+        return AsAudioMessageContent(unsafeResultMap: resultMap)
+      }
+      set {
+        guard let newValue = newValue else { return }
+        resultMap = newValue.resultMap
+      }
+    }
+
+    public struct AsAudioMessageContent: GraphQLSelectionSet {
+      public static let possibleTypes: [String] = ["AudioMessageContent"]
+
+      public static var selections: [GraphQLSelection] {
+        return [
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLFragmentSpread(AudioMessageContentFragment.self),
+        ]
+      }
+
+      public private(set) var resultMap: ResultMap
+
+      public init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
+      }
+
+      public var __typename: String {
+        get {
+          return resultMap["__typename"]! as! String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(unsafeResultMap: resultMap)
+        }
+        set {
+          resultMap += newValue.resultMap
+        }
+      }
+
+      public struct Fragments {
+        public private(set) var resultMap: ResultMap
+
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+        public var audioMessageContentFragment: AudioMessageContentFragment {
+          get {
+            return AudioMessageContentFragment(unsafeResultMap: resultMap)
           }
           set {
             resultMap += newValue.resultMap

@@ -13,7 +13,7 @@ struct MediaComposerItemViewModelMapper {
 private extension Media {
     var viewModelType: MediaComposerItemViewModel.MediaType? {
         switch type {
-        case .video:
+        case .video, .audio:
             return nil
         case .pdf:
             return .pdf

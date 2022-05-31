@@ -124,7 +124,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
     
     private func makeComposerView() -> ComposerView {
-        let composerView = ComposerView().prepareForAutoLayout()
+        let composerView = ComposerView(dependencies: .init(logger: logger)).prepareForAutoLayout()
         composerView.placeHolder = L10n.conversationComposerPlaceholder
         composerView.delegate = self
         return composerView
@@ -315,6 +315,10 @@ extension ConversationViewController: ComposerViewDelegate {
     
     func composerViewDidTapOnAddMedia(_: ComposerView) {
         displayMediaSelectionSheet()
+    }
+
+    func composerView(_: ComposerView, didFinishRecordingAudioFile file: AudioFile) {
+        presenter.didFinishRecordingAudioFile(file)
     }
 }
 

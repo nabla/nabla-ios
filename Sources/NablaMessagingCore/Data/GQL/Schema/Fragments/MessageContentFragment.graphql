@@ -8,6 +8,9 @@ fragment MessageContentFragment on MessageContent {
     ... on DocumentMessageContent {
         ...DocumentMessageContentFragment
     }
+    ... on AudioMessageContent {
+        ...AudioMessageContentFragment
+    }
     ... on DeletedMessageContent {
         empty: _
     }

@@ -1,8 +1,13 @@
+import AVFoundation
 import Foundation
 import NablaMessagingCore
 import UIKit
 
 final class ComposerView: UIView {
+    struct Dependencies {
+        let logger: Logger
+    }
+
     // MARK: - Internal
     
     weak var delegate: ComposerViewDelegate?
@@ -35,7 +40,9 @@ final class ComposerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init() {
+    init(dependencies: Dependencies) {
+        logger = dependencies.logger
+
         super.init(frame: .zero)
         
         addSubview(vStack)
@@ -53,6 +60,7 @@ final class ComposerView: UIView {
         ])
         
         updateMediaComposerVisibility()
+        updateAudioRecordingVisibility()
     }
     
     // MARK: - Lifecycle
@@ -75,9 +83,11 @@ final class ComposerView: UIView {
     }
     
     // MARK: - Private
+
+    private let logger: Logger
     
     private var enableSendButton: Bool {
-        !text.isBlank || !medias.isEmpty
+        !text.isBlank || !medias.isEmpty || isRecording
     }
     
     private enum Constants {
@@ -102,8 +112,18 @@ final class ComposerView: UIView {
     }()
     
     private lazy var hStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [addMedia, textView, sendButton])
+        let stackView = UIStackView(
+            arrangedSubviews: [
+                deleteAudioRecordingButton,
+                recordAudioButton,
+                addMedia,
+                textView,
+                audioRecorderComposerView,
+                sendButton,
+            ]
+        )
         stackView.spacing = Constants.hStackSpacing
+        stackView.setCustomSpacing(8, after: recordAudioButton)
         
         return stackView
     }()
@@ -149,6 +169,24 @@ final class ComposerView: UIView {
         addMediaButton.tintColor = NablaTheme.ComposerView.accessoryColor
         return addMediaButton
     }()
+
+    private lazy var recordAudioButton: UIButton = {
+        let addMediaButton = UIButton().prepareForAutoLayout()
+        addMediaButton.setImage(NablaTheme.ComposerView.recordAudioIcon, for: .normal)
+        addMediaButton.constraintWidth(Constants.controlsSize)
+        addMediaButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        addMediaButton.tintColor = NablaTheme.ComposerView.accessoryColor
+        return addMediaButton
+    }()
+
+    private lazy var deleteAudioRecordingButton: UIButton = {
+        let addMediaButton = UIButton().prepareForAutoLayout()
+        addMediaButton.setImage(NablaTheme.ComposerView.deleteAudioRecordingIcon, for: .normal)
+        addMediaButton.constraintWidth(Constants.controlsSize)
+        addMediaButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        addMediaButton.tintColor = NablaTheme.ComposerView.accessoryColor
+        return addMediaButton
+    }()
     
     private lazy var mediaComposerView: MediaComposerView = {
         let view = MediaComposerView()
@@ -158,16 +196,62 @@ final class ComposerView: UIView {
         view.constraintHeight(70.0)
         return view
     }()
+
+    private lazy var audioRecorderComposerView: AudioRecorderComposerView = {
+        let view = AudioRecorderComposerView()
+        let presenter = AudioRecorderComposerPresenterImpl(viewContract: view, dependencies: .init(logger: logger))
+        presenter.delegate = self
+        view.presenter = presenter
+
+        return view
+    }()
+
+    private var isRecording = false {
+        didSet {
+            updateAudioRecordingVisibility()
+            sendButton.isEnabled = enableSendButton
+        }
+    }
     
     private func updateMediaComposerVisibility() {
         mediaComposerView.isHidden = medias.isEmpty
+    }
+
+    private func updateAudioRecordingVisibility() {
+        if isRecording {
+            setVisibleViews([deleteAudioRecordingButton, audioRecorderComposerView])
+        } else {
+            setVisibleViews([addMedia, recordAudioButton, textView, placeHolderLabel])
+        }
+    }
+
+    private func setVisibleViews(_ visibleViews: Set<UIView>) {
+        // Only add views whose visibility might change.
+        [
+            deleteAudioRecordingButton,
+            addMedia,
+            recordAudioButton,
+            textView,
+            placeHolderLabel,
+            audioRecorderComposerView,
+        ]
+        .forEach { $0.isHidden = !visibleViews.contains($0) }
     }
     
     @objc private func didTapOnButton(_ sender: UIButton) {
         if sender == addMedia {
             delegate?.composerViewDidTapOnAddMedia(self)
         } else if sender == sendButton {
-            delegate?.composerViewDidTapOnSend(self)
+            // TODO: @tgy fix view to view data flow
+            if isRecording {
+                audioRecorderComposerView.stopRecording()
+            } else {
+                delegate?.composerViewDidTapOnSend(self)
+            }
+        } else if sender == recordAudioButton {
+            audioRecorderComposerView.startRecording()
+        } else if sender == deleteAudioRecordingButton {
+            audioRecorderComposerView.cancelRecording()
         }
     }
 }
@@ -188,5 +272,26 @@ extension ComposerView: MediaComposerPresenterDelegate {
         self.medias = medias
         sendButton.isEnabled = enableSendButton
         updateMediaComposerVisibility()
+    }
+}
+
+extension ComposerView: AudioRecorderComposerPresenterDelegate {
+    // MARK: - AudioRecorderComposerPresenterDelegate
+
+    func audioRecorderComposerPresenterDidStartRecording(_: AudioRecorderComposerPresenter) {
+        isRecording = true
+    }
+
+    func audioRecorderComposerPresenter(_: AudioRecorderComposerPresenter, didStopRecordingWithFile file: AudioFile) {
+        isRecording = false
+        delegate?.composerView(self, didFinishRecordingAudioFile: file)
+    }
+
+    func audioRecorderComposerPresenterCanNotStartRecording(_: AudioRecorderComposerPresenter) {
+        isRecording = false
+    }
+
+    func audioRecorderComposerPresenterDidCancelRecording(_: AudioRecorderComposerPresenter) {
+        isRecording = false
     }
 }

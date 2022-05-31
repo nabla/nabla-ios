@@ -1,4 +1,5 @@
 import NablaMessagingCore
+import NablaMessagingCoreTestsUtils
 @testable import NablaMessagingUI
 import SnapshotTesting
 import XCTest
@@ -9,7 +10,7 @@ final class ComposerViewTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = .init()
+        sut = .init(dependencies: .init(logger: LoggerMock()))
     }
 
     func testComposerViewInit() {

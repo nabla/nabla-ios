@@ -20,6 +20,8 @@ final class ConversationItemsTransformer {
                 return transform(documentMessage)
             } else if let activity = item as? ConversationActivity {
                 return transform(activity)
+            } else if let audioMessage = item as? AudioMessageItem {
+                return transform(audioMessage)
             }
             return nil
         }
@@ -81,6 +83,16 @@ final class ConversationItemsTransformer {
             id: activity.id,
             date: activity.date,
             activity: activity.activity
+        )
+    }
+
+    static func transform(_ audioMessage: AudioMessageItem) -> ConversationViewItem {
+        AudioMessageViewItem(
+            id: audioMessage.id,
+            date: audioMessage.date,
+            sender: audioMessage.sender,
+            sendingState: audioMessage.sendingState,
+            audio: audioMessage.content
         )
     }
     

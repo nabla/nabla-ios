@@ -1,0 +1,11 @@
+fragment AudioMessageContentFragment on AudioMessageContent {
+    audioFileUpload {
+        id
+        url {
+            ...EphemeralUrlFragment
+        }
+        fileName
+        mimeType
+        durationMs
+    }
+}

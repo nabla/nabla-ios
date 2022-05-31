@@ -37,18 +37,37 @@ extension UIView {
         ].compactMap { $0 })
     }
     
+    func center(in view: UIView, along axis: NSLayoutConstraint.Axis) {
+        prepareForAutoLayout()
+
+        switch axis {
+        case .horizontal:
+            NSLayoutConstraint.activate([centerXAnchor.constraint(equalTo: view.centerXAnchor)])
+        case .vertical:
+            NSLayoutConstraint.activate([centerYAnchor.constraint(equalTo: view.centerYAnchor)])
+        @unknown default:
+            break
+        }
+    }
+
     func center(in view: UIView) {
         prepareForAutoLayout()
-        
+
         NSLayoutConstraint.activate([
             centerXAnchor.constraint(equalTo: view.centerXAnchor),
             centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
     
+    func centerInSuperView(along axis: NSLayoutConstraint.Axis) {
+        guard let superview = superview else { return }
+
+        center(in: superview, along: axis)
+    }
+
     func centerInSuperView() {
         guard let superview = superview else { return }
-        
+
         center(in: superview)
     }
     

@@ -17,7 +17,7 @@ final class MediaReader {
         switch mediaType {
         case .image: return readImage(from: info)
         case .video: return readVideo(from: info)
-        case .pdf: return .failure(.invalidType)
+        case .pdf, .audio: return .failure(.invalidType)
         }
     }
     

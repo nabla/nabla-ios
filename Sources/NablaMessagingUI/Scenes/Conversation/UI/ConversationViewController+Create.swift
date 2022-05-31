@@ -13,6 +13,7 @@ extension ConversationViewController {
                 DeletedMessageCellProvider(logger: logger, conversationId: conversationId, client: client),
                 ImageMessageCellProvider(logger: logger, conversationId: conversationId, client: client),
                 DocumentMessageCellProvider(logger: logger, conversationId: conversationId, client: client),
+                AudioMessageCellProvider(logger: logger, conversationId: conversationId, client: client),
                 HasMoreIndicatorCellProvider(conversationId: conversationId),
             ]
         )

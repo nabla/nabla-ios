@@ -16,7 +16,8 @@ final class ConversationPresenterImpl: ConversationPresenter {
     func didTapOnSend(text: String, medias: [Media]) {
         view?.emptyComposer()
         medias.forEach { media in
-            let cancellable = client.sendMessage(media.messageInput, inConversationWithId: conversation.id, handler: { result in
+            guard let input = media.messageInput else { return }
+            let cancellable = client.sendMessage(input, inConversationWithId: conversation.id, handler: { result in
                 switch result {
                 case .success:
                     break
@@ -44,6 +45,17 @@ final class ConversationPresenterImpl: ConversationPresenter {
     
     func didTapPhotoLibraryButton() {
         view?.displayMediaPicker(source: .library(imageLimit: nil))
+    }
+
+    func didFinishRecordingAudioFile(_ file: AudioFile) {
+        sendAudioMessageAction = client.sendMessage(.audio(content: file), inConversationWithId: conversation.id) { [weak self] result in
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                self?.logger.warning(message: "Failed to send text with error: \(error.localizedDescription)")
+            }
+        }
     }
     
     @available(iOS 14, *)
@@ -116,6 +128,9 @@ final class ConversationPresenterImpl: ConversationPresenter {
         case .video:
             // TODO: (Thibault Tourailles) - Not handled yet
             break
+        case .audio:
+            // ???: Can't tap audio messages
+            break
         }
     }
 
@@ -151,6 +166,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var itemsWatcher: PaginatedWatcher?
     private var conversationWatcher: Cancellable?
     private var sendMessageAction: Cancellable?
+    private var sendAudioMessageAction: Cancellable?
     private var deleteMessageAction: Cancellable?
     private var setTypingAction: Cancellable?
     private var loadMoreItemsAction: Cancellable?
@@ -228,13 +244,15 @@ final class ConversationPresenterImpl: ConversationPresenter {
 }
 
 private extension Media {
-    var messageInput: MessageInput {
+    var messageInput: MessageInput? {
         switch type {
         case .pdf:
             return .document(content: self)
         // TODO: (Thibault Tourailles) - Split video when available
-        case .image, .video:
+        case .image:
             return .image(content: self)
+        case .video, .audio:
+            return nil
         }
     }
 }

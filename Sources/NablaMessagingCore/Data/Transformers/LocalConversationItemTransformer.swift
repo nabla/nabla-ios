@@ -37,7 +37,28 @@ enum LocalConversationItemTransformer {
             )
         }
 
+        if let audioMessageItem = localConversationItem as? LocalAudioMessageItem {
+            return AudioMessageItem(
+                id: audioMessageItem.clientId,
+                date: audioMessageItem.date,
+                sender: .patient,
+                sendingState: audioMessageItem.sendingState,
+                content: AudioFile(media: audioMessageItem.content.media, durationMs: audioMessageItem.content.durationMs)
+            )
+        }
+
         assertionFailure("Unknown local conversation item \(localConversationItem)")
         return nil
+    }
+}
+
+extension LocalMediaMessageItemContent {
+    var durationMs: Int {
+        switch self {
+        case .media, .uploadedMedia:
+            return 0
+        case let .audioFile(audioFile):
+            return audioFile.durationMs
+        }
     }
 }

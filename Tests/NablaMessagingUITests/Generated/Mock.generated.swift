@@ -80,6 +80,12 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?(`media`)
     }
 
+    open func didFinishRecordingAudioFile(_ file: AudioFile) {
+        addInvocation(.m_didFinishRecordingAudioFile(Parameter<AudioFile>.value(`file`)))
+        let perform = methodPerformValue(.m_didFinishRecordingAudioFile(Parameter<AudioFile>.value(`file`))) as? (AudioFile) -> Void
+        perform?(`file`)
+    }
+
     open func didTapCameraButton() {
         addInvocation(.m_didTapCameraButton)
 		let perform = methodPerformValue(.m_didTapCameraButton) as? () -> Void
@@ -123,6 +129,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         case m_didUpdateDraftText__text(Parameter<String>)
         case m_didTapDeleteMessageButton__withId_messageId(Parameter<UUID>)
         case m_didTapMedia__media(Parameter<Media>)
+        case m_didFinishRecordingAudioFile(Parameter<AudioFile>)
         case m_didTapCameraButton
         case m_didTapPhotoLibraryButton
         case m_didTapDocumentLibraryButton
@@ -174,6 +181,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case let .m_didUpdateDraftText__text(p0): return p0.intValue
             case let .m_didTapDeleteMessageButton__withId_messageId(p0): return p0.intValue
             case let .m_didTapMedia__media(p0): return p0.intValue
+            case let .m_didFinishRecordingAudioFile(p0): return p0.intValue
             case .m_didTapCameraButton: return 0
             case .m_didTapPhotoLibraryButton: return 0
             case .m_didTapDocumentLibraryButton: return 0
@@ -187,6 +195,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case .m_didTapOnSend__text_textmedias_medias: return ".didTapOnSend(text:medias:)"
             case .m_didUpdateDraftText__text: return ".didUpdateDraftText(_:)"
             case .m_didTapDeleteMessageButton__withId_messageId: return ".didTapDeleteMessageButton(withId:)"
+            case .m_didFinishRecordingAudioFile: return ".didFinishRecordingAudioFile(file:)"
             case .m_didTapMedia__media: return ".didTapMedia(_:)"
             case .m_didTapCameraButton: return ".didTapCameraButton()"
             case .m_didTapPhotoLibraryButton: return ".didTapPhotoLibraryButton()"

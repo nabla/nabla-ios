@@ -145,6 +145,11 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
            case let .uploadedMedia(uploadedMedia) = documentMessage.content {
             return .init(documentInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
         }
+
+        if let audioMessage = localConversationMessage as? LocalAudioMessageItem,
+           case let .uploadedMedia(uploadedMedia) = audioMessage.content {
+            return .init(audioInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
+        }
         logger.warning(message: "Sending \(type(of: localConversationMessage)) is not supported yet")
         return nil
     }
@@ -157,6 +162,8 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .media(content))
         case let .document(content):
             return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .media(content))
+        case let .audio(content: content):
+            return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .audioFile(content))
         }
     }
 
@@ -185,6 +192,13 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
                 content: .uploadedMedia(uploadedDocument)
+            )
+        case let .audio(uploadedMedia):
+            return LocalAudioMessageItem(
+                clientId: localConversationMessage.clientId,
+                date: localConversationMessage.date,
+                sendingState: .toBeSent,
+                content: .uploadedMedia(uploadedMedia)
             )
         }
     }
@@ -243,6 +257,14 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 handler: handler
                     .pullbackError(Self.transformFileUploadError)
                     .pullback { .document(.init(fileUploadUUID: $0, media: media)) }
+            )
+        } else if let localAudioItem = localConversationItem as? LocalAudioMessageItem {
+            let media = localAudioItem.content.media
+            fileUploadRemoteDataSource.upload(
+                file: transform(media),
+                handler: handler
+                    .pullbackError(Self.transformFileUploadError)
+                    .pullback { .audio(.init(fileUploadUUID: $0, media: media)) }
             )
         } else {
             logger.warning(message: "Unknown local conversation item type: \(type(of: localConversationItem))")

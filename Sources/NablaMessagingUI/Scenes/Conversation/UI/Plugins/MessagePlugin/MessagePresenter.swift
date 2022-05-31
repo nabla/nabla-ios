@@ -10,9 +10,8 @@ class MessagePresenter<
     Item: ConversationViewMessageItem,
     MessageCellContract: ConversationMessageCellContract
 >: ConversationMessagePresenter where MessageCellContract.ContentView == ContentView {
-    typealias Cell = ConversationMessageCell<ContentView>
-    
     var item: Item
+    private(set) weak var view: MessageCellContract?
     
     // MARK: - Init
     
@@ -48,6 +47,15 @@ class MessagePresenter<
     }
     
     func userDidTapContent() {}
+
+    func updateView() {
+        view?.configure(with: .init(
+            sender: transformSender(),
+            footer: transformFooter(),
+            content: transformContent(item),
+            menuElements: makeMenuElements(item)
+        ))
+    }
     
     // MARK: - Internal
     
@@ -75,8 +83,7 @@ class MessagePresenter<
     private let conversationId: UUID
     private let client: NablaMessagingClientProtocol
     private let transformContent: (Item) -> ContentView.ContentViewModel
-    
-    private weak var view: MessageCellContract?
+
     private weak var delegate: ConversationCellPresenterDelegate?
     
     private var retrySendingAction: Cancellable?
@@ -110,15 +117,6 @@ class MessagePresenter<
         case .patient:
             return .me(isContiguous: item.isContiguous)
         }
-    }
-    
-    private func updateView() {
-        view?.configure(with: .init(
-            sender: transformSender(),
-            footer: transformFooter(),
-            content: transformContent(item),
-            menuElements: makeMenuElements(item)
-        ))
     }
     
     private func transformFooter() -> ConversationMessageFooterViewModel? {

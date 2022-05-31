@@ -5,6 +5,7 @@ import NablaMessagingCore
 protocol ConversationPresenter: Presenter {
     func didTapOnSend(text: String, medias: [Media])
     func didUpdateDraftText(_ text: String)
+    func didFinishRecordingAudioFile(_ file: AudioFile)
     func didTapDeleteMessageButton(withId messageId: UUID)
     func didTapMedia(_ media: Media)
     func didTapCameraButton()
