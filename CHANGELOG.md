@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha03] - 2022-06-01
+
+### Added
  - `ConversationActivity` in conversations. A message is displayed when a provider joins a conversation.
  - `ConversationViewController` now displays system messages, with the right name and avatar.
  - The creation of audio messages is now supported. To make it work, you should fill your `info.plist` with the key `NSMicrophoneUsageDescription` with the desired description.
