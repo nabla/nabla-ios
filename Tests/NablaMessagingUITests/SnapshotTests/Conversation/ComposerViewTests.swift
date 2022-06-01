@@ -47,4 +47,13 @@ final class ComposerViewTests: XCTestCase {
         // THEN
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
     }
+
+    func testComposerViewRecordAudio() {
+        // GIVEN
+        sut.placeHolder = .placeholderStub
+        // WHEN
+        sut.audioRecorderComposerPresenterDidStartRecording(AudioRecorderComposerPresenterMock())
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+    }
 }

@@ -8,6 +8,7 @@ protocol AudioRecorderComposerPresenterDelegate: AnyObject {
     func audioRecorderComposerPresenterCanNotStartRecording(_ presenter: AudioRecorderComposerPresenter)
 }
 
+// sourcery: AutoMockable
 protocol AudioRecorderComposerPresenter: Presenter {
     func userDidRequestStartRecording()
     func userDidRequestStopRecording()

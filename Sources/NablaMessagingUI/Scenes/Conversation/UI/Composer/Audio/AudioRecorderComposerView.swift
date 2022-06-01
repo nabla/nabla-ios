@@ -64,7 +64,7 @@ class AudioRecorderComposerView: UIView, AudioRecorderComposerViewContract {
         addSubview(stackView)
         stackView.centerInSuperView()
 
-        backgroundColor = NablaTheme.Conversation.composerBackgroundColor
+        backgroundColor = NablaTheme.Conversation.audioComposerBackgroundColor
         clipsToBounds = true
     }
 

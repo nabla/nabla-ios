@@ -9,4 +9,8 @@ public extension Media {
     static var mockDocument: Self {
         .init(type: .pdf, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: .stub, mimeType: .pdf)
     }
+
+    static var mockAudioFile: Self {
+        .init(type: .audio, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: nil, mimeType: .mpeg)
+    }
 }

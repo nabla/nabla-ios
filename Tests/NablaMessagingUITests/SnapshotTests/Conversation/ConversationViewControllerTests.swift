@@ -58,6 +58,7 @@ final class ConversationViewControllerTests: XCTestCase {
             DateSeparatorViewItem(id: UUID(), date: Date(timeIntervalSince1970: 0)),
             TextMessageViewItem(id: UUID(), date: Date(), sender: .patient, sendingState: .failed, text: .loremStub),
             TypingIndicatorViewItem(sender: .provider(provider)),
+            AudioMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, audio: AudioFile(media: .mockAudioFile, durationMs: 1000)),
             HasMoreIndicatorViewItem(),
         ]))
         // THEN
