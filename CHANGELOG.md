@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Fixed
+
+
+## [1.0.0-alpha04] - 2022-06-01
+
+### Added
+
+### Changed
+
 - Automatically refreshes expired `accessToken` returned by `SessionTokenProvider.provideTokens`.
 
 ### Fixed
