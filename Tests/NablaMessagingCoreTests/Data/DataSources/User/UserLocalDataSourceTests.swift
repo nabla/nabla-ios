@@ -1,7 +1,5 @@
 @testable import NablaMessagingCore
-#if canImport(NablaMessagingCoreTestsUtils)
-    import NablaMessagingCoreTestsUtils
-#endif
+import NablaMessagingCoreTestsUtils
 import SwiftyMocky
 import XCTest
 
