@@ -1,8 +1,10 @@
 import Foundation
 import NablaMessagingCore
 
-struct MediaComposerItemViewModelMapper {
-    func map(medias: [Media]) -> [MediaComposerItemViewModel] {
+struct MediaComposerItemViewModelTransformer {
+    // MARK: - Public
+
+    func transform(medias: [Media]) -> [MediaComposerItemViewModel] {
         medias.compactMap { media in
             guard let type = media.viewModelType else { return nil }
             return MediaComposerItemViewModel(url: media.fileUrl, type: type)

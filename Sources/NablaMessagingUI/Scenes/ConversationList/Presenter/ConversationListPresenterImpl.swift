@@ -89,7 +89,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     }
 
     private func displayContent() {
-        let viewModel = ConversationListViewModelMapper().map(conversations: list.conversations)
+        let viewModel = ConversationListViewModelTransformer().transform(conversations: list.conversations)
         configureView(with: .loaded(viewModel: viewModel))
     }
 

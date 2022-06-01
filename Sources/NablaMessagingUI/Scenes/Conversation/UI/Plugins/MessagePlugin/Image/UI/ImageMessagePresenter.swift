@@ -22,18 +22,11 @@ final class ImageMessagePresenter:
             conversationId: conversationId,
             client: client,
             delegate: delegate,
-            transformContent: Self.transform
+            transformContent: ImageMessageContentViewModelTransformer.transform
         )
     }
     
     override func userDidTapContent() {
         delegate?.didTapMedia(item.image)
-    }
-    
-    // MARK: - Private
-    
-    // TODO: - Move the transform to a separate class ?
-    private static func transform(item: ImageMessageViewItem) -> ImageMessageContentView.ContentViewModel {
-        .init(url: item.image.fileUrl)
     }
 }

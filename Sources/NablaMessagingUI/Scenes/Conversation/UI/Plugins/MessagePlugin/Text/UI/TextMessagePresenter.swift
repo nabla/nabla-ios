@@ -23,7 +23,7 @@ final class TextMessagePresenter:
             conversationId: conversationId,
             client: client,
             delegate: delegate,
-            transformContent: Self.transform
+            transformContent: TextMessageContentViewModelTransformer.transform
         )
     }
 
@@ -41,12 +41,5 @@ final class TextMessagePresenter:
         super.userDidTapContent()
 
         delegate?.didTapTextItem(withId: item.id)
-    }
-
-    // MARK: - Private
-    
-    // TODO: - Move the transform to a separate class ?
-    private static func transform(item: TextMessageViewItem) -> TextMessageContentView.ContentViewModel {
-        .init(text: item.text)
     }
 }

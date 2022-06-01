@@ -1,10 +1,10 @@
 import Foundation
 import NablaMessagingCore
 
-struct DocumentDetailViewModelMapper {
+struct DocumentDetailViewModelTransformer {
     // MARK: - Public
     
-    func map(document: Media) -> DocumentDetailViewModel {
+    func transform(document: Media) -> DocumentDetailViewModel {
         DocumentDetailViewModel(url: document.fileUrl)
     }
 }

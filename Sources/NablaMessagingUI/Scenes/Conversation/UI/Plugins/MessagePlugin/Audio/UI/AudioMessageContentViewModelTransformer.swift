@@ -1,9 +1,9 @@
 import Foundation
 
-class AudioMessageContentViewModelMapper {
+class AudioMessageContentViewModelTransformer {
     // MARK: - Public
 
-    func map(item _: AudioMessageViewItem) -> AudioMessageContentViewModel {
+    func transform(item _: AudioMessageViewItem) -> AudioMessageContentViewModel {
         AudioMessageContentViewModel(
             isPlayling: isPlaying,
             duration: durationMapper.map(durationInSeconds: currentTimeSeconds)

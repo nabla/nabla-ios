@@ -1,10 +1,10 @@
 import Foundation
 import NablaMessagingCore
 
-struct ConversationListViewModelMapper {
+struct ConversationListViewModelTransformer {
     // MARK: - Public
     
-    func map(conversations: [Conversation]) -> ConversationListViewModel {
+    func transform(conversations: [Conversation]) -> ConversationListViewModel {
         let items = conversations.map { conversation in
             ConversationListItemViewModel(
                 avatar: AvatarViewModel(url: conversation.providers.first?.provider.avatarURL, text: conversation.providers.first?.provider.initials),

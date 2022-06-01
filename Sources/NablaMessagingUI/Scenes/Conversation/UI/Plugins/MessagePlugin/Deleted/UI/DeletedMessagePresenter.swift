@@ -23,7 +23,7 @@ final class DeletedMessagePresenter:
             conversationId: conversationId,
             client: client,
             delegate: delegate,
-            transformContent: Self.transform
+            transformContent: DeletedMessageContentViewModelTransformer.transform
         )
     }
     
@@ -31,12 +31,5 @@ final class DeletedMessagePresenter:
     
     override func makeMenuElements(_: DeletedMessageViewItem) -> [UIMenuElement] {
         []
-    }
-    
-    // MARK: - Private
-    
-    // TODO: - Move the transform to a separate class ?
-    private static func transform(_: DeletedMessageViewItem) -> DeletedMessageContentView.ContentViewModel {
-        .init(text: L10n.conversationDeletedMessage)
     }
 }

@@ -22,17 +22,11 @@ final class DocumentMessagePresenter:
             conversationId: conversationId,
             client: client,
             delegate: delegate,
-            transformContent: Self.transform
+            transformContent: DocumentMessageContentViewModelTransformer.transform
         )
     }
     
     override func userDidTapContent() {
         delegate?.didTapMedia(item.document)
-    }
-    
-    // MARK: - Private
-    
-    private static func transform(item: DocumentMessageViewItem) -> DocumentMessageContentView.ContentViewModel {
-        .init(url: item.document.thumbnailUrl, filename: item.document.fileName)
     }
 }

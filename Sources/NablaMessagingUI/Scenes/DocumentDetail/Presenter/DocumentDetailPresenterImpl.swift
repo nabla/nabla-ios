@@ -12,8 +12,8 @@ class DocumentDetailPresenterImpl: DocumentDetailPresenter {
     // MARK: - Presenter
     
     func start() {
-        let mapper = DocumentDetailViewModelMapper()
-        let viewModel = mapper.map(document: document)
+        let transformer = DocumentDetailViewModelTransformer()
+        let viewModel = transformer.transform(document: document)
         viewContract?.configure(with: viewModel)
     }
     

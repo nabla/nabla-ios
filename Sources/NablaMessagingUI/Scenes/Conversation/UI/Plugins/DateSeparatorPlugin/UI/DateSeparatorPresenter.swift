@@ -26,8 +26,8 @@ final class DateSeparatorPresenter: Presenter {
     private weak var view: ConversationTextSeparatorCellContract?
 
     private func updateView() {
-        let mapper = DateSeparatorViewModelMapper()
-        let viewModel = mapper.map(item: item)
+        let transformer = DateSeparatorViewModelTransformer()
+        let viewModel = transformer.transform(item: item)
         view?.configure(with: viewModel)
     }
 }

@@ -40,8 +40,8 @@ class MediaComposerPresenterImplementation: MediaComposerPresenter {
     }
 
     private func reloadData() {
-        let mapper = MediaComposerItemViewModelMapper()
-        let viewModels = mapper.map(medias: medias)
+        let transformer = MediaComposerItemViewModelTransformer()
+        let viewModels = transformer.transform(medias: medias)
         viewContract?.configure(with: viewModels)
     }
 }

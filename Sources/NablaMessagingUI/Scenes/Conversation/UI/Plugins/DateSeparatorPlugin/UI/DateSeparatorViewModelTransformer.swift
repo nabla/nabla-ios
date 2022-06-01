@@ -1,9 +1,9 @@
 import Foundation
 
-struct DateSeparatorViewModelMapper {
+struct DateSeparatorViewModelTransformer {
     // MARK: - Public
 
-    func map(item: DateSeparatorViewItem) -> ConversationTextSeparatorCellViewModel {
+    func transform(item: DateSeparatorViewItem) -> ConversationTextSeparatorCellViewModel {
         .init(text: text(from: item.date))
     }
 

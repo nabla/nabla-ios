@@ -23,7 +23,7 @@ final class AudioMessagePresenter:
             conversationId: conversationId,
             client: client,
             delegate: delegate,
-            transformContent: mapper.map
+            transformContent: transformer.transform
         )
         currentTimeSeconds = item.audio.durationMs / 1000
     }
@@ -38,7 +38,7 @@ final class AudioMessagePresenter:
         return player
     }()
 
-    private let mapper = AudioMessageContentViewModelMapper()
+    private let transformer = AudioMessageContentViewModelTransformer()
 
     private lazy var currentTimeSeconds = 0 {
         didSet {
@@ -53,7 +53,7 @@ final class AudioMessagePresenter:
     }
 
     private func reloadUI() {
-        mapper.update(isPlaying: isPlaying, currentTimeSeconds: currentTimeSeconds)
+        transformer.update(isPlaying: isPlaying, currentTimeSeconds: currentTimeSeconds)
         DispatchQueue.main.async {
             self.updateView()
         }

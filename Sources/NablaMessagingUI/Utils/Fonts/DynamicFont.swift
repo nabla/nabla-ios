@@ -94,7 +94,6 @@ private struct CustomFontDynamicFontProvider: DynamicFontProvider {
                 contentSizeCategory: currentSpecifiedContentSizeCategory
             )
             guard customFont != nil else {
-                // TODO: (Benjamin Lavialle) 2018-03-15 Check custom font existency, otherwise fallback to system font
                 return try systemFont(weightName: styleDescription.name, size: size)
             }
             let descriptor = UIFontDescriptor(name: styleDescription.name, size: size)

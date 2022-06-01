@@ -13,8 +13,8 @@ class ImageDetailPresenterImpl: ImageDetailPresenter {
     // MARK: - Presenter
     
     func start() {
-        let mapper = ImageDetailViewModelMapper()
-        let viewModel = mapper.map(media: media)
+        let transformer = ImageDetailViewModelTransformer()
+        let viewModel = transformer.transform(media: media)
         viewContract?.configure(with: viewModel)
     }
     
