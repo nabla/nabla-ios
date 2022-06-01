@@ -22,8 +22,4 @@ Pod::Spec.new do |spec|
   spec.source_files       = ["Sources/#{spec.name}/**/*.swift", "Sources/NablaUtils/**/*.swift"]
 
   spec.dependency           'Apollo/WebSocket', '~> 0.50'
-
-  spec.test_spec do |test_spec|
-    test_spec.source_files = "Tests/#{spec.name}Tests/**/*.swift"
-  end
 end

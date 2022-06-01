@@ -23,8 +23,4 @@ Pod::Spec.new do |spec|
   spec.resources          = "Sources/#{spec.name}/Resources/**/*"
 
   spec.dependency           'NablaMessagingCore', "#{spec.version}"
-
-  spec.test_spec do |test_spec|
-    test_spec.source_files = "Tests/#{spec.name}Tests/**/*.swift"
-  end
 end
