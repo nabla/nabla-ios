@@ -31,7 +31,7 @@ class AuthenticatorImpl: Authenticator {
             return
         }
         
-        if let tokens = session.tokens, !isExpired(tokens.accessToken) {
+        if let tokens = session.tokens, !Self.isExpired(tokens.accessToken) {
             handler(.success(.authenticated(accessToken: tokens.accessToken)))
             return
         }
@@ -82,7 +82,7 @@ class AuthenticatorImpl: Authenticator {
     private var session: Session?
     private var renewTask: SharedTask<Result<Tokens, NablaAuthenticationError>>?
     
-    private func isExpired(_ token: String) -> Bool {
+    private static func isExpired(_ token: String) -> Bool {
         do {
             let jwt = try decode(jwt: token)
             guard let expiresAt = jwt.expiresAt else { return false }
@@ -113,17 +113,27 @@ class AuthenticatorImpl: Authenticator {
     }
     
     private func renewSession(_ session: Session, completion: @escaping (Result<Tokens, NablaAuthenticationError>) -> Void) {
-        if let tokens = session.tokens, !isExpired(tokens.refreshToken) {
+        if let tokens = session.tokens, !Self.isExpired(tokens.refreshToken) {
             fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
             return
         }
         requireTokens(session: session, completion: completion)
     }
     
-    private func requireTokens(session: Session, completion: (Result<Tokens, NablaAuthenticationError>) -> Void) {
-        session.provider.provideTokens(forUserId: session.userId) { token in
-            if let token = token {
-                completion(.success(token))
+    private func requireTokens(session: Session, completion: @escaping (Result<Tokens, NablaAuthenticationError>) -> Void) {
+        session.provider.provideTokens(forUserId: session.userId) { [weak self] tokens in
+            guard let self = self else {
+                return completion(.failure(.authenticationProviderFailedToProvideTokens))
+            }
+            
+            if let tokens = tokens {
+                if Self.isExpired(tokens.refreshToken) {
+                    completion(.failure(.authenticationProviderDidProvideExpiredTokens))
+                } else if Self.isExpired(tokens.accessToken) {
+                    self.fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
+                } else {
+                    completion(.success(tokens))
+                }
             } else {
                 completion(.failure(.authenticationProviderFailedToProvideTokens))
             }

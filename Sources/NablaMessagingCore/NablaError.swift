@@ -4,6 +4,7 @@ public enum NablaError: Error {
     public enum AuthenticationError: Error {
         case missingAuthenticationProvider
         case authenticationProviderFailedToProvideTokens
+        case authenticationProviderDidProvideExpiredTokens
         case authorizationDenied(Error)
         case failedToRefreshTokens(Error)
     }
