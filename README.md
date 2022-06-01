@@ -27,8 +27,8 @@ You can find the latest version available in the [release page](https://github.c
 
 Add the following dependencies in your `Podfile`
 ```ruby
-pod 'NablaMessagingUI', git: 'https://github.com/nabla/nabla-ios'
-pod 'NablaMessagingCore', git: 'https://github.com/nabla/nabla-ios'
+pod 'NablaMessagingUI'
+pod 'NablaMessagingCore'
 ```
 
 And then run `pod install` to update your project.
