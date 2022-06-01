@@ -4,6 +4,7 @@ import UIKit
 private enum Constants {
     static let playImageName = "play.circle.fill"
     static let pauseImageName = "pause.circle.fill"
+    static let buttonSize = CGSize(width: 28, height: 28)
 }
 
 protocol AudioMessageContentViewDelegate: AnyObject {
@@ -17,11 +18,12 @@ final class AudioMessageContentView: UIView, MessageContentView {
     
     init() {
         super.init(frame: .zero)
-        let stackView = UIStackView(arrangedSubviews: [playPauseButton, durationLabel])
-        stackView.axis = .horizontal
-        stackView.spacing = 48
-        addSubview(stackView)
-        stackView.pinToSuperView(insets: .init(horizontal: 16, vertical: 8))
+        addSubview(playPauseButton)
+        playPauseButton.pinToSuperView(edges: [.top, .bottom, .leading], insets: .only(top: 8, leading: 10, bottom: 8))
+        addSubview(durationLabel)
+        durationLabel.pinToSuperView(edges: .trailing, insets: .only(trailing: 10))
+        durationLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        durationLabel.leadingAnchor.constraint(equalTo: playPauseButton.trailingAnchor, constant: 44).isActive = true
     }
     
     @available(*, unavailable)
@@ -35,9 +37,8 @@ final class AudioMessageContentView: UIView, MessageContentView {
         durationLabel.text = viewModel.duration
 
         let imageName = viewModel.isPlayling ? Constants.pauseImageName : Constants.playImageName
-        let image = UIImage(systemName: imageName)
-        playPauseButton.setImage(image, for: .normal)
-
+        playPauseButton.setBackgroundImage(UIImage(systemName: imageName), for: .normal)
+        
         switch sender {
         case .me:
             durationLabel.textColor = NablaTheme.Conversation.audioMessagePatientTitleColor
@@ -57,7 +58,8 @@ final class AudioMessageContentView: UIView, MessageContentView {
 
     private func makePlayPauseButton() -> UIButton {
         let button = UIButton().prepareForAutoLayout()
-        button.setImage(UIImage(systemName: Constants.playImageName), for: .normal)
+        button.constraintToSize(Constants.buttonSize)
+        button.setBackgroundImage(UIImage(systemName: Constants.playImageName), for: .normal)
         button.addTarget(self, action: #selector(playPauseButtonTapped), for: .touchUpInside)
         return button
     }
@@ -65,7 +67,7 @@ final class AudioMessageContentView: UIView, MessageContentView {
     private func makeDurationLabel() -> UILabel {
         let label = UILabel().prepareForAutoLayout()
         label.font = NablaTheme.Conversation.audioMessageDurationLabelFont
-        label.constraintWidth(45)
+        label.constraintWidth(44)
         return label
     }
 

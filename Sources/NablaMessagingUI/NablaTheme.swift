@@ -64,8 +64,8 @@ public enum NablaTheme {
         /// Background color for the conversation screen. Default set to NablaTheme.backgroundColor
         public static var backgroundColor = NablaTheme.backgroundColor
 
-        /// Corner radius used for all messages in the conversation screen. Default set to CGFloat = 16
-        public static var messageCornerRadius: CGFloat = 16
+        /// Corner radius used for all messages in the conversation screen. Default set to CGFloat = 10
+        public static var messageCornerRadius: CGFloat = 10
         /// Background color used for all patient messages in the conversation screen. Default set to NablaTheme.primaryColor
         public static var messagePatientBackgroundColor = NablaTheme.primaryColor
         /// Background color used for all provider messages in the conversation screen. Default set to NablaTheme.secondaryBackgroundColor
@@ -94,8 +94,8 @@ public enum NablaTheme {
         /// Font used to display the "Deleted message" text. Default set to NablaTheme.bodyItalic
         public static var deletedMessagefont = NablaTheme.bodyItalic
 
-        /// UIImage used as the document symbol for a document message in the conversation screen. Default set to UIImage(systemName: "doc.text")
-        public static var documentMessageIcon = UIImage(systemName: "doc.text")
+        /// UIImage used as the document symbol for a document message in the conversation screen. Default set to UIImage(systemName: "doc")
+        public static var documentMessageIcon = UIImage(systemName: "doc")
         /// Font used to display the name of the document for a document message in the conversation screen. Default set to NablaTheme.body
         public static var documentMessageTitleFont = NablaTheme.body
         /// Color used to display the name of the document for a document message sent by the patient in the conversation screen. Default set to NablaTheme.alternateTextColor
@@ -126,12 +126,14 @@ public enum NablaTheme {
         public static var composerTextColor = NablaTheme.primaryTextColor
         /// Font used for the text entered by the user in the composer in the conversation screen. Default set to NablaTheme.body
         public static var composerFont = NablaTheme.body
-        /// UIImage used for the send button in the composer in the conversation screen. Default set to UIImage(systemName: "arrow.up.circle.fill")
-        public static var sendIcon = UIImage(systemName: "arrow.up.circle.fill")
-        /// UIImage used for the add media button in the composer in the conversation screen. Default set to UIImage(systemName: "camera.on.rectangle")
-        public static var addMediaIcon = UIImage(systemName: "camera.on.rectangle")
-        /// UIImage used for the record audio button in the composer in the conversation screen. Default set to UIImage(systemName: "camera.on.rectangle")
-        public static var recordAudioIcon = UIImage(systemName: "waveform.circle.fill")
+        /// UIImage used for the send button in the composer in the conversation screen. Default set to UIImage(systemName: "paperplane.fill")
+        public static var sendIcon = UIImage(systemName: "paperplane.fill")
+        /// UIImage used for the send button disabled state in the composer in the conversation screen. Default set to UIImage(systemName: "paperplane")
+        public static var sendIconDisabled = UIImage(systemName: "paperplane")
+        /// UIImage used for the add media button in the composer in the conversation screen. Default set to UIImage(systemName: "plus")
+        public static var addMediaIcon = UIImage(systemName: "plus")
+        /// UIImage used for the record audio button in the composer in the conversation screen. Default set to UIImage(systemName: "mic")
+        public static var recordAudioIcon = UIImage(systemName: "mic")
         /// UIImage used for the cancel button to delete a recording in progress. Default set to UIImage(systemName: "trash")
         public static var deleteAudioRecordingIcon = UIImage(systemName: "trash")
 

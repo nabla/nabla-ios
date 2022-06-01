@@ -5,12 +5,8 @@ import UIKit
 import XCTest
 
 final class ConversationListItemCellTests: XCTestCase {
-    private let size = CGSize(width: 320, height: 88)
+    private let size = CGSize(width: 320, height: 77)
     private var sut: ConversationListItemCell!
-
-    override class func setUp() {
-        super.setUp()
-    }
 
     override func setUp() {
         super.setUp()

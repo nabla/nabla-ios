@@ -29,7 +29,7 @@ final class ImageMessageContentView: UIView, MessageContentView {
     
     private lazy var imageView: UIURLImageView = {
         let imageView = UIURLImageView().prepareForAutoLayout()
-        imageView.constraintToSize(.init(width: 200, height: 200))
+        imageView.constraintToSize(.init(width: 172, height: 172))
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()

@@ -24,7 +24,7 @@ final class AudioMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshot(matching: sut, as: .image(size: size))
     }
 
     func testAudioConfigureThem() {
@@ -39,6 +39,6 @@ final class AudioMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshot(matching: sut, as: .image(size: size))
     }
 }

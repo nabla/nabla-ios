@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 private enum Constants {
-    static let avatarSize: CGFloat = 48
+    static let avatarSize: CGFloat = 44
     static let unreadIndicatorSize: CGFloat = 8
 }
 
@@ -46,20 +46,20 @@ class ConversationListItemCell: UITableViewCell, Reusable {
         
         let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
         stackView.axis = .vertical
-        stackView.spacing = 0.0
+        stackView.spacing = 0
         stackView.alignment = .leading
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(stackView)
-        stackView.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: 16).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: 12).isActive = true
         stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 16).isActive = true
         stackView.bottomAnchor.constraint(greaterThanOrEqualTo: contentView.bottomAnchor, constant: -16).isActive = true
         
         contentView.addSubview(timeLabel)
-        timeLabel.pinToSuperView(edges: [.top, .trailing], insets: .all(16))
-        
+        timeLabel.pinToSuperView(edges: [.trailing], insets: .only(trailing: 16))
+        timeLabel.firstBaselineAnchor.constraint(equalTo: titleLabel.firstBaselineAnchor).isActive = true
         timeLabel.leadingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
         
         contentView.addSubview(unreadIndicatorView)

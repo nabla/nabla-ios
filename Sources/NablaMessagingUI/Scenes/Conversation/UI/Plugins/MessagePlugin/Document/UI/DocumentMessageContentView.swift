@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 private enum Constants {
-    static let thumbnailSize: CGSize = .init(width: 24, height: 24)
+    static let thumbnailSize: CGSize = .init(width: 14, height: 14)
     static let imageSize: CGSize = .init(width: 200, height: 124)
     static let bottomViewHeight: CGFloat = 48
     static let bottomViewPadding = NSDirectionalEdgeInsets(horizontal: 12, vertical: 0)

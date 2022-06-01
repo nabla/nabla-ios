@@ -123,7 +123,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
             if themViewModel.isContiguous {
                 setVisibleViews([rightSpacer])
             } else {
-                setVisibleViews([topSpacer, authorLabel, avatarView, rightSpacer])
+                setVisibleViews([topSpacer, header, avatarView, rightSpacer])
             }
         }
     }
@@ -169,16 +169,18 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     }
     
     private func makeHeader() -> UIView {
-        let view = UIStackView(arrangedSubviews: [
+        let hstack = UIStackView(arrangedSubviews: [
             UISpacerView(axis: .horizontal, size: .fixed(value: Constants.avatarSize + Constants.spacing)),
             authorLabel,
             UISpacerView(axis: .horizontal),
         ])
-        view.prepareForAutoLayout()
-        view.axis = .horizontal
-        view.alignment = .bottom
-        view.distribution = .fill
-        return view
+        hstack.prepareForAutoLayout()
+        hstack.axis = .horizontal
+        hstack.alignment = .bottom
+        hstack.distribution = .fill
+        let vStack = UIStackView(arrangedSubviews: [hstack, UISpacerView(axis: .vertical, size: .fixed(value: 4))])
+        vStack.axis = .vertical
+        return vStack
     }
     
     private func makeFooterLabel() -> UILabel {
@@ -217,7 +219,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         // Only add views whose visibility might change.
         [
             topSpacer,
-            authorLabel,
+            header,
             avatarView,
             leftSpacer,
             rightSpacer,

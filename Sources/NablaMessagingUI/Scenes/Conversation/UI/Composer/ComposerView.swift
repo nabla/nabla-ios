@@ -95,9 +95,10 @@ final class ComposerView: UIView {
     }
     
     private enum Constants {
-        static let controlsSize: CGFloat = 44
+        static let controlsSize: CGFloat = 24
+        static let textViewMinHeight: CGFloat = 44
         static let maximumHeight: CGFloat = 124
-        static let hStackSpacing: CGFloat = 8
+        static let hStackSpacing: CGFloat = 4
         static let hStackMargins: NSDirectionalEdgeInsets = .init(horizontal: Constants.unit * 4, vertical: Constants.unit)
         private static let unit: CGFloat = 4
     }
@@ -118,9 +119,9 @@ final class ComposerView: UIView {
     private lazy var hStack: UIStackView = {
         let stackView = UIStackView(
             arrangedSubviews: [
+                addMedia,
                 deleteAudioRecordingButton,
                 recordAudioButton,
-                addMedia,
                 textView,
                 audioRecorderComposerView,
                 sendButton,
@@ -142,14 +143,14 @@ final class ComposerView: UIView {
     private lazy var textView: UITextView = {
         let textView = UITextView().withInteractiveDismiss().prepareForAutoLayout()
         textView.font = NablaTheme.Conversation.composerFont
-        textView.constraintHeight(Constants.controlsSize, relation: .greaterThanOrEqual)
+        textView.constraintHeight(Constants.textViewMinHeight, relation: .greaterThanOrEqual)
         textView.constraintHeight(Constants.maximumHeight, relation: .lessThanOrEqual)
         textView.textColor = NablaTheme.Conversation.composerTextColor
-        textView.layer.cornerRadius = Constants.controlsSize / 2
+        textView.layer.cornerRadius = Constants.textViewMinHeight / 2
         textView.layer.borderWidth = 1
         textView.layer.borderColor = NablaTheme.Conversation.composerButtonTintColor.cgColor
-        textView.textContainerInset = .all(Constants.controlsSize / 4)
-        textView.scrollIndicatorInsets = .all(Constants.controlsSize / 4)
+        textView.textContainerInset = .all(Constants.textViewMinHeight / 4)
+        textView.scrollIndicatorInsets = .all(Constants.textViewMinHeight / 4)
         textView.delegate = self
         textView.backgroundColor = NablaTheme.Conversation.composerBackgroundColor
         return textView
@@ -158,6 +159,7 @@ final class ComposerView: UIView {
     private lazy var sendButton: UIButton = {
         let sendButton = UIButton().prepareForAutoLayout()
         sendButton.setImage(NablaTheme.Conversation.sendIcon, for: .normal)
+        sendButton.setImage(NablaTheme.Conversation.sendIconDisabled, for: .disabled)
         sendButton.constraintWidth(Constants.controlsSize)
         sendButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
         sendButton.isEnabled = false
@@ -166,30 +168,30 @@ final class ComposerView: UIView {
     }()
     
     private lazy var addMedia: UIButton = {
-        let addMediaButton = UIButton().prepareForAutoLayout()
-        addMediaButton.setImage(NablaTheme.Conversation.addMediaIcon, for: .normal)
-        addMediaButton.constraintWidth(Constants.controlsSize)
-        addMediaButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
-        addMediaButton.tintColor = NablaTheme.Conversation.composerButtonTintColor
-        return addMediaButton
+        let button = UIButton().prepareForAutoLayout()
+        button.setImage(NablaTheme.Conversation.addMediaIcon, for: .normal)
+        button.constraintWidth(Constants.controlsSize)
+        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        button.tintColor = NablaTheme.Conversation.composerButtonTintColor
+        return button
     }()
 
     private lazy var recordAudioButton: UIButton = {
-        let addMediaButton = UIButton().prepareForAutoLayout()
-        addMediaButton.setImage(NablaTheme.Conversation.recordAudioIcon, for: .normal)
-        addMediaButton.constraintWidth(Constants.controlsSize)
-        addMediaButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
-        addMediaButton.tintColor = NablaTheme.Conversation.composerButtonTintColor
-        return addMediaButton
+        let button = UIButton().prepareForAutoLayout()
+        button.setImage(NablaTheme.Conversation.recordAudioIcon, for: .normal)
+        button.constraintWidth(Constants.controlsSize)
+        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        button.tintColor = NablaTheme.Conversation.composerButtonTintColor
+        return button
     }()
 
     private lazy var deleteAudioRecordingButton: UIButton = {
-        let addMediaButton = UIButton().prepareForAutoLayout()
-        addMediaButton.setImage(NablaTheme.Conversation.deleteAudioRecordingIcon, for: .normal)
-        addMediaButton.constraintWidth(Constants.controlsSize)
-        addMediaButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
-        addMediaButton.tintColor = NablaTheme.Conversation.composerButtonTintColor
-        return addMediaButton
+        let button = UIButton().prepareForAutoLayout()
+        button.setImage(NablaTheme.Conversation.deleteAudioRecordingIcon, for: .normal)
+        button.constraintWidth(Constants.controlsSize)
+        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        button.tintColor = NablaTheme.Conversation.composerButtonTintColor
+        return button
     }()
     
     private lazy var mediaComposerView: MediaComposerView = {
@@ -225,7 +227,7 @@ final class ComposerView: UIView {
         if isRecording {
             setVisibleViews([deleteAudioRecordingButton, audioRecorderComposerView])
         } else if showRecordAudioButton {
-            setVisibleViews([addMedia, recordAudioButton, textView, placeHolderLabel])
+            setVisibleViews([recordAudioButton, addMedia, textView, placeHolderLabel])
         } else {
             setVisibleViews([addMedia, textView, placeHolderLabel])
         }
