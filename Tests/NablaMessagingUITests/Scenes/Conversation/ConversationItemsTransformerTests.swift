@@ -1,5 +1,7 @@
 @testable import NablaMessagingCore
-import NablaMessagingCoreTestsUtils
+#if canImport(NablaMessagingCoreTestsUtils)
+    import NablaMessagingCoreTestsUtils
+#endif
 @testable import NablaMessagingUI
 import XCTest
 

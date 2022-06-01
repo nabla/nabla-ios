@@ -1,5 +1,7 @@
 @testable import NablaMessagingCore
-import NablaMessagingCoreTestsUtils
+#if canImport(NablaMessagingCoreTestsUtils)
+    import NablaMessagingCoreTestsUtils
+#endif
 import XCTest
 
 class ConversationItemLocalDataSourceTests: XCTestCase {
