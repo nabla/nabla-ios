@@ -14,8 +14,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
             logger.warning(message: "Missing `NSMicrophoneUsageDescription` key in info.plist to enable audio message recording")
             view?.showRecordAudioMessageButton = false
         }
-        let conversationViewModel = Self.transform(conversation: conversation)
-        view?.configure(withConversation: conversationViewModel)
+        if let conversation = conversation {
+            let conversationViewModel = Self.transform(conversation: conversation)
+            view?.configure(withConversation: conversationViewModel)
+        }
         watchItems()
     }
     
@@ -23,7 +25,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
         view?.emptyComposer()
         medias.forEach { media in
             guard let input = media.messageInput else { return }
-            let cancellable = client.sendMessage(input, inConversationWithId: conversation.id, handler: { result in
+            let cancellable = client.sendMessage(input, inConversationWithId: conversationId, handler: { result in
                 switch result {
                 case .success:
                     break
@@ -34,7 +36,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             sendMediaCancellable.append(cancellable)
         }
         if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            sendMessageAction = client.sendMessage(.text(content: text), inConversationWithId: conversation.id) { result in
+            sendMessageAction = client.sendMessage(.text(content: text), inConversationWithId: conversationId) { result in
                 switch result {
                 case .success:
                     break
@@ -54,7 +56,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     func didFinishRecordingAudioFile(_ file: AudioFile) {
-        sendAudioMessageAction = client.sendMessage(.audio(content: file), inConversationWithId: conversation.id) { [weak self] result in
+        sendAudioMessageAction = client.sendMessage(.audio(content: file), inConversationWithId: conversationId) { [weak self] result in
             switch result {
             case .success:
                 break
@@ -78,7 +80,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             guard let self = self else { return }
             self.setTypingAction = self.client.setIsTyping(
                 !text.isEmpty,
-                inConversationWithId: self.conversation.id,
+                inConversationWithId: self.conversationId,
                 handler: { _ in }
             )
         }
@@ -107,7 +109,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     func didTapDeleteMessageButton(withId messageId: UUID) {
         deleteMessageAction = client.deleteMessage(
             withId: messageId,
-            conversationId: conversation.id
+            conversationId: conversationId
         ) { result in
             switch result {
             case .success:
@@ -166,17 +168,31 @@ final class ConversationPresenterImpl: ConversationPresenter {
         self.logger = logger
         self.view = view
         self.client = client
+        conversationId = conversation.id
         self.conversation = conversation
+    }
+    
+    init(
+        logger: Logger,
+        conversationId: UUID,
+        view: ConversationViewContract,
+        client: NablaMessagingClientProtocol
+    ) {
+        self.logger = logger
+        self.view = view
+        self.client = client
+        self.conversationId = conversationId
     }
     
     // MARK: - Private
     
     private let client: NablaMessagingClientProtocol
-    private var conversation: Conversation
+    private let conversationId: UUID
 
     private let logger: Logger
 
     private weak var view: ConversationViewContract?
+    private var conversation: Conversation?
     private var conversationItems: ConversationItems?
     private var canLoadMoreItems = false
     private var draftText: String = ""
@@ -206,7 +222,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
         set(state: .loading)
         
         conversationWatcher = client.watchConversation(
-            conversation.id,
+            conversationId,
             handler: { [weak self] result in
                 guard let self = self else { return }
                 
@@ -225,7 +241,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             }
         )
         
-        itemsWatcher = client.watchItems(ofConversationWithId: conversation.id) { [weak self] result in
+        itemsWatcher = client.watchItems(ofConversationWithId: conversationId) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .failure(error):
@@ -234,7 +250,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             case let .success(conversationItems):
                 self.conversationItems = conversationItems
                 self.refreshItems()
-                self.markAsSeenAction = self.client.markConversationAsSeen(self.conversation.id, handler: { _ in })
+                self.markAsSeenAction = self.client.markConversationAsSeen(self.conversationId, handler: { _ in })
                 self.canLoadMoreItems = conversationItems.hasMore
             }
         }
@@ -262,10 +278,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
         )
     }
     
-    private func transformAndUpdateState(conversationItems: ConversationItems, conversation: Conversation) {
+    private func transformAndUpdateState(conversationItems: ConversationItems, conversation: Conversation?) {
         let items = ConversationItemsTransformer.transform(
             conversationItems: conversationItems,
-            conversation: conversation,
+            providers: conversation?.providers ?? [],
             focusedTextItemId: focusedPatientTextItemId
         )
         set(state: .loaded(items: items))

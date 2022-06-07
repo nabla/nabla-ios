@@ -22,6 +22,16 @@ public enum NablaViewFactory {
             client: client as NablaMessagingClientProtocol
         )
     }
+    
+    public static func createConversationViewController(
+        _ conversationId: UUID,
+        client: NablaMessagingClient = .shared
+    ) -> UIViewController {
+        createConversationViewController(
+            conversationId,
+            client: client as NablaMessagingClientProtocol
+        )
+    }
 
     // MARK: - Internal
 
@@ -52,6 +62,24 @@ public enum NablaViewFactory {
         viewController.presenter = ConversationPresenterImpl(
             logger: client.logger,
             conversation: conversation,
+            view: viewController,
+            client: client
+        )
+        return viewController
+    }
+    
+    static func createConversationViewController(
+        _ conversationId: UUID,
+        client: NablaMessagingClientProtocol
+    ) -> UIViewController {
+        let viewController = ConversationViewController.create(
+            conversationId: conversationId,
+            client: client,
+            logger: client.logger
+        )
+        viewController.presenter = ConversationPresenterImpl(
+            logger: client.logger,
+            conversationId: conversationId,
             view: viewController,
             client: client
         )

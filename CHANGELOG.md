@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Enable use of `NablaViewFactory.createConversationViewController` with the conversation's `UUID` only.
+
 ### Changed
 
 ### Fixed

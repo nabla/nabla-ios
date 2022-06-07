@@ -22,7 +22,7 @@ final class ConversationItemsTransformerTests: XCTestCase {
                 hasMore: hasMore,
                 items: items
             ),
-            conversation: conversation,
+            providers: [],
             focusedTextItemId: focusedTextItemId
         )
     }

@@ -4,7 +4,7 @@ import NablaMessagingCore
 enum ConversationItemsTransformer {
     static func transform(
         conversationItems: ConversationItems,
-        conversation: Conversation,
+        providers: [ProviderInConversation],
         focusedTextItemId: UUID?
     ) -> [ConversationViewItem] {
         var viewItems = [ConversationViewItem]()
@@ -16,7 +16,7 @@ enum ConversationItemsTransformer {
         let contentItems = conversationItems.items.compactMap(transform)
         viewItems.append(contentsOf: contentItems)
         
-        let typingItems = conversation.providers
+        let typingItems = providers
             .filter(\.isTyping)
             .map {
                 TypingIndicatorViewItem(sender: .provider($0.provider))
