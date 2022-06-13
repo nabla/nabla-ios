@@ -15,6 +15,7 @@ strings:
       params:
         enumName: L10n
         publicAccess: false
+        bundle: NablaMessagingUI.resourcesBundle
 
 ## Generate constants for your Assets Catalogs, including constants for images, colors, ARKit resources, etc.
 ##   This example also shows how to provide additional parameters to your template to customise the output.
@@ -32,6 +33,7 @@ xcassets:
         imageTypeName: CoreImageAsset
         imageAliasName: CoreImageAssetAlias
         publicAccess: true
+        bundle: NablaMessagingUI.resourcesBundle
 ## Generate constants for your storyboards and XIBs.
 ##   This one generates 2 output files, one containing the storyboard scenes, and another for the segues.
 ##    (You can remove the segues entry if you don't use segues in your IB files).

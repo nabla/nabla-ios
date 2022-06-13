@@ -59,7 +59,7 @@ public final class ColorAsset {
   #if os(iOS) || os(tvOS)
   @available(iOS 11.0, tvOS 11.0, *)
   public func color(compatibleWith traitCollection: UITraitCollection) -> Color {
-    let bundle = BundleToken.bundle
+    let bundle = NablaMessagingUI.resourcesBundle
     guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
       fatalError("Unable to load color asset named \(name).")
     }
@@ -75,7 +75,7 @@ public final class ColorAsset {
 public extension ColorAsset.Color {
   @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
   convenience init?(asset: ColorAsset) {
-    let bundle = BundleToken.bundle
+    let bundle = NablaMessagingUI.resourcesBundle
     #if os(iOS) || os(tvOS)
     self.init(named: asset.name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
@@ -97,7 +97,7 @@ public struct CoreImageAsset {
 
   @available(iOS 8.0, tvOS 9.0, watchOS 2.0, macOS 10.7, *)
   public var image: Image {
-    let bundle = BundleToken.bundle
+    let bundle = NablaMessagingUI.resourcesBundle
     #if os(iOS) || os(tvOS)
     let image = Image(named: name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
@@ -115,7 +115,7 @@ public struct CoreImageAsset {
   #if os(iOS) || os(tvOS)
   @available(iOS 8.0, tvOS 9.0, *)
   public func image(compatibleWith traitCollection: UITraitCollection) -> Image {
-    let bundle = BundleToken.bundle
+    let bundle = NablaMessagingUI.resourcesBundle
     guard let result = Image(named: name, in: bundle, compatibleWith: traitCollection) else {
       fatalError("Unable to load image asset named \(name).")
     }
@@ -130,7 +130,7 @@ public extension CoreImageAsset.Image {
     message: "This initializer is unsafe on macOS, please use the CoreImageAsset.image property")
   convenience init?(asset: CoreImageAsset) {
     #if os(iOS) || os(tvOS)
-    let bundle = BundleToken.bundle
+    let bundle = NablaMessagingUI.resourcesBundle
     self.init(named: asset.name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
     self.init(named: NSImage.Name(asset.name))
@@ -139,15 +139,3 @@ public extension CoreImageAsset.Image {
     #endif
   }
 }
-
-// swiftlint:disable convenience_type
-private final class BundleToken {
-  static let bundle: Bundle = {
-    #if SWIFT_PACKAGE
-    return Bundle.module
-    #else
-    return Bundle(for: BundleToken.self)
-    #endif
-  }()
-}
-// swiftlint:enable convenience_type

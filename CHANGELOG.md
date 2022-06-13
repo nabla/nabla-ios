@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Used `spec.resource_bundles` instead of `spec.resources` for `NablaMessaginUI` podspec.
+
 ### Fixed
 
 - New `ConversationActivity` items are now correctly handled when the chat is open.
