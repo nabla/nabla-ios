@@ -116,8 +116,11 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     private func handleConversationEvent(_ event: RemoteConversationEvent, inConversationWithId conversationId: UUID) {
         if let messageCreatedEvent = event.asMessageCreatedEvent {
+            let item = GQL.ConversationItemFragment(
+                message: messageCreatedEvent.message.fragments.messageFragment
+            )
             append(
-                message: messageCreatedEvent.message.fragments.messageFragment,
+                item: item,
                 toCacheOfConversationWithId: conversationId
             )
         } else if let typingEvent = event.asTypingEvent {
@@ -125,19 +128,27 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 provider: typingEvent.provider.fragments.providerInConversationFragment,
                 inCacheOfConversationWithId: conversationId
             )
+        } else if let conversationActivityCreated = event.asConversationActivityCreated {
+            let item = GQL.ConversationItemFragment(
+                conversationActivity: conversationActivityCreated.activity.fragments.conversationActivityFragment
+            )
+            append(
+                item: item,
+                toCacheOfConversationWithId: conversationId
+            )
         }
     }
     
-    private func append(message: GQL.MessageFragment, toCacheOfConversationWithId conversationId: UUID) {
+    private func append(item: GQL.ConversationItemFragment, toCacheOfConversationWithId conversationId: UUID) {
         gqlStore.updateCache(
             for: Constants.rootQuery(conversationId: conversationId),
             onlyIfExists: true,
             body: { cache in
                 let isAlreadyInConversation = cache.conversation.conversation.items.data.contains(
-                    where: { $0?.fragments.conversationItemFragment.id == message.id }
+                    where: { $0?.fragments.conversationItemFragment.id == item.id }
                 )
                 if !isAlreadyInConversation {
-                    cache.conversation.conversation.items.data.append(.init(unsafeResultMap: message.resultMap))
+                    cache.conversation.conversation.items.data.append(.init(unsafeResultMap: item.resultMap))
                 }
             },
             completion: { _ in }
@@ -149,7 +160,6 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             for: GQL.GetConversationQuery(id: conversationId),
             onlyIfExists: true,
             body: { cache in
-                
                 let isAlreadyInConversation = cache.conversation.conversation.fragments.conversationFragment.providers.contains(where: { $0.fragments.providerInConversationFragment.id == provider.id })
                 
                 if !isAlreadyInConversation {
@@ -221,4 +231,14 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
     private let gqlStore: GQLStore
     private let logger: Logger
     private let conversationId: UUID
+}
+
+private extension GQL.ConversationItemFragment {
+    init(message: GQL.MessageFragment) {
+        self.init(unsafeResultMap: message.resultMap)
+    }
+    
+    init(conversationActivity: GQL.ConversationActivityFragment) {
+        self.init(unsafeResultMap: conversationActivity.resultMap)
+    }
 }

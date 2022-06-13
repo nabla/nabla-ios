@@ -40,6 +40,13 @@ public extension GQL {
                 ...ProviderInConversationFragment
               }
             }
+            ... on ConversationActivityCreated {
+              __typename
+              activity {
+                __typename
+                ...ConversationActivityFragment
+              }
+            }
           }
         }
       }
@@ -60,6 +67,8 @@ public extension GQL {
       document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
       document.append("\n" + AudioMessageContentFragment.fragmentDefinition)
       document.append("\n" + ProviderInConversationFragment.fragmentDefinition)
+      document.append("\n" + ConversationActivityFragment.fragmentDefinition)
+      document.append("\n" + MaybeProviderFragment.fragmentDefinition)
       return document
     }
 
@@ -145,7 +154,7 @@ public extension GQL {
           public static var selections: [GraphQLSelection] {
             return [
               GraphQLTypeCase(
-                variants: ["SubscriptionReadinessEvent": AsSubscriptionReadinessEvent.selections, "MessageCreatedEvent": AsMessageCreatedEvent.selections, "MessageUpdatedEvent": AsMessageUpdatedEvent.selections, "TypingEvent": AsTypingEvent.selections],
+                variants: ["SubscriptionReadinessEvent": AsSubscriptionReadinessEvent.selections, "MessageCreatedEvent": AsMessageCreatedEvent.selections, "MessageUpdatedEvent": AsMessageUpdatedEvent.selections, "TypingEvent": AsTypingEvent.selections, "ConversationActivityCreated": AsConversationActivityCreated.selections],
                 default: [
                   GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
                 ]
@@ -157,10 +166,6 @@ public extension GQL {
 
           public init(unsafeResultMap: ResultMap) {
             self.resultMap = unsafeResultMap
-          }
-
-          public static func makeConversationActivityCreated() -> Event {
-            return Event(unsafeResultMap: ["__typename": "ConversationActivityCreated"])
           }
 
           public static func makeSubscriptionReadinessEvent(isReady: Bool) -> Event {
@@ -177,6 +182,10 @@ public extension GQL {
 
           public static func makeTypingEvent(provider: AsTypingEvent.Provider) -> Event {
             return Event(unsafeResultMap: ["__typename": "TypingEvent", "provider": provider.resultMap])
+          }
+
+          public static func makeConversationActivityCreated(activity: AsConversationActivityCreated.Activity) -> Event {
+            return Event(unsafeResultMap: ["__typename": "ConversationActivityCreated", "activity": activity.resultMap])
           }
 
           public var __typename: String {
@@ -539,6 +548,109 @@ public extension GQL {
                 public var providerInConversationFragment: ProviderInConversationFragment {
                   get {
                     return ProviderInConversationFragment(unsafeResultMap: resultMap)
+                  }
+                  set {
+                    resultMap += newValue.resultMap
+                  }
+                }
+              }
+            }
+          }
+
+          public var asConversationActivityCreated: AsConversationActivityCreated? {
+            get {
+              if !AsConversationActivityCreated.possibleTypes.contains(__typename) { return nil }
+              return AsConversationActivityCreated(unsafeResultMap: resultMap)
+            }
+            set {
+              guard let newValue = newValue else { return }
+              resultMap = newValue.resultMap
+            }
+          }
+
+          public struct AsConversationActivityCreated: GraphQLSelectionSet {
+            public static let possibleTypes: [String] = ["ConversationActivityCreated"]
+
+            public static var selections: [GraphQLSelection] {
+              return [
+                GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+                GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+                GraphQLField("activity", type: .nonNull(.object(Activity.selections))),
+              ]
+            }
+
+            public private(set) var resultMap: ResultMap
+
+            public init(unsafeResultMap: ResultMap) {
+              self.resultMap = unsafeResultMap
+            }
+
+            public init(activity: Activity) {
+              self.init(unsafeResultMap: ["__typename": "ConversationActivityCreated", "activity": activity.resultMap])
+            }
+
+            public var __typename: String {
+              get {
+                return resultMap["__typename"]! as! String
+              }
+              set {
+                resultMap.updateValue(newValue, forKey: "__typename")
+              }
+            }
+
+            public var activity: Activity {
+              get {
+                return Activity(unsafeResultMap: resultMap["activity"]! as! ResultMap)
+              }
+              set {
+                resultMap.updateValue(newValue.resultMap, forKey: "activity")
+              }
+            }
+
+            public struct Activity: GraphQLSelectionSet {
+              public static let possibleTypes: [String] = ["ConversationActivity"]
+
+              public static var selections: [GraphQLSelection] {
+                return [
+                  GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+                  GraphQLFragmentSpread(ConversationActivityFragment.self),
+                ]
+              }
+
+              public private(set) var resultMap: ResultMap
+
+              public init(unsafeResultMap: ResultMap) {
+                self.resultMap = unsafeResultMap
+              }
+
+              public var __typename: String {
+                get {
+                  return resultMap["__typename"]! as! String
+                }
+                set {
+                  resultMap.updateValue(newValue, forKey: "__typename")
+                }
+              }
+
+              public var fragments: Fragments {
+                get {
+                  return Fragments(unsafeResultMap: resultMap)
+                }
+                set {
+                  resultMap += newValue.resultMap
+                }
+              }
+
+              public struct Fragments {
+                public private(set) var resultMap: ResultMap
+
+                public init(unsafeResultMap: ResultMap) {
+                  self.resultMap = unsafeResultMap
+                }
+
+                public var conversationActivityFragment: ConversationActivityFragment {
+                  get {
+                    return ConversationActivityFragment(unsafeResultMap: resultMap)
                   }
                   set {
                     resultMap += newValue.resultMap
