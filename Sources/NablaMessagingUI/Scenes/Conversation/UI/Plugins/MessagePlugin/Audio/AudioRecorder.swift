@@ -66,7 +66,7 @@ class AudioRecorder: NSObject {
                 }
             }
         } catch {
-            logger.warning(message: "[AudioRecorder] cannot set audio category: \(error)")
+            logger.error(message: "Cannot set audio category", extra: ["reason": error])
             completionQueue.async {
                 completion(.failure(error))
             }
@@ -87,7 +87,7 @@ class AudioRecorder: NSObject {
 
             startCurrentTimePublication()
         } catch {
-            logger.warning(message: "[AudioRecorder] Cannot create AVAudioRecorder: \(error)")
+            logger.error(message: "Cannot create AVAudioRecorder", extra: ["reason": error])
         }
     }
 

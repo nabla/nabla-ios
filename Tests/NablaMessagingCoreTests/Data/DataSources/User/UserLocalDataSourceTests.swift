@@ -61,7 +61,7 @@ class UserLocalDataSourceTests: XCTestCase {
         let result = sut.getCurrentUser()
         // THEN
         XCTAssertNil(result)
-        Verify(logger, .error(message: .any))
+        Verify(logger, .error(message: .any, extra: .any))
     }
     
     // MARK: setCurrentUser(_:)
@@ -89,7 +89,7 @@ class UserLocalDataSourceTests: XCTestCase {
         // WHEN
         sut.setCurrentUser(nil)
         // THEN
-        Verify(logger, .error(message: .any))
+        Verify(logger, .error(message: .any, extra: .any))
     }
 }
               

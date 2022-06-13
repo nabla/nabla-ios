@@ -211,11 +211,11 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
         let newItems = data.conversation.conversation.items.data.filter { maybeItem in
             guard let item = maybeItem else { return false }
             guard let itemId = item.fragments.conversationItemFragment.id else {
-                logger.warning(message: "Unknown item type: \(item.__typename)")
+                logger.warning(message: "Unknown item type", extra: ["type": item.__typename])
                 return false
             }
             if existingIds.contains(itemId) {
-                logger.warning(message: "Found duplicated item when loading more: \(item)")
+                logger.warning(message: "Found duplicated item when loading more", extra: ["item": item])
                 return false
             }
             return true

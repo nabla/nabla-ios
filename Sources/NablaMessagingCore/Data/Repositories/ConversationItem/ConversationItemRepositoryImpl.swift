@@ -150,7 +150,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
            case let .uploadedMedia(uploadedMedia) = audioMessage.content {
             return .init(audioInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
         }
-        logger.warning(message: "Sending \(type(of: localConversationMessage)) is not supported yet")
+        logger.error(message: "Unsuported message input", extra: ["type": type(of: localConversationMessage)])
         return nil
     }
     
@@ -267,7 +267,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                     .pullback { .audio(.init(fileUploadUUID: $0, media: media)) }
             )
         } else {
-            logger.warning(message: "Unknown local conversation item type: \(type(of: localConversationItem))")
+            logger.error(message: "Unknown local conversation item", extra: ["type": type(of: localConversationItem)])
         }
     }
 

@@ -169,7 +169,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
                 return cell
             }
         }
-        logger.warning(message: "no plugin provided the cell for \(type(of: item))")
+        logger.warning(message: "No plugin provided a cell for item", extra: ["type": type(of: item)])
         return nil
     }
     
@@ -239,7 +239,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         var seen = Set<UUID>()
         let items = items.reversed().compactMap { item -> DiffableConversationViewItem? in
             guard !seen.contains(item.id) else {
-                logger.warning(message: "Found duplicate item with identifier \(item.id)")
+                logger.error(message: "Found duplicated item", extra: ["id": item.id])
                 return nil
             }
             seen.insert(item.id)

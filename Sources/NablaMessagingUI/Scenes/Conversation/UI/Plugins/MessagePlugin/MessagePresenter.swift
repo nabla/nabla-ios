@@ -137,7 +137,7 @@ class MessagePresenter<
         retrySendingAction = client.retrySending(itemWithId: item.id, inConversationWithId: conversationId) { [weak self] result in
             switch result {
             case let .failure(error):
-                self?.logger.error(message: "Failed send retry with error: \(error.localizedDescription)")
+                self?.logger.warning(message: "Failed send retry", extra: ["reason": error])
             case .success:
                 break
             }

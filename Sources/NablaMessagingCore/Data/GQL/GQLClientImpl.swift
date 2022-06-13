@@ -151,8 +151,17 @@ class GQLClientImpl: GQLClient {
                 default: return .unknownError
                 }
             }
+        } else if let sessionClientError = error as? URLSessionClient.URLSessionClientError {
+            return .networkError(message: sessionClientError.errorDescription)
         }
-        logger.warning(message: "Unhandled error type: \(type(of: error)). Description: \(String(describing: error))")
+        let nsError = error as NSError
+        if nsError.domain == NSPOSIXErrorDomain {
+            switch nsError.code {
+            case 61: return .networkError(message: nsError.localizedDescription)
+            default: break
+            }
+        }
+        logger.warning(message: "Unhandled error type", extra: ["error": error, "type": type(of: error)])
         return .unknownError
     }
 }

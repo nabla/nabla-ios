@@ -14,9 +14,15 @@ public class NablaClient {
     /// - Parameters:
     ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
     ///   - name: Namespace for your the stored objects.
-    public convenience init(apiKey: String, name: String, configuration: Configuration? = nil) {
+    ///   - logger: Instance receiving all logs emitted by the SDK. Defaults to `ConsoleLogger` based on `os_log`.
+    public convenience init(
+        apiKey: String,
+        name: String,
+        logger: Logger = ConsoleLogger(),
+        configuration: Configuration? = nil
+    ) {
         let configuration = configuration ?? DefaultConfiguration()
-        let container = CoreContainer(name: name, configuration: configuration)
+        let container = CoreContainer(name: name, configuration: configuration, logger: logger)
         self.init(apiKey: apiKey, container: container)
     }
     
@@ -42,7 +48,12 @@ public class NablaClient {
     /// - Parameters:
     ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
     ///   - configuration: Optional API configuration. This is for internal usage and you should probably never pass any value.
-    public static func initialize(apiKey: String, configuration: Configuration? = nil) {
+    ///   - logger: Instance receiving all logs emitted by the SDK. Defaults to `ConsoleLogger` based on `os_log`.
+    public static func initialize(
+        apiKey: String,
+        logger: Logger = ConsoleLogger(),
+        configuration: Configuration? = nil
+    ) {
         guard _shared == nil else {
             assertionFailure("NablaClient.initialize(configuration:) can only be called once")
             return
@@ -50,6 +61,7 @@ public class NablaClient {
         _shared = NablaClient(
             apiKey: apiKey,
             name: Constants.defaultName,
+            logger: logger,
             configuration: configuration ?? DefaultConfiguration()
         )
     }
@@ -80,7 +92,7 @@ public class NablaClient {
             case .success:
                 break
             case let .failure(error):
-                self.container.logger.error(message: "Failed to clear cache on logout: \(error)")
+                self.container.logger.error(message: "Failed to clear cache on logout", extra: ["reason": error])
             }
         }
     }

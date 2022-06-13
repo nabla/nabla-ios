@@ -1,15 +1,15 @@
 import NablaMessagingCore
 
 final class LoggerMock: Logger {
-    func info(message: @autoclosure () -> String) {
-        print("[INFO] \(message())")
+    func info(message: @autoclosure () -> String, extra: [String: Any]) {
+        print("[INFO] \(message()) - \(extra)")
     }
 
-    func warning(message: @autoclosure () -> String) {
-        print("[WARNING] \(message())")
+    func warning(message: @autoclosure () -> String, extra: [String: Any]) {
+        print("[WARNING] \(message()) - \(extra)")
     }
 
-    func error(message: @autoclosure () -> String) {
-        print("[ERROR] \(message())")
+    func error(message: @autoclosure () -> String, extra: [String: Any]) {
+        print("[ERROR] \(message()) - \(extra)")
     }
 }

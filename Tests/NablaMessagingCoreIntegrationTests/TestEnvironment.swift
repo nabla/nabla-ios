@@ -20,7 +20,11 @@ struct TestEnvironment {
         let userId = UUID(uuidString: "96C3DBC7-744F-44A0-9D7B-8A4C493C7370")!
         let session = makeMockSession(filePath: filePath, function: function)
         let configuration = Configuration(session: session)
-        let container = CoreContainer(name: "tests", configuration: configuration)
+        let container = CoreContainer(
+            name: "tests",
+            configuration: configuration,
+            logger: ConsoleLogger()
+        )
         container.urlSessionClient = MockURLSessionClient(session: session)
         let nablaClient = NablaClient(
             apiKey: "test-api-key",

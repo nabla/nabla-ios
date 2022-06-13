@@ -120,6 +120,12 @@ extension WebSocketTransport: ApolloWebSocketTransportDelegate {
     }
     
     func webSocketTransport(_: ApolloWebSocketTransport, didDisconnectWithError error: Error?) {
-        logger.info(message: "Websocket did disconnect with error: \(error?.localizedDescription ?? "null")")
+        let extra: [String: Any]
+        if let error = error {
+            extra = ["error": error]
+        } else {
+            extra = [:]
+        }
+        logger.info(message: "Websocket did disconnect", extra: extra)
     }
 }

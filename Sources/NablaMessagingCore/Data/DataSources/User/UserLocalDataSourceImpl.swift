@@ -7,7 +7,7 @@ class UserLocalDataSourceImpl: UserLocalDataSource {
         do {
             return try store.get(forKey: Constants.currentUserStoreKey)
         } catch {
-            logger.error(message: "Failed to retrieve current user: \(error)")
+            logger.error(message: "Failed to retrieve current user", extra: ["reason": error])
             return nil
         }
     }
@@ -16,7 +16,7 @@ class UserLocalDataSourceImpl: UserLocalDataSource {
         do {
             try store.set(user, forKey: Constants.currentUserStoreKey)
         } catch {
-            logger.error(message: "Failed to save current user: \(error)")
+            logger.error(message: "Failed to save current user", extra: ["reason": error])
         }
     }
     

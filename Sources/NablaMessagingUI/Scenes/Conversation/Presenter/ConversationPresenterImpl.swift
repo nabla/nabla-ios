@@ -30,7 +30,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 case .success:
                     break
                 case let .failure(error):
-                    self.logger.warning(message: "Failed to send a media (type: \(media.type)) with error: \(error.localizedDescription)")
+                    self.logger.warning(message: "Failed to send a media", extra: ["type": type(of: media), "reason": error])
                 }
             })
             sendMediaCancellable.append(cancellable)
@@ -41,7 +41,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 case .success:
                     break
                 case let .failure(error):
-                    self.logger.warning(message: "Failed to send text with error: \(error.localizedDescription)")
+                    self.logger.warning(message: "Failed to send text", extra: ["reason": error])
                 }
             }
         }
@@ -61,7 +61,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             case .success:
                 break
             case let .failure(error):
-                self?.logger.warning(message: "Failed to send text with error: \(error.localizedDescription)")
+                self?.logger.warning(message: "Failed to send text", extra: ["reason": error])
             }
         }
     }
@@ -91,7 +91,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
         loadMoreItemsAction = itemsWatcher?.loadMore { [weak self] result in
             switch result {
             case let .failure(error):
-                self?.logger.warning(message: "Failed to load more items with error: \(error.localizedDescription)")
+                self?.logger.warning(message: "Failed to load more items", extra: ["reason": error])
                 self?.view?.showErrorAlert(
                     viewModel: .init(
                         title: L10n.conversationLoadMoreErrorTitle,
@@ -115,7 +115,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             case .success:
                 break
             case let .failure(error):
-                self.logger.error(message: "Could not delete message with error: \(error.localizedDescription)")
+                self.logger.warning(message: "Failed to delete message", extra: ["reason": error])
                 self.view?.showErrorAlert(
                     viewModel: .init(
                         title: L10n.conversationDeleteMessageErrorTitle,
@@ -228,7 +228,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 
                 switch result {
                 case let .failure(error):
-                    self.logger.error(message: "Failed to watch conversation with error: \(error.localizedDescription)")
+                    self.logger.warning(message: "Failed to watch conversation", extra: ["reason": error])
                     self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
                 case let .success(conversation):
                     self.conversation = conversation
@@ -245,7 +245,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             guard let self = self else { return }
             switch result {
             case let .failure(error):
-                self.logger.error(message: "Failed to watch messages with error: \(error.localizedDescription)")
+                self.logger.warning(message: "Failed to watch messages", extra: ["reason": error])
                 self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
             case let .success(conversationItems):
                 self.conversationItems = conversationItems

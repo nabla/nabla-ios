@@ -1077,6 +1077,24 @@ open class LoggerMock: Logger, Mock {
 
 
 
+    open func info(message: @autoclosure () -> String, extra: [String: Any]) {
+        addInvocation(.m_info__message_messageextra_extra(Parameter<() -> String>.any, Parameter<[String: Any]>.value(`extra`)))
+		let perform = methodPerformValue(.m_info__message_messageextra_extra(Parameter<() -> String>.any, Parameter<[String: Any]>.value(`extra`))) as? (@autoclosure () -> String, [String: Any]) -> Void
+		perform?(`message`(), `extra`)
+    }
+
+    open func warning(message: @autoclosure () -> String, extra: [String: Any]) {
+        addInvocation(.m_warning__message_messageextra_extra(Parameter<() -> String>.any, Parameter<[String: Any]>.value(`extra`)))
+		let perform = methodPerformValue(.m_warning__message_messageextra_extra(Parameter<() -> String>.any, Parameter<[String: Any]>.value(`extra`))) as? (@autoclosure () -> String, [String: Any]) -> Void
+		perform?(`message`(), `extra`)
+    }
+
+    open func error(message: @autoclosure () -> String, extra: [String: Any]) {
+        addInvocation(.m_error__message_messageextra_extra(Parameter<() -> String>.any, Parameter<[String: Any]>.value(`extra`)))
+		let perform = methodPerformValue(.m_error__message_messageextra_extra(Parameter<() -> String>.any, Parameter<[String: Any]>.value(`extra`))) as? (@autoclosure () -> String, [String: Any]) -> Void
+		perform?(`message`(), `extra`)
+    }
+
     open func info(message: @autoclosure () -> String) {
         addInvocation(.m_info__message_message(Parameter<() -> String>.any))
 		let perform = methodPerformValue(.m_info__message_message(Parameter<() -> String>.any)) as? (@autoclosure () -> String) -> Void
@@ -1097,12 +1115,33 @@ open class LoggerMock: Logger, Mock {
 
 
     fileprivate enum MethodType {
+        case m_info__message_messageextra_extra(Parameter<() -> String>, Parameter<[String: Any]>)
+        case m_warning__message_messageextra_extra(Parameter<() -> String>, Parameter<[String: Any]>)
+        case m_error__message_messageextra_extra(Parameter<() -> String>, Parameter<[String: Any]>)
         case m_info__message_message(Parameter<() -> String>)
         case m_warning__message_message(Parameter<() -> String>)
         case m_error__message_message(Parameter<() -> String>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
+            case (.m_info__message_messageextra_extra(let lhsMessage, let lhsExtra), .m_info__message_messageextra_extra(let rhsMessage, let rhsExtra)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_warning__message_messageextra_extra(let lhsMessage, let lhsExtra), .m_warning__message_messageextra_extra(let rhsMessage, let rhsExtra)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_error__message_messageextra_extra(let lhsMessage, let lhsExtra), .m_error__message_messageextra_extra(let rhsMessage, let rhsExtra)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				return Matcher.ComparisonResult(results)
+
             case (.m_info__message_message(let lhsMessage), .m_info__message_message(let rhsMessage)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
@@ -1123,6 +1162,9 @@ open class LoggerMock: Logger, Mock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_info__message_messageextra_extra(p0, p1): return p0.intValue + p1.intValue
+            case let .m_warning__message_messageextra_extra(p0, p1): return p0.intValue + p1.intValue
+            case let .m_error__message_messageextra_extra(p0, p1): return p0.intValue + p1.intValue
             case let .m_info__message_message(p0): return p0.intValue
             case let .m_warning__message_message(p0): return p0.intValue
             case let .m_error__message_message(p0): return p0.intValue
@@ -1130,6 +1172,9 @@ open class LoggerMock: Logger, Mock {
         }
         func assertionName() -> String {
             switch self {
+            case .m_info__message_messageextra_extra: return ".info(message:extra:)"
+            case .m_warning__message_messageextra_extra: return ".warning(message:extra:)"
+            case .m_error__message_messageextra_extra: return ".error(message:extra:)"
             case .m_info__message_message: return ".info(message:)"
             case .m_warning__message_message: return ".warning(message:)"
             case .m_error__message_message: return ".error(message:)"
@@ -1151,6 +1196,9 @@ open class LoggerMock: Logger, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func info(message: Parameter<() -> String>, extra: Parameter<[String: Any]>) -> Verify { return Verify(method: .m_info__message_messageextra_extra(`message`, `extra`))}
+        public static func warning(message: Parameter<() -> String>, extra: Parameter<[String: Any]>) -> Verify { return Verify(method: .m_warning__message_messageextra_extra(`message`, `extra`))}
+        public static func error(message: Parameter<() -> String>, extra: Parameter<[String: Any]>) -> Verify { return Verify(method: .m_error__message_messageextra_extra(`message`, `extra`))}
         public static func info(message: Parameter<() -> String>) -> Verify { return Verify(method: .m_info__message_message(`message`))}
         public static func warning(message: Parameter<() -> String>) -> Verify { return Verify(method: .m_warning__message_message(`message`))}
         public static func error(message: Parameter<() -> String>) -> Verify { return Verify(method: .m_error__message_message(`message`))}
@@ -1160,6 +1208,15 @@ open class LoggerMock: Logger, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func info(message: Parameter<() -> String>, extra: Parameter<[String: Any]>, perform: @escaping (@autoclosure () -> String, [String: Any]) -> Void) -> Perform {
+            return Perform(method: .m_info__message_messageextra_extra(`message`, `extra`), performs: perform)
+        }
+        public static func warning(message: Parameter<() -> String>, extra: Parameter<[String: Any]>, perform: @escaping (@autoclosure () -> String, [String: Any]) -> Void) -> Perform {
+            return Perform(method: .m_warning__message_messageextra_extra(`message`, `extra`), performs: perform)
+        }
+        public static func error(message: Parameter<() -> String>, extra: Parameter<[String: Any]>, perform: @escaping (@autoclosure () -> String, [String: Any]) -> Void) -> Perform {
+            return Perform(method: .m_error__message_messageextra_extra(`message`, `extra`), performs: perform)
+        }
         public static func info(message: Parameter<() -> String>, perform: @escaping (@autoclosure () -> String) -> Void) -> Perform {
             return Perform(method: .m_info__message_message(`message`), performs: perform)
         }

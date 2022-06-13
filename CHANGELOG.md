@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Enable use of `NablaViewFactory.createConversationViewController` with the conversation's `UUID` only.
+- It is possible to inject a `Logger` into `NablaClient.initialize` to intercept the SDK's logs.
 
 ### Changed
 
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Automatically refreshes expired `accessToken` returned by `SessionTokenProvider.provideTokens`.
+
 
 ### Fixed
 

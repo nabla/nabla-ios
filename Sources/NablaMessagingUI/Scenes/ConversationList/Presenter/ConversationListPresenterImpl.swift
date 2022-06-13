@@ -79,7 +79,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         case let .success(list):
             self.list = list
         case let .failure(error):
-            logger.error(message: "Failed to watch conversations with error: \(error.localizedDescription)")
+            logger.warning(message: "Failed to watch conversations", extra: ["reason": error])
             let viewModel = ErrorViewModel(
                 message: L10n.conversationListLoadErrorLabel,
                 buttonTitle: L10n.conversationListButtonRetry

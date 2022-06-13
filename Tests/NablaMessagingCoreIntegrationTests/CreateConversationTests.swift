@@ -43,6 +43,7 @@ class CreateConversationTests: XCTestCase {
             }
         }
         wait(for: [initialListDidLoad], timeout: 3)
+        watcher1.cancel()
         
         // 2 - Create conversation
         var createdConversation: Conversation?
@@ -57,6 +58,7 @@ class CreateConversationTests: XCTestCase {
             }
         }
         wait(for: [createConversationDidComplete], timeout: 3)
+        createConversationAction.cancel()
         
         // 3 - Observe conversations again
         let finalListDidLoad = expectation(description: "Final conversation list did load")
@@ -71,10 +73,8 @@ class CreateConversationTests: XCTestCase {
             }
         }
         wait(for: [finalListDidLoad], timeout: 3)
+        watcher2.cancel()
         
-        XCTAssertNotNil(watcher1)
-        XCTAssertNotNil(watcher2)
-        XCTAssertNotNil(createConversationAction)
         env.session.endRecording()
     }
 }

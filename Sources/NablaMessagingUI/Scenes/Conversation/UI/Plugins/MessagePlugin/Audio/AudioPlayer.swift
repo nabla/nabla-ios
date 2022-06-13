@@ -61,7 +61,7 @@ class AudioPlayer {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
         } catch {
-            logger.error(message: "[AudioPlayer] Cannot activate audio: \(error)")
+            logger.error(message: "Cannot activate audio", extra: ["reason": error])
         }
     }
 

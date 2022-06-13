@@ -2,13 +2,19 @@ import Apollo
 import Foundation
 
 class CoreContainer {
-    init(name: String,
-         configuration: Configuration) {
+    init(
+        name: String,
+        configuration: Configuration,
+        logger: Logger
+    ) {
         self.name = name
         self.configuration = configuration
+        self.logger = logger
     }
 
-    // MARK: - Public
+    // MARK: - Internal
+    
+    let logger: Logger
 
     private(set) lazy var authenticator: Authenticator = AuthenticatorImpl(httpManager: httpManager)
 
@@ -45,8 +51,6 @@ class CoreContainer {
         apolloStore: apolloStore,
         urlSessionClient: urlSessionClient
     )
-
-    private(set) lazy var logger: Logger = ConsoleLogger()
 
     private(set) lazy var extraHeadersRequestBehavior = AddExtraHeadersRequestBehavior(headers: [:])
 
