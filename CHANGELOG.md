@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha05] - 2022-06-13
+
+### Added
+
 - Enable use of `NablaViewFactory.createConversationViewController` with the conversation's `UUID` only.
 - It is possible to inject a `Logger` into `NablaClient.initialize` to intercept the SDK's logs.
 
