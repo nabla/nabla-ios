@@ -61,27 +61,27 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             source: source,
             mediaTypes: [.image]
         )
-        navigationController?.present(picker, animated: true)
+        present(picker, animated: true)
     }
     
     func displayImageDetail(for media: Media) {
         let viewController = ImageDetailViewController()
         let presenter = ImageDetailPresenterImpl(viewContract: viewController, media: media)
         viewController.presenter = presenter
-        navigationController?.pushViewController(viewController, animated: true)
+        show(viewController, sender: nil)
     }
     
     func displayDocumentDetail(for media: Media) {
         let viewController = DocumentDetailViewController()
         let presenter = DocumentDetailPresenterImpl(viewContract: viewController, document: media)
         viewController.presenter = presenter
-        navigationController?.pushViewController(viewController, animated: true)
+        show(viewController, sender: nil)
     }
     
     @available(iOS 14, *)
     func displayDocumentPicker() {
         let picker = DocumentPickerModule.makeViewController(delegate: self)
-        navigationController?.present(picker, animated: true)
+        present(picker, animated: true)
     }
 
     func showErrorAlert(viewModel: AlertViewModel) {
@@ -357,26 +357,26 @@ extension ConversationViewController: ComposerViewDelegate {
 extension ConversationViewController: ImagePickerDelegate {
     // MARK: - ImagePickerDelegate
     
-    func imagePickerDidCancel(_: UIViewController) {
-        navigationController?.dismiss(animated: true)
+    func imagePickerDidCancel(_ pickerViewController: UIViewController) {
+        pickerViewController.dismiss(animated: true)
     }
     
-    func imagePicker(_: UIViewController, didSelect medias: [Media], errors _: [ImagePickerError]) {
+    func imagePicker(_ pickerViewController: UIViewController, didSelect medias: [Media], errors _: [ImagePickerError]) {
         composerView.add(medias)
-        navigationController?.dismiss(animated: true)
+        pickerViewController.dismiss(animated: true)
     }
 }
 
 extension ConversationViewController: DocumentPickerDelegate {
     // MARK: - DocumentPickerDelegate
     
-    func documentPickerDidCancel(_: UIViewController) {
-        navigationController?.dismiss(animated: true)
+    func documentPickerDidCancel(_ pickerViewController: UIViewController) {
+        pickerViewController.dismiss(animated: true)
     }
     
-    func documentPicker(_: UIViewController, didSelect media: Media) {
+    func documentPicker(_ pickerViewController: UIViewController, didSelect media: Media) {
         composerView.add([media])
-        navigationController?.dismiss(animated: true)
+        pickerViewController.dismiss(animated: true)
     }
 }
 
