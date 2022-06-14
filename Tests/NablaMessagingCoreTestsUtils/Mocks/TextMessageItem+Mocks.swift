@@ -12,6 +12,7 @@ public extension TextMessageItem {
             date: Date(timeIntervalSinceReferenceDate: dateOffset),
             sender: sender,
             sendingState: .sent,
+            replyTo: nil,
             content: "Hello world \(itemCount)"
         )
     }

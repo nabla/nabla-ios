@@ -36,6 +36,13 @@ final class ComposerView: UIView {
     }
     
     private(set) var medias: [Media] = []
+
+    var replyToMessage: ConversationViewMessageItem? {
+        didSet {
+            replyToComposerView.message = replyToMessage
+            updateReplyToComposerVisibility()
+        }
+    }
     
     // MARK: - Init
     
@@ -48,13 +55,10 @@ final class ComposerView: UIView {
         logger = dependencies.logger
 
         super.init(frame: .zero)
-        
-        addSubview(vStack)
-        vStack.pinToSuperView(insets: Constants.hStackMargins)
-        
+
         backgroundColor = NablaTheme.Conversation.composerBackgroundColor
         addSubview(vStack)
-        vStack.pinToSuperView(insets: Constants.hStackMargins)
+        vStack.pinToSuperView()
         
         addSubview(placeHolderLabel)
         
@@ -65,6 +69,7 @@ final class ComposerView: UIView {
         
         updateMediaComposerVisibility()
         updateAudioRecordingVisibility()
+        updateReplyToComposerVisibility()
     }
     
     // MARK: - Lifecycle
@@ -79,6 +84,7 @@ final class ComposerView: UIView {
     func emptyComposer() {
         text = nil
         mediaComposerView.emptyMedias()
+        replyToMessage = nil
     }
 
     func add(_ medias: [Media]) {
@@ -111,12 +117,13 @@ final class ComposerView: UIView {
     }
     
     private lazy var vStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [mediaComposerView, hStack])
+        let stackView = UIStackView(arrangedSubviews: [mediaComposerView, replyToComposerView, hStack])
         stackView.axis = .vertical
         return stackView
     }()
     
-    private lazy var hStack: UIStackView = {
+    private lazy var hStack: UIView = {
+        let container = UIView()
         let stackView = UIStackView(
             arrangedSubviews: [
                 addMedia,
@@ -129,8 +136,11 @@ final class ComposerView: UIView {
         )
         stackView.spacing = Constants.hStackSpacing
         stackView.setCustomSpacing(8, after: recordAudioButton)
+
+        container.addSubview(stackView)
+        stackView.pinToSuperView(insets: Constants.hStackMargins)
         
-        return stackView
+        return container
     }()
     
     private lazy var placeHolderLabel: UILabel = {
@@ -212,6 +222,15 @@ final class ComposerView: UIView {
         return view
     }()
 
+    private lazy var replyToComposerView: ReplyToComposerView = {
+        let view = ReplyToComposerView()
+        let presenter = ReplyToComposerPresenterImpl(viewContract: view, dependencies: .init(logger: logger))
+        presenter.delegate = self
+        view.presenter = presenter
+
+        return view
+    }()
+
     private var isRecording = false {
         didSet {
             updateAudioRecordingVisibility()
@@ -231,6 +250,10 @@ final class ComposerView: UIView {
         } else {
             setVisibleViews([addMedia, textView, placeHolderLabel])
         }
+    }
+
+    private func updateReplyToComposerVisibility() {
+        replyToComposerView.isHidden = replyToMessage == nil
     }
 
     private func setVisibleViews(_ visibleViews: Set<UIView>) {
@@ -301,5 +324,13 @@ extension ComposerView: AudioRecorderComposerPresenterDelegate {
 
     func audioRecorderComposerPresenterDidCancelRecording(_: AudioRecorderComposerPresenter) {
         isRecording = false
+    }
+}
+
+extension ComposerView: ReplyToComposerPresenterDelegate {
+    // MARK: - ReplyToComposerPresenterDelegate
+
+    func replyToComposerPresenterDidTapCloseButton(_: ReplyToComposerPresenter) {
+        replyToMessage = nil
     }
 }

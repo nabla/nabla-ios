@@ -273,10 +273,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 
 
 
-    open func didTapOnSend(text: String, medias: [Media]) {
-        addInvocation(.m_didTapOnSend__text_textmedias_medias(Parameter<String>.value(`text`), Parameter<[Media]>.value(`medias`)))
-		let perform = methodPerformValue(.m_didTapOnSend__text_textmedias_medias(Parameter<String>.value(`text`), Parameter<[Media]>.value(`medias`))) as? (String, [Media]) -> Void
-		perform?(`text`, `medias`)
+    open func didTapOnSend(text: String, medias: [Media], replyingToMessageUUID replyToUUID: UUID?) {
+        addInvocation(.m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(Parameter<String>.value(`text`), Parameter<[Media]>.value(`medias`), Parameter<UUID?>.value(`replyToUUID`)))
+		let perform = methodPerformValue(.m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(Parameter<String>.value(`text`), Parameter<[Media]>.value(`medias`), Parameter<UUID?>.value(`replyToUUID`))) as? (String, [Media], UUID?) -> Void
+		perform?(`text`, `medias`, `replyToUUID`)
     }
 
     open func didUpdateDraftText(_ text: String) {
@@ -285,10 +285,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?(`text`)
     }
 
-    open func didFinishRecordingAudioFile(_ file: AudioFile) {
-        addInvocation(.m_didFinishRecordingAudioFile__file(Parameter<AudioFile>.value(`file`)))
-		let perform = methodPerformValue(.m_didFinishRecordingAudioFile__file(Parameter<AudioFile>.value(`file`))) as? (AudioFile) -> Void
-		perform?(`file`)
+    open func didFinishRecordingAudioFile(_ file: AudioFile, replyingToMessageUUID replyToUUID: UUID?) {
+        addInvocation(.m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(Parameter<AudioFile>.value(`file`), Parameter<UUID?>.value(`replyToUUID`)))
+		let perform = methodPerformValue(.m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(Parameter<AudioFile>.value(`file`), Parameter<UUID?>.value(`replyToUUID`))) as? (AudioFile, UUID?) -> Void
+		perform?(`file`, `replyToUUID`)
     }
 
     open func didTapDeleteMessageButton(withId messageId: UUID) {
@@ -306,6 +306,18 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
     open func didTapTextItem(withId: UUID) {
         addInvocation(.m_didTapTextItem__withId_withId(Parameter<UUID>.value(`withId`)))
 		let perform = methodPerformValue(.m_didTapTextItem__withId_withId(Parameter<UUID>.value(`withId`))) as? (UUID) -> Void
+		perform?(`withId`)
+    }
+
+    open func didReplyToMessage(withId: UUID) {
+        addInvocation(.m_didReplyToMessage__withId_withId(Parameter<UUID>.value(`withId`)))
+		let perform = methodPerformValue(.m_didReplyToMessage__withId_withId(Parameter<UUID>.value(`withId`))) as? (UUID) -> Void
+		perform?(`withId`)
+    }
+
+    open func didTapMessagePreview(withId: UUID) {
+        addInvocation(.m_didTapMessagePreview__withId_withId(Parameter<UUID>.value(`withId`)))
+		let perform = methodPerformValue(.m_didTapMessagePreview__withId_withId(Parameter<UUID>.value(`withId`))) as? (UUID) -> Void
 		perform?(`withId`)
     }
 
@@ -348,12 +360,14 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 
 
     fileprivate enum MethodType {
-        case m_didTapOnSend__text_textmedias_medias(Parameter<String>, Parameter<[Media]>)
+        case m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(Parameter<String>, Parameter<[Media]>, Parameter<UUID?>)
         case m_didUpdateDraftText__text(Parameter<String>)
-        case m_didFinishRecordingAudioFile__file(Parameter<AudioFile>)
+        case m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(Parameter<AudioFile>, Parameter<UUID?>)
         case m_didTapDeleteMessageButton__withId_messageId(Parameter<UUID>)
         case m_didTapMedia__media(Parameter<Media>)
         case m_didTapTextItem__withId_withId(Parameter<UUID>)
+        case m_didReplyToMessage__withId_withId(Parameter<UUID>)
+        case m_didTapMessagePreview__withId_withId(Parameter<UUID>)
         case m_didTapCameraButton
         case m_didTapPhotoLibraryButton
         case m_didTapDocumentLibraryButton
@@ -363,10 +377,11 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_didTapOnSend__text_textmedias_medias(let lhsText, let lhsMedias), .m_didTapOnSend__text_textmedias_medias(let rhsText, let rhsMedias)):
+            case (.m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(let lhsText, let lhsMedias, let lhsReplytouuid), .m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(let rhsText, let rhsMedias, let rhsReplytouuid)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsText, rhs: rhsText, with: matcher), lhsText, rhsText, "text"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMedias, rhs: rhsMedias, with: matcher), lhsMedias, rhsMedias, "medias"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsReplytouuid, rhs: rhsReplytouuid, with: matcher), lhsReplytouuid, rhsReplytouuid, "replyingToMessageUUID replyToUUID"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_didUpdateDraftText__text(let lhsText), .m_didUpdateDraftText__text(let rhsText)):
@@ -374,9 +389,10 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsText, rhs: rhsText, with: matcher), lhsText, rhsText, "_ text"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_didFinishRecordingAudioFile__file(let lhsFile), .m_didFinishRecordingAudioFile__file(let rhsFile)):
+            case (.m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(let lhsFile, let lhsReplytouuid), .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(let rhsFile, let rhsReplytouuid)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsFile, rhs: rhsFile, with: matcher), lhsFile, rhsFile, "_ file"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsReplytouuid, rhs: rhsReplytouuid, with: matcher), lhsReplytouuid, rhsReplytouuid, "replyingToMessageUUID replyToUUID"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_didTapDeleteMessageButton__withId_messageId(let lhsMessageid), .m_didTapDeleteMessageButton__withId_messageId(let rhsMessageid)):
@@ -390,6 +406,16 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 				return Matcher.ComparisonResult(results)
 
             case (.m_didTapTextItem__withId_withId(let lhsWithid), .m_didTapTextItem__withId_withId(let rhsWithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsWithid, rhs: rhsWithid, with: matcher), lhsWithid, rhsWithid, "withId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_didReplyToMessage__withId_withId(let lhsWithid), .m_didReplyToMessage__withId_withId(let rhsWithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsWithid, rhs: rhsWithid, with: matcher), lhsWithid, rhsWithid, "withId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_didTapMessagePreview__withId_withId(let lhsWithid), .m_didTapMessagePreview__withId_withId(let rhsWithid)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsWithid, rhs: rhsWithid, with: matcher), lhsWithid, rhsWithid, "withId"))
 				return Matcher.ComparisonResult(results)
@@ -411,12 +437,14 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_didTapOnSend__text_textmedias_medias(p0, p1): return p0.intValue + p1.intValue
+            case let .m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_didUpdateDraftText__text(p0): return p0.intValue
-            case let .m_didFinishRecordingAudioFile__file(p0): return p0.intValue
+            case let .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(p0, p1): return p0.intValue + p1.intValue
             case let .m_didTapDeleteMessageButton__withId_messageId(p0): return p0.intValue
             case let .m_didTapMedia__media(p0): return p0.intValue
             case let .m_didTapTextItem__withId_withId(p0): return p0.intValue
+            case let .m_didReplyToMessage__withId_withId(p0): return p0.intValue
+            case let .m_didTapMessagePreview__withId_withId(p0): return p0.intValue
             case .m_didTapCameraButton: return 0
             case .m_didTapPhotoLibraryButton: return 0
             case .m_didTapDocumentLibraryButton: return 0
@@ -427,12 +455,14 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         }
         func assertionName() -> String {
             switch self {
-            case .m_didTapOnSend__text_textmedias_medias: return ".didTapOnSend(text:medias:)"
+            case .m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID: return ".didTapOnSend(text:medias:replyingToMessageUUID:)"
             case .m_didUpdateDraftText__text: return ".didUpdateDraftText(_:)"
-            case .m_didFinishRecordingAudioFile__file: return ".didFinishRecordingAudioFile(_:)"
+            case .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID: return ".didFinishRecordingAudioFile(_:replyingToMessageUUID:)"
             case .m_didTapDeleteMessageButton__withId_messageId: return ".didTapDeleteMessageButton(withId:)"
             case .m_didTapMedia__media: return ".didTapMedia(_:)"
             case .m_didTapTextItem__withId_withId: return ".didTapTextItem(withId:)"
+            case .m_didReplyToMessage__withId_withId: return ".didReplyToMessage(withId:)"
+            case .m_didTapMessagePreview__withId_withId: return ".didTapMessagePreview(withId:)"
             case .m_didTapCameraButton: return ".didTapCameraButton()"
             case .m_didTapPhotoLibraryButton: return ".didTapPhotoLibraryButton()"
             case .m_didTapDocumentLibraryButton: return ".didTapDocumentLibraryButton()"
@@ -457,12 +487,14 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func didTapOnSend(text: Parameter<String>, medias: Parameter<[Media]>) -> Verify { return Verify(method: .m_didTapOnSend__text_textmedias_medias(`text`, `medias`))}
+        public static func didTapOnSend(text: Parameter<String>, medias: Parameter<[Media]>, replyingToMessageUUID replyToUUID: Parameter<UUID?>) -> Verify { return Verify(method: .m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(`text`, `medias`, `replyToUUID`))}
         public static func didUpdateDraftText(_ text: Parameter<String>) -> Verify { return Verify(method: .m_didUpdateDraftText__text(`text`))}
-        public static func didFinishRecordingAudioFile(_ file: Parameter<AudioFile>) -> Verify { return Verify(method: .m_didFinishRecordingAudioFile__file(`file`))}
+        public static func didFinishRecordingAudioFile(_ file: Parameter<AudioFile>, replyingToMessageUUID replyToUUID: Parameter<UUID?>) -> Verify { return Verify(method: .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(`file`, `replyToUUID`))}
         public static func didTapDeleteMessageButton(withId messageId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapDeleteMessageButton__withId_messageId(`messageId`))}
         public static func didTapMedia(_ media: Parameter<Media>) -> Verify { return Verify(method: .m_didTapMedia__media(`media`))}
         public static func didTapTextItem(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapTextItem__withId_withId(`withId`))}
+        public static func didReplyToMessage(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didReplyToMessage__withId_withId(`withId`))}
+        public static func didTapMessagePreview(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapMessagePreview__withId_withId(`withId`))}
         public static func didTapCameraButton() -> Verify { return Verify(method: .m_didTapCameraButton)}
         public static func didTapPhotoLibraryButton() -> Verify { return Verify(method: .m_didTapPhotoLibraryButton)}
         @available(iOS 14, *)
@@ -476,14 +508,14 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func didTapOnSend(text: Parameter<String>, medias: Parameter<[Media]>, perform: @escaping (String, [Media]) -> Void) -> Perform {
-            return Perform(method: .m_didTapOnSend__text_textmedias_medias(`text`, `medias`), performs: perform)
+        public static func didTapOnSend(text: Parameter<String>, medias: Parameter<[Media]>, replyingToMessageUUID replyToUUID: Parameter<UUID?>, perform: @escaping (String, [Media], UUID?) -> Void) -> Perform {
+            return Perform(method: .m_didTapOnSend__text_textmedias_mediasreplyingToMessageUUID_replyToUUID(`text`, `medias`, `replyToUUID`), performs: perform)
         }
         public static func didUpdateDraftText(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_didUpdateDraftText__text(`text`), performs: perform)
         }
-        public static func didFinishRecordingAudioFile(_ file: Parameter<AudioFile>, perform: @escaping (AudioFile) -> Void) -> Perform {
-            return Perform(method: .m_didFinishRecordingAudioFile__file(`file`), performs: perform)
+        public static func didFinishRecordingAudioFile(_ file: Parameter<AudioFile>, replyingToMessageUUID replyToUUID: Parameter<UUID?>, perform: @escaping (AudioFile, UUID?) -> Void) -> Perform {
+            return Perform(method: .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(`file`, `replyToUUID`), performs: perform)
         }
         public static func didTapDeleteMessageButton(withId messageId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
             return Perform(method: .m_didTapDeleteMessageButton__withId_messageId(`messageId`), performs: perform)
@@ -493,6 +525,12 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         }
         public static func didTapTextItem(withId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
             return Perform(method: .m_didTapTextItem__withId_withId(`withId`), performs: perform)
+        }
+        public static func didReplyToMessage(withId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_didReplyToMessage__withId_withId(`withId`), performs: perform)
+        }
+        public static func didTapMessagePreview(withId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_didTapMessagePreview__withId_withId(`withId`), performs: perform)
         }
         public static func didTapCameraButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_didTapCameraButton, performs: perform)
@@ -721,16 +759,16 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 		return __value
     }
 
-    open func sendMessage(_ message: MessageInput, inConversationWithId conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
-        addInvocation(.m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>.value(`message`), Parameter<UUID>.value(`conversationId`), Parameter<(Result<Void, NablaError>) -> Void>.value(`handler`)))
-		let perform = methodPerformValue(.m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>.value(`message`), Parameter<UUID>.value(`conversationId`), Parameter<(Result<Void, NablaError>) -> Void>.value(`handler`))) as? (MessageInput, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void
-		perform?(`message`, `conversationId`, `handler`)
+    open func sendMessage(_ message: MessageInput, replyingToMessageWithId: UUID?, inConversationWithId conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+        addInvocation(.m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>.value(`message`), Parameter<UUID?>.value(`replyingToMessageWithId`), Parameter<UUID>.value(`conversationId`), Parameter<(Result<Void, NablaError>) -> Void>.value(`handler`)))
+		let perform = methodPerformValue(.m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>.value(`message`), Parameter<UUID?>.value(`replyingToMessageWithId`), Parameter<UUID>.value(`conversationId`), Parameter<(Result<Void, NablaError>) -> Void>.value(`handler`))) as? (MessageInput, UUID?, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void
+		perform?(`message`, `replyingToMessageWithId`, `conversationId`, `handler`)
 		var __value: Cancellable
 		do {
-		    __value = try methodReturnValue(.m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>.value(`message`), Parameter<UUID>.value(`conversationId`), Parameter<(Result<Void, NablaError>) -> Void>.value(`handler`))).casted()
+		    __value = try methodReturnValue(.m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>.value(`message`), Parameter<UUID?>.value(`replyingToMessageWithId`), Parameter<UUID>.value(`conversationId`), Parameter<(Result<Void, NablaError>) -> Void>.value(`handler`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for sendMessage(_ message: MessageInput, inConversationWithId conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void). Use given")
-			Failure("Stub return value not specified for sendMessage(_ message: MessageInput, inConversationWithId conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for sendMessage(_ message: MessageInput, replyingToMessageWithId: UUID?, inConversationWithId conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void). Use given")
+			Failure("Stub return value not specified for sendMessage(_ message: MessageInput, replyingToMessageWithId: UUID?, inConversationWithId conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void). Use given")
 		}
 		return __value
     }
@@ -771,7 +809,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         case m_markConversationAsSeen__conversationIdhandler_handler(Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_watchConversations__handler_handler(Parameter<(Result<ConversationList, NablaError>) -> Void>)
         case m_watchConversation__conversationIdhandler_handler(Parameter<UUID>, Parameter<(Result<Conversation, NablaError>) -> Void>)
-        case m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
+        case m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>, Parameter<UUID?>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(Parameter<UUID>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(Parameter<UUID>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case p_logger_get
@@ -813,9 +851,10 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(let lhsMessage, let lhsConversationid, let lhsHandler), .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(let rhsMessage, let rhsConversationid, let rhsHandler)):
+            case (.m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(let lhsMessage, let lhsReplyingtomessagewithid, let lhsConversationid, let lhsHandler), .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(let rhsMessage, let rhsReplyingtomessagewithid, let rhsConversationid, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "_ message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsReplyingtomessagewithid, rhs: rhsReplyingtomessagewithid, with: matcher), lhsReplyingtomessagewithid, rhsReplyingtomessagewithid, "replyingToMessageWithId"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "inConversationWithId conversationId"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
@@ -846,7 +885,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case let .m_markConversationAsSeen__conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
             case let .m_watchConversations__handler_handler(p0): return p0.intValue
             case let .m_watchConversation__conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
-            case let .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .p_logger_get: return 0
@@ -860,7 +899,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case .m_markConversationAsSeen__conversationIdhandler_handler: return ".markConversationAsSeen(_:handler:)"
             case .m_watchConversations__handler_handler: return ".watchConversations(handler:)"
             case .m_watchConversation__conversationIdhandler_handler: return ".watchConversation(_:handler:)"
-            case .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler: return ".sendMessage(_:inConversationWithId:handler:)"
+            case .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler: return ".sendMessage(_:replyingToMessageWithId:inConversationWithId:handler:)"
             case .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler: return ".retrySending(itemWithId:inConversationWithId:handler:)"
             case .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler: return ".deleteMessage(withId:conversationId:handler:)"
             case .p_logger_get: return "[get] .logger"
@@ -898,8 +937,8 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
             return Given(method: .m_watchConversation__conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyingToMessageWithId: Parameter<UUID?>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(`message`, `replyingToMessageWithId`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
             return Given(method: .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(`itemId`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -949,9 +988,9 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 			willProduce(stubber)
 			return given
         }
-        public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyingToMessageWithId: Parameter<UUID?>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
             let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(`message`, `replyingToMessageWithId`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Cancellable).self)
 			willProduce(stubber)
 			return given
@@ -981,7 +1020,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func markConversationAsSeen(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_markConversationAsSeen__conversationIdhandler_handler(`conversationId`, `handler`))}
         public static func watchConversations(handler: Parameter<(Result<ConversationList, NablaError>) -> Void>) -> Verify { return Verify(method: .m_watchConversations__handler_handler(`handler`))}
         public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>) -> Verify { return Verify(method: .m_watchConversation__conversationIdhandler_handler(`conversationId`, `handler`))}
-        public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`))}
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyingToMessageWithId: Parameter<UUID?>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(`message`, `replyingToMessageWithId`, `conversationId`, `handler`))}
         public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(`itemId`, `conversationId`, `handler`))}
         public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(`messageId`, `conversationId`, `handler`))}
         public static var logger: Verify { return Verify(method: .p_logger_get) }
@@ -1009,8 +1048,8 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, perform: @escaping (UUID, @escaping (Result<Conversation, NablaError>) -> Void) -> Void) -> Perform {
             return Perform(method: .m_watchConversation__conversationIdhandler_handler(`conversationId`, `handler`), performs: perform)
         }
-        public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, perform: @escaping (MessageInput, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void) -> Perform {
-            return Perform(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`), performs: perform)
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyingToMessageWithId: Parameter<UUID?>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, perform: @escaping (MessageInput, UUID?, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void) -> Perform {
+            return Perform(method: .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(`message`, `replyingToMessageWithId`, `conversationId`, `handler`), performs: perform)
         }
         public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, perform: @escaping (UUID, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void) -> Perform {
             return Perform(method: .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(`itemId`, `conversationId`, `handler`), performs: perform)

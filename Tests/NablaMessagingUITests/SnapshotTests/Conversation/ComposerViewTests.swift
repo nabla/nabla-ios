@@ -56,4 +56,68 @@ final class ComposerViewTests: XCTestCase {
         // THEN
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
     }
+
+    func testComposerViewReplyToText() {
+        // GIVEN
+        sut.placeHolder = .placeholderStub
+        // WHEN
+        sut.replyToMessage = TextMessageViewItem(
+            id: UUID(),
+            date: Date(),
+            sender: .patient,
+            sendingState: .sent,
+            replyTo: nil,
+            text: .loremStub
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+    }
+
+    func testComposerViewReplyToImage() {
+        // GIVEN
+        sut.placeHolder = .placeholderStub
+        // WHEN
+        sut.replyToMessage = ImageMessageViewItem(
+            id: UUID(),
+            date: Date(),
+            sender: .patient,
+            sendingState: .sent,
+            replyTo: nil,
+            image: .mockImage
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
+    }
+
+    func testComposerViewReplyToDocument() {
+        // GIVEN
+        sut.placeHolder = .placeholderStub
+        // WHEN
+        sut.replyToMessage = DocumentMessageViewItem(
+            id: UUID(),
+            date: Date(),
+            sender: .patient,
+            sendingState: .sent,
+            replyTo: nil,
+            document: .mockDocument
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
+    }
+
+    func testComposerViewReplyToAudio() {
+        // GIVEN
+        sut.placeHolder = .placeholderStub
+        // WHEN
+        sut.replyToMessage = AudioMessageViewItem(
+            id: UUID(),
+            date: Date(),
+            sender: .patient,
+            sendingState: .sent,
+            replyTo: nil,
+            audio: .init(media: .mockAudioFile, durationMs: 10000)
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+    }
 }

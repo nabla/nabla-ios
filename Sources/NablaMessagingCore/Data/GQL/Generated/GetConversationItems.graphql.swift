@@ -36,6 +36,7 @@ public extension GQL {
       var document: String = operationDefinition
       document.append("\n" + ConversationItemFragment.fragmentDefinition)
       document.append("\n" + MessageFragment.fragmentDefinition)
+      document.append("\n" + MessageAuthorFragment.fragmentDefinition)
       document.append("\n" + ProviderFragment.fragmentDefinition)
       document.append("\n" + EphemeralUrlFragment.fragmentDefinition)
       document.append("\n" + PatientFragment.fragmentDefinition)
@@ -45,6 +46,7 @@ public extension GQL {
       document.append("\n" + ImageMessageContentFragment.fragmentDefinition)
       document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
       document.append("\n" + AudioMessageContentFragment.fragmentDefinition)
+      document.append("\n" + ReplyMessageFragment.fragmentDefinition)
       document.append("\n" + ConversationActivityFragment.fragmentDefinition)
       document.append("\n" + MaybeProviderFragment.fragmentDefinition)
       return document

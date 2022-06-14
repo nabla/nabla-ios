@@ -17,26 +17,15 @@ public extension GQL {
         createdAt
         author {
           __typename
-          ... on Provider {
-            __typename
-            ...ProviderFragment
-          }
-          ... on Patient {
-            __typename
-            ...PatientFragment
-          }
-          ... on System {
-            __typename
-            ...SystemMessageFragment
-          }
-          ... on DeletedProvider {
-            __typename
-            empty: _
-          }
+          ...MessageAuthorFragment
         }
         content {
           __typename
           ...MessageContentFragment
+        }
+        replyTo {
+          __typename
+          ...ReplyMessageFragment
         }
       }
       """
@@ -51,6 +40,7 @@ public extension GQL {
         GraphQLField("createdAt", type: .nonNull(.scalar(GQL.DateTime.self))),
         GraphQLField("author", type: .nonNull(.object(Author.selections))),
         GraphQLField("content", type: .nonNull(.object(Content.selections))),
+        GraphQLField("replyTo", type: .object(ReplyTo.selections)),
       ]
     }
 
@@ -60,8 +50,8 @@ public extension GQL {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, clientId: GQL.UUID? = nil, createdAt: GQL.DateTime, author: Author, content: Content) {
-      self.init(unsafeResultMap: ["__typename": "Message", "id": id, "clientId": clientId, "createdAt": createdAt, "author": author.resultMap, "content": content.resultMap])
+    public init(id: GQL.UUID, clientId: GQL.UUID? = nil, createdAt: GQL.DateTime, author: Author, content: Content, replyTo: ReplyTo? = nil) {
+      self.init(unsafeResultMap: ["__typename": "Message", "id": id, "clientId": clientId, "createdAt": createdAt, "author": author.resultMap, "content": content.resultMap, "replyTo": replyTo.flatMap { (value: ReplyTo) -> ResultMap in value.resultMap }])
     }
 
     public var __typename: String {
@@ -118,17 +108,22 @@ public extension GQL {
       }
     }
 
+    public var replyTo: ReplyTo? {
+      get {
+        return (resultMap["replyTo"] as? ResultMap).flatMap { ReplyTo(unsafeResultMap: $0) }
+      }
+      set {
+        resultMap.updateValue(newValue?.resultMap, forKey: "replyTo")
+      }
+    }
+
     public struct Author: GraphQLSelectionSet {
       public static let possibleTypes: [String] = ["System", "Patient", "Provider", "DeletedProvider"]
 
       public static var selections: [GraphQLSelection] {
         return [
-          GraphQLTypeCase(
-            variants: ["Provider": AsProvider.selections, "Patient": AsPatient.selections, "System": AsSystem.selections, "DeletedProvider": AsDeletedProvider.selections],
-            default: [
-              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            ]
-          )
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLFragmentSpread(MessageAuthorFragment.self),
         ]
       }
 
@@ -155,249 +150,28 @@ public extension GQL {
         }
       }
 
-      public var asProvider: AsProvider? {
+      public var fragments: Fragments {
         get {
-          if !AsProvider.possibleTypes.contains(__typename) { return nil }
-          return AsProvider(unsafeResultMap: resultMap)
+          return Fragments(unsafeResultMap: resultMap)
         }
         set {
-          guard let newValue = newValue else { return }
-          resultMap = newValue.resultMap
+          resultMap += newValue.resultMap
         }
       }
 
-      public struct AsProvider: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["Provider"]
-
-        public static var selections: [GraphQLSelection] {
-          return [
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLFragmentSpread(ProviderFragment.self),
-          ]
-        }
-
+      public struct Fragments {
         public private(set) var resultMap: ResultMap
 
         public init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var __typename: String {
+        public var messageAuthorFragment: MessageAuthorFragment {
           get {
-            return resultMap["__typename"]! as! String
-          }
-          set {
-            resultMap.updateValue(newValue, forKey: "__typename")
-          }
-        }
-
-        public var fragments: Fragments {
-          get {
-            return Fragments(unsafeResultMap: resultMap)
+            return MessageAuthorFragment(unsafeResultMap: resultMap)
           }
           set {
             resultMap += newValue.resultMap
-          }
-        }
-
-        public struct Fragments {
-          public private(set) var resultMap: ResultMap
-
-          public init(unsafeResultMap: ResultMap) {
-            self.resultMap = unsafeResultMap
-          }
-
-          public var providerFragment: ProviderFragment {
-            get {
-              return ProviderFragment(unsafeResultMap: resultMap)
-            }
-            set {
-              resultMap += newValue.resultMap
-            }
-          }
-        }
-      }
-
-      public var asPatient: AsPatient? {
-        get {
-          if !AsPatient.possibleTypes.contains(__typename) { return nil }
-          return AsPatient(unsafeResultMap: resultMap)
-        }
-        set {
-          guard let newValue = newValue else { return }
-          resultMap = newValue.resultMap
-        }
-      }
-
-      public struct AsPatient: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["Patient"]
-
-        public static var selections: [GraphQLSelection] {
-          return [
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLFragmentSpread(PatientFragment.self),
-          ]
-        }
-
-        public private(set) var resultMap: ResultMap
-
-        public init(unsafeResultMap: ResultMap) {
-          self.resultMap = unsafeResultMap
-        }
-
-        public init(id: GQL.UUID) {
-          self.init(unsafeResultMap: ["__typename": "Patient", "id": id])
-        }
-
-        public var __typename: String {
-          get {
-            return resultMap["__typename"]! as! String
-          }
-          set {
-            resultMap.updateValue(newValue, forKey: "__typename")
-          }
-        }
-
-        public var fragments: Fragments {
-          get {
-            return Fragments(unsafeResultMap: resultMap)
-          }
-          set {
-            resultMap += newValue.resultMap
-          }
-        }
-
-        public struct Fragments {
-          public private(set) var resultMap: ResultMap
-
-          public init(unsafeResultMap: ResultMap) {
-            self.resultMap = unsafeResultMap
-          }
-
-          public var patientFragment: PatientFragment {
-            get {
-              return PatientFragment(unsafeResultMap: resultMap)
-            }
-            set {
-              resultMap += newValue.resultMap
-            }
-          }
-        }
-      }
-
-      public var asSystem: AsSystem? {
-        get {
-          if !AsSystem.possibleTypes.contains(__typename) { return nil }
-          return AsSystem(unsafeResultMap: resultMap)
-        }
-        set {
-          guard let newValue = newValue else { return }
-          resultMap = newValue.resultMap
-        }
-      }
-
-      public struct AsSystem: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["System"]
-
-        public static var selections: [GraphQLSelection] {
-          return [
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLFragmentSpread(SystemMessageFragment.self),
-          ]
-        }
-
-        public private(set) var resultMap: ResultMap
-
-        public init(unsafeResultMap: ResultMap) {
-          self.resultMap = unsafeResultMap
-        }
-
-        public var __typename: String {
-          get {
-            return resultMap["__typename"]! as! String
-          }
-          set {
-            resultMap.updateValue(newValue, forKey: "__typename")
-          }
-        }
-
-        public var fragments: Fragments {
-          get {
-            return Fragments(unsafeResultMap: resultMap)
-          }
-          set {
-            resultMap += newValue.resultMap
-          }
-        }
-
-        public struct Fragments {
-          public private(set) var resultMap: ResultMap
-
-          public init(unsafeResultMap: ResultMap) {
-            self.resultMap = unsafeResultMap
-          }
-
-          public var systemMessageFragment: SystemMessageFragment {
-            get {
-              return SystemMessageFragment(unsafeResultMap: resultMap)
-            }
-            set {
-              resultMap += newValue.resultMap
-            }
-          }
-        }
-      }
-
-      public var asDeletedProvider: AsDeletedProvider? {
-        get {
-          if !AsDeletedProvider.possibleTypes.contains(__typename) { return nil }
-          return AsDeletedProvider(unsafeResultMap: resultMap)
-        }
-        set {
-          guard let newValue = newValue else { return }
-          resultMap = newValue.resultMap
-        }
-      }
-
-      public struct AsDeletedProvider: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["DeletedProvider"]
-
-        public static var selections: [GraphQLSelection] {
-          return [
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLField("_", alias: "empty", type: .nonNull(.scalar(EmptyObject.self))),
-          ]
-        }
-
-        public private(set) var resultMap: ResultMap
-
-        public init(unsafeResultMap: ResultMap) {
-          self.resultMap = unsafeResultMap
-        }
-
-        public init(empty: EmptyObject) {
-          self.init(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
-        }
-
-        public var __typename: String {
-          get {
-            return resultMap["__typename"]! as! String
-          }
-          set {
-            resultMap.updateValue(newValue, forKey: "__typename")
-          }
-        }
-
-        public var empty: EmptyObject {
-          get {
-            return resultMap["empty"]! as! EmptyObject
-          }
-          set {
-            resultMap.updateValue(newValue, forKey: "empty")
           }
         }
       }
@@ -455,6 +229,58 @@ public extension GQL {
         public var messageContentFragment: MessageContentFragment {
           get {
             return MessageContentFragment(unsafeResultMap: resultMap)
+          }
+          set {
+            resultMap += newValue.resultMap
+          }
+        }
+      }
+    }
+
+    public struct ReplyTo: GraphQLSelectionSet {
+      public static let possibleTypes: [String] = ["Message"]
+
+      public static var selections: [GraphQLSelection] {
+        return [
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLFragmentSpread(ReplyMessageFragment.self),
+        ]
+      }
+
+      public private(set) var resultMap: ResultMap
+
+      public init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
+      }
+
+      public var __typename: String {
+        get {
+          return resultMap["__typename"]! as! String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(unsafeResultMap: resultMap)
+        }
+        set {
+          resultMap += newValue.resultMap
+        }
+      }
+
+      public struct Fragments {
+        public private(set) var resultMap: ResultMap
+
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+        public var replyMessageFragment: ReplyMessageFragment {
+          get {
+            return ReplyMessageFragment(unsafeResultMap: resultMap)
           }
           set {
             resultMap += newValue.resultMap

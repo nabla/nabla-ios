@@ -10,11 +10,12 @@ public extension GQL {
     /// The raw GraphQL definition of this operation.
     public let operationDefinition: String =
       """
-      mutation SendMessage($conversationId: UUID!, $content: SendMessageContentInput!, $clientId: UUID!) {
+      mutation SendMessage($conversationId: UUID!, $content: SendMessageContentInput!, $clientId: UUID!, $replyToMessageId: UUID) {
         sendMessage(
           conversationId: $conversationId
           content: $content
           clientId: $clientId
+          replyToMessageId: $replyToMessageId
         ) {
           __typename
           message {
@@ -30,6 +31,7 @@ public extension GQL {
     public var queryDocument: String {
       var document: String = operationDefinition
       document.append("\n" + MessageFragment.fragmentDefinition)
+      document.append("\n" + MessageAuthorFragment.fragmentDefinition)
       document.append("\n" + ProviderFragment.fragmentDefinition)
       document.append("\n" + EphemeralUrlFragment.fragmentDefinition)
       document.append("\n" + PatientFragment.fragmentDefinition)
@@ -39,21 +41,24 @@ public extension GQL {
       document.append("\n" + ImageMessageContentFragment.fragmentDefinition)
       document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
       document.append("\n" + AudioMessageContentFragment.fragmentDefinition)
+      document.append("\n" + ReplyMessageFragment.fragmentDefinition)
       return document
     }
 
     public var conversationId: GQL.UUID
     public var content: SendMessageContentInput
     public var clientId: GQL.UUID
+    public var replyToMessageId: GQL.UUID?
 
-    public init(conversationId: GQL.UUID, content: SendMessageContentInput, clientId: GQL.UUID) {
+    public init(conversationId: GQL.UUID, content: SendMessageContentInput, clientId: GQL.UUID, replyToMessageId: GQL.UUID? = nil) {
       self.conversationId = conversationId
       self.content = content
       self.clientId = clientId
+      self.replyToMessageId = replyToMessageId
     }
 
     public var variables: GraphQLMap? {
-      return ["conversationId": conversationId, "content": content, "clientId": clientId]
+      return ["conversationId": conversationId, "content": content, "clientId": clientId, "replyToMessageId": replyToMessageId]
     }
 
     public struct Data: GraphQLSelectionSet {
@@ -61,7 +66,7 @@ public extension GQL {
 
       public static var selections: [GraphQLSelection] {
         return [
-          GraphQLField("sendMessage", arguments: ["conversationId": GraphQLVariable("conversationId"), "content": GraphQLVariable("content"), "clientId": GraphQLVariable("clientId")], type: .nonNull(.object(SendMessage.selections))),
+          GraphQLField("sendMessage", arguments: ["conversationId": GraphQLVariable("conversationId"), "content": GraphQLVariable("content"), "clientId": GraphQLVariable("clientId"), "replyToMessageId": GraphQLVariable("replyToMessageId")], type: .nonNull(.object(SendMessage.selections))),
         ]
       }
 

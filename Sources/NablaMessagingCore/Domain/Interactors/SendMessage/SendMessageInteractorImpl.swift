@@ -12,6 +12,7 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
 
     func execute(
         message: MessageInput,
+        replyToMessageId: UUID?,
         conversationId: UUID,
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
@@ -24,6 +25,7 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
         }
         return repository.sendMessage(
             message,
+            replyToMessageId: replyToMessageId,
             inConversationWithId: conversationId,
             handler: handler
         )

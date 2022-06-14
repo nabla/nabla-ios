@@ -31,11 +31,14 @@ protocol ConversationViewContract: AnyObject {
     func displayImageDetail(for media: Media)
     func displayDocumentDetail(for media: Media)
     func showErrorAlert(viewModel: AlertViewModel)
+    func set(replyToMessage: ConversationViewMessageItem)
+    func scrollToItem(withId id: UUID)
 }
 
 protocol ConversationViewMessageItem: ConversationViewItem {
     var sender: NablaMessagingCore.ConversationMessageSender { get }
     var sendingState: ConversationMessageSendingState { get }
+    var replyTo: ConversationViewMessageItem? { get }
     var date: Date { get }
     var isContiguous: Bool { get set }
     var isFocused: Bool { get set }

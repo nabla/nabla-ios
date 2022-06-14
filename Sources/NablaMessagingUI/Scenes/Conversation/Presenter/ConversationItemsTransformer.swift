@@ -54,6 +54,7 @@ enum ConversationItemsTransformer {
             date: textMessage.date,
             sender: textMessage.sender,
             sendingState: textMessage.sendingState,
+            replyTo: textMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem,
             text: textMessage.content
         )
     }
@@ -63,7 +64,8 @@ enum ConversationItemsTransformer {
             id: deletedMessage.id,
             date: deletedMessage.date,
             sender: deletedMessage.sender,
-            sendingState: deletedMessage.sendingState
+            sendingState: deletedMessage.sendingState,
+            replyTo: deletedMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem
         )
     }
 
@@ -73,6 +75,7 @@ enum ConversationItemsTransformer {
             date: imageMessage.date,
             sender: imageMessage.sender,
             sendingState: imageMessage.sendingState,
+            replyTo: imageMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem,
             image: imageMessage.content
         )
     }
@@ -83,6 +86,7 @@ enum ConversationItemsTransformer {
             date: documentMessage.date,
             sender: documentMessage.sender,
             sendingState: documentMessage.sendingState,
+            replyTo: documentMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem,
             document: documentMessage.content
         )
     }
@@ -101,6 +105,7 @@ enum ConversationItemsTransformer {
             date: audioMessage.date,
             sender: audioMessage.sender,
             sendingState: audioMessage.sendingState,
+            replyTo: audioMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem,
             audio: audioMessage.content
         )
     }

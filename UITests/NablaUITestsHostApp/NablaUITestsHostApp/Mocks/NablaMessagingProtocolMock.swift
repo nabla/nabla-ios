@@ -65,16 +65,17 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
         return watchConversationClosure?(conversationId, handler) ?? CancellableMock()
     }
 
-    var sendMessageParams: [(message: MessageInput, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []
+    var sendMessageParams: [(message: MessageInput, replyTo: UUID?, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []
     var sendMessageClosure: ((_ message: MessageInput,
                               _ conversationId: UUID,
                               _ handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable)?
     func sendMessage(
         _ message: MessageInput,
+        replyingToMessageWithId: UUID?,
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
-        sendMessageParams.append((message: message, conversationId: conversationId, handler: handler))
+        sendMessageParams.append((message: message, replyTo: replyingToMessageWithId, conversationId: conversationId, handler: handler))
         return sendMessageClosure?(message, conversationId, handler) ?? CancellableMock()
     }
 

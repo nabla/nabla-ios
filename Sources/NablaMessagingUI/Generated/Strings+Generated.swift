@@ -14,6 +14,8 @@ internal enum L10n {
   internal static let conversationActionCopyMessage = L10n.tr("Localizable", "conversation_action_copy_message")
   /// Delete
   internal static let conversationActionDeleteMessage = L10n.tr("Localizable", "conversation_action_delete_message")
+  /// Reply to
+  internal static let conversationActionReplyTo = L10n.tr("Localizable", "conversation_action_reply_to")
   /// [Deleted provider]
   internal static let conversationActivityDeletedProviderName = L10n.tr("Localizable", "conversation_activity_deleted_provider_name")
   /// Camera
@@ -74,6 +76,24 @@ internal enum L10n {
   internal static func conversationProviderJoined(_ p1: Any) -> String {
     return L10n.tr("Localizable", "conversation_provider_joined", String(describing: p1))
   }
+  /// Replying to %@
+  internal static func conversationReplyToAuthor(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "conversation_reply_to_author", String(describing: p1))
+  }
+  /// [Deleted provider]
+  internal static let conversationReplyToAuthorDeletedProvider = L10n.tr("Localizable", "conversation_reply_to_author_deleted_provider")
+  /// unknown
+  internal static let conversationReplyToAuthorUnknownAuthor = L10n.tr("Localizable", "conversation_reply_to_author_unknown_author")
+  /// you
+  internal static let conversationReplyToAuthorYou = L10n.tr("Localizable", "conversation_reply_to_author_you")
+  /// Audio
+  internal static let conversationReplyToPreviewAudio = L10n.tr("Localizable", "conversation_reply_to_preview_audio")
+  /// Document
+  internal static let conversationReplyToPreviewDocument = L10n.tr("Localizable", "conversation_reply_to_preview_document")
+  /// Picture
+  internal static let conversationReplyToPreviewPicture = L10n.tr("Localizable", "conversation_reply_to_preview_picture")
+  /// Preview
+  internal static let conversationReplyToPreviewUnknown = L10n.tr("Localizable", "conversation_reply_to_preview_unknown")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

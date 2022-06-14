@@ -1,0 +1,14 @@
+fragment MessageAuthorFragment on MessageAuthor {
+    ... on Provider {
+        ...ProviderFragment
+    }
+    ... on Patient {
+        ...PatientFragment
+    }
+    ... on System {
+        ...SystemMessageFragment
+    }
+    ... on DeletedProvider {
+        empty: _
+    }
+}

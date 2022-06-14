@@ -91,6 +91,20 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         )
     }
 
+    func set(replyToMessage: ConversationViewMessageItem) {
+        composerView.replyToMessage = replyToMessage
+    }
+
+    func scrollToItem(withId id: UUID) {
+        guard
+            case let .loaded(items) = state,
+            let item = items.first(where: { $0.id == id }),
+            let indexPath = dataSource.indexPath(for: DiffableConversationViewItem(value: item)) else {
+            return
+        }
+        collectionView.scrollToItem(at: indexPath, at: [.centeredHorizontally, .centeredVertically], animated: true)
+    }
+
     // MARK: Private
     
     private enum Section {
@@ -309,6 +323,14 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
     func didTapTextItem(withId id: UUID) {
         presenter?.didTapTextItem(withId: id)
     }
+
+    func didReplyToItem(withId id: UUID) {
+        presenter?.didReplyToMessage(withId: id)
+    }
+
+    func didTapMessagePreview(withId id: UUID) {
+        presenter?.didTapMessagePreview(withId: id)
+    }
 }
 
 extension ConversationViewController: ComposerViewDelegate {
@@ -316,7 +338,7 @@ extension ConversationViewController: ComposerViewDelegate {
     
     func composerViewDidTapOnSend(_ composerView: ComposerView) {
         guard let text = composerView.text else { return }
-        presenter.didTapOnSend(text: text, medias: composerView.medias)
+        presenter.didTapOnSend(text: text, medias: composerView.medias, replyingToMessageUUID: composerView.replyToMessage?.id)
     }
     
     func composerViewDidUpdateTextDraft(_ composerView: ComposerView) {
@@ -328,7 +350,7 @@ extension ConversationViewController: ComposerViewDelegate {
     }
 
     func composerView(_: ComposerView, didFinishRecordingAudioFile file: AudioFile) {
-        presenter.didFinishRecordingAudioFile(file)
+        presenter.didFinishRecordingAudioFile(file, replyingToMessageUUID: composerView.replyToMessage?.id)
     }
 }
 

@@ -41,16 +41,35 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     
     func sendMessage(
         _ messageInput: MessageInput,
+        replyToMessageId: UUID?,
         inConversationWithId conversationId: UUID,
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
-        let localConversationMessage = makeLocalConversationMessage(for: messageInput)
-        localDataSource.addConversationItem(localConversationMessage, toConversationWithId: conversationId)
-        return makeRemoteMessageAndThenSend(
-            localConversationMessage: localConversationMessage,
+        let umbrellaCancellable = UmbrellaCancellable()
+        let task = makeLocalConversationMessage(
+            for: messageInput,
+            replyToMessageId: replyToMessageId,
             conversationId: conversationId,
-            handler: handler
+            handler: .init { [weak self] result in
+                guard let self = self else { return }
+
+                switch result {
+                case let .success(localMessage):
+                    self.localDataSource.addConversationItem(localMessage, toConversationWithId: conversationId)
+                    let task = self.makeRemoteMessageAndThenSend(
+                        localConversationMessage: localMessage,
+                        conversationId: conversationId,
+                        handler: handler
+                    )
+                    umbrellaCancellable.add(task)
+                case let .failure(error):
+                    handler(.failure(error))
+                }
+            }
         )
+        umbrellaCancellable.add(task)
+
+        return umbrellaCancellable
     }
 
     func retrySending(
@@ -154,17 +173,31 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         return nil
     }
     
-    private func makeLocalConversationMessage(for input: MessageInput) -> LocalConversationMessage {
-        switch input {
-        case let .text(content):
-            return LocalTextMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: content)
-        case let .image(content):
-            return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .media(content))
-        case let .document(content):
-            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .media(content))
-        case let .audio(content: content):
-            return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, content: .audioFile(content))
-        }
+    private func makeLocalConversationMessage(
+        for input: MessageInput,
+        replyToMessageId: UUID?,
+        conversationId: UUID,
+        handler: ResultHandler<LocalConversationMessage, NablaError>
+    ) -> Cancellable {
+        remoteDataSource.getConversationItems(
+            ofConversationWithId: conversationId,
+            handler: handler
+                .pullbackError(GQLErrorTransformer.transform)
+                .pullback(
+                    { _ in
+                        switch input {
+                        case let .text(content):
+                            return LocalTextMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: content)
+                        case let .image(content):
+                            return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .media(content))
+                        case let .document(content):
+                            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .media(content))
+                        case let .audio(content: content):
+                            return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .audioFile(content))
+                        }
+                    }
+                )
+        )
     }
 
     private func updateLocalConversationMessage(
@@ -177,6 +210,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
+                replyToUuid: localConversationMessage.replyToUuid,
                 content: content
             )
         case let .image(uploadedMedia):
@@ -184,6 +218,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
+                replyToUuid: localConversationMessage.replyToUuid,
                 content: .uploadedMedia(uploadedMedia)
             )
         case let .document(uploadedDocument):
@@ -191,6 +226,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
+                replyToUuid: localConversationMessage.replyToUuid,
                 content: .uploadedMedia(uploadedDocument)
             )
         case let .audio(uploadedMedia):
@@ -198,6 +234,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
+                replyToUuid: localConversationMessage.replyToUuid,
                 content: .uploadedMedia(uploadedMedia)
             )
         }
@@ -300,6 +337,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             localMessageClientId: localConversationMessage.clientId,
             remoteMessageInput: sendInput,
             conversationId: conversationId,
+            replyToMessageId: localConversationMessage.replyToUuid,
             handler: .init { [weak self] result in
                 switch result {
                 case let .failure(error):

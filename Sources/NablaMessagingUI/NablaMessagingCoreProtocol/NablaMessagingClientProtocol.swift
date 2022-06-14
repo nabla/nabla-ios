@@ -32,6 +32,7 @@ protocol NablaMessagingClientProtocol {
 
     func sendMessage(
         _ message: MessageInput,
+        replyingToMessageWithId: UUID?,
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable
@@ -50,3 +51,13 @@ protocol NablaMessagingClientProtocol {
 }
 
 extension NablaMessagingClient: NablaMessagingClientProtocol {}
+
+extension NablaMessagingClientProtocol {
+    func sendMessage(
+        _ message: MessageInput,
+        inConversationWithId conversationId: UUID,
+        handler: @escaping (Result<Void, NablaError>) -> Void
+    ) -> Cancellable {
+        sendMessage(message, replyingToMessageWithId: nil, inConversationWithId: conversationId, handler: handler)
+    }
+}

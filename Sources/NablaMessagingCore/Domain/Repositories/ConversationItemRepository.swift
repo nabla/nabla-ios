@@ -8,6 +8,7 @@ protocol ConversationItemRepository {
     
     func sendMessage(
         _ message: MessageInput,
+        replyToMessageId: UUID?,
         inConversationWithId: UUID,
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable

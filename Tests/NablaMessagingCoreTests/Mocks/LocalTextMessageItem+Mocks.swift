@@ -11,6 +11,7 @@ extension LocalTextMessageItem {
             clientId: .init(),
             date: Date(timeIntervalSinceReferenceDate: dateOffset),
             sendingState: sendingState,
+            replyToUuid: nil,
             content: "Hello world \(itemCount)"
         )
     }

@@ -1,0 +1,11 @@
+fragment ReplyMessageFragment on Message {
+    id
+    clientId
+    createdAt
+    author {
+        ...MessageAuthorFragment
+    }
+    content {
+        ...MessageContentFragment
+    }
+}

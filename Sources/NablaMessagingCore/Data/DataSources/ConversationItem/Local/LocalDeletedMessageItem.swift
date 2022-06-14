@@ -5,4 +5,5 @@ struct LocalDeletedMessageItem: LocalConversationMessage {
     let date: Date
     let sender: ConversationMessageSender
     var sendingState: ConversationMessageSendingState = .sent
+    let replyToUuid: UUID?
 }

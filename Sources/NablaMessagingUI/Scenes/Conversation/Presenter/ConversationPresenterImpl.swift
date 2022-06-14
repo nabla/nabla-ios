@@ -21,11 +21,11 @@ final class ConversationPresenterImpl: ConversationPresenter {
         watchItems()
     }
     
-    func didTapOnSend(text: String, medias: [Media]) {
+    func didTapOnSend(text: String, medias: [Media], replyingToMessageUUID replyToUUID: UUID?) {
         view?.emptyComposer()
         medias.forEach { media in
             guard let input = media.messageInput else { return }
-            let cancellable = client.sendMessage(input, inConversationWithId: conversationId, handler: { result in
+            let cancellable = client.sendMessage(input, replyingToMessageWithId: nil, inConversationWithId: conversationId, handler: { result in
                 switch result {
                 case .success:
                     break
@@ -36,7 +36,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             sendMediaCancellable.append(cancellable)
         }
         if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            sendMessageAction = client.sendMessage(.text(content: text), inConversationWithId: conversationId) { result in
+            sendMessageAction = client.sendMessage(.text(content: text), replyingToMessageWithId: replyToUUID, inConversationWithId: conversationId) { result in
                 switch result {
                 case .success:
                     break
@@ -55,8 +55,8 @@ final class ConversationPresenterImpl: ConversationPresenter {
         view?.displayMediaPicker(source: .library(imageLimit: nil))
     }
 
-    func didFinishRecordingAudioFile(_ file: AudioFile) {
-        sendAudioMessageAction = client.sendMessage(.audio(content: file), inConversationWithId: conversationId) { [weak self] result in
+    func didFinishRecordingAudioFile(_ file: AudioFile, replyingToMessageUUID _: UUID?) {
+        sendAudioMessageAction = client.sendMessage(.audio(content: file), replyingToMessageWithId: nil, inConversationWithId: conversationId) { [weak self] result in
             switch result {
             case .success:
                 break
@@ -64,6 +64,20 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self?.logger.warning(message: "Failed to send text", extra: ["reason": error])
             }
         }
+    }
+
+    func didReplyToMessage(withId id: UUID) {
+        guard
+            case let .loaded(items) = state,
+            let item = items.first(where: { $0.id == id }),
+            let message = item as? ConversationViewMessageItem else {
+            return
+        }
+        view?.set(replyToMessage: message)
+    }
+
+    func didTapMessagePreview(withId id: UUID) {
+        view?.scrollToItem(withId: id)
     }
     
     @available(iOS 14, *)
@@ -196,6 +210,14 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var conversationItems: ConversationItems?
     private var canLoadMoreItems = false
     private var draftText: String = ""
+    private var state: ConversationViewState = .empty {
+        didSet {
+            DispatchQueue.main.async { [view, state] in
+                view?.configure(withState: state)
+            }
+        }
+    }
+
     private var focusedPatientTextItemId: UUID? {
         didSet {
             refreshItems()
@@ -219,7 +241,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     private func watchItems() {
-        set(state: .loading)
+        state = .loading
         
         conversationWatcher = client.watchConversation(
             conversationId,
@@ -229,7 +251,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 switch result {
                 case let .failure(error):
                     self.logger.warning(message: "Failed to watch conversation", extra: ["reason": error])
-                    self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
+                    self.state = .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry))
                 case let .success(conversation):
                     self.conversation = conversation
                     
@@ -246,7 +268,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             switch result {
             case let .failure(error):
                 self.logger.warning(message: "Failed to watch messages", extra: ["reason": error])
-                self.set(state: .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry)))
+                self.state = .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry))
             case let .success(conversationItems):
                 self.conversationItems = conversationItems
                 self.refreshItems()
@@ -259,12 +281,6 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private func set(conversation: ConversationViewModel) {
         DispatchQueue.main.async { [view] in
             view?.configure(withConversation: conversation)
-        }
-    }
-
-    private func set(state: ConversationViewState) {
-        DispatchQueue.main.async { [view] in
-            view?.configure(withState: state)
         }
     }
     
@@ -284,7 +300,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             providers: conversation?.providers ?? [],
             focusedTextItemId: focusedPatientTextItemId
         )
-        set(state: .loaded(items: items))
+        state = .loaded(items: items)
     }
 
     private func refreshItems() {

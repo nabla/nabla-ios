@@ -31,6 +31,7 @@ extension NablaMessagingClientProtocolMock {
                             date: .init(),
                             sender: .patient,
                             sendingState: .sent,
+                            replyTo: nil,
                             content: Media(
                                 type: .image,
                                 fileName: "image",

@@ -20,6 +20,7 @@ enum ConversationMessageSender {
 struct ConversationMessageViewModel<ContentViewModel> {
     let sender: ConversationMessageSender
     let footer: ConversationMessageFooterViewModel?
+    let replyTo: ConversationMessagePreviewViewModel?
     let content: ContentViewModel
     let menuElements: [UIMenuElement]
 }

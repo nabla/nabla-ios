@@ -69,6 +69,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
     func testSendMessageInConversationWithIdFailsWhenNotAuthenticated() {
         _ = messagingClient.sendMessage(
             .text(content: "Hello world!"),
+            replyingToMessageWithId: nil,
             inConversationWithId: .init(),
             handler: assertAuthenticationErrorHandler()
         )

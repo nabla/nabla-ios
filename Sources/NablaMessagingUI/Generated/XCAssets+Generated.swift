@@ -29,6 +29,8 @@ public enum CoreAssets {
     public static let accessory = ColorAsset(name: "accessory")
     public static let alternateText = ColorAsset(name: "alternateText")
     public static let background = ColorAsset(name: "background")
+    public static let darkAlternateTextColor = ColorAsset(name: "darkAlternateTextColor")
+    public static let lightAlternateTextColor = ColorAsset(name: "lightAlternateTextColor")
     public static let primary = ColorAsset(name: "primary")
     public static let primaryText = ColorAsset(name: "primaryText")
     public static let secondaryBackground = ColorAsset(name: "secondaryBackground")

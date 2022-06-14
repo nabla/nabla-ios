@@ -8,7 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the handle of replies to message, Core & UI.
+
 ### Changed
+
+- `NablaMessagingClient.sendMessage` now takes an optional parameter `replyToMessageId ` of type `UUID?` which correspond to the message the patient replies to.
 
 ### Fixed
 
@@ -27,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - New `ConversationActivity` items are now correctly handled when the chat is open.
-
 
 ## [1.0.0-alpha04] - 2022-06-01
 

@@ -5,6 +5,11 @@ protocol ConversationItemRemoteDataSource {
         ofConversationWithId conversationId: UUID,
         handler: ResultHandler<RemoteConversationItems, GQLError>
     ) -> PaginatedWatcher
+
+    func getConversationItems(
+        ofConversationWithId conversationId: UUID,
+        handler: ResultHandler<RemoteConversationItems, GQLError>
+    ) -> Cancellable
     
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
@@ -15,6 +20,7 @@ protocol ConversationItemRemoteDataSource {
         localMessageClientId: UUID,
         remoteMessageInput: GQL.SendMessageContentInput,
         conversationId: UUID,
+        replyToMessageId: UUID?,
         handler: ResultHandler<Void, GQLError>
     ) -> Cancellable
     

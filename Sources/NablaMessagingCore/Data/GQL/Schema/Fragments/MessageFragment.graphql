@@ -3,20 +3,12 @@ fragment MessageFragment on Message {
     clientId
     createdAt
     author {
-        ... on Provider {
-            ...ProviderFragment
-        }
-        ... on Patient {
-            ...PatientFragment
-        }
-        ... on System {
-            ...SystemMessageFragment
-        }
-        ... on DeletedProvider {
-            empty: _
-        }
+        ...MessageAuthorFragment
     }
     content {
         ...MessageContentFragment
+    }
+    replyTo {
+        ...ReplyMessageFragment
     }
 }

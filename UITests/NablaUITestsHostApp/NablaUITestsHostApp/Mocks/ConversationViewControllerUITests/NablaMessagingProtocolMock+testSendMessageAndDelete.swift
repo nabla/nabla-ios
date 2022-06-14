@@ -36,6 +36,7 @@ extension NablaMessagingClientProtocolMock {
                             date: Date(),
                             sender: .patient,
                             sendingState: .sent,
+                            replyTo: nil,
                             content: textContent
                         ),
                     ]
@@ -50,7 +51,7 @@ extension NablaMessagingClientProtocolMock {
                     conversationId: .init(),
                     hasMore: false,
                     items: [
-                        DeletedMessageItem(id: .init(), date: .init(), sender: .patient, sendingState: .sent),
+                        DeletedMessageItem(id: .init(), date: .init(), sender: .patient, sendingState: .sent, replyTo: nil),
                     ]
                 )))
             }

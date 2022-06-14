@@ -26,6 +26,7 @@ final class DeletedMessageCellProvider: ConversationCellProvider {
         )
         presenter.attachView(cell)
         cell.configure(presenter: presenter)
+        cell.allowSwipeGesture = false
         return cell
     }
     

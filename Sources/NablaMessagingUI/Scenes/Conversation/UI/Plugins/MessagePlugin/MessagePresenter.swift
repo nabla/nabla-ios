@@ -48,13 +48,23 @@ class MessagePresenter<
     
     func userDidTapContent() {}
 
+    func userDidSwipeSuccessfully() {
+        delegate?.didReplyToItem(withId: item.id)
+    }
+
     func updateView() {
         view?.configure(with: .init(
             sender: transformSender(),
             footer: transformFooter(),
+            replyTo: transformReplyTo(),
             content: transformContent(item),
             menuElements: makeMenuElements(item)
         ))
+    }
+
+    func userDidTapMessagePreview() {
+        guard let id = item.replyTo?.id else { return }
+        delegate?.didTapMessagePreview(withId: id)
     }
 
     // MARK: - Internal
@@ -64,6 +74,15 @@ class MessagePresenter<
     }
     
     func makeMenuElements(_ item: Item) -> [UIMenuElement] {
+        var actions: [UIAction] = []
+        if item.sendingState == .sent {
+            let replyAction = UIAction(
+                title: L10n.conversationActionReplyTo,
+                image: UIImage(systemName: "arrowshape.turn.up.left"),
+                handler: { [weak self] _ in self?.delegate?.didReplyToItem(withId: item.id) }
+            )
+            actions.append(replyAction)
+        }
         if item.sender == .patient, item.sendingState == .sent {
             let deleteAction = UIAction(
                 title: L10n.conversationActionDeleteMessage,
@@ -71,9 +90,9 @@ class MessagePresenter<
                 attributes: .destructive,
                 handler: { [weak self] _ in self?.delegate?.didDeleteItem(withId: item.id) }
             )
-            return [deleteAction]
+            actions.append(deleteAction)
         }
-        return []
+        return actions
     }
     
     // MARK: - Private
@@ -89,47 +108,16 @@ class MessagePresenter<
     private(set) weak var view: MessageCellContract?
     
     private func transformSender() -> ConversationMessageSender {
-        switch item.sender {
-        case let .provider(provider):
-            return .them(.init(
-                author: [provider.prefix, provider.lastName].compactMap(identity).joined(separator: " "),
-                avatar: .init(url: provider.avatarURL, text: provider.initials),
-                isContiguous: item.isContiguous
-            ))
-        case let .system(system):
-            return .them(.init(
-                author: system.name,
-                avatar: .init(url: system.avatarURL, text: system.initials),
-                isContiguous: item.isContiguous
-            ))
-        case .deleted:
-            return .them(.init(
-                author: L10n.conversationMessageDeletedSender,
-                avatar: .init(url: nil, text: nil),
-                isContiguous: item.isContiguous
-            ))
-        case .unknown:
-            return .them(.init(
-                author: L10n.conversationMessageUnknownSender,
-                avatar: .init(url: nil, text: nil),
-                isContiguous: item.isContiguous
-            ))
-        case .patient:
-            return .me(isContiguous: item.isContiguous)
-        }
+        ConversationMessageSenderTransformer.transform(item: item)
     }
 
     private func transformFooter() -> ConversationMessageFooterViewModel? {
-        switch item.sendingState {
-        case .sending:
-            return .init(text: L10n.conversationMessageStatusSending, color: .lightGray)
-        case .sent where item.isFocused:
-            return .init(text: L10n.conversationMessageStatusSent, color: .lightGray)
-        case .sent, .toBeSent:
-            return nil
-        case .failed:
-            return .init(text: L10n.conversationMessageStatusFailed, color: .red)
-        }
+        ConversationMessageFooterViewModelTransformer.transform(item: item)
+    }
+
+    private func transformReplyTo() -> ConversationMessagePreviewViewModel? {
+        guard !(item is DeletedMessageViewItem) else { return nil }
+        return ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)
     }
     
     private func retrySendingMessage() {

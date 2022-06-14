@@ -31,18 +31,28 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             handler: handler
         )
     }
+
+    func getConversationItems(ofConversationWithId conversationId: UUID, handler: ResultHandler<RemoteConversationItems, GQLError>) -> Cancellable {
+        gqlClient.fetch(
+            query: Constants.rootQuery(conversationId: conversationId),
+            cachePolicy: .returnCacheDataDontFetch,
+            handler: handler
+        )
+    }
     
     func send(
         localMessageClientId: UUID,
         remoteMessageInput: GQL.SendMessageContentInput,
         conversationId: UUID,
+        replyToMessageId: UUID?,
         handler: ResultHandler<Void, GQLError>
     ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.SendMessageMutation(
                 conversationId: conversationId,
                 content: remoteMessageInput,
-                clientId: localMessageClientId
+                clientId: localMessageClientId,
+                replyToMessageId: replyToMessageId
             ),
             handler: handler.pullback(void)
         )

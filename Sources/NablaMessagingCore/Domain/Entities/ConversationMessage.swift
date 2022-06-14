@@ -3,6 +3,7 @@ import Foundation
 public protocol ConversationMessage: ConversationItem {
     var sender: ConversationMessageSender { get }
     var sendingState: ConversationMessageSendingState { get }
+    var replyTo: ConversationMessage? { get }
 }
 
 public enum ConversationMessageSender: Hashable {

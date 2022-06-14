@@ -8,6 +8,7 @@
 "conversation_composer_placeholder" = "Tapez votre message";
 "conversation_action_copy_message" = "Copier";
 "conversation_action_delete_message" = "Supprimer";
+"conversation_action_reply_to" = "Répondre à";
 "conversation_deleted_message" = "Message supprimé";
 "conversation_message_deleted_sender" = "Supprimé";
 "conversation_message_system_sender" = "Système";
@@ -31,3 +32,11 @@
 "conversation_date_separator_date_yesterday" = "Hier";
 "conversation_provider_joined" = "%@ a rejoint la conversation";
 "conversation_activity_deleted_provider_name" = "[Praticien supprimé]";
+"conversation_reply_to_author" = "Répondre à %@";
+"conversation_reply_to_author_you" = "vous";
+"conversation_reply_to_author_deleted_provider" = "[Praticien supprimé]";
+"conversation_reply_to_author_unknown_author" = "inconnu";
+"conversation_reply_to_preview_picture" = "Photo";
+"conversation_reply_to_preview_audio" = "Audio";
+"conversation_reply_to_preview_document" = "Document";
+"conversation_reply_to_preview_unknown" = "Aperçu";

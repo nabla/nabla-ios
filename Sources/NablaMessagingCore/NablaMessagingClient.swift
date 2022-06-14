@@ -96,15 +96,17 @@ public class NablaMessagingClient {
     ///
     /// - Parameters:
     ///   - message: The message to send.
+    ///   - replyingToMessageWithId: Id of the message we reply to
     ///   - conversationId: The id of the ``Conversation``
     ///   - handler: Handler called with the result when the message is sent.
     /// - Returns: A ``Cancellable`` of the task
     public func sendMessage(
         _ message: MessageInput,
+        replyingToMessageWithId replyToId: UUID?,
         inConversationWithId conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
-        container.sendMessageInteractor.execute(message: message, conversationId: conversationId, handler: .init(handler))
+        container.sendMessageInteractor.execute(message: message, replyToMessageId: replyToId, conversationId: conversationId, handler: .init(handler))
     }
 
     /// Retry sending a message for which `LocalConversationItem.state`` is ``ConversationItemState.failed``.
