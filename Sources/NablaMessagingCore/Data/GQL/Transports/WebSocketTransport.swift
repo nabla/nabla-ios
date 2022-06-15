@@ -66,8 +66,8 @@ class WebSocketTransport {
                 protocol: .graphql_ws
             ),
             store: apolloStore,
-            clientName: environment.packageName,
-            clientVersion: environment.packageVersion,
+            clientName: environment.platform,
+            clientVersion: environment.version,
             sendOperationIdentifiers: false,
             reconnect: true,
             reconnectionInterval: 1.0,
@@ -81,10 +81,10 @@ class WebSocketTransport {
     }
     
     @objc private func updateStaticHeaders() {
-        apollo.updateHeaderValues(
-            extraHeaders,
-            reconnectIfConnected: true
-        )
+        var headers = extraHeaders
+        headers[HTTPHeaders.Platform] = environment.platform
+        headers[HTTPHeaders.Version] = environment.version
+        apollo.updateHeaderValues(headers, reconnectIfConnected: true)
     }
     
     @objc private func updateAuthenticationHeader() {

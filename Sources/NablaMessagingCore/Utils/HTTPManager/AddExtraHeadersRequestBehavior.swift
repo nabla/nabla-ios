@@ -1,6 +1,6 @@
 import Foundation
 
-class AddExtraHeadersRequestBehavior: RequestBehavior {
+class HeadersRequestBehavior: RequestBehavior {
     // MARK: - Initializer
     
     init(headers: [String: String]) {

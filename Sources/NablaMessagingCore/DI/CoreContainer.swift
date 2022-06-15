@@ -35,7 +35,7 @@ class CoreContainer {
             baseURL: environment.serverUrl
         ),
         session: configuration.session,
-        requestBehavior: extraHeadersRequestBehavior
+        requestBehavior: headersRequestBehavior
     )
 
     private(set) lazy var webSocketTransport: WebSocketTransport = .init(
@@ -47,12 +47,16 @@ class CoreContainer {
     )
 
     private(set) lazy var interceptorProvider: InterceptorProvider = HttpInterceptorProvider(
+        environment: environment,
         authenticator: authenticator,
         apolloStore: apolloStore,
         urlSessionClient: urlSessionClient
     )
 
-    private(set) lazy var extraHeadersRequestBehavior = AddExtraHeadersRequestBehavior(headers: [:])
+    private(set) lazy var headersRequestBehavior = HeadersRequestBehavior(headers: [
+        HTTPHeaders.Platform: environment.platform,
+        HTTPHeaders.Version: environment.version,
+    ])
 
     // MARK: - Private
 

@@ -111,7 +111,7 @@ public class NablaClient {
     ///   - value: The value of the header
     public func addHTTPHeader(name: String, value: String) {
         container.webSocketTransport.addExtraHeader(key: name, value: value)
-        container.extraHeadersRequestBehavior.addHeader(key: name, value: value)
+        container.headersRequestBehavior.addHeader(key: name, value: value)
         if let httpInterceptor = container.interceptorProvider as? HttpInterceptorProvider {
             httpInterceptor.addExtraHeader(key: name, value: value)
         }

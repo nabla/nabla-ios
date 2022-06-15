@@ -1,6 +1,9 @@
 import Foundation
 
 class EnvironmentImpl: Environment {
+    let platform = "ios"
+    let version = "1.0.0-alpha05"
+    
     var serverUrl: URL {
         var components = URLComponents()
         components.host = configuration.domain
@@ -27,31 +30,6 @@ class EnvironmentImpl: Environment {
         components.path = configuration.path
         // swiftlint:disable:next force_unwrapping
         return components.url!.appendingPathComponent(graphqlPath)
-    }
-    
-    var packageName: String {
-        "nabla-ios-sdk"
-    }
-    
-    var packageVersion: String {
-        var version = String()
-        if let shortVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
-            version.append(shortVersion)
-        }
-        
-        if let buildNumber = Bundle.main.object(forInfoDictionaryKey: String(kCFBundleVersionKey)) as? String {
-            if version.isEmpty {
-                version.append(buildNumber)
-            } else {
-                version.append("-\(buildNumber)")
-            }
-        }
-        
-        if version.isEmpty {
-            version = "(unknown)"
-        }
-        
-        return version
     }
     
     init(

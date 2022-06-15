@@ -4,7 +4,11 @@ import Foundation
 class RequestHeadersInterceptor: ApolloInterceptor {
     // MARK: - Initializer
 
-    init(extraHeaders: [String: String]) {
+    init(
+        environment: Environment,
+        extraHeaders: [String: String]
+    ) {
+        self.environment = environment
         self.extraHeaders = extraHeaders
     }
 
@@ -16,6 +20,8 @@ class RequestHeadersInterceptor: ApolloInterceptor {
         response: Apollo.HTTPResponse<Operation>?,
         completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void
     ) where Operation: GraphQLOperation {
+        request.addHeader(name: HTTPHeaders.Platform, value: environment.platform)
+        request.addHeader(name: HTTPHeaders.Version, value: environment.version)
         for (name, value) in extraHeaders {
             request.addHeader(name: name, value: value)
         }
@@ -24,5 +30,6 @@ class RequestHeadersInterceptor: ApolloInterceptor {
     
     // MARK: - Private
 
+    private let environment: Environment
     private let extraHeaders: [String: String]
 }
