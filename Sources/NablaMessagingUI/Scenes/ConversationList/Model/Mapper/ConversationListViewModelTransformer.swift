@@ -21,26 +21,26 @@ struct ConversationListViewModelTransformer {
     // MARK: - Private
     
     private var shortDateFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("E")
         return formatter
     }()
     
     private var dateInYearFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("MM/dd")
         return formatter
     }()
     
     private var dateLongAgoFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .none
         return formatter
     }()
     
     private var timeFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
         return formatter

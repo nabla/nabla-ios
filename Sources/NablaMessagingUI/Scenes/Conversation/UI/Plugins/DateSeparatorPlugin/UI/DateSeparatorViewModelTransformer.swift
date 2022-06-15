@@ -10,25 +10,25 @@ struct DateSeparatorViewModelTransformer {
     // MARK: - Private
 
     private var shortDateFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("E")
         return formatter
     }()
 
     private var dateInYearFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("E d MMM")
         return formatter
     }()
 
     private var dateLongAgoFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("E d MMM y")
         return formatter
     }()
 
     private var timeFormatter: DateFormatter = {
-        let formatter = DateFormatter(locale: .server)
+        let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
         return formatter
