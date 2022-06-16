@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import MobileCoreServices
 import NablaMessagingCore
 import Photos
 import PhotosUI
@@ -71,7 +72,7 @@ final class MediaReader {
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
             thumbnailUrl: fileUrl,
-            mimeType: .jpg
+            mimeType: .image(.from(rawValue: MediaReader.mimeType(for: fileUrl.path)))
         )
         return .success(media)
     }
@@ -96,7 +97,7 @@ final class MediaReader {
                     fileName: fileName,
                     fileUrl: temporaryFileUrl,
                     thumbnailUrl: temporaryFileUrl,
-                    mimeType: .jpg
+                    mimeType: .image(.jpg)
                 )
                 completion(.success(media))
             }
@@ -115,7 +116,7 @@ final class MediaReader {
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
             thumbnailUrl: fileUrl,
-            mimeType: .mov // The videos are always compressed as .mov files by UIImagePickerController when selected
+            mimeType: .video(.mov) // The videos are always compressed as .mov files by UIImagePickerController when selected
         )
         return .success(media)
     }
@@ -133,10 +134,23 @@ final class MediaReader {
                 fileName: url.lastPathComponent,
                 fileUrl: url,
                 thumbnailUrl: url,
-                mimeType: .mov
+                mimeType: .video(.from(rawValue: MediaReader.mimeType(for: url.path)))
             )
             completion(.success(media))
         }
+    }
+    
+    // Taken from https://gist.github.com/robertmryan/62dcb3a7c67091d7e2b9aaaea8b55634
+    private static func mimeType(for path: String) -> String? {
+        let url = URL(fileURLWithPath: path)
+        let pathExtension = url.pathExtension
+        
+        if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue() {
+            if let mimetype = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType)?.takeRetainedValue() {
+                return mimetype as String
+            }
+        }
+        return nil
     }
     
     private func readData(at url: URL) -> Data? {

@@ -3,14 +3,14 @@ import NablaMessagingCore
 
 public extension Media {
     static var mockImage: Self {
-        .init(type: .image, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: .stub, mimeType: .png)
+        .init(type: .image, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: .stub, mimeType: .image(.jpg))
     }
 
     static var mockDocument: Self {
-        .init(type: .pdf, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: .stub, mimeType: .pdf)
+        .init(type: .pdf, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: .stub, mimeType: .document(.pdf))
     }
 
     static var mockAudioFile: Self {
-        .init(type: .audio, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: nil, mimeType: .mpeg)
+        .init(type: .audio, fileName: .filenameStub, fileUrl: .stub, thumbnailUrl: nil, mimeType: .audio(.mpeg))
     }
 }

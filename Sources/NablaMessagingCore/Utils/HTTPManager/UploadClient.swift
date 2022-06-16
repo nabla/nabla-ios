@@ -120,20 +120,30 @@ class UploadClient {
     
     private static func makeMimeType(from mimeType: MimeType) -> MIMEType {
         switch mimeType {
-        case .png:
-            return .imagePng
-        case .jpg:
-            return .imageJpeg
-        case .heic:
-            return MIMEType(text: "image/heic")
-        case .heif:
-            return MIMEType(text: "image/heif")
-        case .mov:
-            return .videoWebm
-        case .mpeg:
-            return .audioMpeg
-        case .pdf:
-            return MIMEType(text: "application/pdf")
+        case let .image(imageType):
+            switch imageType {
+            case .png: return MIMEType.imagePng
+            case .jpg: return MIMEType.imageJpeg
+            case .heic: return MIMEType(text: "image/heic")
+            case .heif: return MIMEType(text: "image/heif")
+            case .other: return MIMEType(text: "image/*")
+            }
+        case let .video(videoType):
+            switch videoType {
+            case .mov: return MIMEType(text: "video/mov")
+            case .mp4: return MIMEType(text: "video/mp4")
+            case .other: return MIMEType(text: "video/*")
+            }
+        case let .audio(audioType):
+            switch audioType {
+            case .mpeg: return MIMEType.audioMpeg
+            case .other: return MIMEType(text: "audio/*")
+            }
+        case let .document(documentType):
+            switch documentType {
+            case .pdf: return MIMEType(text: "application/pdf")
+            case .other: return MIMEType(text: "application/*")
+            }
         }
     }
 }

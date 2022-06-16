@@ -40,7 +40,7 @@ class DocumentPickerViewController: UIDocumentPickerViewController, UIDocumentPi
             fileName: url.lastPathComponent,
             fileUrl: url,
             thumbnailUrl: nil,
-            mimeType: .pdf
+            mimeType: .document(.pdf)
         )
         _delegate?.documentPicker(controller, didSelect: media)
     }

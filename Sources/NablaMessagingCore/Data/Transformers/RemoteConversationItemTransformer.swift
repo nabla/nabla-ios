@@ -34,8 +34,7 @@ enum RemoteConversationItemTransformer {
             )
         } else if
             let imageContent = message.content.fragments.messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
-            let url = URL(string: imageContent.imageFileUpload.url.url),
-            let mimeType = MimeType(rawValue: imageContent.imageFileUpload.mimeType) {
+            let url = URL(string: imageContent.imageFileUpload.url.url) {
             return ImageMessageItem(
                 id: message.id,
                 date: message.createdAt,
@@ -47,13 +46,12 @@ enum RemoteConversationItemTransformer {
                     fileName: imageContent.imageFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: url,
-                    mimeType: mimeType
+                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType))
                 )
             )
         } else if
             let documentContent = message.content.fragments.messageContentFragment.asDocumentMessageContent?.fragments.documentMessageContentFragment,
-            let url = URL(string: documentContent.documentFileUpload.url.url),
-            let mimeType = MimeType(rawValue: documentContent.documentFileUpload.mimeType) {
+            let url = URL(string: documentContent.documentFileUpload.url.url) {
             return DocumentMessageItem(
                 id: message.id,
                 date: message.createdAt,
@@ -65,13 +63,12 @@ enum RemoteConversationItemTransformer {
                     fileName: documentContent.documentFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
-                    mimeType: mimeType
+                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType))
                 )
             )
         } else if
             let audioContent = message.content.fragments.messageContentFragment.asAudioMessageContent?.fragments.audioMessageContentFragment,
-            let url = URL(string: audioContent.audioFileUpload.url.fragments.ephemeralUrlFragment.url),
-            let mimeType = MimeType(rawValue: audioContent.audioFileUpload.mimeType) {
+            let url = URL(string: audioContent.audioFileUpload.url.fragments.ephemeralUrlFragment.url) {
             return AudioMessageItem(
                 id: message.id,
                 date: message.createdAt,
@@ -84,7 +81,7 @@ enum RemoteConversationItemTransformer {
                         fileName: audioContent.audioFileUpload.fileName,
                         fileUrl: url,
                         thumbnailUrl: nil,
-                        mimeType: mimeType
+                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType))
                     ),
                     durationMs: audioContent.audioFileUpload.durationMs ?? 0
                 )
@@ -117,8 +114,7 @@ enum RemoteConversationItemTransformer {
             )
         } else if
             let imageContent = messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
-            let url = URL(string: imageContent.imageFileUpload.url.url),
-            let mimeType = MimeType(rawValue: imageContent.imageFileUpload.mimeType) {
+            let url = URL(string: imageContent.imageFileUpload.url.url) {
             return ImageMessageItem(
                 id: replyTo.id,
                 date: replyTo.createdAt,
@@ -130,13 +126,12 @@ enum RemoteConversationItemTransformer {
                     fileName: imageContent.imageFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: url,
-                    mimeType: mimeType
+                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType))
                 )
             )
         } else if
             let documentContent = messageContentFragment.asDocumentMessageContent?.fragments.documentMessageContentFragment,
-            let url = URL(string: documentContent.documentFileUpload.url.url),
-            let mimeType = MimeType(rawValue: documentContent.documentFileUpload.mimeType) {
+            let url = URL(string: documentContent.documentFileUpload.url.url) {
             return DocumentMessageItem(
                 id: replyTo.id,
                 date: replyTo.createdAt,
@@ -148,13 +143,12 @@ enum RemoteConversationItemTransformer {
                     fileName: documentContent.documentFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
-                    mimeType: mimeType
+                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType))
                 )
             )
         } else if
             let audioContent = messageContentFragment.asAudioMessageContent?.fragments.audioMessageContentFragment,
-            let url = URL(string: audioContent.audioFileUpload.url.fragments.ephemeralUrlFragment.url),
-            let mimeType = MimeType(rawValue: audioContent.audioFileUpload.mimeType) {
+            let url = URL(string: audioContent.audioFileUpload.url.fragments.ephemeralUrlFragment.url) {
             return AudioMessageItem(
                 id: replyTo.id,
                 date: replyTo.createdAt,
@@ -167,7 +161,7 @@ enum RemoteConversationItemTransformer {
                         fileName: audioContent.audioFileUpload.fileName,
                         fileUrl: url,
                         thumbnailUrl: nil,
-                        mimeType: mimeType
+                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType))
                     ),
                     durationMs: audioContent.audioFileUpload.durationMs ?? 0
                 )

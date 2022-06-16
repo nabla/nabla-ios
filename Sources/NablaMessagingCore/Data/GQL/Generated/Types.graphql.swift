@@ -12,10 +12,11 @@ public enum GQL {
     /// - Parameters:
     ///   - textInput
     ///   - imageInput
+    ///   - videoInput
     ///   - documentInput
     ///   - audioInput
-    public init(textInput: Swift.Optional<SendTextMessageInput?> = nil, imageInput: Swift.Optional<SendImageMessageInput?> = nil, documentInput: Swift.Optional<SendDocumentMessageInput?> = nil, audioInput: Swift.Optional<SendAudioMessageInput?> = nil) {
-      graphQLMap = ["textInput": textInput, "imageInput": imageInput, "documentInput": documentInput, "audioInput": audioInput]
+    public init(textInput: Swift.Optional<SendTextMessageInput?> = nil, imageInput: Swift.Optional<SendImageMessageInput?> = nil, videoInput: Swift.Optional<SendVideoMessageInput?> = nil, documentInput: Swift.Optional<SendDocumentMessageInput?> = nil, audioInput: Swift.Optional<SendAudioMessageInput?> = nil) {
+      graphQLMap = ["textInput": textInput, "imageInput": imageInput, "videoInput": videoInput, "documentInput": documentInput, "audioInput": audioInput]
     }
 
     public var textInput: Swift.Optional<SendTextMessageInput?> {
@@ -33,6 +34,15 @@ public enum GQL {
       }
       set {
         graphQLMap.updateValue(newValue, forKey: "imageInput")
+      }
+    }
+
+    public var videoInput: Swift.Optional<SendVideoMessageInput?> {
+      get {
+        return graphQLMap["videoInput"] as? Swift.Optional<SendVideoMessageInput?> ?? Swift.Optional<SendVideoMessageInput?>.none
+      }
+      set {
+        graphQLMap.updateValue(newValue, forKey: "videoInput")
       }
     }
 
@@ -108,6 +118,25 @@ public enum GQL {
       }
       set {
         graphQLMap.updateValue(newValue, forKey: "uuid")
+      }
+    }
+  }
+
+  public struct SendVideoMessageInput: GraphQLMapConvertible {
+    public var graphQLMap: GraphQLMap
+
+    /// - Parameters:
+    ///   - upload
+    public init(upload: UploadInput) {
+      graphQLMap = ["upload": upload]
+    }
+
+    public var upload: UploadInput {
+      get {
+        return graphQLMap["upload"] as! UploadInput
+      }
+      set {
+        graphQLMap.updateValue(newValue, forKey: "upload")
       }
     }
   }
