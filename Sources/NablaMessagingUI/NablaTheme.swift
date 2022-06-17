@@ -60,6 +60,11 @@ public enum NablaTheme {
         public static var previewSubtitleFont = NablaTheme.subhead
         /// Font used for the time of the last message of a conversation in the conversations list. Default set to NablaTheme.footnote
         public static var previewTimeLabelFont = NablaTheme.footnote
+
+        /// UIImage used for the create conversation button in the Inbox view. Default set to UIImage(systemName: "square.and.pencil")
+        public static var createConversationIcon = UIImage(systemName: "square.and.pencil")
+        /// Color used for the create conversation button in the Inbox view. Default set to NablaTheme.primary
+        public static var createConversationColor = NablaTheme.primaryColor
     }
 
     enum Conversation {

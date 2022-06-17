@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the handle of replies to message, Core & UI.
 - Added video messages, Core & UI.
+- `NablaViewFactory` can create an `InboxViewController` that adds the button to create conversation and create them.
 
 ### Changed
 

@@ -12,6 +12,16 @@ public enum NablaViewFactory {
             client: client as NablaMessagingClientProtocol
         )
     }
+
+    public static func createInboxViewController(
+        delegate: InboxDelegate,
+        client: NablaMessagingClient = .shared
+    ) -> UIViewController {
+        createInboxViewController(
+            delegate: delegate,
+            client: client as NablaMessagingClientProtocol
+        )
+    }
   
     public static func createConversationViewController(
         _ conversation: Conversation,
@@ -48,6 +58,23 @@ public enum NablaViewFactory {
         )
         view.presenter = presenter
         return view
+    }
+
+    static func createInboxViewController(
+        delegate: InboxDelegate,
+        client: NablaMessagingClientProtocol
+    ) -> InboxViewController {
+        let viewController = InboxViewController()
+        let view = createConversationListView(delegate: viewController, client: client)
+        viewController.setContentView(view)
+        let presenter = InboxPresenterImpl(
+            logger: client.logger,
+            viewContract: viewController,
+            delegate: delegate,
+            client: client
+        )
+        viewController.presenter = presenter
+        return viewController
     }
 
     static func createConversationViewController(

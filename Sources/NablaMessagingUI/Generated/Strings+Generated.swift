@@ -96,6 +96,16 @@ internal enum L10n {
   internal static let conversationReplyToPreviewUnknown = L10n.tr("Localizable", "conversation_reply_to_preview_unknown")
   /// Video
   internal static let conversationReplyToPreviewVideo = L10n.tr("Localizable", "conversation_reply_to_preview_video")
+  /// Cancel
+  internal static let inboxErrorAlertCancelActionTitle = L10n.tr("Localizable", "inbox_error_alert_cancel_action_title")
+  /// Error
+  internal static let inboxErrorAlertTitle = L10n.tr("Localizable", "inbox_error_alert_title")
+  /// Failed to create conversation: %@
+  internal static func inboxErrorFailedToCreateConversationMessage(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "inbox_error_failed_to_create_conversation_message", String(describing: p1))
+  }
+  /// Medical Chat
+  internal static let inboxTitle = L10n.tr("Localizable", "inbox_title")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

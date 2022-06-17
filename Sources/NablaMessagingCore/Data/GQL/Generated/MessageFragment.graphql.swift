@@ -197,10 +197,6 @@ public extension GQL {
         return Content(unsafeResultMap: ["__typename": "TextMessageContent", "text": text])
       }
 
-      public static func makeVideoMessageContent() -> Content {
-        return Content(unsafeResultMap: ["__typename": "VideoMessageContent"])
-      }
-
       public static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
         return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
       }

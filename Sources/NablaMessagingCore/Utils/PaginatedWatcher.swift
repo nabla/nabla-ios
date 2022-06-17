@@ -3,6 +3,7 @@ import Foundation
 /// A ``Cancellable`` task that handles pagination.
 /// Used to fetch list of items, you must call loadMore when reaching end of list.
 /// The items are received via the associated list watcher callback.
+// sourcery: AutoMockable
 public protocol PaginatedWatcher: Cancellable {
     /// Load more items.
     /// The number of items returned is computed by the backed.

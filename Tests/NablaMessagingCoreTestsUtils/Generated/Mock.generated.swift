@@ -1301,3 +1301,248 @@ open class LoggerMock: Logger, Mock {
     }
 }
 
+// MARK: - PaginatedWatcher
+
+open class PaginatedWatcherMock: PaginatedWatcher, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        addInvocation(.m_loadMore__completion_completion(Parameter<(Result<Void, Error>) -> Void>.value(`completion`)))
+		let perform = methodPerformValue(.m_loadMore__completion_completion(Parameter<(Result<Void, Error>) -> Void>.value(`completion`))) as? (@escaping (Result<Void, Error>) -> Void) -> Void
+		perform?(`completion`)
+		var __value: Cancellable
+		do {
+		    __value = try methodReturnValue(.m_loadMore__completion_completion(Parameter<(Result<Void, Error>) -> Void>.value(`completion`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for loadMore(completion: @escaping (Result<Void, Error>) -> Void). Use given")
+			Failure("Stub return value not specified for loadMore(completion: @escaping (Result<Void, Error>) -> Void). Use given")
+		}
+		return __value
+    }
+
+    open func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+        addInvocation(.m_loadMore__numberOfItems_numberOfItemscompletion_completion(Parameter<Int>.value(`numberOfItems`), Parameter<(Result<Void, Error>) -> Void>.value(`completion`)))
+		let perform = methodPerformValue(.m_loadMore__numberOfItems_numberOfItemscompletion_completion(Parameter<Int>.value(`numberOfItems`), Parameter<(Result<Void, Error>) -> Void>.value(`completion`))) as? (Int, @escaping (Result<Void, Error>) -> Void) -> Void
+		perform?(`numberOfItems`, `completion`)
+		var __value: Cancellable
+		do {
+		    __value = try methodReturnValue(.m_loadMore__numberOfItems_numberOfItemscompletion_completion(Parameter<Int>.value(`numberOfItems`), Parameter<(Result<Void, Error>) -> Void>.value(`completion`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void). Use given")
+			Failure("Stub return value not specified for loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void). Use given")
+		}
+		return __value
+    }
+
+    open func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+
+    fileprivate enum MethodType {
+        case m_loadMore__completion_completion(Parameter<(Result<Void, Error>) -> Void>)
+        case m_loadMore__numberOfItems_numberOfItemscompletion_completion(Parameter<Int>, Parameter<(Result<Void, Error>) -> Void>)
+        case m_cancel
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_loadMore__completion_completion(let lhsCompletion), .m_loadMore__completion_completion(let rhsCompletion)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCompletion, rhs: rhsCompletion, with: matcher), lhsCompletion, rhsCompletion, "completion"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_loadMore__numberOfItems_numberOfItemscompletion_completion(let lhsNumberofitems, let lhsCompletion), .m_loadMore__numberOfItems_numberOfItemscompletion_completion(let rhsNumberofitems, let rhsCompletion)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsNumberofitems, rhs: rhsNumberofitems, with: matcher), lhsNumberofitems, rhsNumberofitems, "numberOfItems"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCompletion, rhs: rhsCompletion, with: matcher), lhsCompletion, rhsCompletion, "completion"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_cancel, .m_cancel): return .match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_loadMore__completion_completion(p0): return p0.intValue
+            case let .m_loadMore__numberOfItems_numberOfItemscompletion_completion(p0, p1): return p0.intValue + p1.intValue
+            case .m_cancel: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_loadMore__completion_completion: return ".loadMore(completion:)"
+            case .m_loadMore__numberOfItems_numberOfItemscompletion_completion: return ".loadMore(numberOfItems:completion:)"
+            case .m_cancel: return ".cancel()"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func loadMore(completion: Parameter<(Result<Void, Error>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_loadMore__completion_completion(`completion`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, Error>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_loadMore__numberOfItems_numberOfItemscompletion_completion(`numberOfItems`, `completion`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func loadMore(completion: Parameter<(Result<Void, Error>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+            let willReturn: [Cancellable] = []
+			let given: Given = { return Given(method: .m_loadMore__completion_completion(`completion`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Cancellable).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, Error>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+            let willReturn: [Cancellable] = []
+			let given: Given = { return Given(method: .m_loadMore__numberOfItems_numberOfItemscompletion_completion(`numberOfItems`, `completion`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Cancellable).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func loadMore(completion: Parameter<(Result<Void, Error>) -> Void>) -> Verify { return Verify(method: .m_loadMore__completion_completion(`completion`))}
+        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, Error>) -> Void>) -> Verify { return Verify(method: .m_loadMore__numberOfItems_numberOfItemscompletion_completion(`numberOfItems`, `completion`))}
+        public static func cancel() -> Verify { return Verify(method: .m_cancel)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func loadMore(completion: Parameter<(Result<Void, Error>) -> Void>, perform: @escaping (@escaping (Result<Void, Error>) -> Void) -> Void) -> Perform {
+            return Perform(method: .m_loadMore__completion_completion(`completion`), performs: perform)
+        }
+        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, Error>) -> Void>, perform: @escaping (Int, @escaping (Result<Void, Error>) -> Void) -> Void) -> Perform {
+            return Perform(method: .m_loadMore__numberOfItems_numberOfItemscompletion_completion(`numberOfItems`, `completion`), performs: perform)
+        }
+        public static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+

@@ -58,10 +58,6 @@ public extension GQL {
       self.resultMap = unsafeResultMap
     }
 
-    public static func makeVideoMessageContent() -> MessageContentFragment {
-      return MessageContentFragment(unsafeResultMap: ["__typename": "VideoMessageContent"])
-    }
-
     public static func makeTextMessageContent(text: String) -> MessageContentFragment {
       return MessageContentFragment(unsafeResultMap: ["__typename": "TextMessageContent", "text": text])
     }

@@ -4,6 +4,12 @@
 "conversation_list_button_retry" = "Réessayer";
 "conversation_list_load_error_label" = "Une erreur est survenue lors du chargement des conversations, veuillez réessayer.";
 
+// Inbox
+"inbox_title" = "Chat Médical";
+"inbox_error_alert_title" = "Erreur";
+"inbox_error_alert_cancel_action_title" = "Annuler";
+"inbox_error_failed_to_create_conversation_message" = "Impossible de créer une conversation : %@";
+
 // Conversation
 "conversation_composer_placeholder" = "Tapez votre message";
 "conversation_action_copy_message" = "Copier";
