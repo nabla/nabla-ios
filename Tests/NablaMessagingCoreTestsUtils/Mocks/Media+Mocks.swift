@@ -1,20 +1,26 @@
 import Foundation
 import NablaMessagingCore
 
-public extension Media {
-    static var mockImage: Self {
-        .init(type: .image, fileName: .filenameStub, fileUrl: .stubImage, thumbnailUrl: .stubImage, mimeType: .image(.jpg), size: .init(width: 200, height: 200))
+public extension ImageFile {
+    static var mock: Self {
+        .init(fileName: .filenameStub, fileUrl: .stubImage, size: .init(width: 200, height: 200), mimeType: .jpg)
     }
+}
 
-    static var mockDocument: Self {
-        .init(type: .pdf, fileName: .filenameStub, fileUrl: .stubImage, thumbnailUrl: .stubImage, mimeType: .document(.pdf), size: nil)
+public extension AudioFile {
+    static var mock: Self {
+        .init(fileName: .filenameStub, fileUrl: .stubImage, durationMs: 1000, mimeType: .mpeg)
     }
+}
 
-    static var mockAudioFile: Self {
-        .init(type: .audio, fileName: .filenameStub, fileUrl: .stubImage, thumbnailUrl: nil, mimeType: .audio(.mpeg), size: nil)
+public extension DocumentFile {
+    static var mock: Self {
+        .init(fileName: .filenameStub, fileUrl: .stubImage, thumbnailUrl: .stubImage, mimeType: .pdf)
     }
+}
 
-    static var mockVideo: Self {
-        .init(type: .video, fileName: .filenameStub, fileUrl: .stubVideo, thumbnailUrl: nil, mimeType: .video(.mp4), size: .init(width: 700, height: 394))
+public extension VideoFile {
+    static var mock: Self {
+        .init(fileName: .filenameStub, fileUrl: .stubVideo, size: .init(width: 700, height: 394), mimeType: .mp4)
     }
 }

@@ -64,16 +64,16 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         present(picker, animated: true)
     }
     
-    func displayImageDetail(for media: Media) {
+    func displayImageDetail(for image: ImageFile) {
         let viewController = ImageDetailViewController()
-        let presenter = ImageDetailPresenterImpl(viewContract: viewController, media: media)
+        let presenter = ImageDetailPresenterImpl(viewContract: viewController, image: image)
         viewController.presenter = presenter
         show(viewController, sender: nil)
     }
     
-    func displayDocumentDetail(for media: Media) {
+    func displayDocumentDetail(for document: DocumentFile) {
         let viewController = DocumentDetailViewController()
-        let presenter = DocumentDetailPresenterImpl(viewContract: viewController, document: media)
+        let presenter = DocumentDetailPresenterImpl(viewContract: viewController, document: document)
         viewController.presenter = presenter
         show(viewController, sender: nil)
     }
@@ -316,8 +316,12 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
         presenter.didTapDeleteMessageButton(withId: messageId)
     }
     
-    func didTapMedia(_ media: Media) {
-        presenter?.didTapMedia(media)
+    func didTap(document: DocumentFile) {
+        presenter?.didTap(document: document)
+    }
+
+    func didTap(image: ImageFile) {
+        presenter?.didTap(image: image)
     }
 
     func didTapTextItem(withId id: UUID) {

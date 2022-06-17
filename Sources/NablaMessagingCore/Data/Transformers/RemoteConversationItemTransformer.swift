@@ -35,7 +35,7 @@ enum RemoteConversationItemTransformer {
         } else if
             let imageContent = message.content.fragments.messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
             let url = URL(string: imageContent.imageFileUpload.url.url) {
-            let size: Media.Size?
+            let size: MediaSize?
             if
                 let width = imageContent.imageFileUpload.width,
                 let height = imageContent.imageFileUpload.height {
@@ -49,13 +49,11 @@ enum RemoteConversationItemTransformer {
                 sender: transform(message.author.fragments.messageAuthorFragment),
                 sendingState: .sent,
                 replyTo: transform(replyToFragment),
-                content: Media(
-                    type: .image,
+                content: ImageFile(
                     fileName: imageContent.imageFileUpload.fileName,
                     fileUrl: url,
-                    thumbnailUrl: url,
-                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType)),
-                    size: size
+                    size: size,
+                    mimeType: .from(rawValue: imageContent.imageFileUpload.mimeType)
                 )
             )
         } else if
@@ -67,13 +65,11 @@ enum RemoteConversationItemTransformer {
                 sender: transform(message.author.fragments.messageAuthorFragment),
                 sendingState: .sent,
                 replyTo: transform(replyToFragment),
-                content: Media(
-                    type: .pdf,
+                content: DocumentFile(
                     fileName: documentContent.documentFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
-                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType)),
-                    size: nil
+                    mimeType: .from(rawValue: documentContent.documentFileUpload.mimeType)
                 )
             )
         } else if
@@ -86,21 +82,16 @@ enum RemoteConversationItemTransformer {
                 sendingState: .sent,
                 replyTo: transform(replyToFragment),
                 content: AudioFile(
-                    media: Media(
-                        type: .audio,
-                        fileName: audioContent.audioFileUpload.fileName,
-                        fileUrl: url,
-                        thumbnailUrl: nil,
-                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType)),
-                        size: nil
-                    ),
-                    durationMs: audioContent.audioFileUpload.durationMs ?? 0
+                    fileName: audioContent.audioFileUpload.fileName,
+                    fileUrl: url,
+                    durationMs: audioContent.audioFileUpload.durationMs ?? 0,
+                    mimeType: .from(rawValue: audioContent.audioFileUpload.mimeType)
                 )
             )
         } else if
             let videoContent = message.content.fragments.messageContentFragment.asVideoMessageContent?.fragments.videoMessageContentFragment,
             let url = URL(string: videoContent.videoFileUpload.url.url) {
-            let size: Media.Size?
+            let size: MediaSize?
             if
                 let width = videoContent.videoFileUpload.width,
                 let height = videoContent.videoFileUpload.height {
@@ -114,13 +105,11 @@ enum RemoteConversationItemTransformer {
                 sender: transform(message.author.fragments.messageAuthorFragment),
                 sendingState: .sent,
                 replyTo: transform(replyToFragment),
-                content: Media(
-                    type: .video,
+                content: VideoFile(
                     fileName: videoContent.videoFileUpload.fileName,
                     fileUrl: url,
-                    thumbnailUrl: nil,
-                    mimeType: .video(.from(rawValue: videoContent.videoFileUpload.mimeType)),
-                    size: size
+                    size: size,
+                    mimeType: .from(rawValue: videoContent.videoFileUpload.mimeType)
                 )
             )
         }
@@ -152,7 +141,7 @@ enum RemoteConversationItemTransformer {
         } else if
             let imageContent = messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
             let url = URL(string: imageContent.imageFileUpload.url.url) {
-            let size: Media.Size?
+            let size: MediaSize?
             if
                 let width = imageContent.imageFileUpload.width,
                 let height = imageContent.imageFileUpload.height {
@@ -166,13 +155,11 @@ enum RemoteConversationItemTransformer {
                 sender: transform(replyTo.author.fragments.messageAuthorFragment),
                 sendingState: .sent,
                 replyTo: nil,
-                content: Media(
-                    type: .image,
+                content: ImageFile(
                     fileName: imageContent.imageFileUpload.fileName,
                     fileUrl: url,
-                    thumbnailUrl: url,
-                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType)),
-                    size: size
+                    size: size,
+                    mimeType: .from(rawValue: imageContent.imageFileUpload.mimeType)
                 )
             )
         } else if
@@ -184,13 +171,11 @@ enum RemoteConversationItemTransformer {
                 sender: transform(replyTo.author.fragments.messageAuthorFragment),
                 sendingState: .sent,
                 replyTo: nil,
-                content: Media(
-                    type: .pdf,
+                content: DocumentFile(
                     fileName: documentContent.documentFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
-                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType)),
-                    size: nil
+                    mimeType: .from(rawValue: documentContent.documentFileUpload.mimeType)
                 )
             )
         } else if
@@ -203,21 +188,16 @@ enum RemoteConversationItemTransformer {
                 sendingState: .sent,
                 replyTo: nil,
                 content: AudioFile(
-                    media: Media(
-                        type: .audio,
-                        fileName: audioContent.audioFileUpload.fileName,
-                        fileUrl: url,
-                        thumbnailUrl: nil,
-                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType)),
-                        size: nil
-                    ),
-                    durationMs: audioContent.audioFileUpload.durationMs ?? 0
+                    fileName: audioContent.audioFileUpload.fileName,
+                    fileUrl: url,
+                    durationMs: audioContent.audioFileUpload.durationMs ?? 0,
+                    mimeType: .from(rawValue: audioContent.audioFileUpload.mimeType)
                 )
             )
         } else if
             let videoContent = messageContentFragment.asVideoMessageContent?.fragments.videoMessageContentFragment,
             let url = URL(string: videoContent.videoFileUpload.url.url) {
-            let size: Media.Size?
+            let size: MediaSize?
             if
                 let width = videoContent.videoFileUpload.width,
                 let height = videoContent.videoFileUpload.height {
@@ -231,13 +211,11 @@ enum RemoteConversationItemTransformer {
                 sender: transform(replyTo.author.fragments.messageAuthorFragment),
                 sendingState: .sent,
                 replyTo: nil,
-                content: Media(
-                    type: .video,
+                content: VideoFile(
                     fileName: videoContent.videoFileUpload.fileName,
                     fileUrl: url,
-                    thumbnailUrl: nil,
-                    mimeType: .video(.from(rawValue: videoContent.videoFileUpload.mimeType)),
-                    size: size
+                    size: size,
+                    mimeType: .from(rawValue: videoContent.videoFileUpload.mimeType)
                 )
             )
         }

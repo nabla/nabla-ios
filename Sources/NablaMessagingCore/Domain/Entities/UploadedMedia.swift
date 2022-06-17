@@ -1,6 +1,6 @@
 import Foundation
 
-struct UploadedMedia {
+struct UploadedMedia<M: Media> {
     let fileUploadUUID: UUID
-    let media: Media
+    let media: M
 }

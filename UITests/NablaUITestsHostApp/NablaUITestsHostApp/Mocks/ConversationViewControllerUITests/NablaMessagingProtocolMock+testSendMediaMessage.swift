@@ -32,13 +32,11 @@ extension NablaMessagingClientProtocolMock {
                             sender: .patient,
                             sendingState: .sent,
                             replyTo: nil,
-                            content: Media(
-                                type: .image,
+                            content: ImageFile(
                                 fileName: "image",
                                 fileUrl: URL(string: "https://avatars.githubusercontent.com/u/39350711?s=200&v=4")!, // swiftlint:disable:this force_unwrapping
-                                thumbnailUrl: URL(string: "https://avatars.githubusercontent.com/u/39350711?s=200&v=4")!, // swiftlint:disable:this force_unwrapping
-                                mimeType: .image(.png),
-                                size: .init(width: 200, height: 200)
+                                size: .init(width: 200, height: 200),
+                                mimeType: .png
                             )
                         ),
                     ]

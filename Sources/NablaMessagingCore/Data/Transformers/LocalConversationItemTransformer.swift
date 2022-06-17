@@ -56,7 +56,7 @@ struct LocalConversationItemTransformer {
                 sender: .patient,
                 sendingState: audioMessageItem.sendingState,
                 replyTo: audioMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage },
-                content: AudioFile(media: audioMessageItem.content.media, durationMs: audioMessageItem.content.durationMs)
+                content: audioMessageItem.content.media
             )
         }
 
@@ -78,15 +78,4 @@ struct LocalConversationItemTransformer {
     // MARK: - Private
 
     private let existingItems: [UUID: ConversationItem]
-}
-
-extension LocalMediaMessageItemContent {
-    var durationMs: Int {
-        switch self {
-        case .media, .uploadedMedia:
-            return 0
-        case let .audioFile(audioFile):
-            return audioFile.durationMs
-        }
-    }
 }

@@ -1,5 +1,5 @@
 import Foundation
 
 protocol LocalMediaConversationMessage: LocalConversationMessage {
-    var content: LocalMediaMessageItemContent { get }
+    var isUploaded: Bool { get }
 }

@@ -5,16 +5,16 @@ class ImageDetailPresenterImpl: ImageDetailPresenter {
     // MARK: - Initializer
     
     init(viewContract: ImageDetailViewContract,
-         media: Media) {
+         image: ImageFile) {
         self.viewContract = viewContract
-        self.media = media
+        self.image = image
     }
     
     // MARK: - Presenter
     
     func start() {
         let transformer = ImageDetailViewModelTransformer()
-        let viewModel = transformer.transform(media: media)
+        let viewModel = transformer.transform(image: image)
         viewContract?.configure(with: viewModel)
     }
     
@@ -24,5 +24,5 @@ class ImageDetailPresenterImpl: ImageDetailPresenter {
     
     private weak var viewContract: ImageDetailViewContract?
     
-    private let media: Media
+    private let image: ImageFile
 }

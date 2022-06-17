@@ -6,5 +6,5 @@ public struct DocumentMessageItem: ConversationMessage {
     public let sender: ConversationMessageSender
     public let sendingState: ConversationMessageSendingState
     public let replyTo: ConversationMessage?
-    public let content: Media
+    public let content: DocumentFile
 }

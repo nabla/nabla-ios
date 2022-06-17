@@ -7,7 +7,7 @@ struct ImageMessageViewItem: ConversationViewMessageItem {
     let sender: NablaMessagingCore.ConversationMessageSender
     let sendingState: ConversationMessageSendingState
     let replyTo: ConversationViewMessageItem?
-    let image: Media
+    let image: ImageFile
     var isContiguous: Bool = false
     var isFocused: Bool = false
 }

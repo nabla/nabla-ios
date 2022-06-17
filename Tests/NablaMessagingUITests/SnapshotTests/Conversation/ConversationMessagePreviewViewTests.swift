@@ -51,7 +51,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .patient,
                 sendingState: .sent,
                 replyTo: nil,
-                image: .mockImage
+                image: .mock
             ),
             text: .loremStub
         )
@@ -73,7 +73,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .patient,
                 sendingState: .sent,
                 replyTo: nil,
-                video: .mockVideo
+                video: .mock
             ),
             text: .loremStub
         )
@@ -95,7 +95,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .patient,
                 sendingState: .sent,
                 replyTo: nil,
-                document: .mockDocument
+                document: .mock
             ),
             text: .loremStub
         )
@@ -117,7 +117,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .patient,
                 sendingState: .sent,
                 replyTo: nil,
-                audio: .init(media: .mockAudioFile, durationMs: 1000)
+                audio: .mock
             ),
             text: .loremStub
         )
@@ -185,7 +185,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .provider(provider),
                 sendingState: .sent,
                 replyTo: nil,
-                image: .mockImage
+                image: .mock
             ),
             text: .loremStub
         )
@@ -210,7 +210,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .provider(provider),
                 sendingState: .sent,
                 replyTo: nil,
-                document: .mockDocument
+                document: .mock
             ),
             text: .loremStub
         )
@@ -235,7 +235,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .provider(provider),
                 sendingState: .sent,
                 replyTo: nil,
-                audio: .init(media: .mockAudioFile, durationMs: 1000)
+                audio: .mock
             ),
             text: .loremStub
         )
@@ -284,7 +284,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .provider(provider),
                 sendingState: .sent,
                 replyTo: nil,
-                video: .mockVideo
+                video: .mock
             ),
             text: .loremStub
         )

@@ -43,7 +43,7 @@ final class ComposerViewTests: XCTestCase {
         // GIVEN
         sut.placeHolder = .placeholderStub
         // WHEN
-        sut.add([.mockImage])
+        sut.add([ImageFile.mock])
         // THEN
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
     }
@@ -83,7 +83,7 @@ final class ComposerViewTests: XCTestCase {
             sender: .patient,
             sendingState: .sent,
             replyTo: nil,
-            image: .mockImage
+            image: .mock
         )
         // THEN
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
@@ -99,7 +99,7 @@ final class ComposerViewTests: XCTestCase {
             sender: .patient,
             sendingState: .sent,
             replyTo: nil,
-            document: .mockDocument
+            document: .mock
         )
         // THEN
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
@@ -115,7 +115,7 @@ final class ComposerViewTests: XCTestCase {
             sender: .patient,
             sendingState: .sent,
             replyTo: nil,
-            audio: .init(media: .mockAudioFile, durationMs: 10000)
+            audio: .mock
         )
         // THEN
         assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
@@ -131,7 +131,7 @@ final class ComposerViewTests: XCTestCase {
             sender: .patient,
             sendingState: .sent,
             replyTo: nil,
-            video: .mockVideo
+            video: .mock
         )
         // THEN
         assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))

@@ -4,7 +4,7 @@ import NablaMessagingCore
 struct DocumentDetailViewModelTransformer {
     // MARK: - Public
     
-    func transform(document: Media) -> DocumentDetailViewModel {
+    func transform(document: DocumentFile) -> DocumentDetailViewModel {
         DocumentDetailViewModel(url: document.fileUrl)
     }
 }

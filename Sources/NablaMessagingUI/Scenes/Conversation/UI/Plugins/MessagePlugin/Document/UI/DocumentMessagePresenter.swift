@@ -27,6 +27,6 @@ final class DocumentMessagePresenter:
     }
     
     override func userDidTapContent() {
-        delegate?.didTapMedia(item.document)
+        delegate?.didTap(document: item.document)
     }
 }

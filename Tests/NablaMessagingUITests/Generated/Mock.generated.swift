@@ -297,10 +297,16 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?(`messageId`)
     }
 
-    open func didTapMedia(_ media: Media) {
-        addInvocation(.m_didTapMedia__media(Parameter<Media>.value(`media`)))
-		let perform = methodPerformValue(.m_didTapMedia__media(Parameter<Media>.value(`media`))) as? (Media) -> Void
-		perform?(`media`)
+    open func didTap(image: ImageFile) {
+        addInvocation(.m_didTap__image_image(Parameter<ImageFile>.value(`image`)))
+		let perform = methodPerformValue(.m_didTap__image_image(Parameter<ImageFile>.value(`image`))) as? (ImageFile) -> Void
+		perform?(`image`)
+    }
+
+    open func didTap(document: DocumentFile) {
+        addInvocation(.m_didTap__document_document(Parameter<DocumentFile>.value(`document`)))
+		let perform = methodPerformValue(.m_didTap__document_document(Parameter<DocumentFile>.value(`document`))) as? (DocumentFile) -> Void
+		perform?(`document`)
     }
 
     open func didTapTextItem(withId: UUID) {
@@ -364,7 +370,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         case m_didUpdateDraftText__text(Parameter<String>)
         case m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(Parameter<AudioFile>, Parameter<UUID?>)
         case m_didTapDeleteMessageButton__withId_messageId(Parameter<UUID>)
-        case m_didTapMedia__media(Parameter<Media>)
+        case m_didTap__image_image(Parameter<ImageFile>)
+        case m_didTap__document_document(Parameter<DocumentFile>)
         case m_didTapTextItem__withId_withId(Parameter<UUID>)
         case m_didReplyToMessage__withId_withId(Parameter<UUID>)
         case m_didTapMessagePreview__withId_withId(Parameter<UUID>)
@@ -400,9 +407,14 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessageid, rhs: rhsMessageid, with: matcher), lhsMessageid, rhsMessageid, "withId messageId"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_didTapMedia__media(let lhsMedia), .m_didTapMedia__media(let rhsMedia)):
+            case (.m_didTap__image_image(let lhsImage), .m_didTap__image_image(let rhsImage)):
 				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMedia, rhs: rhsMedia, with: matcher), lhsMedia, rhsMedia, "_ media"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsImage, rhs: rhsImage, with: matcher), lhsImage, rhsImage, "image"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_didTap__document_document(let lhsDocument), .m_didTap__document_document(let rhsDocument)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDocument, rhs: rhsDocument, with: matcher), lhsDocument, rhsDocument, "document"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_didTapTextItem__withId_withId(let lhsWithid), .m_didTapTextItem__withId_withId(let rhsWithid)):
@@ -441,7 +453,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case let .m_didUpdateDraftText__text(p0): return p0.intValue
             case let .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(p0, p1): return p0.intValue + p1.intValue
             case let .m_didTapDeleteMessageButton__withId_messageId(p0): return p0.intValue
-            case let .m_didTapMedia__media(p0): return p0.intValue
+            case let .m_didTap__image_image(p0): return p0.intValue
+            case let .m_didTap__document_document(p0): return p0.intValue
             case let .m_didTapTextItem__withId_withId(p0): return p0.intValue
             case let .m_didReplyToMessage__withId_withId(p0): return p0.intValue
             case let .m_didTapMessagePreview__withId_withId(p0): return p0.intValue
@@ -459,7 +472,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case .m_didUpdateDraftText__text: return ".didUpdateDraftText(_:)"
             case .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID: return ".didFinishRecordingAudioFile(_:replyingToMessageUUID:)"
             case .m_didTapDeleteMessageButton__withId_messageId: return ".didTapDeleteMessageButton(withId:)"
-            case .m_didTapMedia__media: return ".didTapMedia(_:)"
+            case .m_didTap__image_image: return ".didTap(image:)"
+            case .m_didTap__document_document: return ".didTap(document:)"
             case .m_didTapTextItem__withId_withId: return ".didTapTextItem(withId:)"
             case .m_didReplyToMessage__withId_withId: return ".didReplyToMessage(withId:)"
             case .m_didTapMessagePreview__withId_withId: return ".didTapMessagePreview(withId:)"
@@ -491,7 +505,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         public static func didUpdateDraftText(_ text: Parameter<String>) -> Verify { return Verify(method: .m_didUpdateDraftText__text(`text`))}
         public static func didFinishRecordingAudioFile(_ file: Parameter<AudioFile>, replyingToMessageUUID replyToUUID: Parameter<UUID?>) -> Verify { return Verify(method: .m_didFinishRecordingAudioFile__filereplyingToMessageUUID_replyToUUID(`file`, `replyToUUID`))}
         public static func didTapDeleteMessageButton(withId messageId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapDeleteMessageButton__withId_messageId(`messageId`))}
-        public static func didTapMedia(_ media: Parameter<Media>) -> Verify { return Verify(method: .m_didTapMedia__media(`media`))}
+        public static func didTap(image: Parameter<ImageFile>) -> Verify { return Verify(method: .m_didTap__image_image(`image`))}
+        public static func didTap(document: Parameter<DocumentFile>) -> Verify { return Verify(method: .m_didTap__document_document(`document`))}
         public static func didTapTextItem(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapTextItem__withId_withId(`withId`))}
         public static func didReplyToMessage(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didReplyToMessage__withId_withId(`withId`))}
         public static func didTapMessagePreview(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapMessagePreview__withId_withId(`withId`))}
@@ -520,8 +535,11 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         public static func didTapDeleteMessageButton(withId messageId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
             return Perform(method: .m_didTapDeleteMessageButton__withId_messageId(`messageId`), performs: perform)
         }
-        public static func didTapMedia(_ media: Parameter<Media>, perform: @escaping (Media) -> Void) -> Perform {
-            return Perform(method: .m_didTapMedia__media(`media`), performs: perform)
+        public static func didTap(image: Parameter<ImageFile>, perform: @escaping (ImageFile) -> Void) -> Perform {
+            return Perform(method: .m_didTap__image_image(`image`), performs: perform)
+        }
+        public static func didTap(document: Parameter<DocumentFile>, perform: @escaping (DocumentFile) -> Void) -> Perform {
+            return Perform(method: .m_didTap__document_document(`document`), performs: perform)
         }
         public static func didTapTextItem(withId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
             return Perform(method: .m_didTapTextItem__withId_withId(`withId`), performs: perform)

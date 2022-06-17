@@ -54,11 +54,11 @@ final class ConversationViewControllerTests: XCTestCase {
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.deletedProvider)),
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.provider(provider))),
             DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .toBeSent, replyTo: nil),
-            DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mockDocument),
+            DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mock),
             DateSeparatorViewItem(id: UUID(), date: Date(timeIntervalSince1970: 0)),
             TextMessageViewItem(id: UUID(), date: Date(), sender: .patient, sendingState: .failed, replyTo: nil, text: .loremStub),
             TypingIndicatorViewItem(sender: .provider(provider)),
-            AudioMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, audio: AudioFile(media: .mockAudioFile, durationMs: 1000)),
+            AudioMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, audio: .mock),
             HasMoreIndicatorViewItem(),
         ]))
         // THEN

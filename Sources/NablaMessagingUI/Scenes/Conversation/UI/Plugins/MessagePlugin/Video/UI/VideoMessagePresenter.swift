@@ -25,8 +25,4 @@ final class VideoMessagePresenter:
             transformContent: VideoMessageContentViewModelTransformer.transform
         )
     }
-    
-    override func userDidTapContent() {
-        delegate?.didTapMedia(item.video)
-    }
 }

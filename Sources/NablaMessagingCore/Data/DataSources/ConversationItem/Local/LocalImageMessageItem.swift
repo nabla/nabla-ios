@@ -5,5 +5,8 @@ struct LocalImageMessageItem: LocalMediaConversationMessage {
     let date: Date
     var sendingState: ConversationMessageSendingState
     let replyToUuid: UUID?
-    let content: LocalMediaMessageItemContent
+    let content: LocalMediaMessageItemContent<ImageFile>
+    var isUploaded: Bool {
+        content.uploadUuid != nil
+    }
 }

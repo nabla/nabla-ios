@@ -7,7 +7,7 @@ struct VideoMessageViewItem: ConversationViewMessageItem {
     let sender: NablaMessagingCore.ConversationMessageSender
     let sendingState: ConversationMessageSendingState
     let replyTo: ConversationViewMessageItem?
-    let video: Media
+    let video: VideoFile
     var isContiguous: Bool = false
     var isFocused: Bool = false
 }

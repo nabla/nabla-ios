@@ -6,8 +6,8 @@ import Foundation
 /// of upload, resulting of ``ConversationMessage.sendingState`` set to ``ConversationMessageSendingState.failed``
 public enum MessageInput {
     case text(content: String)
-    case image(content: Media)
-    case video(content: Media)
-    case document(content: Media)
+    case image(content: ImageFile)
+    case video(content: VideoFile)
+    case document(content: DocumentFile)
     case audio(content: AudioFile)
 }

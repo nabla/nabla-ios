@@ -27,6 +27,6 @@ final class ImageMessagePresenter:
     }
     
     override func userDidTapContent() {
-        delegate?.didTapMedia(item.image)
+        delegate?.didTap(image: item.image)
     }
 }

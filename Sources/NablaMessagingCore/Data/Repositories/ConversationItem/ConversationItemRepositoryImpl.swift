@@ -86,7 +86,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         }
 
         if let mediaMessage = localConversationMessage as? LocalMediaConversationMessage,
-           case .media = mediaMessage.content {
+           !mediaMessage.isUploaded {
             return makeRemoteMessageAndThenSend(
                 localConversationMessage: localConversationMessage,
                 conversationId: conversationId,
@@ -156,23 +156,23 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             return .init(textInput: .init(text: textMessage.content))
         }
         if let imageMessage = localConversationMessage as? LocalImageMessageItem,
-           case let .uploadedMedia(uploadedMedia) = imageMessage.content {
-            return .init(imageInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
+           let fileUploadUUID = imageMessage.content.uploadUuid {
+            return .init(imageInput: .init(upload: .init(uuid: fileUploadUUID)))
         }
         
         if let documentMessage = localConversationMessage as? LocalDocumentMessageItem,
-           case let .uploadedMedia(uploadedMedia) = documentMessage.content {
-            return .init(documentInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
+           let fileUploadUUID = documentMessage.content.uploadUuid {
+            return .init(documentInput: .init(upload: .init(uuid: fileUploadUUID)))
         }
 
         if let audioMessage = localConversationMessage as? LocalAudioMessageItem,
-           case let .uploadedMedia(uploadedMedia) = audioMessage.content {
-            return .init(audioInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
+           let fileUploadUUID = audioMessage.content.uploadUuid {
+            return .init(audioInput: .init(upload: .init(uuid: fileUploadUUID)))
         }
 
         if let videoMessage = localConversationMessage as? LocalVideoMessageItem,
-           case let .uploadedMedia(uploadedMedia) = videoMessage.content {
-            return .init(videoInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
+           let fileUploadUUID = videoMessage.content.uploadUuid {
+            return .init(videoInput: .init(upload: .init(uuid: fileUploadUUID)))
         }
         
         logger.error(message: "Unsuported message input", extra: ["type": type(of: localConversationMessage)])
@@ -195,13 +195,13 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                         case let .text(content):
                             return LocalTextMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: content)
                         case let .image(content):
-                            return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .media(content))
-                        case let .document(content):
-                            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .media(content))
-                        case let .audio(content: content):
-                            return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .audioFile(content))
+                            return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
                         case let .video(content):
-                            return LocalVideoMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .media(content))
+                            return LocalVideoMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
+                        case let .document(content):
+                            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
+                        case let .audio(content):
+                            return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
                         }
                     }
                 )
@@ -221,21 +221,21 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 replyToUuid: localConversationMessage.replyToUuid,
                 content: content
             )
-        case let .image(uploadedMedia):
+        case let .image(uploadedImage):
             return LocalImageMessageItem(
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
                 replyToUuid: localConversationMessage.replyToUuid,
-                content: .uploadedMedia(uploadedMedia)
+                content: .init(media: uploadedImage.media, uploadUuid: uploadedImage.fileUploadUUID)
             )
-        case let .video(uploadedMedia):
+        case let .video(uploadedVideo):
             return LocalVideoMessageItem(
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
                 replyToUuid: localConversationMessage.replyToUuid,
-                content: .uploadedMedia(uploadedMedia)
+                content: .init(media: uploadedVideo.media, uploadUuid: uploadedVideo.fileUploadUUID)
             )
         case let .document(uploadedDocument):
             return LocalDocumentMessageItem(
@@ -243,15 +243,15 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
                 replyToUuid: localConversationMessage.replyToUuid,
-                content: .uploadedMedia(uploadedDocument)
+                content: .init(media: uploadedDocument.media, uploadUuid: uploadedDocument.fileUploadUUID)
             )
-        case let .audio(uploadedMedia):
+        case let .audio(uploadedAudio):
             return LocalAudioMessageItem(
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
                 replyToUuid: localConversationMessage.replyToUuid,
-                content: .uploadedMedia(uploadedMedia)
+                content: .init(media: uploadedAudio.media, uploadUuid: uploadedAudio.fileUploadUUID)
             )
         }
     }

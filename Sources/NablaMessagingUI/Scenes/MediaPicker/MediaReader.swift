@@ -67,13 +67,11 @@ final class MediaReader {
         } else {
             return .failure(.missingAssetData)
         }
-        let media = Media(
-            type: .image,
+        let media = ImageFile(
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
-            thumbnailUrl: fileUrl,
-            mimeType: .image(.from(rawValue: MediaReader.mimeType(for: fileUrl.path))),
-            size: fileUrl.imageSize
+            size: fileUrl.imageSize,
+            mimeType: .from(rawValue: MediaReader.mimeType(for: fileUrl.path))
         )
         return .success(media)
     }
@@ -92,14 +90,12 @@ final class MediaReader {
                     completion(.failure(.failedToSaveTemporaryFile))
                     return
                 }
-                
-                let media = Media(
-                    type: .image,
+
+                let media = ImageFile(
                     fileName: fileName,
                     fileUrl: temporaryFileUrl,
-                    thumbnailUrl: temporaryFileUrl,
-                    mimeType: .image(.jpg),
-                    size: temporaryFileUrl.imageSize
+                    size: temporaryFileUrl.imageSize,
+                    mimeType: .jpg
                 )
                 completion(.success(media))
             }
@@ -113,13 +109,11 @@ final class MediaReader {
         } else {
             return .failure(.missingAssetData)
         }
-        let media = Media(
-            type: .video,
+        let media = VideoFile(
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
-            thumbnailUrl: fileUrl,
-            mimeType: .video(.mov), // The videos are always compressed as .mov files by UIImagePickerController when selected
-            size: fileUrl.videoSize
+            size: fileUrl.videoSize,
+            mimeType: .mov // The videos are always compressed as .mov files by UIImagePickerController when selected
         )
         return .success(media)
     }
@@ -136,13 +130,11 @@ final class MediaReader {
                 return
             }
 
-            let media = Media(
-                type: .video,
+            let media = VideoFile(
                 fileName: copiedURL.lastPathComponent,
                 fileUrl: copiedURL,
-                thumbnailUrl: copiedURL,
-                mimeType: .video(.from(rawValue: MediaReader.mimeType(for: copiedURL.path))),
-                size: copiedURL.videoSize
+                size: copiedURL.videoSize,
+                mimeType: .from(rawValue: MediaReader.mimeType(for: copiedURL.path))
             )
 
             completion(.success(media))
@@ -221,7 +213,7 @@ private extension NSItemProvider {
 }
 
 private extension URL {
-    var imageSize: Media.Size? {
+    var imageSize: MediaSize? {
         guard let source = CGImageSourceCreateWithURL(self as CFURL, nil) else { return nil }
 
         let propertiesOptions = [kCGImageSourceShouldCache: false] as CFDictionary
@@ -239,7 +231,7 @@ private extension URL {
         }
     }
 
-    var videoSize: Media.Size? {
+    var videoSize: MediaSize? {
         guard let track = AVURLAsset(url: self).tracks(withMediaType: .video).first else { return nil }
         let size = track.naturalSize.applying(track.preferredTransform)
         return .init(width: Int(abs(size.width)), height: Int(abs(size.height)))

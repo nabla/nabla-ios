@@ -140,20 +140,13 @@ final class ConversationPresenterImpl: ConversationPresenter {
             }
         }
     }
-    
-    func didTapMedia(_ media: Media) {
-        switch media.type {
-        case .pdf:
-            view?.displayDocumentDetail(for: media)
-        case .image:
-            view?.displayImageDetail(for: media)
-        case .video:
-            // TODO: (Thibault Tourailles) - Not handled yet
-            break
-        case .audio:
-            // ???: Can't tap audio messages
-            break
-        }
+
+    func didTap(image: ImageFile) {
+        view?.displayImageDetail(for: image)
+    }
+
+    func didTap(document: DocumentFile) {
+        view?.displayDocumentDetail(for: document)
     }
 
     func didTapTextItem(withId id: UUID) {
@@ -312,15 +305,15 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
 private extension Media {
     var messageInput: MessageInput? {
-        switch type {
-        case .pdf:
-            return .document(content: self)
-        case .image:
-            return .image(content: self)
-        case .video:
-            return .video(content: self)
-        case .audio:
-            return nil
+        if let audioFile = self as? AudioFile {
+            return .audio(content: audioFile)
+        } else if let documentFile = self as? DocumentFile {
+            return .document(content: documentFile)
+        } else if let imageFile = self as? ImageFile {
+            return .image(content: imageFile)
+        } else if let videoFile = self as? VideoFile {
+            return .video(content: videoFile)
         }
+        return nil
     }
 }

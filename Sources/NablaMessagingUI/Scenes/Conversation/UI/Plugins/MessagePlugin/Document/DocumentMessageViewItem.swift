@@ -7,7 +7,7 @@ struct DocumentMessageViewItem: ConversationViewMessageItem {
     let sender: NablaMessagingCore.ConversationMessageSender
     let sendingState: ConversationMessageSendingState
     let replyTo: ConversationViewMessageItem?
-    let document: Media
+    let document: DocumentFile
     var isContiguous: Bool = false
     var isFocused: Bool = false
 }

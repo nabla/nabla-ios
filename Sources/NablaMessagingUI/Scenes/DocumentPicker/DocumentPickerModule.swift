@@ -35,13 +35,11 @@ class DocumentPickerViewController: UIDocumentPickerViewController, UIDocumentPi
             _delegate?.documentPickerDidCancel(controller)
             return
         }
-        let media = Media(
-            type: .pdf,
+        let media = DocumentFile(
             fileName: url.lastPathComponent,
             fileUrl: url,
             thumbnailUrl: nil,
-            mimeType: .document(.pdf),
-            size: nil
+            mimeType: .pdf
         )
         _delegate?.documentPicker(controller, didSelect: media)
     }

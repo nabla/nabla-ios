@@ -138,15 +138,10 @@ extension AudioRecorder: AVAudioRecorderDelegate {
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully: Bool) {
         guard successfully else { return }
         let audioFile = AudioFile(
-            media: Media(
-                type: .audio,
-                fileName: Constants.filename,
-                fileUrl: recorder.url,
-                thumbnailUrl: nil,
-                mimeType: .audio(.mpeg),
-                size: nil
-            ),
-            durationMs: Int(currentRecordingTime)
+            fileName: Constants.filename,
+            fileUrl: recorder.url,
+            durationMs: Int(currentRecordingTime),
+            mimeType: .mpeg
         )
         self.recorder = nil
         completion?(audioFile)

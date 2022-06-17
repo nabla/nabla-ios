@@ -4,7 +4,7 @@ import NablaMessagingCore
 class DocumentDetailPresenterImpl: DocumentDetailPresenter {
     // MARK: - Initializer
     
-    init(viewContract: DocumentDetailViewContract, document: Media) {
+    init(viewContract: DocumentDetailViewContract, document: DocumentFile) {
         self.viewContract = viewContract
         self.document = document
     }
@@ -22,5 +22,5 @@ class DocumentDetailPresenterImpl: DocumentDetailPresenter {
     // MARK: - Private
     
     private weak var viewContract: DocumentDetailViewContract?
-    private let document: Media
+    private let document: DocumentFile
 }
