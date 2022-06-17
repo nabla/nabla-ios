@@ -34,7 +34,7 @@ final class ConversationListItemCellTests: XCTestCase {
         // WHEN
         sut.configure(
             with: .init(
-                avatar: .init(url: .urlStub, text: nil),
+                avatar: .init(url: .urlStubImage, text: nil),
                 title: .authorStub,
                 lastMessage: "Last message preview as a subtitle",
                 lastUpdatedTime: "5min ago",

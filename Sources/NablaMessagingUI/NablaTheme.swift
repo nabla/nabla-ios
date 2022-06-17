@@ -129,6 +129,8 @@ public enum NablaTheme {
         public static var replyToPreviewFont = NablaTheme.footnote
         /// UIImage used as the preview of an image replied to. Default set to UIImage(systemName: "photo")
         public static var replyToImageIcon = UIImage(systemName: "photo")
+        /// UIImage used as the preview of a video replied to. Default set to UIImage(systemName: "photo")
+        public static var replyToVideoIcon = UIImage(systemName: "video.fill")
         /// UIImage used as the preview of a document replied to. Default set to UIImage(systemName: "doc")
         public static var replyToDocumentIcon = UIImage(systemName: "doc")
         /// UIImage used as the preview of an audio message replied to. Default set to UIImage(systemName: "mic")

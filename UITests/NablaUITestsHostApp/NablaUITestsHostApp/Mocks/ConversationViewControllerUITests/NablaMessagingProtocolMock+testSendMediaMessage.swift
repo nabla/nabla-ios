@@ -37,7 +37,8 @@ extension NablaMessagingClientProtocolMock {
                                 fileName: "image",
                                 fileUrl: URL(string: "https://avatars.githubusercontent.com/u/39350711?s=200&v=4")!, // swiftlint:disable:this force_unwrapping
                                 thumbnailUrl: URL(string: "https://avatars.githubusercontent.com/u/39350711?s=200&v=4")!, // swiftlint:disable:this force_unwrapping
-                                mimeType: .image(.png)
+                                mimeType: .image(.png),
+                                size: .init(width: 200, height: 200)
                             )
                         ),
                     ]

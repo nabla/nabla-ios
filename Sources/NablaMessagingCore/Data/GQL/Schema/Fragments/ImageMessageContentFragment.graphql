@@ -6,5 +6,7 @@ fragment ImageMessageContentFragment on ImageMessageContent {
         }
         fileName
         mimeType
+        width
+        height
     }
 }

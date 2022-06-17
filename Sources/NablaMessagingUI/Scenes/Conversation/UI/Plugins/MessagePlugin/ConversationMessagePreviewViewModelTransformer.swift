@@ -32,6 +32,13 @@ struct ConversationMessagePreviewViewModelTransformer {
                 preview: L10n.conversationReplyToPreviewPicture,
                 previewImageURL: imageMessage.image.fileUrl
             )
+        } else if item is VideoMessageViewItem {
+            return .init(
+                icon: NablaTheme.Conversation.replyToVideoIcon,
+                author: author,
+                preview: L10n.conversationReplyToPreviewVideo,
+                previewImageURL: nil
+            )
         } else if let documentMessage = item as? DocumentMessageViewItem {
             return .init(
                 icon: NablaTheme.Conversation.replyToDocumentIcon,

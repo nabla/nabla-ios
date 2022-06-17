@@ -139,7 +139,7 @@ final class ConversationViewControllerUITests: XCTestCase {
         // WHEN & THEN
         XCTContext.runActivity(named: "Import image from the library") { _ in
             app.buttons["add"].tap()
-            app.sheets.buttons["Photo Library"].waitUntilExists().tap()
+            app.sheets.buttons["Photo & video Library"].waitUntilExists().tap()
             app.scrollViews.images.element(boundBy: 1).waitUntilExists().tap()
             app.navigationBars.buttons["Add"].tap()
         }

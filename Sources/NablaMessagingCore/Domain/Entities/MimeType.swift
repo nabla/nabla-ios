@@ -17,7 +17,7 @@ public enum MimeType: Equatable, Hashable {
             MimeType.Image(rawValue: value ?? "") ?? MimeType.Image.other
         }
     }
-    
+
     public enum Video: String {
         case mov = "video/mov"
         case mp4 = "video/mp4"

@@ -169,10 +169,16 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
            case let .uploadedMedia(uploadedMedia) = audioMessage.content {
             return .init(audioInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
         }
+
+        if let videoMessage = localConversationMessage as? LocalVideoMessageItem,
+           case let .uploadedMedia(uploadedMedia) = videoMessage.content {
+            return .init(videoInput: .init(upload: .init(uuid: uploadedMedia.fileUploadUUID)))
+        }
+        
         logger.error(message: "Unsuported message input", extra: ["type": type(of: localConversationMessage)])
         return nil
     }
-    
+
     private func makeLocalConversationMessage(
         for input: MessageInput,
         replyToMessageId: UUID?,
@@ -194,6 +200,8 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                             return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .media(content))
                         case let .audio(content: content):
                             return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .audioFile(content))
+                        case let .video(content):
+                            return LocalVideoMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .media(content))
                         }
                     }
                 )
@@ -215,6 +223,14 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             )
         case let .image(uploadedMedia):
             return LocalImageMessageItem(
+                clientId: localConversationMessage.clientId,
+                date: localConversationMessage.date,
+                sendingState: .toBeSent,
+                replyToUuid: localConversationMessage.replyToUuid,
+                content: .uploadedMedia(uploadedMedia)
+            )
+        case let .video(uploadedMedia):
+            return LocalVideoMessageItem(
                 clientId: localConversationMessage.clientId,
                 date: localConversationMessage.date,
                 sendingState: .toBeSent,
@@ -302,6 +318,14 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 handler: handler
                     .pullbackError(Self.transformFileUploadError)
                     .pullback { .audio(.init(fileUploadUUID: $0, media: media)) }
+            )
+        } else if let localVideoItem = localConversationItem as? LocalVideoMessageItem {
+            let media = localVideoItem.content.media
+            fileUploadRemoteDataSource.upload(
+                file: transform(media),
+                handler: handler
+                    .pullbackError(Self.transformFileUploadError)
+                    .pullback { .video(.init(fileUploadUUID: $0, media: media)) }
             )
         } else {
             logger.error(message: "Unknown local conversation item", extra: ["type": type(of: localConversationItem)])

@@ -20,6 +20,10 @@ public extension GQL {
           __typename
           ...ImageMessageContentFragment
         }
+        ... on VideoMessageContent {
+          __typename
+          ...VideoMessageContentFragment
+        }
         ... on DocumentMessageContent {
           __typename
           ...DocumentMessageContentFragment
@@ -40,7 +44,7 @@ public extension GQL {
     public static var selections: [GraphQLSelection] {
       return [
         GraphQLTypeCase(
-          variants: ["TextMessageContent": AsTextMessageContent.selections, "ImageMessageContent": AsImageMessageContent.selections, "DocumentMessageContent": AsDocumentMessageContent.selections, "AudioMessageContent": AsAudioMessageContent.selections, "DeletedMessageContent": AsDeletedMessageContent.selections],
+          variants: ["TextMessageContent": AsTextMessageContent.selections, "ImageMessageContent": AsImageMessageContent.selections, "VideoMessageContent": AsVideoMessageContent.selections, "DocumentMessageContent": AsDocumentMessageContent.selections, "AudioMessageContent": AsAudioMessageContent.selections, "DeletedMessageContent": AsDeletedMessageContent.selections],
           default: [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           ]
@@ -199,6 +203,70 @@ public extension GQL {
         public var imageMessageContentFragment: ImageMessageContentFragment {
           get {
             return ImageMessageContentFragment(unsafeResultMap: resultMap)
+          }
+          set {
+            resultMap += newValue.resultMap
+          }
+        }
+      }
+    }
+
+    public var asVideoMessageContent: AsVideoMessageContent? {
+      get {
+        if !AsVideoMessageContent.possibleTypes.contains(__typename) { return nil }
+        return AsVideoMessageContent(unsafeResultMap: resultMap)
+      }
+      set {
+        guard let newValue = newValue else { return }
+        resultMap = newValue.resultMap
+      }
+    }
+
+    public struct AsVideoMessageContent: GraphQLSelectionSet {
+      public static let possibleTypes: [String] = ["VideoMessageContent"]
+
+      public static var selections: [GraphQLSelection] {
+        return [
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLFragmentSpread(VideoMessageContentFragment.self),
+        ]
+      }
+
+      public private(set) var resultMap: ResultMap
+
+      public init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
+      }
+
+      public var __typename: String {
+        get {
+          return resultMap["__typename"]! as! String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(unsafeResultMap: resultMap)
+        }
+        set {
+          resultMap += newValue.resultMap
+        }
+      }
+
+      public struct Fragments {
+        public private(set) var resultMap: ResultMap
+
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+        public var videoMessageContentFragment: VideoMessageContentFragment {
+          get {
+            return VideoMessageContentFragment(unsafeResultMap: resultMap)
           }
           set {
             resultMap += newValue.resultMap

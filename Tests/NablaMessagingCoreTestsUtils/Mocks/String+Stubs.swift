@@ -1,8 +1,12 @@
 import Foundation
 
 public extension String {
-    static var urlStub: Self {
+    static var urlStubImage: Self {
         "https://avatars.githubusercontent.com/u/39350711?s=200&v=4"
+    }
+
+    static var urlStubVideo: Self {
+        "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4"
     }
 
     static var filenameStub: Self {

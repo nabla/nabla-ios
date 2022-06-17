@@ -1,0 +1,12 @@
+fragment VideoMessageContentFragment on VideoMessageContent {
+    videoFileUpload {
+        id
+        url {
+            url
+        }
+        fileName
+        mimeType
+        width
+        height
+    }
+}

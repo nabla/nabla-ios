@@ -44,6 +44,8 @@ enum ConversationItemsTransformer {
             return Self.transform(activity)
         } else if let audioMessage = item as? AudioMessageItem {
             return transform(audioMessage)
+        } else if let videoMessage = item as? VideoMessageItem {
+            return transform(videoMessage)
         }
         return nil
     }
@@ -107,6 +109,17 @@ enum ConversationItemsTransformer {
             sendingState: audioMessage.sendingState,
             replyTo: audioMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem,
             audio: audioMessage.content
+        )
+    }
+
+    static func transform(_ videoMessage: VideoMessageItem) -> ConversationViewItem {
+        VideoMessageViewItem(
+            id: videoMessage.id,
+            date: videoMessage.date,
+            sender: videoMessage.sender,
+            sendingState: videoMessage.sendingState,
+            replyTo: videoMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem,
+            video: videoMessage.content
         )
     }
 

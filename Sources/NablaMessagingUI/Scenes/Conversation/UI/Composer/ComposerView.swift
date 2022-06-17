@@ -115,9 +115,9 @@ final class ComposerView: UIView {
         let idealSize = textView.sizeThatFits(constraintedSize)
         return idealSize.height >= Constants.maximumHeight
     }
-    
+
     private lazy var vStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [mediaComposerView, replyToComposerView, hStack])
+        let stackView = UIStackView(arrangedSubviews: [replyToComposerView, hStack])
         stackView.axis = .vertical
         return stackView
     }()
@@ -129,7 +129,7 @@ final class ComposerView: UIView {
                 addMedia,
                 deleteAudioRecordingButton,
                 recordAudioButton,
-                textView,
+                borderedContainerView,
                 audioRecorderComposerView,
                 sendButton,
             ]
@@ -141,6 +141,15 @@ final class ComposerView: UIView {
         stackView.pinToSuperView(insets: Constants.hStackMargins)
         
         return container
+    }()
+
+    private lazy var borderedContainerView: UIView = {
+        let stackView = UIStackView(arrangedSubviews: [mediaComposerView, textView])
+        stackView.axis = .vertical
+        stackView.layer.cornerRadius = Constants.textViewMinHeight / 2
+        stackView.layer.borderWidth = 1
+        stackView.layer.borderColor = NablaTheme.Conversation.composerButtonTintColor.cgColor
+        return stackView
     }()
     
     private lazy var placeHolderLabel: UILabel = {
@@ -156,9 +165,6 @@ final class ComposerView: UIView {
         textView.constraintHeight(Constants.textViewMinHeight, relation: .greaterThanOrEqual)
         textView.constraintHeight(Constants.maximumHeight, relation: .lessThanOrEqual)
         textView.textColor = NablaTheme.Conversation.composerTextColor
-        textView.layer.cornerRadius = Constants.textViewMinHeight / 2
-        textView.layer.borderWidth = 1
-        textView.layer.borderColor = NablaTheme.Conversation.composerButtonTintColor.cgColor
         textView.textContainerInset = .all(Constants.textViewMinHeight / 4)
         textView.scrollIndicatorInsets = .all(Constants.textViewMinHeight / 4)
         textView.delegate = self

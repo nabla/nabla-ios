@@ -61,6 +61,28 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
     }
 
+    func testTextConfigureReplyToVideoMe() {
+        let item = TextMessageViewItem(
+            id: UUID(),
+            date: Date(),
+            sender: .patient,
+            sendingState: .sent,
+            replyTo: VideoMessageViewItem(
+                id: UUID(),
+                date: Date(),
+                sender: .patient,
+                sendingState: .sent,
+                replyTo: nil,
+                video: .mockVideo
+            ),
+            text: .loremStub
+        )
+        // WHEN
+        sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+    }
+
     func testTextConfigureReplyToDocumentMe() {
         let item = TextMessageViewItem(
             id: UUID(),
@@ -248,5 +270,30 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         )
         // THEN
         assertSnapshot(matching: sut, as: .image(size: size))
+    }
+
+    func testTextConfigureReplyToVideoThem() {
+        let item = TextMessageViewItem(
+            id: UUID(),
+            date: Date(),
+            sender: .patient,
+            sendingState: .sent,
+            replyTo: VideoMessageViewItem(
+                id: UUID(),
+                date: Date(),
+                sender: .provider(provider),
+                sendingState: .sent,
+                replyTo: nil,
+                video: .mockVideo
+            ),
+            text: .loremStub
+        )
+        // WHEN
+        sut.configure(
+            with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!,
+            sender: ConversationMessageSenderTransformer.transform(item: item)
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
     }
 }

@@ -24,7 +24,7 @@ internal enum L10n {
   internal static let conversationAddMediaCancel = L10n.tr("Localizable", "conversation_add_media_cancel")
   /// Document
   internal static let conversationAddMediaDocument = L10n.tr("Localizable", "conversation_add_media_document")
-  /// Photo Library
+  /// Photo & video Library
   internal static let conversationAddMediaLibrary = L10n.tr("Localizable", "conversation_add_media_library")
   /// Type your message
   internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
@@ -94,6 +94,8 @@ internal enum L10n {
   internal static let conversationReplyToPreviewPicture = L10n.tr("Localizable", "conversation_reply_to_preview_picture")
   /// Preview
   internal static let conversationReplyToPreviewUnknown = L10n.tr("Localizable", "conversation_reply_to_preview_unknown")
+  /// Video
+  internal static let conversationReplyToPreviewVideo = L10n.tr("Localizable", "conversation_reply_to_preview_video")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

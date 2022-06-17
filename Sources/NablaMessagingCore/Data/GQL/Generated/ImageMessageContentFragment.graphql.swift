@@ -21,6 +21,8 @@ public extension GQL {
           }
           fileName
           mimeType
+          width
+          height
         }
       }
       """
@@ -72,6 +74,8 @@ public extension GQL {
           GraphQLField("url", type: .nonNull(.object(Url.selections))),
           GraphQLField("fileName", type: .nonNull(.scalar(String.self))),
           GraphQLField("mimeType", type: .nonNull(.scalar(String.self))),
+          GraphQLField("width", type: .scalar(Int.self)),
+          GraphQLField("height", type: .scalar(Int.self)),
         ]
       }
 
@@ -81,8 +85,8 @@ public extension GQL {
         self.resultMap = unsafeResultMap
       }
 
-      public init(id: GQL.UUID, url: Url, fileName: String, mimeType: String) {
-        self.init(unsafeResultMap: ["__typename": "ImageFileUpload", "id": id, "url": url.resultMap, "fileName": fileName, "mimeType": mimeType])
+      public init(id: GQL.UUID, url: Url, fileName: String, mimeType: String, width: Int? = nil, height: Int? = nil) {
+        self.init(unsafeResultMap: ["__typename": "ImageFileUpload", "id": id, "url": url.resultMap, "fileName": fileName, "mimeType": mimeType, "width": width, "height": height])
       }
 
       public var __typename: String {
@@ -127,6 +131,24 @@ public extension GQL {
         }
         set {
           resultMap.updateValue(newValue, forKey: "mimeType")
+        }
+      }
+
+      public var width: Int? {
+        get {
+          return resultMap["width"] as? Int
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "width")
+        }
+      }
+
+      public var height: Int? {
+        get {
+          return resultMap["height"] as? Int
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "height")
         }
       }
 

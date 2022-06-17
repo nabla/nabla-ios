@@ -31,6 +31,7 @@ class ImagePickerModule: NSObject {
                 var configuration = PHPickerConfiguration()
                 configuration.filter = .any(of: mediaTypes.map(\.pickerFilter))
                 configuration.selectionLimit = imageLimit ?? 0
+                configuration.preferredAssetRepresentationMode = .current
                 
                 let viewController = PHPickerViewController(configuration: configuration)
                 viewController.delegate = self

@@ -143,7 +143,8 @@ extension AudioRecorder: AVAudioRecorderDelegate {
                 fileName: Constants.filename,
                 fileUrl: recorder.url,
                 thumbnailUrl: nil,
-                mimeType: .audio(.mpeg)
+                mimeType: .audio(.mpeg),
+                size: nil
             ),
             durationMs: Int(currentRecordingTime)
         )

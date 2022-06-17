@@ -72,7 +72,8 @@ final class MediaReader {
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
             thumbnailUrl: fileUrl,
-            mimeType: .image(.from(rawValue: MediaReader.mimeType(for: fileUrl.path)))
+            mimeType: .image(.from(rawValue: MediaReader.mimeType(for: fileUrl.path))),
+            size: fileUrl.imageSize
         )
         return .success(media)
     }
@@ -97,7 +98,8 @@ final class MediaReader {
                     fileName: fileName,
                     fileUrl: temporaryFileUrl,
                     thumbnailUrl: temporaryFileUrl,
-                    mimeType: .image(.jpg)
+                    mimeType: .image(.jpg),
+                    size: temporaryFileUrl.imageSize
                 )
                 completion(.success(media))
             }
@@ -116,26 +118,33 @@ final class MediaReader {
             fileName: fileUrl.lastPathComponent,
             fileUrl: fileUrl,
             thumbnailUrl: fileUrl,
-            mimeType: .video(.mov) // The videos are always compressed as .mov files by UIImagePickerController when selected
+            mimeType: .video(.mov), // The videos are always compressed as .mov files by UIImagePickerController when selected
+            size: fileUrl.videoSize
         )
         return .success(media)
     }
     
     @available(iOS 14, *)
     private func readVideo(from provider: NSItemProvider, completion: @escaping (Result<Media, ImagePickerError>) -> Void) {
-        provider.loadInPlaceFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { url, _, _ in
-            guard let url = url else {
+        provider.loadItem(forTypeIdentifier: UTType.movie.identifier) { _, _ in
+        }
+        provider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { url, _ in
+            guard
+                let url = url,
+                let copiedURL = self.copyContentToTemporaryFile(url) else {
                 completion(.failure(.missingAssetData))
                 return
             }
-            
+
             let media = Media(
                 type: .video,
-                fileName: url.lastPathComponent,
-                fileUrl: url,
-                thumbnailUrl: url,
-                mimeType: .video(.from(rawValue: MediaReader.mimeType(for: url.path)))
+                fileName: copiedURL.lastPathComponent,
+                fileUrl: copiedURL,
+                thumbnailUrl: copiedURL,
+                mimeType: .video(.from(rawValue: MediaReader.mimeType(for: copiedURL.path))),
+                size: copiedURL.videoSize
             )
+
             completion(.success(media))
         }
     }
@@ -165,6 +174,14 @@ final class MediaReader {
             return nil
         }
         return url
+    }
+
+    private func copyContentToTemporaryFile(_ url: URL) -> URL? {
+        let manager = FileManager.default
+        let destination = manager.temporaryDirectory
+            .appendingPathComponent(makeRandomFileName(extension: url.pathExtension))
+        try? manager.copyItem(at: url, to: destination)
+        return destination
     }
     
     private func getMediaType(from info: [UIImagePickerController.InfoKey: Any]) -> MediaType? {
@@ -200,5 +217,31 @@ private extension NSItemProvider {
             return .image
         }
         return nil
+    }
+}
+
+private extension URL {
+    var imageSize: Media.Size? {
+        guard let source = CGImageSourceCreateWithURL(self as CFURL, nil) else { return nil }
+
+        let propertiesOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard
+            let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, propertiesOptions) as? [CFString: Any] else {
+            return nil
+        }
+
+        if
+            let width = properties[kCGImagePropertyPixelWidth] as? Int,
+            let height = properties[kCGImagePropertyPixelHeight] as? Int {
+            return .init(width: width, height: height)
+        } else {
+            return nil
+        }
+    }
+
+    var videoSize: Media.Size? {
+        guard let track = AVURLAsset(url: self).tracks(withMediaType: .video).first else { return nil }
+        let size = track.naturalSize.applying(track.preferredTransform)
+        return .init(width: Int(abs(size.width)), height: Int(abs(size.height)))
     }
 }

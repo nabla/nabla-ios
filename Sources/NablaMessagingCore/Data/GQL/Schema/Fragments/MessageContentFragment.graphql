@@ -5,6 +5,9 @@ fragment MessageContentFragment on MessageContent {
     ... on ImageMessageContent {
         ...ImageMessageContentFragment
     }
+    ... on VideoMessageContent {
+        ...VideoMessageContentFragment
+    }
     ... on DocumentMessageContent {
         ...DocumentMessageContentFragment
     }

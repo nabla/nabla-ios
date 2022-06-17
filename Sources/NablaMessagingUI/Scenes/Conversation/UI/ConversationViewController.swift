@@ -59,7 +59,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     func displayMediaPicker(source: ImagePickerSource) {
         let picker = imagePickerModule.makeViewController(
             source: source,
-            mediaTypes: [.image]
+            mediaTypes: [.image, .video]
         )
         present(picker, animated: true)
     }

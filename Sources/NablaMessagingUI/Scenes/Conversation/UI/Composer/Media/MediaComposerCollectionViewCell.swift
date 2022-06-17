@@ -27,8 +27,13 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         switch viewModel.type {
         case .image:
             imageView.url = viewModel.url
+            setVisibleView(imageView)
         case .pdf:
             imageView.image = NablaTheme.Conversation.mediaComposerDocumentIcon
+            setVisibleView(imageView)
+        case .video:
+            playerView.url = viewModel.url
+            setVisibleView(playerView)
         }
     }
     
@@ -48,14 +53,38 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     // MARK: - Private
     
     private lazy var imageView: UIURLImageView = makeImageView()
+    private lazy var playerView: UIPlayerView = makePlayerView()
     private lazy var deleteButton: UIButton = makeDeleteButton()
     private lazy var deleteButtonContainerView: UIView = makeDeleteButtonContainerView()
+
+    private func setUp() {
+        guard contentView.subviews.isEmpty else { return }
+        contentView.isUserInteractionEnabled = false
+        contentView.backgroundColor = NablaTheme.Conversation.mediaComposerBackgroundColor
+
+        addSubview(imageView)
+        imageView.pinToSuperView()
+
+        addSubview(playerView)
+        playerView.pinToSuperView()
+
+        addSubview(deleteButtonContainerView)
+        deleteButtonContainerView.pinToSuperView(edges: [.top, .trailing], insets: .init(horizontal: 5, vertical: 5))
+
+        layer.cornerRadius = 10.0
+        clipsToBounds = true
+    }
     
     private func makeImageView() -> UIURLImageView {
         let view = UIURLImageView()
         view.tintColor = NablaTheme.Conversation.mediaComposerDocumentTintColor
-        view.contentMode = .scaleAspectFit
+        view.contentMode = .scaleAspectFill
         view.isUserInteractionEnabled = true
+        return view
+    }
+
+    private func makePlayerView() -> UIPlayerView {
+        let view = UIPlayerView()
         return view
     }
     
@@ -78,22 +107,16 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         return view
     }
     
-    private func setUp() {
-        guard contentView.subviews.isEmpty else { return }
-        contentView.isUserInteractionEnabled = false
-        contentView.backgroundColor = NablaTheme.Conversation.mediaComposerBackgroundColor
-        
-        addSubview(imageView)
-        imageView.pinToSuperView()
-        
-        addSubview(deleteButtonContainerView)
-        deleteButtonContainerView.pinToSuperView(edges: [.top, .trailing], insets: .init(horizontal: 5, vertical: 5))
-        
-        layer.cornerRadius = 12.0
-        clipsToBounds = true
-    }
-    
     @objc private func deleteButtonSelected() {
         delegate?.mediaComposerCollectionViewCellDidTapDeleteButton(self)
+    }
+
+    private func setVisibleView(_ visibleView: UIView) {
+        // Only add views whose visibility might change.
+        [
+            imageView,
+            playerView,
+        ]
+        .forEach { $0.isHidden = $0 != visibleView }
     }
 }

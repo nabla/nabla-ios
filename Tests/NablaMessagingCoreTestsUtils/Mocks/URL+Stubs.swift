@@ -1,7 +1,11 @@
 import Foundation
 
 public extension URL {
-    static var stub: Self {
-        .init(string: .urlStub)! // swiftlint:disable:this force_unwrapping
+    static var stubImage: Self {
+        .init(string: .urlStubImage)! // swiftlint:disable:this force_unwrapping
+    }
+
+    static var stubVideo: Self {
+        .init(string: .urlStubVideo)! // swiftlint:disable:this force_unwrapping
     }
 }

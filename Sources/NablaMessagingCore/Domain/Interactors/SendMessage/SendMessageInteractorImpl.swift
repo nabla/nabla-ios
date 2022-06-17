@@ -39,7 +39,7 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
         switch message {
         case let .text(content):
             return !content.isEmpty
-        case .document, .image, .audio:
+        case .document, .image, .audio, .video:
             return true
         }
     }

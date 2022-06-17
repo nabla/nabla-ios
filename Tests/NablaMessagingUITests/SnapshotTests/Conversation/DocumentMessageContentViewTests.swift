@@ -20,7 +20,7 @@ final class DocumentMessageContentViewTests: XCTestCase {
                 sender: .me(isContiguous: false),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stub, filename: .filenameStub),
+                content: .init(url: .stubImage, filename: .filenameStub),
                 menuElements: []
             )
         )
@@ -36,7 +36,7 @@ final class DocumentMessageContentViewTests: XCTestCase {
                 sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stub, filename: .filenameStub),
+                content: .init(url: .stubImage, filename: .filenameStub),
                 menuElements: []
             )
         )

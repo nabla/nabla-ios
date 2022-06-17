@@ -35,6 +35,14 @@ enum RemoteConversationItemTransformer {
         } else if
             let imageContent = message.content.fragments.messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
             let url = URL(string: imageContent.imageFileUpload.url.url) {
+            let size: Media.Size?
+            if
+                let width = imageContent.imageFileUpload.width,
+                let height = imageContent.imageFileUpload.height {
+                size = .init(width: width, height: height)
+            } else {
+                size = nil
+            }
             return ImageMessageItem(
                 id: message.id,
                 date: message.createdAt,
@@ -46,7 +54,8 @@ enum RemoteConversationItemTransformer {
                     fileName: imageContent.imageFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: url,
-                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType))
+                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType)),
+                    size: size
                 )
             )
         } else if
@@ -63,7 +72,8 @@ enum RemoteConversationItemTransformer {
                     fileName: documentContent.documentFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
-                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType))
+                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType)),
+                    size: nil
                 )
             )
         } else if
@@ -81,9 +91,36 @@ enum RemoteConversationItemTransformer {
                         fileName: audioContent.audioFileUpload.fileName,
                         fileUrl: url,
                         thumbnailUrl: nil,
-                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType))
+                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType)),
+                        size: nil
                     ),
                     durationMs: audioContent.audioFileUpload.durationMs ?? 0
+                )
+            )
+        } else if
+            let videoContent = message.content.fragments.messageContentFragment.asVideoMessageContent?.fragments.videoMessageContentFragment,
+            let url = URL(string: videoContent.videoFileUpload.url.url) {
+            let size: Media.Size?
+            if
+                let width = videoContent.videoFileUpload.width,
+                let height = videoContent.videoFileUpload.height {
+                size = .init(width: width, height: height)
+            } else {
+                size = nil
+            }
+            return VideoMessageItem(
+                id: message.id,
+                date: message.createdAt,
+                sender: transform(message.author.fragments.messageAuthorFragment),
+                sendingState: .sent,
+                replyTo: transform(replyToFragment),
+                content: Media(
+                    type: .video,
+                    fileName: videoContent.videoFileUpload.fileName,
+                    fileUrl: url,
+                    thumbnailUrl: nil,
+                    mimeType: .video(.from(rawValue: videoContent.videoFileUpload.mimeType)),
+                    size: size
                 )
             )
         }
@@ -115,6 +152,14 @@ enum RemoteConversationItemTransformer {
         } else if
             let imageContent = messageContentFragment.asImageMessageContent?.fragments.imageMessageContentFragment,
             let url = URL(string: imageContent.imageFileUpload.url.url) {
+            let size: Media.Size?
+            if
+                let width = imageContent.imageFileUpload.width,
+                let height = imageContent.imageFileUpload.height {
+                size = .init(width: width, height: height)
+            } else {
+                size = nil
+            }
             return ImageMessageItem(
                 id: replyTo.id,
                 date: replyTo.createdAt,
@@ -126,7 +171,8 @@ enum RemoteConversationItemTransformer {
                     fileName: imageContent.imageFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: url,
-                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType))
+                    mimeType: .image(.from(rawValue: imageContent.imageFileUpload.mimeType)),
+                    size: size
                 )
             )
         } else if
@@ -143,7 +189,8 @@ enum RemoteConversationItemTransformer {
                     fileName: documentContent.documentFileUpload.fileName,
                     fileUrl: url,
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
-                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType))
+                    mimeType: .document(.from(rawValue: documentContent.documentFileUpload.mimeType)),
+                    size: nil
                 )
             )
         } else if
@@ -161,9 +208,36 @@ enum RemoteConversationItemTransformer {
                         fileName: audioContent.audioFileUpload.fileName,
                         fileUrl: url,
                         thumbnailUrl: nil,
-                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType))
+                        mimeType: .audio(.from(rawValue: audioContent.audioFileUpload.mimeType)),
+                        size: nil
                     ),
                     durationMs: audioContent.audioFileUpload.durationMs ?? 0
+                )
+            )
+        } else if
+            let videoContent = messageContentFragment.asVideoMessageContent?.fragments.videoMessageContentFragment,
+            let url = URL(string: videoContent.videoFileUpload.url.url) {
+            let size: Media.Size?
+            if
+                let width = videoContent.videoFileUpload.width,
+                let height = videoContent.videoFileUpload.height {
+                size = .init(width: width, height: height)
+            } else {
+                size = nil
+            }
+            return VideoMessageItem(
+                id: replyTo.id,
+                date: replyTo.createdAt,
+                sender: transform(replyTo.author.fragments.messageAuthorFragment),
+                sendingState: .sent,
+                replyTo: nil,
+                content: Media(
+                    type: .video,
+                    fileName: videoContent.videoFileUpload.fileName,
+                    fileUrl: url,
+                    thumbnailUrl: nil,
+                    mimeType: .video(.from(rawValue: videoContent.videoFileUpload.mimeType)),
+                    size: size
                 )
             )
         }

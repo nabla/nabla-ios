@@ -40,7 +40,7 @@ class MediaComposerView: UIView, MediaComposerViewContract {
     
     private func makeCollectionView() -> UICollectionView {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = .init(width: 60, height: 50)
+        flowLayout.itemSize = .init(width: 40, height: 40)
         flowLayout.sectionInset = .init(horizontal: 16.0, vertical: 8.0)
         flowLayout.scrollDirection = .horizontal
         flowLayout.minimumInteritemSpacing = 16.0

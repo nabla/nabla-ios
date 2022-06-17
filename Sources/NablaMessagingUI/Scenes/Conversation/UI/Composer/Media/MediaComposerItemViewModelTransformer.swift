@@ -15,12 +15,14 @@ struct MediaComposerItemViewModelTransformer {
 private extension Media {
     var viewModelType: MediaComposerItemViewModel.MediaType? {
         switch type {
-        case .video, .audio:
+        case .audio:
             return nil
         case .pdf:
             return .pdf
         case .image:
             return .image
+        case .video:
+            return .video
         }
     }
 }

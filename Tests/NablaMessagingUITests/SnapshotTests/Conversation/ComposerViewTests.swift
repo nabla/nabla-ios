@@ -120,4 +120,20 @@ final class ComposerViewTests: XCTestCase {
         // THEN
         assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
     }
+
+    func testComposerViewReplyToVideo() {
+        // GIVEN
+        sut.placeHolder = .placeholderStub
+        // WHEN
+        sut.replyToMessage = VideoMessageViewItem(
+            id: UUID(),
+            date: Date(),
+            sender: .patient,
+            sendingState: .sent,
+            replyTo: nil,
+            video: .mockVideo
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+    }
 }

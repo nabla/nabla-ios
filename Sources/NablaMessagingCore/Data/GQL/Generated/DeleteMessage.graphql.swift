@@ -32,6 +32,7 @@ public extension GQL {
       document.append("\n" + MessageContentFragment.fragmentDefinition)
       document.append("\n" + TextMessageContentFragment.fragmentDefinition)
       document.append("\n" + ImageMessageContentFragment.fragmentDefinition)
+      document.append("\n" + VideoMessageContentFragment.fragmentDefinition)
       document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
       document.append("\n" + AudioMessageContentFragment.fragmentDefinition)
       document.append("\n" + EphemeralUrlFragment.fragmentDefinition)

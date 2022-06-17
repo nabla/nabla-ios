@@ -40,6 +40,8 @@ private extension ConversationViewMessageItem {
             return L10n.conversationReplyToPreviewDocument
         } else if self as? AudioMessageViewItem != nil {
             return L10n.conversationReplyToPreviewAudio
+        } else if self as? VideoMessageViewItem != nil {
+            return L10n.conversationReplyToPreviewVideo
         }
         return L10n.conversationReplyToPreviewUnknown
     }

@@ -315,10 +315,11 @@ private extension Media {
         switch type {
         case .pdf:
             return .document(content: self)
-        // TODO: (Thibault Tourailles) - Split video when available
         case .image:
             return .image(content: self)
-        case .video, .audio:
+        case .video:
+            return .video(content: self)
+        case .audio:
             return nil
         }
     }

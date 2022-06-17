@@ -60,6 +60,17 @@ struct LocalConversationItemTransformer {
             )
         }
 
+        if let videoMessageItem = localConversationItem as? LocalVideoMessageItem {
+            return VideoMessageItem(
+                id: videoMessageItem.clientId,
+                date: videoMessageItem.date,
+                sender: .patient,
+                sendingState: videoMessageItem.sendingState,
+                replyTo: videoMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage },
+                content: videoMessageItem.content.media
+            )
+        }
+
         assertionFailure("Unknown local conversation item \(localConversationItem)")
         return nil
     }
