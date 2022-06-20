@@ -10,8 +10,8 @@ public extension GQL {
     /// The raw GraphQL definition of this operation.
     public let operationDefinition: String =
       """
-      mutation CreateConversation {
-        createConversation {
+      mutation CreateConversation($title: String, $providerIdToAssign: UUID) {
+        createConversation(title: $title, providerIdToAssign: $providerIdToAssign) {
           __typename
           conversation {
             __typename
@@ -32,7 +32,16 @@ public extension GQL {
       return document
     }
 
-    public init() {
+    public var title: String?
+    public var providerIdToAssign: GQL.UUID?
+
+    public init(title: String? = nil, providerIdToAssign: GQL.UUID? = nil) {
+      self.title = title
+      self.providerIdToAssign = providerIdToAssign
+    }
+
+    public var variables: GraphQLMap? {
+      return ["title": title, "providerIdToAssign": providerIdToAssign]
     }
 
     public struct Data: GraphQLSelectionSet {
@@ -40,7 +49,7 @@ public extension GQL {
 
       public static var selections: [GraphQLSelection] {
         return [
-          GraphQLField("createConversation", type: .nonNull(.object(CreateConversation.selections))),
+          GraphQLField("createConversation", arguments: ["title": GraphQLVariable("title"), "providerIdToAssign": GraphQLVariable("providerIdToAssign")], type: .nonNull(.object(CreateConversation.selections))),
         ]
       }
 

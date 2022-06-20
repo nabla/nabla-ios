@@ -8,6 +8,9 @@ public enum NablaError: Error {
         case authorizationDenied(Error)
         case failedToRefreshTokens(Error)
     }
+    
+    case providerNotFound(String?)
+    case providerMissingPermission(String?)
 
     case networkError(String?)
     case serverError(String?)

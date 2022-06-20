@@ -3,7 +3,7 @@ import Foundation
 
 extension NablaMessagingClientProtocolMock {
     func setupForTestCreateConversation() {
-        createConversationClosure = { _ in
+        createConversationClosure = { _, _, _ in
             self.watchConversationsParams
                 .forEach { params in
                     params.handler(.success(ConversationList(conversations: [.mock()], hasMore: false)))

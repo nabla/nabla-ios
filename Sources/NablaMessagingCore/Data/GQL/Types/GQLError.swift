@@ -4,7 +4,8 @@ enum GQLError: Error {
     case unknownError
     case internalError
     case emptyServerResponse
-    case entityNotFound(path: [String])
+    case entityNotFound(message: String?)
+    case permissionRequired(message: String?)
     case incompatibleServerSchema(message: String?)
     case cacheError(CacheError)
 

@@ -12,7 +12,10 @@ class CreateConversationTests: XCTestCase {
         
         env.session.beginRecording()
         
-        createConversationAction = env.messagingClient.createConversation { result in
+        createConversationAction = env.messagingClient.createConversation(
+            title: nil,
+            providerIdToAssign: nil
+        ) { result in
             switch result {
             case let .failure(error):
                 XCTFail("Received error: \(error)")
@@ -48,7 +51,10 @@ class CreateConversationTests: XCTestCase {
         // 2 - Create conversation
         var createdConversation: Conversation?
         let createConversationDidComplete = expectation(description: "Create conversation did complete")
-        let createConversationAction = env.messagingClient.createConversation { result in
+        let createConversationAction = env.messagingClient.createConversation(
+            title: nil,
+            providerIdToAssign: nil
+        ) { result in
             switch result {
             case let .failure(error):
                 XCTFail("Received error: \(error)")

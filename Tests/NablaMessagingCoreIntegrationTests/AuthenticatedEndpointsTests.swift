@@ -42,7 +42,11 @@ class AuthenticatedEndpointsTests: XCTestCase {
     }
 
     func testCreateConversationFailsWhenNotAuthenticated() {
-        _ = messagingClient.createConversation(handler: assertAuthenticationErrorHandler())
+        _ = messagingClient.createConversation(
+            title: nil,
+            providerIdToAssign: nil,
+            handler: assertAuthenticationErrorHandler()
+        )
         waitForExpectations(timeout: 0.5)
     }
     

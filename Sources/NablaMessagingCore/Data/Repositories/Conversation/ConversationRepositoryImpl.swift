@@ -61,10 +61,25 @@ class ConversationRepositoryImpl: ConversationRepository {
         return watcher
     }
     
-    func createConversation(handler: ResultHandler<Conversation, NablaError>) -> Cancellable {
+    func createConversation(
+        title: String?,
+        providerIdToAssign: UUID?,
+        handler: ResultHandler<Conversation, NablaError>
+    ) -> Cancellable {
         remoteDataSource.createConversation(
+            title: title,
+            providerIdToAssign: providerIdToAssign,
             handler: handler
-                .pullbackError(GQLErrorTransformer.transform)
+                .pullbackError { error in
+                    switch error {
+                    case let .entityNotFound(message):
+                        return .providerNotFound(message)
+                    case let .permissionRequired(message):
+                        return .providerMissingPermission(message)
+                    default:
+                        return GQLErrorTransformer.transform(gqlError: error)
+                    }
+                }
                 .pullback(ConversationTransformer.transform)
         )
     }

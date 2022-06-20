@@ -898,16 +898,16 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 
 
 
-    open func createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable {
-        addInvocation(.m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`)))
-		let perform = methodPerformValue(.m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))) as? (@escaping (Result<Conversation, NablaError>) -> Void) -> Void
-		perform?(`handler`)
+    open func createConversation(title: String?, providerIdToAssign: UUID?, handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable {
+        addInvocation(.m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(Parameter<String?>.value(`title`), Parameter<UUID?>.value(`providerIdToAssign`), Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`)))
+		let perform = methodPerformValue(.m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(Parameter<String?>.value(`title`), Parameter<UUID?>.value(`providerIdToAssign`), Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))) as? (String?, UUID?, @escaping (Result<Conversation, NablaError>) -> Void) -> Void
+		perform?(`title`, `providerIdToAssign`, `handler`)
 		var __value: Cancellable
 		do {
-		    __value = try methodReturnValue(.m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))).casted()
+		    __value = try methodReturnValue(.m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(Parameter<String?>.value(`title`), Parameter<UUID?>.value(`providerIdToAssign`), Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void). Use given")
-			Failure("Stub return value not specified for createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for createConversation(title: String?, providerIdToAssign: UUID?, handler: @escaping (Result<Conversation, NablaError>) -> Void). Use given")
+			Failure("Stub return value not specified for createConversation(title: String?, providerIdToAssign: UUID?, handler: @escaping (Result<Conversation, NablaError>) -> Void). Use given")
 		}
 		return __value
     }
@@ -1038,9 +1038,23 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 		return __value
     }
 
+    open func createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable {
+        addInvocation(.m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`)))
+		let perform = methodPerformValue(.m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))) as? (@escaping (Result<Conversation, NablaError>) -> Void) -> Void
+		perform?(`handler`)
+		var __value: Cancellable
+		do {
+		    __value = try methodReturnValue(.m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void). Use given")
+			Failure("Stub return value not specified for createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
-        case m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>)
+        case m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(Parameter<String?>, Parameter<UUID?>, Parameter<(Result<Conversation, NablaError>) -> Void>)
         case m_watchItems__ofConversationWithId_conversationIdhandler_handler(Parameter<UUID>, Parameter<(Result<ConversationItems, NablaError>) -> Void>)
         case m_setIsTyping__isTypinginConversationWithId_conversationIdhandler_handler(Parameter<Bool>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_markConversationAsSeen__conversationIdhandler_handler(Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
@@ -1050,12 +1064,15 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         case m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(Parameter<UUID>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(Parameter<UUID>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
+        case m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>)
         case p_logger_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_createConversation__handler_handler(let lhsHandler), .m_createConversation__handler_handler(let rhsHandler)):
+            case (.m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(let lhsTitle, let lhsProvideridtoassign, let lhsHandler), .m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(let rhsTitle, let rhsProvideridtoassign, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher), lhsTitle, rhsTitle, "title"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsProvideridtoassign, rhs: rhsProvideridtoassign, with: matcher), lhsProvideridtoassign, rhsProvideridtoassign, "providerIdToAssign"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
@@ -1117,6 +1134,11 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "inConversationWithId conversationId"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
+
+            case (.m_createConversation__handler_handler(let lhsHandler), .m_createConversation__handler_handler(let rhsHandler)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
+				return Matcher.ComparisonResult(results)
             case (.p_logger_get,.p_logger_get): return Matcher.ComparisonResult.match
             default: return .none
             }
@@ -1124,7 +1146,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 
         func intValue() -> Int {
             switch self {
-            case let .m_createConversation__handler_handler(p0): return p0.intValue
+            case let .m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_watchItems__ofConversationWithId_conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
             case let .m_setIsTyping__isTypinginConversationWithId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_markConversationAsSeen__conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
@@ -1134,12 +1156,13 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case let .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_createConversation__handler_handler(p0): return p0.intValue
             case .p_logger_get: return 0
             }
         }
         func assertionName() -> String {
             switch self {
-            case .m_createConversation__handler_handler: return ".createConversation(handler:)"
+            case .m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler: return ".createConversation(title:providerIdToAssign:handler:)"
             case .m_watchItems__ofConversationWithId_conversationIdhandler_handler: return ".watchItems(ofConversationWithId:handler:)"
             case .m_setIsTyping__isTypinginConversationWithId_conversationIdhandler_handler: return ".setIsTyping(_:inConversationWithId:handler:)"
             case .m_markConversationAsSeen__conversationIdhandler_handler: return ".markConversationAsSeen(_:handler:)"
@@ -1149,6 +1172,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler: return ".retrySending(itemWithId:inConversationWithId:handler:)"
             case .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler: return ".deleteMessage(withId:conversationId:handler:)"
             case .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler: return ".sendMessage(_:inConversationWithId:handler:)"
+            case .m_createConversation__handler_handler: return ".createConversation(handler:)"
             case .p_logger_get: return "[get] .logger"
             }
         }
@@ -1166,8 +1190,8 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             return Given(method: .p_logger_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
-        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_createConversation__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func createConversation(title: Parameter<String?>, providerIdToAssign: Parameter<UUID?>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(`title`, `providerIdToAssign`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func watchItems(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<ConversationItems, NablaError>) -> Void>, willReturn: PaginatedWatcher...) -> MethodStub {
             return Given(method: .m_watchItems__ofConversationWithId_conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -1196,9 +1220,12 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
             return Given(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_createConversation__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createConversation(title: Parameter<String?>, providerIdToAssign: Parameter<UUID?>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
             let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_createConversation__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(`title`, `providerIdToAssign`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Cancellable).self)
 			willProduce(stubber)
 			return given
@@ -1266,12 +1293,19 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 			willProduce(stubber)
 			return given
         }
+        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+            let willReturn: [Cancellable] = []
+			let given: Given = { return Given(method: .m_createConversation__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Cancellable).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>) -> Verify { return Verify(method: .m_createConversation__handler_handler(`handler`))}
+        public static func createConversation(title: Parameter<String?>, providerIdToAssign: Parameter<UUID?>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>) -> Verify { return Verify(method: .m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(`title`, `providerIdToAssign`, `handler`))}
         public static func watchItems(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<ConversationItems, NablaError>) -> Void>) -> Verify { return Verify(method: .m_watchItems__ofConversationWithId_conversationIdhandler_handler(`conversationId`, `handler`))}
         public static func setIsTyping(_ isTyping: Parameter<Bool>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_setIsTyping__isTypinginConversationWithId_conversationIdhandler_handler(`isTyping`, `conversationId`, `handler`))}
         public static func markConversationAsSeen(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_markConversationAsSeen__conversationIdhandler_handler(`conversationId`, `handler`))}
@@ -1281,6 +1315,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(`itemId`, `conversationId`, `handler`))}
         public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(`messageId`, `conversationId`, `handler`))}
         public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`))}
+        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>) -> Verify { return Verify(method: .m_createConversation__handler_handler(`handler`))}
         public static var logger: Verify { return Verify(method: .p_logger_get) }
     }
 
@@ -1288,8 +1323,8 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>, perform: @escaping (@escaping (Result<Conversation, NablaError>) -> Void) -> Void) -> Perform {
-            return Perform(method: .m_createConversation__handler_handler(`handler`), performs: perform)
+        public static func createConversation(title: Parameter<String?>, providerIdToAssign: Parameter<UUID?>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, perform: @escaping (String?, UUID?, @escaping (Result<Conversation, NablaError>) -> Void) -> Void) -> Perform {
+            return Perform(method: .m_createConversation__title_titleproviderIdToAssign_providerIdToAssignhandler_handler(`title`, `providerIdToAssign`, `handler`), performs: perform)
         }
         public static func watchItems(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<ConversationItems, NablaError>) -> Void>, perform: @escaping (UUID, @escaping (Result<ConversationItems, NablaError>) -> Void) -> Void) -> Perform {
             return Perform(method: .m_watchItems__ofConversationWithId_conversationIdhandler_handler(`conversationId`, `handler`), performs: perform)
@@ -1317,6 +1352,9 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         }
         public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, perform: @escaping (MessageInput, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void) -> Perform {
             return Perform(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`), performs: perform)
+        }
+        public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>, perform: @escaping (@escaping (Result<Conversation, NablaError>) -> Void) -> Void) -> Perform {
+            return Perform(method: .m_createConversation__handler_handler(`handler`), performs: perform)
         }
     }
 

@@ -5,7 +5,12 @@ import NablaMessagingCore
 protocol NablaMessagingClientProtocol {
     var logger: Logger { get }
 
-    func createConversation(handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable
+    func createConversation(
+        title: String?,
+        providerIdToAssign: UUID?,
+        handler: @escaping (Result<Conversation, NablaError>
+        ) -> Void
+    ) -> Cancellable
 
     func watchItems(
         ofConversationWithId conversationId: UUID,
@@ -59,5 +64,29 @@ extension NablaMessagingClientProtocol {
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable {
         sendMessage(message, replyingToMessageWithId: nil, inConversationWithId: conversationId, handler: handler)
+    }
+    
+    func createConversation(
+        title: String?,
+        handler: @escaping (Result<Conversation, NablaError>) -> Void
+    ) -> Cancellable {
+        createConversation(title: title, providerIdToAssign: nil, handler: handler)
+    }
+    
+    func createConversation(
+        providerIdToAssign: UUID?,
+        handler: @escaping (Result<Conversation, NablaError>) -> Void
+    ) -> Cancellable {
+        createConversation(title: nil, providerIdToAssign: providerIdToAssign, handler: handler)
+    }
+    
+    func createConversation(
+        handler: @escaping (Result<Conversation, NablaError>) -> Void
+    ) -> Cancellable {
+        createConversation(
+            title: nil,
+            providerIdToAssign: nil,
+            handler: handler
+        )
     }
 }

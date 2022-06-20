@@ -116,10 +116,11 @@ class GQLClientImpl: GQLClient {
         if let graphqlError = error as? Apollo.GraphQLError {
             switch graphqlError.errorName {
             case "ENTITY_NOT_FOUND":
-                let path = graphqlError["path"] as? [String] ?? []
-                return .entityNotFound(path: path)
+                return .entityNotFound(message: graphqlError.message)
             case "INTERNAL_SERVER_ERROR":
                 return .serverError(message: graphqlError.message)
+            case "PERMISSION_REQUIRED":
+                return .permissionRequired(message: graphqlError.message)
             default:
                 break
             }

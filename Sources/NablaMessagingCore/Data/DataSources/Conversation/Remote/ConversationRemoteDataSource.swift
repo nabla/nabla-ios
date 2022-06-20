@@ -1,7 +1,11 @@
 import Foundation
 
 protocol ConversationRemoteDataSource {
-    func createConversation(handler: ResultHandler<RemoteConversation, GQLError>) -> Cancellable
+    func createConversation(
+        title: String?,
+        providerIdToAssign: UUID?,
+        handler: ResultHandler<RemoteConversation, GQLError>
+    ) -> Cancellable
     
     func watchConversation(_ conversationId: UUID, handler: ResultHandler<RemoteConversation, GQLError>) -> Cancellable
     

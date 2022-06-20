@@ -5,12 +5,12 @@ enum GQLErrorTransformer {
             return .internalError(gqlError)
         case .emptyServerResponse:
             return .serverError("Empty server response")
-        case .entityNotFound:
-            return .serverError("Entity not found")
         case .unknownError:
             return .serverError(gqlError.localizedDescription)
         case let .incompatibleServerSchema(message),
-             let .serverError(message):
+             let .serverError(message),
+             let .entityNotFound(message),
+             let .permissionRequired(message):
             return .serverError(message)
         case .cacheError:
             return .internalError(gqlError)

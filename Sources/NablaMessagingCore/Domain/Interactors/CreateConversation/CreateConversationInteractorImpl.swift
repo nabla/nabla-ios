@@ -10,11 +10,19 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
 
     // MARK: - Internal
     
-    func execute(handler: ResultHandler<Conversation, NablaError>) -> Cancellable {
+    func execute(
+        title: String?,
+        providerIdToAssign: UUID?,
+        handler: ResultHandler<Conversation, NablaError>
+    ) -> Cancellable {
         guard isAuthenticated(handler: handler) else {
             return Failure()
         }
-        return repository.createConversation(handler: handler)
+        return repository.createConversation(
+            title: title,
+            providerIdToAssign: providerIdToAssign,
+            handler: handler
+        )
     }
     
     // MARK: - Private
