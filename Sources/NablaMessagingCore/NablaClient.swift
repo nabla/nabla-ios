@@ -55,7 +55,7 @@ public class NablaClient {
         configuration: Configuration? = nil
     ) {
         guard _shared == nil else {
-            assertionFailure("NablaClient.initialize(configuration:) can only be called once")
+            logger.warning(message: "NablaClient.initialize(configuration:) should only be called once. Ignoring this call and using the previously created shared instance.")
             return
         }
         _shared = NablaClient(

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ConversationViewController` can be used without a `UINavigationController`
 - `NablaMessagingClient.sendMessage` now takes an optional parameter `replyToMessageId ` of type `UUID?` which correspond to the message the patient replies to.
 - `MimeType` is now split in different types (image, video, audio, document) and fallback on wildcard when receiving an unknown value.
+- `NablaClient.initialise` now logs a `warning` log in case of multiple calls instead of a `failure`.
 
 ### Fixed
 
