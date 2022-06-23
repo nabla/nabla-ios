@@ -1,6 +1,6 @@
 import Foundation
 
-extension String {
+public extension String {
     var nilIfEmpty: String? {
         isEmpty ? nil : self
     }

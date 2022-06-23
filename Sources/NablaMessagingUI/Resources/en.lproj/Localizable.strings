@@ -37,7 +37,6 @@
 "conversation_date_separator_date_today" = "Today";
 "conversation_date_separator_date_yesterday" = "Yesterday";
 "conversation_provider_joined" = "%@ has joined the conversation";
-"conversation_activity_deleted_provider_name" = "[Deleted provider]";
 "conversation_reply_to_author" = "Replying to %@";
 "conversation_reply_to_author_you" = "you";
 "conversation_reply_to_author_deleted_provider" = "[Deleted provider]";
@@ -47,3 +46,6 @@
 "conversation_reply_to_preview_document" = "Document";
 "conversation_reply_to_preview_video" = "Video";
 "conversation_reply_to_preview_unknown" = "Preview";
+
+// Provider
+"provider_deleted_name" = "[Deleted provider]";

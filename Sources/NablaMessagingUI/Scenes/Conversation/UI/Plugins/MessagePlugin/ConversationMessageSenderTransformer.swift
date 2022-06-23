@@ -7,7 +7,7 @@ struct ConversationMessageSenderTransformer {
         switch item.sender {
         case let .provider(provider):
             return .them(.init(
-                author: [provider.prefix, provider.lastName].compactMap { $0 }.joined(separator: " "),
+                author: provider.abbreviatedNameWithPrefix,
                 avatar: .init(url: provider.avatarURL, text: provider.initials),
                 isContiguous: item.isContiguous
             ))

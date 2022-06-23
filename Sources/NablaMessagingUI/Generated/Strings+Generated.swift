@@ -16,8 +16,6 @@ internal enum L10n {
   internal static let conversationActionDeleteMessage = L10n.tr("Localizable", "conversation_action_delete_message")
   /// Reply to
   internal static let conversationActionReplyTo = L10n.tr("Localizable", "conversation_action_reply_to")
-  /// [Deleted provider]
-  internal static let conversationActivityDeletedProviderName = L10n.tr("Localizable", "conversation_activity_deleted_provider_name")
   /// Camera
   internal static let conversationAddMediaCamera = L10n.tr("Localizable", "conversation_add_media_camera")
   /// Cancel
@@ -106,6 +104,8 @@ internal enum L10n {
   }
   /// Medical Chat
   internal static let inboxTitle = L10n.tr("Localizable", "inbox_title")
+  /// [Deleted provider]
+  internal static let providerDeletedName = L10n.tr("Localizable", "provider_deleted_name")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

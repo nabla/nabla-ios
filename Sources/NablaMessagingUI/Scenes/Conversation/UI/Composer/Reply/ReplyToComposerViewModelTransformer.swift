@@ -18,7 +18,7 @@ private extension ConversationViewMessageItem {
         let name: String
         switch sender {
         case let .provider(provider):
-            name = provider.name
+            name = provider.abbreviatedNameWithPrefix
         case let .system(system):
             name = system.name
         case .patient:

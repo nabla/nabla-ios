@@ -36,18 +36,7 @@ final class ConversationActivityPresenter: Presenter {
     private static func transform(item: ConversationActivityViewItem) -> String {
         switch item.activity {
         case let .providerJoined(provider):
-            return L10n.conversationProviderJoined(provider.name)
-        }
-    }
-}
-
-private extension MaybeProvider {
-    var name: String {
-        switch self {
-        case .deletedProvider:
-            return L10n.conversationActivityDeletedProviderName
-        case let .provider(provider):
-            return [provider.prefix, provider.lastName].compactMap(identity).joined(separator: " ")
+            return L10n.conversationProviderJoined(provider.fullNameWithPrefix)
         }
     }
 }

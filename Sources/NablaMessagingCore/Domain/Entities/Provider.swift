@@ -12,13 +12,3 @@ public enum MaybeProvider: Hashable {
     case deletedProvider
     case provider(Provider)
 }
-
-public extension Provider {
-    var initials: String? {
-        String([firstName, lastName].compactMap(\.first)).nilIfEmpty
-    }
-
-    var name: String {
-        [`prefix`, lastName].compactMap { $0 }.joined(separator: " ")
-    }
-}

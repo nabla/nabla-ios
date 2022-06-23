@@ -14,7 +14,7 @@ struct ConversationMessagePreviewViewModelTransformer {
         case .patient:
             author = L10n.conversationReplyToAuthorYou
         case let .provider(provider):
-            author = provider.name
+            author = provider.abbreviatedNameWithPrefix
         case let .system(system):
             author = system.name
         case .deleted:
