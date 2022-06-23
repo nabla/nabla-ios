@@ -17,6 +17,7 @@ protocol ConversationViewItem {
 
 struct ConversationViewModel {
     let title: String?
+    let subtitle: String?
     let avatar: AvatarViewModel
 }
 

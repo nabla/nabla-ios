@@ -280,6 +280,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private static func transform(conversation: Conversation) -> ConversationViewModel {
         ConversationViewModel(
             title: conversation.title ?? conversation.inboxPreviewTitle,
+            subtitle: conversation.subtitle,
             avatar: AvatarViewModel(
                 url: conversation.providers.first?.provider.avatarURL,
                 text: conversation.providers.first?.provider.initials

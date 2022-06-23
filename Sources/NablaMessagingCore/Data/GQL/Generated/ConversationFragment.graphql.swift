@@ -14,7 +14,7 @@ public extension GQL {
         __typename
         id
         title
-        description
+        subtitle
         lastMessagePreview
         unreadMessageCount
         inboxPreviewTitle
@@ -33,7 +33,7 @@ public extension GQL {
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
         GraphQLField("title", type: .scalar(String.self)),
-        GraphQLField("description", type: .scalar(String.self)),
+        GraphQLField("subtitle", type: .scalar(String.self)),
         GraphQLField("lastMessagePreview", type: .scalar(String.self)),
         GraphQLField("unreadMessageCount", type: .nonNull(.scalar(Int.self))),
         GraphQLField("inboxPreviewTitle", type: .nonNull(.scalar(String.self))),
@@ -48,8 +48,8 @@ public extension GQL {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, title: String? = nil, description: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, providers: [Provider]) {
-      self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "description": description, "lastMessagePreview": lastMessagePreview, "unreadMessageCount": unreadMessageCount, "inboxPreviewTitle": inboxPreviewTitle, "updatedAt": updatedAt, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }])
+    public init(id: GQL.UUID, title: String? = nil, subtitle: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, providers: [Provider]) {
+      self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "subtitle": subtitle, "lastMessagePreview": lastMessagePreview, "unreadMessageCount": unreadMessageCount, "inboxPreviewTitle": inboxPreviewTitle, "updatedAt": updatedAt, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }])
     }
 
     public var __typename: String {
@@ -79,12 +79,12 @@ public extension GQL {
       }
     }
 
-    public var description: String? {
+    public var subtitle: String? {
       get {
-        return resultMap["description"] as? String
+        return resultMap["subtitle"] as? String
       }
       set {
-        resultMap.updateValue(newValue, forKey: "description")
+        resultMap.updateValue(newValue, forKey: "subtitle")
       }
     }
 

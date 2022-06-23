@@ -11,7 +11,7 @@ enum ConversationTransformer {
         Conversation(
             id: fragment.id,
             title: fragment.title,
-            description: fragment.description,
+            subtitle: fragment.subtitle,
             inboxPreviewTitle: fragment.inboxPreviewTitle,
             lastMessagePreview: fragment.lastMessagePreview,
             lastModified: fragment.updatedAt,

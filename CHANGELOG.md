@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `headerTitleFont`, `headerSubtitleFont`, `headerTitleColor` and `headerSubtitleColor` to `NablaTheme.Conversation` to customize the look of the `ConversationViewController` header
 
 ### Changed
+- Remove the `description` field from `Conversation` and replace it by a `subtitle` that is displayed by the `ConversationViewController`
 
 ### Fixed
 

@@ -8,6 +8,14 @@ final class TitleView: UIView {
         set { titleLabel.text = newValue }
     }
     
+    var subtitle: String? {
+        get { subtitleLabel.text }
+        set {
+            subtitleLabel.text = newValue
+            subtitleLabel.isHidden = newValue == nil
+        }
+    }
+    
     var avatar: AvatarViewModel = .init(url: nil, text: nil) {
         didSet { avatarView.configure(with: avatar) }
     }
@@ -40,11 +48,19 @@ final class TitleView: UIView {
     
     private let titleLabel: UILabel = {
         let view = UILabel()
-        view.textColor = NablaTheme.ConversationPreview.previewTitleColor
-        view.font = NablaTheme.ConversationPreview.previewTitleFont
+        view.textColor = NablaTheme.Conversation.headerTitleColor
+        view.font = NablaTheme.Conversation.headerTitleFont
         return view
     }()
     
+    private let subtitleLabel: UILabel = {
+        let view = UILabel()
+        view.isHidden = true
+        view.textColor = NablaTheme.Conversation.headerSubtitleColor
+        view.font = NablaTheme.Conversation.headerSubtitleFont
+        return view
+    }()
+
     private func makeSpacer() -> UIView {
         let view = UIView()
         view.backgroundColor = .clear
@@ -53,7 +69,14 @@ final class TitleView: UIView {
     
     private func setUpSubviews() {
         let spacer = makeSpacer()
-        let hstack = UIStackView(arrangedSubviews: [avatarView, titleLabel, spacer])
+        
+        let titleSubtitleVStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+        titleSubtitleVStack.axis = .vertical
+        titleSubtitleVStack.alignment = .leading
+        titleSubtitleVStack.distribution = .fill
+        titleSubtitleVStack.spacing = 3
+        
+        let hstack = UIStackView(arrangedSubviews: [avatarView, titleSubtitleVStack, spacer])
         hstack.axis = .horizontal
         hstack.alignment = .center
         hstack.distribution = .fill

@@ -9,7 +9,7 @@ struct ConversationListViewModelTransformer {
             ConversationListItemViewModel(
                 avatar: AvatarViewModel(url: conversation.providers.first?.provider.avatarURL, text: conversation.providers.first?.provider.initials),
                 title: conversation.inboxPreviewTitle,
-                lastMessage: conversation.lastMessagePreview,
+                subtitle: conversation.lastMessagePreview ?? conversation.subtitle,
                 lastUpdatedTime: lastUpdatedTime(from: conversation),
                 isUnread: conversation.patientUnreadMessageCount > 0
             )

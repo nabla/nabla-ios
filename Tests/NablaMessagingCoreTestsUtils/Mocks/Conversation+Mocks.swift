@@ -6,7 +6,7 @@ public extension Conversation {
         return Conversation(
             id: .init(),
             title: "Title \(conversationCount)",
-            description: " Description \(conversationCount)",
+            subtitle: "Subtitle \(conversationCount)",
             inboxPreviewTitle: "PreviewTitle \(conversationCount)",
             lastMessagePreview: "MessagePreview \(conversationCount)",
             lastModified: .init(timeIntervalSinceReferenceDate: 0),

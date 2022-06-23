@@ -70,6 +70,15 @@ public enum NablaTheme {
     enum Conversation {
         /// Background color for the conversation screen. Default set to NablaTheme.backgroundColor
         public static var backgroundColor = NablaTheme.backgroundColor
+        
+        /// Font used for the title of a conversation in the conversations list. Default set to NablaTheme.body
+        public static var headerTitleFont = NablaTheme.body
+        /// Font used for the subtitle or message preview of a conversation in the conversations list. Default set to NablaTheme.subhead
+        public static var headerSubtitleFont = NablaTheme.subhead
+        /// Color of the title of a conversation in the conversations list. Default set to NablaTheme.primaryTextColor
+        public static var headerTitleColor = NablaTheme.primaryTextColor
+        /// Color of the subtitle or message preview of a conversation in the conversations list. Default set to NablaTheme.secondaryTextColor
+        public static var headerSubtitleColor = NablaTheme.secondaryTextColor
 
         /// Corner radius used for all messages in the conversation screen. Default set to CGFloat = 10
         public static var messageCornerRadius: CGFloat = 10

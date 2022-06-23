@@ -46,6 +46,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     func configure(withConversation conversation: ConversationViewModel) {
         titleView.title = conversation.title
         titleView.avatar = conversation.avatar
+        titleView.subtitle = conversation.subtitle
     }
     
     func configure(withState state: ConversationViewState) {

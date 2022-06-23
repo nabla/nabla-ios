@@ -1,66 +1,66 @@
 {
+  "name" : "testCreateConversation.cassette",
   "interactions" : [
     {
       "request" : {
-        "method" : "POST",
+        "headers" : {
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwYmYwM2IxZi0zN2MxLTQ5OTMtYjY2Ni0zZThmYzlmOGUwOTMiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY1NTkwMzk3Niwic2Vzc2lvbl91dWlkIjoiOGMyM2U2ZjItOWZkNS00NzMyLWE3MjgtMDdjNDU2NjQzNDgxIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsbyJ9.piwGJlLqMKtWid4iwxo8STv7_D9Xin87_iH0IxqpcSI",
+          "X-APOLLO-OPERATION-NAME" : "CreateConversation",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha06",
+          "Content-Type" : "application\/json",
+          "X-Nabla-SDK-Platform" : "ios",
+          "X-Nabla-API-Key" : "test-api-key",
+          "apollographql-client-version" : "13.4-20501"
+        },
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "body" : {
-          "Tests-Request-Index" : 0,
-          "query" : "mutation CreateConversation($title: String, $providerIdToAssign: UUID) {\n  createConversation(title: $title, providerIdToAssign: $providerIdToAssign) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  description\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}",
-          "operationName" : "CreateConversation",
           "variables" : {
             "title" : null,
             "providerIdToAssign" : null
-          }
+          },
+          "query" : "mutation CreateConversation($title: String, $providerIdToAssign: UUID) {\n  createConversation(title: $title, providerIdToAssign: $providerIdToAssign) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}",
+          "operationName" : "CreateConversation",
+          "Tests-Request-Index" : 0
         },
-        "headers" : {
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwYmYwM2IxZi0zN2MxLTQ5OTMtYjY2Ni0zZThmYzlmOGUwOTMiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY1NTczMzYwOSwic2Vzc2lvbl91dWlkIjoiNzdhZTczMjEtOWE3MC00NmYwLWFjN2QtNzc4M2VlNDY5ODA5Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsbyJ9.32Pl5svA5Olac1awmMPCI5DiLQ1cstQH5JvmOAFY5xk",
-          "X-APOLLO-OPERATION-NAME" : "CreateConversation",
-          "X-Nabla-API-Key" : "test-api-key",
-          "X-Nabla-SDK-Platform" : "ios",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "X-Nabla-SDK-Version" : "1.0.0-alpha05",
-          "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "apollographql-client-version" : "13.4-20501",
-          "Content-Type" : "application\/json"
-        }
+        "method" : "POST"
       },
-      "recorded_at" : 1655733355.8968401,
+      "recorded_at" : 1655903729.4041629,
       "response" : {
         "body" : {
           "data" : {
             "createConversation" : {
               "conversation" : {
+                "subtitle" : null,
+                "id" : "e3a58b9b-32b1-4e37-b34f-cd9c0e6fcb96",
                 "inboxPreviewTitle" : "Ask us anything",
-                "id" : "add843c0-c765-4c7a-b472-754ec3ed17f3",
                 "title" : null,
                 "lastMessagePreview" : null,
-                "updatedAt" : "2022-06-20T15:55:55.872+02:00",
-                "description" : null,
+                "updatedAt" : "2022-06-22T15:15:29.376+02:00",
                 "unreadMessageCount" : 0,
-                "__typename" : "Conversation",
                 "providers" : [
 
-                ]
+                ],
+                "__typename" : "Conversation"
               },
               "__typename" : "CreateConversationOutput"
             }
           }
         },
         "status" : 200,
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "headers" : {
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "Content-Length" : "337",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "X-Request-ID" : "e4efc720-f326-4b84-a2e4-6a15ef69bae9",
+          "Connection" : "keep-alive",
           "X-Nabla-Minimum-Android-Code-Version" : "0",
           "Vary" : "Origin",
-          "Content-Length" : "340",
-          "X-Nabla-Minimum-Code-Version" : "323",
-          "X-Request-ID" : "e8446c6e-790e-481d-9ac1-2dba74187461",
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "Connection" : "keep-alive"
-        },
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
+          "X-Nabla-Minimum-Code-Version" : "323"
+        }
       }
     }
-  ],
-  "name" : "testCreateConversation.cassette"
+  ]
 }

@@ -12,7 +12,7 @@ extension NablaMessagingClientProtocolMock {
                 handler(.success(Conversation(
                     id: conversation.id,
                     title: conversation.title,
-                    description: conversation.description,
+                    subtitle: conversation.subtitle,
                     inboxPreviewTitle: conversation.inboxPreviewTitle,
                     lastMessagePreview: conversation.lastMessagePreview,
                     lastModified: conversation.lastModified,

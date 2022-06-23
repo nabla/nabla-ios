@@ -23,7 +23,7 @@ class ConversationListItemCell: UITableViewCell, Reusable {
     
     func configure(with viewModel: ConversationListItemViewModel) {
         titleLabel.text = viewModel.title
-        subtitleLabel.text = viewModel.lastMessage
+        subtitleLabel.text = viewModel.subtitle
         timeLabel.text = viewModel.lastUpdatedTime
         unreadIndicatorView.isHidden = !viewModel.isUnread
         avatarView.configure(with: viewModel.avatar)

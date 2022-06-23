@@ -1,7 +1,7 @@
 fragment ConversationFragment on Conversation {
     id
     title
-    description
+    subtitle
     lastMessagePreview
     unreadMessageCount
     inboxPreviewTitle

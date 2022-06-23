@@ -7,7 +7,7 @@ final class ConversationListViewTests: XCTestCase {
     private let item: ConversationListItemViewModel = .init(
         avatar: .init(url: nil, text: "JD"),
         title: "Dr John Doe",
-        lastMessage: "How are you?",
+        subtitle: "How are you?",
         lastUpdatedTime: "Today",
         isUnread: true
     )
