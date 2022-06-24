@@ -17,13 +17,13 @@ final class DateSeparatorPresenter: Presenter {
 
     // MARK: - Internal
 
-    func attachView(_ view: ConversationTextSeparatorCellContract) {
+    func attachView(_ view: DateSeparatorCell) {
         self.view = view
     }
 
     // MARK: - Private
 
-    private weak var view: ConversationTextSeparatorCellContract?
+    private weak var view: DateSeparatorCell?
 
     private func updateView() {
         let transformer = DateSeparatorViewModelTransformer()

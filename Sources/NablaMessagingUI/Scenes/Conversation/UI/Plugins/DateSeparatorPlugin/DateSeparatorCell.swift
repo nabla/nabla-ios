@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-final class ConversationTextSeparatorCell: UICollectionViewCell, ConversationTextSeparatorCellContract, Reusable {
+final class DateSeparatorCell: UICollectionViewCell, Reusable {
     // MARK: - Lifecycle
 
     override func didMoveToSuperview() {
@@ -11,7 +11,7 @@ final class ConversationTextSeparatorCell: UICollectionViewCell, ConversationTex
 
     // MARK: - Internal
 
-    func configure(with viewModel: ConversationTextSeparatorCellViewModel) {
+    func configure(with viewModel: DateSeparatorCellViewModel) {
         label.text = viewModel.text
     }
 
@@ -40,8 +40,8 @@ final class ConversationTextSeparatorCell: UICollectionViewCell, ConversationTex
     private func makeLabel() -> UILabel {
         let label = UILabel().prepareForAutoLayout()
         label.textAlignment = .center
-        label.font = NablaTheme.Conversation.textSeparatorFont
-        label.textColor = NablaTheme.Conversation.textSeparatorColor
+        label.font = NablaTheme.Conversation.dateSeparatorFont
+        label.textColor = NablaTheme.Conversation.dateSeparatorColor
         label.numberOfLines = 2
         return label
     }
@@ -50,10 +50,10 @@ final class ConversationTextSeparatorCell: UICollectionViewCell, ConversationTex
 #if DEBUG
     import SwiftUI
 
-    struct ConversationTextSeparatorCell_Previews: PreviewProvider {
-        static var preview: ConversationTextSeparatorCell {
-            let cell = ConversationTextSeparatorCell(frame: .zero)
-            cell.configure(with: .init(text: "Hello ConversationTextSeparatorCell"))
+    struct DateSeparatorCell_Previews: PreviewProvider {
+        static var preview: DateSeparatorCell {
+            let cell = DateSeparatorCell(frame: .zero)
+            cell.configure(with: .init(text: "12/03/2023 at 8pm"))
             return cell
         }
 

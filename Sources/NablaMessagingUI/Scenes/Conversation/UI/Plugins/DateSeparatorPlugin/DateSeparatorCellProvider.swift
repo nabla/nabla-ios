@@ -2,12 +2,10 @@ import Foundation
 import UIKit
 
 final class DateSeparatorCellProvider: ConversationCellProvider {
-    private typealias Cell = ConversationTextSeparatorCell
-
     private var presenters: [UUID: DateSeparatorPresenter] = [:]
 
     func prepare(collectionView: UICollectionView) {
-        collectionView.register(Cell.self)
+        collectionView.register(DateSeparatorCell.self)
     }
 
     func provideCell(
@@ -20,7 +18,7 @@ final class DateSeparatorCellProvider: ConversationCellProvider {
             return nil
         }
 
-        let cell = collectionView.dequeueReusableCell(ofClass: Cell.self, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(ofClass: DateSeparatorCell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
             item: item,
             delegate: delegate

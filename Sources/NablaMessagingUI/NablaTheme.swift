@@ -150,10 +150,15 @@ public enum NablaTheme {
         /// UIImage used as the preview of an audio message replied to. Default set to UIImage(systemName: "mic")
         public static var replyToAudioIcon = UIImage(systemName: "mic")
 
-        /// Font used to display the text for date separators & conversation events. Default set to NablaTheme.footnote
-        public static var textSeparatorFont = NablaTheme.footnote
-        /// Color used to display the text for date separators & conversation events. Default set to NablaTheme.secondaryTextColor
-        public static var textSeparatorColor = NablaTheme.secondaryTextColor
+        /// Font used to display the text for date separators. Default set to NablaTheme.footnote
+        public static var dateSeparatorFont = NablaTheme.footnote
+        /// Color used to display the text for date separators. Default set to NablaTheme.secondaryTextColor
+        public static var dateSeparatorColor = NablaTheme.secondaryTextColor
+        
+        /// Font used to display the text of conversation activities. Default set to NablaTheme.footnote
+        public static var conversationActivityFont = NablaTheme.footnote
+        /// Color used to display the text of conversation activities. Default set to NablaTheme.secondaryTextColor
+        public static var conversationActivityColor = NablaTheme.secondaryTextColor
 
         /// Background color of the message composer in the conversation screen. Default set to NablaTheme.backgroundColor
         public static var composerBackgroundColor = NablaTheme.backgroundColor

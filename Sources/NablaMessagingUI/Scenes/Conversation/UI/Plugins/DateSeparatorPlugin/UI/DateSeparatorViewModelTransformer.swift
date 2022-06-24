@@ -3,7 +3,7 @@ import Foundation
 struct DateSeparatorViewModelTransformer {
     // MARK: - Public
 
-    func transform(item: DateSeparatorViewItem) -> ConversationTextSeparatorCellViewModel {
+    func transform(item: DateSeparatorViewItem) -> DateSeparatorCellViewModel {
         .init(text: text(from: item.date))
     }
 

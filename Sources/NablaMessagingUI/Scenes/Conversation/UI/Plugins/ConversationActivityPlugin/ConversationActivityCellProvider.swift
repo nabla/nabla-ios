@@ -2,12 +2,10 @@ import Foundation
 import UIKit
 
 final class ConversationActivityCellProvider: ConversationCellProvider {
-    private typealias Cell = ConversationTextSeparatorCell
-    
     private var presenters: [UUID: ConversationActivityPresenter] = [:]
     
     func prepare(collectionView: UICollectionView) {
-        collectionView.register(Cell.self)
+        collectionView.register(ConversationActivityCell.self)
     }
     
     func provideCell(
@@ -20,7 +18,7 @@ final class ConversationActivityCellProvider: ConversationCellProvider {
             return nil
         }
         
-        let cell = collectionView.dequeueReusableCell(ofClass: Cell.self, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(ofClass: ConversationActivityCell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
             item: item,
             delegate: delegate

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Remove the `description` field from `Conversation` and replace it by a `subtitle` that is displayed by the `ConversationViewController`
+- `NablaTheme.Conversation.textSeparatorFont` & `NablaTheme.Conversation.textSeparatorColor` have been split into `dateSeparator` & `conversationActivity` items to allow for customization of the 2 elements differently 
 
 ### Fixed
 

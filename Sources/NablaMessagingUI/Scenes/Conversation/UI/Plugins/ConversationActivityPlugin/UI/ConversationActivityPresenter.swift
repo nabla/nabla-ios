@@ -21,13 +21,13 @@ final class ConversationActivityPresenter: Presenter {
     
     // MARK: - Internal
     
-    func attachView(_ view: ConversationTextSeparatorCellContract) {
+    func attachView(_ view: ConversationActivityCell) {
         self.view = view
     }
     
     // MARK: - Private
     
-    private weak var view: ConversationTextSeparatorCellContract?
+    private weak var view: ConversationActivityCell?
     
     private func updateView() {
         view?.configure(with: .init(text: Self.transform(item: item)))

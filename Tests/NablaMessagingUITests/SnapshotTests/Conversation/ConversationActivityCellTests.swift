@@ -3,13 +3,13 @@ import NablaMessagingCore
 import SnapshotTesting
 import XCTest
 
-final class ConversationTextSeparatorCellTests: XCTestCase {
+final class ConversationActivityCellTests: XCTestCase {
     private let size = CGSize(width: 320, height: 88)
-    private var sut: ConversationTextSeparatorCell!
+    private var sut: ConversationActivityCell!
 
     override func setUp() {
         super.setUp()
-        sut = ConversationTextSeparatorCell(frame: .zero)
+        sut = ConversationActivityCell(frame: .zero)
     }
 
     func testConfigureWithText() {
