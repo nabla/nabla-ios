@@ -16,8 +16,8 @@ public class NablaMessagingClient {
     /// - Parameter handler: Handler called when the ``Conversation`` is created or an ``Error`` if something went wrong.
     /// - Returns: A ``Cancellable`` of the task
     public func createConversation(
-        title: String?,
-        providerIdToAssign: UUID?,
+        title: String? = nil,
+        providerIdToAssign: UUID? = nil,
         handler: @escaping (Result<Conversation, NablaError>
         ) -> Void
     ) -> Cancellable {
