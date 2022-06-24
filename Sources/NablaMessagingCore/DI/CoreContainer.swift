@@ -4,11 +4,11 @@ import Foundation
 class CoreContainer {
     init(
         name: String,
-        configuration: Configuration,
+        networkConfiguration: NetworkConfiguration,
         logger: Logger
     ) {
         self.name = name
-        self.configuration = configuration
+        self.networkConfiguration = networkConfiguration
         self.logger = logger
     }
 
@@ -34,7 +34,7 @@ class CoreContainer {
         baseURLProvider: URLProvider(
             baseURL: environment.serverUrl
         ),
-        session: configuration.session,
+        session: networkConfiguration.session,
         requestBehavior: headersRequestBehavior
     )
 
@@ -61,9 +61,9 @@ class CoreContainer {
     // MARK: - Private
 
     private let name: String
-    private let configuration: Configuration
+    private let networkConfiguration: NetworkConfiguration
 
-    private lazy var environment: Environment = EnvironmentImpl(configuration: configuration)
+    private lazy var environment: Environment = EnvironmentImpl(networkConfiguration: networkConfiguration)
 
     private lazy var combinedTransport: CombinedTransport = .init(
         httpTransport: httpTransport,

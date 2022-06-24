@@ -6,10 +6,10 @@ class EnvironmentImpl: Environment {
     
     var serverUrl: URL {
         var components = URLComponents()
-        components.host = configuration.domain
-        components.scheme = configuration.scheme
-        components.port = configuration.port
-        components.path = configuration.path
+        components.host = networkConfiguration.domain
+        components.scheme = networkConfiguration.scheme
+        components.port = networkConfiguration.port
+        components.path = networkConfiguration.path
         // swiftlint:disable:next force_unwrapping
         return components.url!
     }
@@ -24,21 +24,21 @@ class EnvironmentImpl: Environment {
     
     var graphqlWebSocketUrl: URL {
         var components = URLComponents()
-        components.host = configuration.domain
-        components.scheme = configuration.scheme == "https" ? "wss" : "ws"
-        components.port = configuration.port
-        components.path = configuration.path
+        components.host = networkConfiguration.domain
+        components.scheme = networkConfiguration.scheme == "https" ? "wss" : "ws"
+        components.port = networkConfiguration.port
+        components.path = networkConfiguration.path
         // swiftlint:disable:next force_unwrapping
         return components.url!.appendingPathComponent(graphqlPath)
     }
     
     init(
-        configuration: Configuration
+        networkConfiguration: NetworkConfiguration
     ) {
-        self.configuration = configuration
+        self.networkConfiguration = networkConfiguration
     }
     
     // MARK: - Private
     
-    private let configuration: Configuration
+    private let networkConfiguration: NetworkConfiguration
 }

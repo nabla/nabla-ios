@@ -3,7 +3,7 @@ import Foundation
 @testable import NablaMessagingCore
 
 struct TestEnvironment {
-    struct Configuration: NablaMessagingCore.Configuration {
+    struct NetworkConfiguration: NablaMessagingCore.NetworkConfiguration {
         let domain = "localhost"
         let scheme = "http"
         let port: Int? = 8080
@@ -19,10 +19,10 @@ struct TestEnvironment {
         // swiftlint:disable:next force_unwrapping
         let userId = UUID(uuidString: "96C3DBC7-744F-44A0-9D7B-8A4C493C7370")!
         let session = makeMockSession(filePath: filePath, function: function)
-        let configuration = Configuration(session: session)
+        let networkConfiguration = NetworkConfiguration(session: session)
         let container = CoreContainer(
             name: "tests",
-            configuration: configuration,
+            networkConfiguration: networkConfiguration,
             logger: ConsoleLogger()
         )
         container.urlSessionClient = MockURLSessionClient(session: session)

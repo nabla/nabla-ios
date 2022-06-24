@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol Configuration {
+public protocol NetworkConfiguration {
     var domain: String { get }
     var scheme: String { get }
     var port: Int? { get }
@@ -8,7 +8,7 @@ public protocol Configuration {
     var session: URLSession { get }
 }
 
-struct DefaultConfiguration: Configuration {
+struct DefaultNetworkConfiguration: NetworkConfiguration {
     let domain = "api.nabla.com"
     let scheme = "https"
     let port: Int? = nil

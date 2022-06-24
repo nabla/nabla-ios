@@ -15,14 +15,15 @@ public class NablaClient {
     ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
     ///   - name: Namespace for your the stored objects.
     ///   - logger: Instance receiving all logs emitted by the SDK. Defaults to `ConsoleLogger` based on `os_log`.
+    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app
     public convenience init(
         apiKey: String,
         name: String,
         logger: Logger = ConsoleLogger(),
-        configuration: Configuration? = nil
+        networkConfiguration: NetworkConfiguration? = nil
     ) {
-        let configuration = configuration ?? DefaultConfiguration()
-        let container = CoreContainer(name: name, configuration: configuration, logger: logger)
+        let configuration = networkConfiguration ?? DefaultNetworkConfiguration()
+        let container = CoreContainer(name: name, networkConfiguration: configuration, logger: logger)
         self.init(apiKey: apiKey, container: container)
     }
     
@@ -47,12 +48,12 @@ public class NablaClient {
     /// You must call this method only once.
     /// - Parameters:
     ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
-    ///   - configuration: Optional API configuration. This is for internal usage and you should probably never pass any value.
     ///   - logger: Instance receiving all logs emitted by the SDK. Defaults to `ConsoleLogger` based on `os_log`.
+    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app
     public static func initialize(
         apiKey: String,
         logger: Logger = ConsoleLogger(),
-        configuration: Configuration? = nil
+        networkConfiguration: NetworkConfiguration? = nil
     ) {
         guard _shared == nil else {
             logger.warning(message: "NablaClient.initialize(configuration:) should only be called once. Ignoring this call and using the previously created shared instance.")
@@ -62,7 +63,7 @@ public class NablaClient {
             apiKey: apiKey,
             name: Constants.defaultName,
             logger: logger,
-            configuration: configuration ?? DefaultConfiguration()
+            networkConfiguration: networkConfiguration
         )
     }
 
