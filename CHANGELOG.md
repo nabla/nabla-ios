@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `Configuration` has been renamed to `NetworkConfiguration`. This should not have an impact on an existing app as this is supposed to be for internal tests only.
+- `PaginatedWatcher` now returns proper `NablaError` in case of error instead of the basic `Error`.
 
 ### Fixed
 

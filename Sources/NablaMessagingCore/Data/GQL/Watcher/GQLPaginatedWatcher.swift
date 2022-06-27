@@ -8,11 +8,11 @@ protocol PaginatedQuery: GQLQuery {
 class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     // MARK: - Internal
 
-    func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         loadMore(numberOfItems: numberOfItemsPerPage, completion: completion)
     }
     
-    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         gqlClient
             .fetch(
                 query: makeQuery(page: .init(cursor: cursor, numberOfItems: numberOfItems)),
@@ -23,7 +23,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
                     }
                     switch result {
                     case let .failure(error):
-                        completion(.failure(error))
+                        completion(.failure(GQLErrorTransformer.transform(gqlError: error)))
                     case let .success(data):
                         self.cursor = Query.getCursor(from: data)
                         self.handleAdditionalData(data, completion: completion)
@@ -89,7 +89,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     private var watcher: Cancellable?
     private var cursor: String?
     
-    private func handleAdditionalData(_ data: Query.Data, completion: @escaping (Result<Void, Error>) -> Void) {
+    private func handleAdditionalData(_ data: Query.Data, completion: @escaping (Result<Void, NablaError>) -> Void) {
         gqlStore.updateCache(
             for: makeQuery(page: .init(cursor: nil, numberOfItems: numberOfItemsPerPage)),
             onlyIfExists: true,
@@ -99,7 +99,7 @@ class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
             completion: { result in
                 switch result {
                 case let .failure(error):
-                    completion(.failure(GQLError.cacheError(error)))
+                    completion(.failure(GQLErrorTransformer.transform(gqlError: .cacheError(error))))
                 case .success:
                     completion(.success(()))
                 }

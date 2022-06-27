@@ -8,23 +8,23 @@ public protocol PaginatedWatcher: Cancellable {
     /// Load more items.
     /// The number of items returned is computed by the backed.
     /// - Parameters:
-    ///   - callback: The completion to handle whether or not the task failed. The results are received via the associated list watcher callback.
+    ///   - completion: The completion to handle whether or not the task failed. The results are received via the associated list watcher callback.
     /// - Returns: The ``Cancellable`` of the task.
-    func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable
+    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable
     /// Load more items.
     /// - Parameters:
     ///   - numberOfItems: The number of items to load.
-    ///   - callback: The completion to handle whether or not the task failed. The results are received via the associated list watcher callback.
+    ///   - completion: The completion to handle whether or not the task failed. The results are received via the associated list watcher callback.
     /// - Returns: The ``Cancellable`` of the task.
-    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable
+    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable
 }
 
 final class FailurePaginatedWatcher: PaginatedWatcher {
-    func loadMore(completion _: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(completion _: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         Failure()
     }
 
-    func loadMore(numberOfItems _: Int, completion _: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(numberOfItems _: Int, completion _: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         Failure()
     }
 

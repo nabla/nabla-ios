@@ -22,14 +22,14 @@ class ConversationItemsMerger: PaginatedWatcher {
         }
     }
     
-    func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         guard let remoteWatcher = remoteWatcher else {
             fatalError("You should always call `ConversationItemsMerger.resume()` before calling `loadMore(completion:)`.")
         }
         return remoteWatcher.loadMore(completion: completion)
     }
     
-    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         guard let remoteWatcher = remoteWatcher else {
             fatalError("You should always call `ConversationItemsMerger.resume()` before calling `loadMore(completion:)`.")
         }

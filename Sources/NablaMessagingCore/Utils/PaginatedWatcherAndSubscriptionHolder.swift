@@ -8,11 +8,11 @@ final class PaginatedWatcherAndSubscriptionHolder: PaginatedWatcher {
         cancellables.forEach { $0.cancel() }
     }
     
-    func loadMore(completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         watcher.loadMore(completion: completion)
     }
     
-    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, Error>) -> Void) -> Cancellable {
+    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
         watcher.loadMore(numberOfItems: numberOfItems, completion: completion)
     }
     
