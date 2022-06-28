@@ -25,20 +25,24 @@ public enum NablaViewFactory {
   
     public static func createConversationViewController(
         _ conversation: Conversation,
+        showComposer: Bool = true,
         client: NablaMessagingClient = .shared
     ) -> UIViewController {
         createConversationViewController(
             conversation,
+            showComposer: showComposer,
             client: client as NablaMessagingClientProtocol
         )
     }
     
     public static func createConversationViewController(
         _ conversationId: UUID,
+        showComposer: Bool = true,
         client: NablaMessagingClient = .shared
     ) -> UIViewController {
         createConversationViewController(
             conversationId,
+            showComposer: showComposer,
             client: client as NablaMessagingClientProtocol
         )
     }
@@ -79,10 +83,12 @@ public enum NablaViewFactory {
 
     static func createConversationViewController(
         _ conversation: Conversation,
+        showComposer: Bool,
         client: NablaMessagingClientProtocol
     ) -> UIViewController {
         let viewController = ConversationViewController.create(
             conversationId: conversation.id,
+            showComposer: showComposer,
             client: client,
             logger: client.logger
         )
@@ -97,10 +103,12 @@ public enum NablaViewFactory {
     
     static func createConversationViewController(
         _ conversationId: UUID,
+        showComposer: Bool,
         client: NablaMessagingClientProtocol
     ) -> UIViewController {
         let viewController = ConversationViewController.create(
             conversationId: conversationId,
+            showComposer: showComposer,
             client: client,
             logger: client.logger
         )

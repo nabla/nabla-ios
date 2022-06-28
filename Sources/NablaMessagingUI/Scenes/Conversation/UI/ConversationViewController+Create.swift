@@ -2,8 +2,14 @@ import Foundation
 import NablaMessagingCore
 
 extension ConversationViewController {
-    static func create(conversationId: UUID, client: NablaMessagingClientProtocol, logger: Logger) -> Self {
+    static func create(
+        conversationId: UUID,
+        showComposer: Bool,
+        client: NablaMessagingClientProtocol,
+        logger: Logger
+    ) -> Self {
         .init(
+            showComposer: showComposer,
             logger: logger,
             providers: [
                 DateSeparatorCellProvider(),

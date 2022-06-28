@@ -203,7 +203,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var conversationItems: ConversationItems?
     private var canLoadMoreItems = false
     private var draftText: String = ""
-    private var state: ConversationViewState = .empty {
+    private var state: ConversationViewState = .loading {
         didSet {
             DispatchQueue.main.async { [view, state] in
                 view?.configure(withState: state)

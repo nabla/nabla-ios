@@ -10,7 +10,12 @@ final class ConversationViewControllerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = ConversationViewController.create(conversationId: UUID(), client: NablaMessagingClientProtocolMock(), logger: LoggerMock())
+        sut = ConversationViewController.create(
+            conversationId: UUID(),
+            showComposer: true,
+            client: NablaMessagingClientProtocolMock(),
+            logger: LoggerMock()
+        )
         sut.presenter = ConversationPresenterMock()
     }
 
@@ -25,7 +30,22 @@ final class ConversationViewControllerTests: XCTestCase {
     func testConversationVCConfigureWithEmpty() {
         // GIVEN
         // WHEN
-        sut.configure(withState: .empty)
+        sut.configure(withState: .loaded(items: []))
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: size))
+    }
+
+    func testConversationVCConfigureWithEmptyAndNoComposer() {
+        // GIVEN
+        sut = ConversationViewController.create(
+            conversationId: UUID(),
+            showComposer: false,
+            client: NablaMessagingClientProtocolMock(),
+            logger: LoggerMock()
+        )
+        sut.presenter = ConversationPresenterMock()
+        // WHEN
+        sut.configure(withState: .loaded(items: []))
         // THEN
         assertSnapshot(matching: sut, as: .image(size: size))
     }

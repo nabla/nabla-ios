@@ -3,7 +3,6 @@ import NablaMessagingCore
 
 enum ConversationViewState {
     case loading
-    case empty
     case loaded(items: [ConversationViewItem])
     case error(viewModel: ErrorViewModel)
 }

@@ -5,24 +5,26 @@ import UIKit
 
 final class ConversationViewController: UIViewController, ConversationViewContract {
     // MARK: - Init
-    
+
     init(
+        showComposer: Bool,
         logger: Logger,
         providers: [ConversationCellProvider]
     ) {
+        self.showComposer = showComposer
         self.logger = logger
         self.providers = providers
         super.init(nibName: nil, bundle: nil)
         navigationItem.titleView = titleView
     }
-    
+
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Lifecycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = NablaTheme.Conversation.backgroundColor
@@ -32,31 +34,31 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         errorView.delegate = self
         presenter.start()
     }
-    
+
     // MARK: - Internal
-    
+
     var presenter: ConversationPresenter!
-    
+
     // MARK: - ConversationViewContract
-    
+
     var showRecordAudioMessageButton = true {
         didSet { composerView.showRecordAudioButton = showRecordAudioMessageButton }
     }
-    
+
     func configure(withConversation conversation: ConversationViewModel) {
         titleView.title = conversation.title
         titleView.avatar = conversation.avatar
         titleView.subtitle = conversation.subtitle
     }
-    
+
     func configure(withState state: ConversationViewState) {
         self.state = state
     }
-    
+
     func emptyComposer() {
         composerView.emptyComposer()
     }
-    
+
     func displayMediaPicker(source: ImagePickerSource) {
         let picker = imagePickerModule.makeViewController(
             source: source,
@@ -64,21 +66,21 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         )
         present(picker, animated: true)
     }
-    
+
     func displayImageDetail(for image: ImageFile) {
         let viewController = ImageDetailViewController()
         let presenter = ImageDetailPresenterImpl(viewContract: viewController, image: image)
         viewController.presenter = presenter
         show(viewController, sender: nil)
     }
-    
+
     func displayDocumentDetail(for document: DocumentFile) {
         let viewController = DocumentDetailViewController()
         let presenter = DocumentDetailPresenterImpl(viewContract: viewController, document: document)
         viewController.presenter = presenter
         show(viewController, sender: nil)
     }
-    
+
     @available(iOS 14, *)
     func displayDocumentPicker() {
         let picker = DocumentPickerModule.makeViewController(delegate: self)
@@ -107,14 +109,16 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
 
     // MARK: Private
-    
+
     private enum Section {
         case main
     }
-    
+
     private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, DiffableConversationViewItem>
+
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, DiffableConversationViewItem>
-    
+
+    private let showComposer: Bool
     private let logger: Logger
     private let providers: [ConversationCellProvider]
     private var state: ConversationViewState = .loading {
@@ -132,8 +136,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private let errorView: ErrorView = .init().prepareForAutoLayout()
     
     private let loadedView: UIView = .init().prepareForAutoLayout()
-    private let emptyView: EmptyView = .init().prepareForAutoLayout()
-    
+
     private lazy var collectionView: UICollectionView = makeCollectionView()
     private lazy var composerView: ComposerView = makeComposerView()
     
@@ -192,21 +195,14 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     //
     // - Error -> errorView
     // - Loading -> loadingView
-    // - Loaded -> [emptyView | collectionView] + composerView
+    // - Loaded -> collectionView + composerView
     private func updateLayoutAfterStateChange(oldValue: ConversationViewState) {
         switch (state, oldValue) {
-        case (.empty, .loaded):
-            switchLoadedLayout(from: collectionView, to: emptyView)
         case let (.loaded(items), .loaded(previousItems)):
             applySnapshot(items: items, animatingDifferences: !previousItems.isEmpty)
-        case let (.loaded(items), .empty):
-            switchLoadedLayout(from: emptyView, to: collectionView)
-            applySnapshot(items: items, animatingDifferences: true)
         case (.loading, _):
             switchToLoadingLayout()
             loadingView.startAnimating()
-        case (.empty, _):
-            switchToLoadedLayout(with: emptyView)
         case let (.error(viewModel), _):
             switchToErrorLayout(viewModel: viewModel)
         case let (.loaded(items), _):
@@ -230,18 +226,22 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private func switchToLoadedLayout(with containedView: UIView) {
         view.removeSubviews()
-        view.addSubview(composerView)
+        if showComposer {
+            view.addSubview(composerView)
+            composerView.pinToSuperView(edges: .horizontal)
+        }
         view.addSubview(loadedView)
         loadedView.addSubview(containedView)
-        composerView.pinToSuperView(edges: .horizontal)
         loadedView.pinToSuperView(edges: .horizontal)
         containedView.pinToSuperView()
-        
-        NSLayoutConstraint.activate([
-            loadedView.topAnchor.constraint(equalTo: view.topAnchor),
-            loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor),
-            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
-        ])
+
+        loadedView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        if showComposer {
+            loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor).isActive = true
+            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
+        } else {
+            loadedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        }
     }
     
     private func switchLoadedLayout(from fromView: UIView, to toView: UIView) {
