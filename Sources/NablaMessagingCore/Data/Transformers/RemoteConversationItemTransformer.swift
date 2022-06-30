@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 enum RemoteConversationItemTransformer {
     static func transform(_ remoteConversationItem: RemoteConversationItem) -> ConversationItem? {

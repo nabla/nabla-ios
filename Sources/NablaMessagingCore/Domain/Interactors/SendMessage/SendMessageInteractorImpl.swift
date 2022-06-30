@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInteractor {
     // MARK: - Initializer
@@ -20,7 +21,7 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
             return Failure()
         }
         guard isMessageValid(message) else {
-            handler(.failure(.invalidMessage))
+            handler(.failure(InvalidMessageError()))
             return Failure()
         }
         return repository.sendMessage(

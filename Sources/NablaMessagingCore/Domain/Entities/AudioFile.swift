@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 public struct AudioFile: Media, Equatable, Hashable {
     public let fileName: String

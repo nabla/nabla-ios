@@ -1,4 +1,5 @@
 import Foundation
+@testable import NablaCore
 @testable import NablaMessagingCore
 
 extension NablaMessagingClientProtocolMock {
@@ -7,7 +8,7 @@ extension NablaMessagingClientProtocolMock {
 
         watchConversationClosure = { _, handler in
             handler(.success(.mock()))
-            return CancellableMock()
+            return WatcherMock()
         }
 
         watchItemsClosure = { _, handler in

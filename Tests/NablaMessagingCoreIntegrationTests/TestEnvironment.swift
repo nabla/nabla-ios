@@ -1,9 +1,10 @@
 import DVR
 import Foundation
+@testable import NablaCore
 @testable import NablaMessagingCore
 
 struct TestEnvironment {
-    struct NetworkConfiguration: NablaMessagingCore.NetworkConfiguration {
+    struct NetworkConfiguration: NablaCore.NetworkConfiguration {
         let domain = "localhost"
         let scheme = "http"
         let port: Int? = 8080
@@ -17,20 +18,21 @@ struct TestEnvironment {
     
     static func make(filePath: String = #filePath, function: String = #function) -> TestEnvironment {
         // swiftlint:disable:next force_unwrapping
-        let userId = UUID(uuidString: "96C3DBC7-744F-44A0-9D7B-8A4C493C7370")!
+        let userId = UUID(uuidString: "64cffe69-0746-46ea-979b-13f933958087")!
         let session = makeMockSession(filePath: filePath, function: function)
         let networkConfiguration = NetworkConfiguration(session: session)
-        let container = CoreContainer(
+        let coreContainer = CoreContainer(
             name: "tests",
             networkConfiguration: networkConfiguration,
             logger: ConsoleLogger()
         )
-        container.urlSessionClient = MockURLSessionClient(session: session)
+        coreContainer.urlSessionClient = MockURLSessionClient(session: session)
         let nablaClient = NablaClient(
             apiKey: "test-api-key",
-            container: container
+            container: coreContainer
         )
-        let messagingClient = NablaMessagingClient(client: nablaClient)
+        let messagingContainer = MessagingContainer(coreContainer: coreContainer)
+        let messagingClient = NablaMessagingClient(parent: nablaClient, container: messagingContainer)
         let env = TestEnvironment(
             nablaClient: nablaClient,
             messagingClient: messagingClient,
@@ -59,10 +61,10 @@ extension TestEnvironment: SessionTokenProvider {
     func provideTokens(forUserId _: UUID, completion: (Tokens?) -> Void) {
         completion(
             .init(
-                // Expires 30/01/2054
-                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5NmMzZGJjNy03NDRmLTQ0YTAtOWQ3Yi04YTRjNDkzYzczNzAiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY1MzQwODQxNiwic2Vzc2lvbl91dWlkIjoiMDY3ZjczOTUtMTMxZC00NGViLWJjZTgtZTY1MjAyYmY5MTZhIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.1IeGSx5M-DhuHL47r7U3KLNvjLCPDKDq-EHEMV-1720",
-                // Expires 30/01/2054
-                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5NmMzZGJjNy03NDRmLTQ0YTAtOWQ3Yi04YTRjNDkzYzczNzAiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NjExODQxMTYsInNlc3Npb25fdXVpZCI6IjA2N2Y3Mzk1LTEzMWQtNDRlYi1iY2U4LWU2NTIwMmJmOTE2YSIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.hzhmxTPoukAv26oZIV2acQRwkbJLf6w5XYAjGNHdb6c"
+                // Expires 05/06/2054
+                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY1NjQ5NTc2OCwic2Vzc2lvbl91dWlkIjoiZDYwNzNiNzQtYjAwNS00MjVhLTkxYTEtZGNlMzgxNjZlMGM4Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.TnLh-ruzwV8g7vc2Y5pgYnCXRHJvcqkpSGf7PrHZ56E",
+                // Expires 05/06/2054
+                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NjQyNzE0NjgsInNlc3Npb25fdXVpZCI6ImQ2MDczYjc0LWIwMDUtNDI1YS05MWExLWRjZTM4MTY2ZTBjOCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.SyltPUcTMBLXQRxEMun6BQkpeAOGyaFqO5hIqTd2RNc"
             )
         )
     }

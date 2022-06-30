@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
 #if canImport(NablaUtils)
     import NablaUtils

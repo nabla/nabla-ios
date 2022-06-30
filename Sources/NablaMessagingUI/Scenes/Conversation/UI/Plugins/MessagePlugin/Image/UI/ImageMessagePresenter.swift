@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
 
 final class ImageMessagePresenter:

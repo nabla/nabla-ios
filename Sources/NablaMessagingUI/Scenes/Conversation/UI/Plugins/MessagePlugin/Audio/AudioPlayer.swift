@@ -1,5 +1,6 @@
 import AVKit
 import Foundation
+import NablaCore
 import NablaMessagingCore
 
 protocol AudioPlayerDelegate: AnyObject {

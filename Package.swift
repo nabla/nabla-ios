@@ -11,6 +11,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "NablaCore",
+            targets: ["NablaCore"]
+        ),
+        .library(
             name: "NablaMessagingCore",
             targets: ["NablaMessagingCore"]
         ),
@@ -34,11 +38,33 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "NablaMessagingCore",
+            name: "NablaCore",
             dependencies: [
                 .target(name: "NablaUtils"),
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloWebSocket", package: "apollo-ios"),
+            ]
+        ),
+        .target(
+            name: "NablaCoreTestsUtils",
+            dependencies: [
+                .target(name: "NablaCore"),
+                .product(name: "SwiftyMocky", package: "SwiftyMocky"),
+            ],
+            path: "Tests/NablaCoreTestsUtils"
+        ),
+        .testTarget(
+            name: "NablaCoreTests",
+            dependencies: [
+                .target(name: "NablaCore"),
+                .target(name: "NablaCoreTestsUtils"),
+            ]
+        ),
+        .target(
+            name: "NablaMessagingCore",
+            dependencies: [
+                .target(name: "NablaCore"),
+                .target(name: "NablaUtils"),
             ],
             exclude: [
                 "build.sh",
@@ -58,6 +84,7 @@ let package = Package(
             dependencies: [
                 .target(name: "NablaMessagingCore"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
+                .target(name: "NablaCoreTestsUtils"),
             ]
         ),
         .testTarget(
@@ -65,6 +92,7 @@ let package = Package(
             dependencies: [
                 .target(name: "NablaMessagingCore"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
+                .target(name: "NablaCoreTestsUtils"),
                 .product(name: "DVR", package: "DVR"),
                 .product(name: "Apollo", package: "apollo-ios"),
             ],
@@ -90,6 +118,7 @@ let package = Package(
             name: "NablaMessagingUITests",
             dependencies: [
                 .target(name: "NablaMessagingUI"),
+                .target(name: "NablaCoreTestsUtils"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),

@@ -1,3 +1,4 @@
+import NablaCore
 import NablaMessagingCore
 import XCTest
 
@@ -19,15 +20,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
             switch result {
             case let .failure(error):
                 switch error {
-                case let .authenticationError(reason):
-                    switch reason {
-                    case .missingAuthenticationProvider:
-                        break
-                    default:
-                        XCTFail("Expected `AuthenticationError.missingAuthenticationProvider`, received \(reason)", file: file, line: line)
-                    }
+                case is MissingAuthenticationProviderError:
+                    break
                 default:
-                    XCTFail("Expected `NablaError.authenticationError`, received \(error)", file: file, line: line)
+                    XCTFail("Expected `MissingAuthenticationProviderError`, received \(error)", file: file, line: line)
                 }
             case .success:
                 XCTFail("Should not succeed", file: file, line: line)
@@ -40,7 +36,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
         _ = messagingClient.watchConversations(handler: assertAuthenticationErrorHandler())
         waitForExpectations(timeout: 0.5)
     }
-
+    
     func testCreateConversationFailsWhenNotAuthenticated() {
         _ = messagingClient.createConversation(
             title: nil,

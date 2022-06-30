@@ -1,5 +1,5 @@
 import Foundation
-import NablaMessagingCore
+import NablaCore
 
 class FakeAuthenticator: SessionTokenProvider {
     static let shared = FakeAuthenticator()

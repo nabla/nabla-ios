@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 import NablaMessagingCoreTestsUtils
 @testable import NablaMessagingUI

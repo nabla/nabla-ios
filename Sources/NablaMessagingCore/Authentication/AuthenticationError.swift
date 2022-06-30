@@ -1,1 +1,0 @@
-typealias NablaAuthenticationError = NablaError.AuthenticationError

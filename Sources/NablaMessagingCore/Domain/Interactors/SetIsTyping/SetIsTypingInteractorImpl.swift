@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInteractor {
     // MARK: - Initializer

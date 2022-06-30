@@ -8,6 +8,7 @@
 
 import SwiftyMocky
 import XCTest
+import NablaCore
 import NablaMessagingCore
 @testable import NablaMessagingUI
 
@@ -968,11 +969,11 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 		return __value
     }
 
-    open func watchConversation(_ conversationId: UUID, handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable {
+    open func watchConversation(_ conversationId: UUID, handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Watcher {
         addInvocation(.m_watchConversation__conversationIdhandler_handler(Parameter<UUID>.value(`conversationId`), Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`)))
 		let perform = methodPerformValue(.m_watchConversation__conversationIdhandler_handler(Parameter<UUID>.value(`conversationId`), Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))) as? (UUID, @escaping (Result<Conversation, NablaError>) -> Void) -> Void
 		perform?(`conversationId`, `handler`)
-		var __value: Cancellable
+		var __value: Watcher
 		do {
 		    __value = try methodReturnValue(.m_watchConversation__conversationIdhandler_handler(Parameter<UUID>.value(`conversationId`), Parameter<(Result<Conversation, NablaError>) -> Void>.value(`handler`))).casted()
 		} catch {
@@ -1022,6 +1023,12 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 			Failure("Stub return value not specified for deleteMessage(withId messageId: UUID, conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void). Use given")
 		}
 		return __value
+    }
+
+    open func addRefetchTriggers(_ triggers: RefetchTrigger...) {
+        addInvocation(.m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>.value(`triggers`)))
+		let perform = methodPerformValue(.m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>.value(`triggers`))) as? ([RefetchTrigger]) -> Void
+		perform?(`triggers`)
     }
 
     open func sendMessage(_ message: MessageInput, inConversationWithId conversationId: UUID, handler: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
@@ -1091,6 +1098,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         case m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>, Parameter<UUID?>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(Parameter<UUID>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(Parameter<UUID>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
+        case m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>)
         case m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(Parameter<MessageInput>, Parameter<UUID>, Parameter<(Result<Void, NablaError>) -> Void>)
         case m_createConversation__title_titlehandler_handler(Parameter<String?>, Parameter<(Result<Conversation, NablaError>) -> Void>)
         case m_createConversation__providerIdToAssign_providerIdToAssignhandler_handler(Parameter<UUID?>, Parameter<(Result<Conversation, NablaError>) -> Void>)
@@ -1158,6 +1166,11 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
+            case (.m_addRefetchTriggers__triggers(let lhsTriggers), .m_addRefetchTriggers__triggers(let rhsTriggers)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTriggers, rhs: rhsTriggers, with: matcher), lhsTriggers, rhsTriggers, "_ triggers"))
+				return Matcher.ComparisonResult(results)
+
             case (.m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(let lhsMessage, let lhsConversationid, let lhsHandler), .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(let rhsMessage, let rhsConversationid, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "_ message"))
@@ -1197,6 +1210,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case let .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_addRefetchTriggers__triggers(p0): return p0.intValue
             case let .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_createConversation__title_titlehandler_handler(p0, p1): return p0.intValue + p1.intValue
             case let .m_createConversation__providerIdToAssign_providerIdToAssignhandler_handler(p0, p1): return p0.intValue + p1.intValue
@@ -1215,6 +1229,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler: return ".sendMessage(_:replyingToMessageWithId:inConversationWithId:handler:)"
             case .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler: return ".retrySending(itemWithId:inConversationWithId:handler:)"
             case .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler: return ".deleteMessage(withId:conversationId:handler:)"
+            case .m_addRefetchTriggers__triggers: return ".addRefetchTriggers(_:)"
             case .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler: return ".sendMessage(_:inConversationWithId:handler:)"
             case .m_createConversation__title_titlehandler_handler: return ".createConversation(title:handler:)"
             case .m_createConversation__providerIdToAssign_providerIdToAssignhandler_handler: return ".createConversation(providerIdToAssign:handler:)"
@@ -1251,7 +1266,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func watchConversations(handler: Parameter<(Result<ConversationList, NablaError>) -> Void>, willReturn: PaginatedWatcher...) -> MethodStub {
             return Given(method: .m_watchConversations__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+        public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willReturn: Watcher...) -> MethodStub {
             return Given(method: .m_watchConversation__conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func sendMessage(_ message: Parameter<MessageInput>, replyingToMessageWithId: Parameter<UUID?>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
@@ -1310,10 +1325,10 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 			willProduce(stubber)
 			return given
         }
-        public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
+        public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willProduce: (Stubber<Watcher>) -> Void) -> MethodStub {
+            let willReturn: [Watcher] = []
 			let given: Given = { return Given(method: .m_watchConversation__conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
+			let stubber = given.stub(for: (Watcher).self)
 			willProduce(stubber)
 			return given
         }
@@ -1380,6 +1395,7 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func sendMessage(_ message: Parameter<MessageInput>, replyingToMessageWithId: Parameter<UUID?>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_sendMessage__messagereplyingToMessageWithId_replyingToMessageWithIdinConversationWithId_conversationIdhandler_handler(`message`, `replyingToMessageWithId`, `conversationId`, `handler`))}
         public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_retrySending__itemWithId_itemIdinConversationWithId_conversationIdhandler_handler(`itemId`, `conversationId`, `handler`))}
         public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(`messageId`, `conversationId`, `handler`))}
+        public static func addRefetchTriggers(_ triggers: Parameter<[RefetchTrigger]>) -> Verify { return Verify(method: .m_addRefetchTriggers__triggers(`triggers`))}
         public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>) -> Verify { return Verify(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`))}
         public static func createConversation(title: Parameter<String?>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>) -> Verify { return Verify(method: .m_createConversation__title_titlehandler_handler(`title`, `handler`))}
         public static func createConversation(providerIdToAssign: Parameter<UUID?>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>) -> Verify { return Verify(method: .m_createConversation__providerIdToAssign_providerIdToAssignhandler_handler(`providerIdToAssign`, `handler`))}
@@ -1417,6 +1433,9 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         }
         public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, perform: @escaping (UUID, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void) -> Perform {
             return Perform(method: .m_deleteMessage__withId_messageIdconversationId_conversationIdhandler_handler(`messageId`, `conversationId`, `handler`), performs: perform)
+        }
+        public static func addRefetchTriggers(_ triggers: Parameter<[RefetchTrigger]>, perform: @escaping ([RefetchTrigger]) -> Void) -> Perform {
+            return Perform(method: .m_addRefetchTriggers__triggers(`triggers`), performs: perform)
         }
         public static func sendMessage(_ message: Parameter<MessageInput>, inConversationWithId conversationId: Parameter<UUID>, handler: Parameter<(Result<Void, NablaError>) -> Void>, perform: @escaping (MessageInput, UUID, @escaping (Result<Void, NablaError>) -> Void) -> Void) -> Perform {
             return Perform(method: .m_sendMessage__messageinConversationWithId_conversationIdhandler_handler(`message`, `conversationId`, `handler`), performs: perform)

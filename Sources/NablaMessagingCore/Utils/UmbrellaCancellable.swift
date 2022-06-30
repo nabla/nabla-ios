@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 class UmbrellaCancellable: Cancellable {
     func add(_ cancellable: Cancellable) {

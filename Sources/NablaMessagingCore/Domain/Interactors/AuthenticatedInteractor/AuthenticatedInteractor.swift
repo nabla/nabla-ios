@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 class AuthenticatedInteractor {
     init(authenticator: Authenticator) {
@@ -7,7 +8,7 @@ class AuthenticatedInteractor {
 
     final func isAuthenticated<Data>(handler: ResultHandler<Data, NablaError>) -> Bool {
         if !authenticator.isSessionInitialized() {
-            handler(.failure(.authenticationError(.missingAuthenticationProvider)))
+            handler(.failure(MissingAuthenticationProviderError()))
             return false
         }
         return true

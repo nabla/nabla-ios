@@ -1,3 +1,4 @@
+import NablaCore
 import NablaMessagingCore
 import NablaMessagingUI
 import UIKit

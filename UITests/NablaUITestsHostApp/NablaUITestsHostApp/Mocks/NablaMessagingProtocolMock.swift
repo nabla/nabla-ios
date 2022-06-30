@@ -1,9 +1,12 @@
 // swiftlint:disable large_tuple
 import Foundation
+import NablaCore
 import NablaMessagingCore
 @testable import NablaMessagingUI
 
 final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
+    func addRefetchTriggers(_: RefetchTrigger...) {}
+    
     var logger: Logger = LoggerMock()
 
     var createConversationReceivedInvocations: [(title: String?, providerIdToAssign: UUID?, handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
@@ -59,13 +62,13 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     }
 
     var watchConversationParams: [(conversationId: UUID, handler: (Result<Conversation, NablaError>) -> Void)] = []
-    var watchConversationClosure: ((_ conversationId: UUID, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
+    var watchConversationClosure: ((_ conversationId: UUID, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> WatcherMock)?
     func watchConversation(
         _ conversationId: UUID,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Cancellable {
+    ) -> Watcher {
         watchConversationParams.append((conversationId: conversationId, handler: handler))
-        return watchConversationClosure?(conversationId, handler) ?? CancellableMock()
+        return watchConversationClosure?(conversationId, handler) ?? WatcherMock()
     }
 
     var sendMessageParams: [(message: MessageInput, replyTo: UUID?, conversationId: UUID, handler: (Result<Void, NablaError>) -> Void)] = []

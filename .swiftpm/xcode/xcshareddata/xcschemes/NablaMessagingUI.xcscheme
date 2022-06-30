@@ -30,6 +30,16 @@
       language = "en"
       region = "FR">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "NablaMessagingUITests"
+               BuildableName = "NablaMessagingUITests"
+               BlueprintName = "NablaMessagingUITests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

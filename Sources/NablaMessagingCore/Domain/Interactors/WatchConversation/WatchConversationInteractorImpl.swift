@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 class WatchConversationInteractorImpl: AuthenticatedInteractor, WatchConversationInteractor {
     // MARK: - Initializer
@@ -10,7 +11,7 @@ class WatchConversationInteractorImpl: AuthenticatedInteractor, WatchConversatio
 
     // MARK: - WatchConversationInteractor
 
-    func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaError>) -> Cancellable {
+    func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaError>) -> Watcher {
         guard isAuthenticated(handler: handler) else {
             return Failure()
         }

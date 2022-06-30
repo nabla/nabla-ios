@@ -1,3 +1,5 @@
+import NablaCore
+import NablaCoreTestsUtils
 @testable import NablaMessagingCore
 import NablaMessagingCoreTestsUtils
 import XCTest

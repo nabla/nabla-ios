@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 class ConversationItemRepositoryImpl: ConversationItemRepository {
     // MARK: - Initializer
@@ -81,7 +82,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             withClientId: itemId,
             inConversationWithId: conversationId
         ) as? LocalConversationMessage else {
-            handler(.failure(.messageNotFound))
+            handler(.failure(MessageNotFoundError()))
             return Failure()
         }
 
@@ -349,7 +350,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
         guard let sendInput = makeSendInput(for: localConversationMessage) else {
-            handler(.failure(.invalidMessage))
+            handler(.failure(InvalidMessageError()))
             return Failure()
         }
         
@@ -384,9 +385,9 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private static func transformFileUploadError(_ error: FileUploadRemoteDataSourceError) -> NablaError {
         switch error {
         case .cannotReadFileData:
-            return .cannotReadFileData
+            return CanNotReadFileDataError()
         case let .uploadError(error):
-            return .serverError(error.localizedDescription)
+            return ServerError(underlyingError: error)
         }
     }
 }

@@ -74,7 +74,7 @@ class CreateConversationTests: XCTestCase {
                 XCTFail("Received error: \(error)")
             case let .success(list):
                 XCTAssertEqual(list.conversations.count, initalConversationsCount + 1)
-                XCTAssertEqual(list.conversations.last?.id, createdConversation?.id)
+                XCTAssertEqual(list.conversations.first?.id, createdConversation?.id)
                 finalListDidLoad.fulfill()
             }
         }

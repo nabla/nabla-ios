@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
 
 // sourcery: AutoMockable
@@ -33,7 +34,7 @@ protocol NablaMessagingClientProtocol {
     func watchConversation(
         _ conversationId: UUID,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Cancellable
+    ) -> Watcher
 
     func sendMessage(
         _ message: MessageInput,
@@ -53,6 +54,8 @@ protocol NablaMessagingClientProtocol {
         conversationId: UUID,
         handler: @escaping (Result<Void, NablaError>) -> Void
     ) -> Cancellable
+    
+    func addRefetchTriggers(_ triggers: RefetchTrigger...)
 }
 
 extension NablaMessagingClient: NablaMessagingClientProtocol {}

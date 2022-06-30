@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 /// Main entry-point for SDK messaging features.
 public class NablaMessagingClient {
@@ -7,7 +8,7 @@ public class NablaMessagingClient {
     public static let shared = NablaMessagingClient(client: .shared)
 
     public var logger: Logger {
-        coreContainer.logger
+        container.logger
     }
 
     /// Create a new conversation on behalf of the current user.
@@ -93,7 +94,7 @@ public class NablaMessagingClient {
     public func watchConversation(
         _ conversationId: UUID,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Cancellable {
+    ) -> Watcher {
         container.watchConversationInteractor.execute(conversationId, handler: .init(handler))
     }
 
@@ -153,17 +154,35 @@ public class NablaMessagingClient {
     ) -> Cancellable {
         container.deleteMessageInteractor.execute(messageId: messageId, conversationId: conversationId, handler: .init(handler))
     }
+    
+    /// Any ``RefetchTrigger`` will tell the SDK to update watchers with the latest server data.
+    /// It is a common practice to add some ``NotificationRefetchTrigger(name: UIApplication.willEnterForegroundNotification)``
+    /// in order to refresh the on screen information when your application comes back to foreground
+    /// - Parameter triggers: The triggers to add.
+    public func addRefetchTriggers(_ triggers: RefetchTrigger...) {
+        container.gqlClient.addRefetchTriggers(triggers)
+    }
 
-    public init(client: NablaClient) {
-        coreContainer = client.container
-        container = MessagingContainer(coreContainer: client.container)
+    public convenience init(client: NablaClient) {
+        self.init(
+            parent: client,
+            container: MessagingContainer(coreContainer: client.container)
+        )
     }
 
     // MARK: - Internal
-
-    private(set) var container: MessagingContainer
-
+    
+    init(
+        parent: NablaClient,
+        container: MessagingContainer
+    ) {
+        self.container = container
+        parent.container.logOutInteractor.addAction {
+            // TODO: Clear any user related data
+        }
+    }
+    
     // MARK: - Private
 
-    private var coreContainer: CoreContainer
+    private let container: MessagingContainer
 }

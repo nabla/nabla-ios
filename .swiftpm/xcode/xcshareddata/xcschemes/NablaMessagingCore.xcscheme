@@ -30,6 +30,26 @@
       language = "en"
       region = "FR">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "NablaMessagingCoreIntegrationTests"
+               BuildableName = "NablaMessagingCoreIntegrationTests"
+               BlueprintName = "NablaMessagingCoreIntegrationTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "NablaMessagingCoreTests"
+               BuildableName = "NablaMessagingCoreTests"
+               BlueprintName = "NablaMessagingCoreTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

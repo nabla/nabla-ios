@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 protocol MarkConversationAsSeenInteractor {
     func execute(

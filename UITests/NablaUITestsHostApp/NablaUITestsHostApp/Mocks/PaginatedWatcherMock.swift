@@ -1,4 +1,4 @@
-import NablaMessagingCore
+import NablaCore
 
 final class PaginatedWatcherMock: PaginatedWatcher {
     var loadMoreClosure: ((_ completion: @escaping ((Result<Void, NablaError>) -> Void)) -> Cancellable)?
@@ -11,4 +11,6 @@ final class PaginatedWatcherMock: PaginatedWatcher {
     }
 
     func cancel() {}
+    
+    func refetch() {}
 }

@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateConversationInteractor {
     // MARK: - Initializer

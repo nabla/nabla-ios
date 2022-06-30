@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 protocol ConversationRemoteDataSource {
     func createConversation(
@@ -7,7 +8,7 @@ protocol ConversationRemoteDataSource {
         handler: ResultHandler<RemoteConversation, GQLError>
     ) -> Cancellable
     
-    func watchConversation(_ conversationId: UUID, handler: ResultHandler<RemoteConversation, GQLError>) -> Cancellable
+    func watchConversation(_ conversationId: UUID, handler: ResultHandler<RemoteConversation, GQLError>) -> Watcher
     
     func watchConversations(handler: ResultHandler<RemoteConversationList, GQLError>) -> PaginatedWatcher
     

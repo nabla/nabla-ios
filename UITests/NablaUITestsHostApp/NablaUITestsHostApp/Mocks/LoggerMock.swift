@@ -1,3 +1,4 @@
+import NablaCore
 import NablaMessagingCore
 
 final class LoggerMock: Logger {

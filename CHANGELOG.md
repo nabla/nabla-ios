@@ -8,10 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Methods like `watchConversations()`, `watchConverversation()` or `watchItems(ofConversationWithId:)` now return a `Watcher`.
+- Using `NablaMessagingUI` will automatically register some `NotificationRefetchTrigger` for `UIApplication.willEnterForegroundNotification`.
+
 ### Changed
+
 - `Configuration` has been renamed to `NetworkConfiguration`. This should not have an impact on an existing app as this is supposed to be for internal tests only.
 - Added a new `showComposer` parameter to `NablaViewFactory.createConversationViewController` that can be set to false to hide the message composer for the patient.
 - `PaginatedWatcher` now returns proper `NablaError` in case of error instead of the basic `Error`.
+- Extract `NablaClient` from `NablaMessagingCore` to a new `NablaCore` library.
 
 ### Fixed
 

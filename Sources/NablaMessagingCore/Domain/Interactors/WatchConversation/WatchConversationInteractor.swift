@@ -1,5 +1,6 @@
 import Foundation
+import NablaCore
 
 protocol WatchConversationInteractor {
-    func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaError>) -> Cancellable
+    func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaError>) -> Watcher
 }

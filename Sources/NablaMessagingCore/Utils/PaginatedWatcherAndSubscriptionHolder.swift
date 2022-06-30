@@ -1,7 +1,12 @@
 import Foundation
+import NablaCore
 
 final class PaginatedWatcherAndSubscriptionHolder: PaginatedWatcher {
     // MARK: - Internal
+    
+    func refetch() {
+        watcher.refetch()
+    }
     
     func cancel() {
         watcher.cancel()

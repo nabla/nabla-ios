@@ -34,10 +34,12 @@ included: # paths to include during linting. `--path` is ignored if present.
   - Example
   - Tests
 excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Sources/NablaCore/Vendors
   - Sources/NablaMessagingCore/Generated
   - Sources/NablaMessagingCore/Data/GQL/Generated
   - Sources/NablaMessagingCore/Vendors
   - Sources/NablaMessagingUI/Generated
+  - Tests/NablaCoreTestsUtils/Generated
   - Tests/NablaMessagingCoreTestsUtils/Generated
   - Tests/NablaMessagingUITests/Generated
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown, github-actions-logging)

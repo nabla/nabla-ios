@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
 import UIKit
 
@@ -53,6 +54,7 @@ public enum NablaViewFactory {
         delegate: ConversationListDelegate,
         client: NablaMessagingClientProtocol
     ) -> ConversationListView {
+        prepare(client: client)
         let view = ConversationListView(frame: .zero)
         let presenter = ConversationListPresenterImpl(
             logger: client.logger,
@@ -68,6 +70,7 @@ public enum NablaViewFactory {
         delegate: InboxDelegate,
         client: NablaMessagingClientProtocol
     ) -> InboxViewController {
+        prepare(client: client)
         let viewController = InboxViewController()
         let view = createConversationListView(delegate: viewController, client: client)
         viewController.setContentView(view)
@@ -86,6 +89,7 @@ public enum NablaViewFactory {
         showComposer: Bool,
         client: NablaMessagingClientProtocol
     ) -> UIViewController {
+        prepare(client: client)
         let viewController = ConversationViewController.create(
             conversationId: conversation.id,
             showComposer: showComposer,
@@ -106,6 +110,7 @@ public enum NablaViewFactory {
         showComposer: Bool,
         client: NablaMessagingClientProtocol
     ) -> UIViewController {
+        prepare(client: client)
         let viewController = ConversationViewController.create(
             conversationId: conversationId,
             showComposer: showComposer,
@@ -119,5 +124,13 @@ public enum NablaViewFactory {
             client: client
         )
         return viewController
+    }
+    
+    // MARK: - Private
+    
+    private static func prepare(client: NablaMessagingClientProtocol) {
+        client.addRefetchTriggers(
+            NotificationRefetchTrigger(name: UIApplication.willEnterForegroundNotification)
+        )
     }
 }

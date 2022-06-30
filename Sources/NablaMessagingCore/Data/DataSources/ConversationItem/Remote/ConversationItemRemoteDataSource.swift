@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 protocol ConversationItemRemoteDataSource {
     func watchConversationItems(

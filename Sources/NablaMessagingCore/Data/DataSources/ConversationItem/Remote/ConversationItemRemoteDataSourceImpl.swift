@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 #if canImport(NablaUtils)
     import NablaUtils
 #endif
@@ -182,7 +183,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
 }
 
 extension GQL.GetConversationItemsQuery: PaginatedQuery {
-    static func getCursor(from data: Data) -> String? {
+    public static func getCursor(from data: Data) -> String? {
         data.conversation.conversation.items.nextCursor
     }
 }
@@ -210,8 +211,8 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
         )
     }
     
-    override func makeQuery(page: GQL.OpaqueCursorPage) -> GQL.GetConversationItemsQuery {
-        GQL.GetConversationItemsQuery(id: conversationId, page: page)
+    override func makeQuery(cursor: String?, numberOfItems: Int) -> GQL.GetConversationItemsQuery {
+        GQL.GetConversationItemsQuery(id: conversationId, page: .init(cursor: cursor, numberOfItems: numberOfItems))
     }
     
     override func updateCache(_ cache: inout RemoteConversationItems, withAdditionalData data: RemoteConversationItems) {

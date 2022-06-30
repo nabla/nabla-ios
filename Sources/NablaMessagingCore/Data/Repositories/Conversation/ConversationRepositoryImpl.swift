@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 #if canImport(NablaUtils)
     import NablaUtils
 #endif
@@ -15,7 +16,7 @@ class ConversationRepositoryImpl: ConversationRepository {
     func watchConversation(
         _ conversationId: UUID,
         handler: ResultHandler<Conversation, NablaError>
-    ) -> Cancellable {
+    ) -> Watcher {
         let watcher = remoteDataSource.watchConversation(
             conversationId,
             handler: .init { [weak self] result in
@@ -73,9 +74,9 @@ class ConversationRepositoryImpl: ConversationRepository {
                 .pullbackError { error in
                     switch error {
                     case let .entityNotFound(message):
-                        return .providerNotFound(message)
+                        return ProviderNotFoundError(message: message)
                     case let .permissionRequired(message):
-                        return .providerMissingPermission(message)
+                        return ProviderMissingPermissionError(message: message)
                     default:
                         return GQLErrorTransformer.transform(gqlError: error)
                     }

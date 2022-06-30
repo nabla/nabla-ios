@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 protocol ConversationItemLocalDataSource {
     func getConversationItems(ofConversationWithId conversationId: UUID) -> [LocalConversationItem]

@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 class MessagingContainer {
     // MARK: - Initializer
@@ -7,7 +8,15 @@ class MessagingContainer {
         self.coreContainer = coreContainer
     }
 
-    // MARK: - Public
+    // MARK: - Internal
+    
+    var logger: Logger {
+        coreContainer.logger
+    }
+    
+    var gqlClient: GQLClient {
+        coreContainer.gqlClient
+    }
 
     private(set) lazy var createConversationInteractor: CreateConversationInteractor = CreateConversationInteractorImpl(
         authenticator: coreContainer.authenticator,
@@ -55,8 +64,8 @@ class MessagingContainer {
     )
 
     // MARK: - Private
-
-    private var coreContainer: CoreContainer
+    
+    private let coreContainer: CoreContainer
 
     private lazy var conversationRepository: ConversationRepository = ConversationRepositoryImpl(remoteDataSource: conversationRemoteDataSource)
 
@@ -64,7 +73,7 @@ class MessagingContainer {
         remoteDataSource: conversationItemRemoteDataSource,
         localDataSource: conversationItemLocalDataSource,
         fileUploadRemoteDataSource: fileUploadRemoteDataSource,
-        uploadClient: uploadClient,
+        uploadClient: coreContainer.uploadClient,
         logger: coreContainer.logger
     )
 
@@ -81,10 +90,5 @@ class MessagingContainer {
 
     private lazy var conversationItemLocalDataSource: ConversationItemLocalDataSource = ConversationItemLocalDataSourceImpl()
 
-    private lazy var fileUploadRemoteDataSource: FileUploadRemoteDataSource = FileUploadRemoteDataSourceImpl(uploadClient: uploadClient)
-
-    private lazy var uploadClient: UploadClient = .init(
-        httpManager: coreContainer.httpManager,
-        authenticator: coreContainer.authenticator
-    )
+    private lazy var fileUploadRemoteDataSource: FileUploadRemoteDataSource = FileUploadRemoteDataSourceImpl(uploadClient: coreContainer.uploadClient)
 }

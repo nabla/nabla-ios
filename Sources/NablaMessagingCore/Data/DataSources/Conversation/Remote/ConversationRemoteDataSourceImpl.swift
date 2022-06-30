@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     // MARK: - Initializer
@@ -30,7 +31,7 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     func watchConversation(
         _ conversationId: UUID,
         handler: ResultHandler<RemoteConversation, GQLError>
-    ) -> Cancellable {
+    ) -> Watcher {
         gqlClient.watch(
             query: GQL.GetConversationQuery(id: conversationId),
             cachePolicy: .returnCacheDataAndFetch,
@@ -116,7 +117,7 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
 }
 
 extension GQL.GetConversationsQuery: PaginatedQuery {
-    static func getCursor(from data: Data) -> String? {
+    public static func getCursor(from data: Data) -> String? {
         data.conversations.nextCursor
     }
 }
@@ -124,8 +125,8 @@ extension GQL.GetConversationsQuery: PaginatedQuery {
 private class ConversationListWatcher: GQLPaginatedWatcher<GQL.GetConversationsQuery> {
     // MARK: - Initializer
     
-    override func makeQuery(page: GQL.OpaqueCursorPage) -> GQL.GetConversationsQuery {
-        GQL.GetConversationsQuery(page: page)
+    override func makeQuery(cursor: String?, numberOfItems: Int) -> GQL.GetConversationsQuery {
+        GQL.GetConversationsQuery(page: .init(cursor: cursor, numberOfItems: numberOfItems))
     }
     
     override func updateCache(_ cache: inout RemoteConversationList, withAdditionalData data: RemoteConversationList) {

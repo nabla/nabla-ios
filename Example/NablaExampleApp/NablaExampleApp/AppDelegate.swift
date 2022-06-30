@@ -1,4 +1,4 @@
-import NablaMessagingCore
+import NablaCore
 import UIKit
 
 @main

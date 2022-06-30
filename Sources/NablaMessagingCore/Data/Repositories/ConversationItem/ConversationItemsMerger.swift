@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 class ConversationItemsMerger: PaginatedWatcher {
     // MARK: - Internal
@@ -20,6 +21,10 @@ class ConversationItemsMerger: PaginatedWatcher {
             self.localData = items
             self.notifyNewValues()
         }
+    }
+    
+    func refetch() {
+        remoteWatcher?.refetch()
     }
     
     func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {

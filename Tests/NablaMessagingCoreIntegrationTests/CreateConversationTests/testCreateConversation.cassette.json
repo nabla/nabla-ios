@@ -2,17 +2,19 @@
   "name" : "testCreateConversation.cassette",
   "interactions" : [
     {
+      "recorded_at" : 1656495593.630707,
       "request" : {
+        "method" : "POST",
         "headers" : {
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwYmYwM2IxZi0zN2MxLTQ5OTMtYjY2Ni0zZThmYzlmOGUwOTMiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY1NTkwMzk3Niwic2Vzc2lvbl91dWlkIjoiOGMyM2U2ZjItOWZkNS00NzMyLWE3MjgtMDdjNDU2NjQzNDgxIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsbyJ9.piwGJlLqMKtWid4iwxo8STv7_D9Xin87_iH0IxqpcSI",
           "X-APOLLO-OPERATION-NAME" : "CreateConversation",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
           "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "X-Nabla-SDK-Version" : "1.0.0-alpha06",
-          "Content-Type" : "application\/json",
-          "X-Nabla-SDK-Platform" : "ios",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha07",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY1NjQ5NTc2OCwic2Vzc2lvbl91dWlkIjoiZDYwNzNiNzQtYjAwNS00MjVhLTkxYTEtZGNlMzgxNjZlMGM4Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.mjaGj-V9DDVIU48JSbuMOeZ_rk0_mzQOaWDRMC0oONU",
           "X-Nabla-API-Key" : "test-api-key",
-          "apollographql-client-version" : "13.4-20501"
+          "X-Nabla-SDK-Platform" : "ios",
+          "Content-Type" : "application\/json",
+          "apollographql-client-version" : "13.3-20076"
         },
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "body" : {
@@ -23,21 +25,30 @@
           "query" : "mutation CreateConversation($title: String, $providerIdToAssign: UUID) {\n  createConversation(title: $title, providerIdToAssign: $providerIdToAssign) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}",
           "operationName" : "CreateConversation",
           "Tests-Request-Index" : 0
-        },
-        "method" : "POST"
+        }
       },
-      "recorded_at" : 1655903729.4041629,
       "response" : {
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "headers" : {
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Connection" : "keep-alive",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "Content-Length" : "337",
+          "X-Nabla-Minimum-Code-Version" : "323",
+          "Vary" : "Origin",
+          "X-Request-ID" : "71fe8428-84fe-4603-bd7b-32a9e1564122",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0"
+        },
         "body" : {
           "data" : {
             "createConversation" : {
               "conversation" : {
                 "subtitle" : null,
-                "id" : "e3a58b9b-32b1-4e37-b34f-cd9c0e6fcb96",
+                "id" : "f4467bc7-7caa-433c-9dce-ffff908c9d2e",
                 "inboxPreviewTitle" : "Ask us anything",
                 "title" : null,
                 "lastMessagePreview" : null,
-                "updatedAt" : "2022-06-22T15:15:29.376+02:00",
+                "updatedAt" : "2022-06-29T11:39:53.614+02:00",
                 "unreadMessageCount" : 0,
                 "providers" : [
 
@@ -48,18 +59,7 @@
             }
           }
         },
-        "status" : 200,
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "headers" : {
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "Content-Length" : "337",
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "X-Request-ID" : "e4efc720-f326-4b84-a2e4-6a15ef69bae9",
-          "Connection" : "keep-alive",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "Vary" : "Origin",
-          "X-Nabla-Minimum-Code-Version" : "323"
-        }
+        "status" : 200
       }
     }
   ]

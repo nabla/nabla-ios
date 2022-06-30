@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
     // MARK: - Initializer

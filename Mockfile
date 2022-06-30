@@ -1,6 +1,22 @@
 sourceryCommand: null
 sourceryTemplate: ./Mock.swifttemplate # Custom template until https://github.com/MakeAWishFoundation/SwiftyMocky/issues/313 is fixed
 
+NablaCore:
+    sources:
+        include:
+            - ./Sources/NablaCore
+        exclude:
+            - ./Sources/**/Generated
+    output:
+        ./Tests/NablaCoreTestsUtils/Generated/Mock.generated.swift
+    targets:
+        - NablaCoreTestUtils
+    testable:
+        - NablaCore
+    import: []
+    prototype: false
+    sourcery: []
+
 NablaMessagingCore:
     sources:
         include:
@@ -13,7 +29,8 @@ NablaMessagingCore:
         - NablaMessagingCoreTestUtils
     testable:
         - NablaMessagingCore
-    import: []
+    import:
+        - NablaCore
     prototype: false
     sourcery: []
 
@@ -30,6 +47,8 @@ NablaMessagingUI:
         - NablaMessagingUITests
     testable:
         - NablaMessagingUI
-    import: ["NablaMessagingCore"]
+    import:
+        - NablaCore
+        - NablaMessagingCore
     prototype: false
     sourcery: []
