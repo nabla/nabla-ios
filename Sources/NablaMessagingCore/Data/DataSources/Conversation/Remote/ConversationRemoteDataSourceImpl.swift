@@ -125,7 +125,7 @@ extension GQL.GetConversationsQuery: PaginatedQuery {
 private class ConversationListWatcher: GQLPaginatedWatcher<GQL.GetConversationsQuery> {
     // MARK: - Initializer
     
-    override func makeQuery(cursor: String?, numberOfItems: Int) -> GQL.GetConversationsQuery {
+    override func makeQuery(cursor: String??, numberOfItems: Int) -> GQL.GetConversationsQuery {
         GQL.GetConversationsQuery(page: .init(cursor: cursor, numberOfItems: numberOfItems))
     }
     

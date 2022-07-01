@@ -42,8 +42,11 @@ open class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
     
     // MARK: To override
     
-    open func makeQuery(cursor _: String?, numberOfItems _: Int) -> Query {
-        fatalError("You must override `GQLPaginatedWatcher.makeQuery(page:)`")
+    /// `cursor` is intentionally a `String??` to match with the `GQL.OpaqueCursorPage` constructor
+    /// Otherwise, serialization becomes inconsistent and cache fails to match queries.
+    /// See https://github.com/nabla/health/pull/20421
+    open func makeQuery(cursor _: String??, numberOfItems _: Int) -> Query {
+        fatalError("You must override `GQLPaginatedWatcher.makeQuery(cursor:numberOfItems:)`")
     }
     
     open func updateCache(_: inout Query.Data, withAdditionalData _: Query.Data) {}

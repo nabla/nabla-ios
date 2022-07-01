@@ -46,31 +46,17 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         inConversationWithId conversationId: UUID,
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable {
-        let umbrellaCancellable = UmbrellaCancellable()
-        let task = makeLocalConversationMessage(
+        let localMessage = makeLocalConversationMessage(
             for: messageInput,
             replyToMessageId: replyToMessageId,
-            conversationId: conversationId,
-            handler: .init { [weak self] result in
-                guard let self = self else { return }
-
-                switch result {
-                case let .success(localMessage):
-                    self.localDataSource.addConversationItem(localMessage, toConversationWithId: conversationId)
-                    let task = self.makeRemoteMessageAndThenSend(
-                        localConversationMessage: localMessage,
-                        conversationId: conversationId,
-                        handler: handler
-                    )
-                    umbrellaCancellable.add(task)
-                case let .failure(error):
-                    handler(.failure(error))
-                }
-            }
+            conversationId: conversationId
         )
-        umbrellaCancellable.add(task)
-
-        return umbrellaCancellable
+        localDataSource.addConversationItem(localMessage, toConversationWithId: conversationId)
+        return makeRemoteMessageAndThenSend(
+            localConversationMessage: localMessage,
+            conversationId: conversationId,
+            handler: handler
+        )
     }
 
     func retrySending(
@@ -183,30 +169,20 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private func makeLocalConversationMessage(
         for input: MessageInput,
         replyToMessageId: UUID?,
-        conversationId: UUID,
-        handler: ResultHandler<LocalConversationMessage, NablaError>
-    ) -> Cancellable {
-        remoteDataSource.getConversationItems(
-            ofConversationWithId: conversationId,
-            handler: handler
-                .pullbackError(GQLErrorTransformer.transform)
-                .pullback(
-                    { _ in
-                        switch input {
-                        case let .text(content):
-                            return LocalTextMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: content)
-                        case let .image(content):
-                            return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
-                        case let .video(content):
-                            return LocalVideoMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
-                        case let .document(content):
-                            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
-                        case let .audio(content):
-                            return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
-                        }
-                    }
-                )
-        )
+        conversationId _: UUID
+    ) -> LocalConversationMessage {
+        switch input {
+        case let .text(content):
+            return LocalTextMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: content)
+        case let .image(content):
+            return LocalImageMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
+        case let .video(content):
+            return LocalVideoMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
+        case let .document(content):
+            return LocalDocumentMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
+        case let .audio(content):
+            return LocalAudioMessageItem(clientId: UUID(), date: Date(), sendingState: .toBeSent, replyToUuid: replyToMessageId, content: .init(media: content))
+        }
     }
 
     private func updateLocalConversationMessage(

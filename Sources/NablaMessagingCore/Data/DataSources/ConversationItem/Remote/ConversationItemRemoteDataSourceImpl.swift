@@ -32,14 +32,6 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             handler: handler
         )
     }
-
-    func getConversationItems(ofConversationWithId conversationId: UUID, handler: ResultHandler<RemoteConversationItems, GQLError>) -> Cancellable {
-        gqlClient.fetch(
-            query: Constants.rootQuery(conversationId: conversationId),
-            cachePolicy: .returnCacheDataDontFetch,
-            handler: handler
-        )
-    }
     
     func send(
         localMessageClientId: UUID,
@@ -211,7 +203,7 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
         )
     }
     
-    override func makeQuery(cursor: String?, numberOfItems: Int) -> GQL.GetConversationItemsQuery {
+    override func makeQuery(cursor: String??, numberOfItems: Int) -> GQL.GetConversationItemsQuery {
         GQL.GetConversationItemsQuery(id: conversationId, page: .init(cursor: cursor, numberOfItems: numberOfItems))
     }
     
