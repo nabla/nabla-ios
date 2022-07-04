@@ -10,8 +10,8 @@ public extension GQL {
     /// The raw GraphQL definition of this operation.
     public let operationDefinition: String =
       """
-      mutation CreateConversation($title: String, $providerIdToAssign: UUID) {
-        createConversation(title: $title, providerIdToAssign: $providerIdToAssign) {
+      mutation CreateConversation($title: String, $providerIds: [UUID!]) {
+        createConversation(title: $title, providerIds: $providerIds) {
           __typename
           conversation {
             __typename
@@ -33,15 +33,15 @@ public extension GQL {
     }
 
     public var title: String?
-    public var providerIdToAssign: GQL.UUID?
+    public var providerIds: [GQL.UUID]?
 
-    public init(title: String? = nil, providerIdToAssign: GQL.UUID? = nil) {
+    public init(title: String? = nil, providerIds: [GQL.UUID]?) {
       self.title = title
-      self.providerIdToAssign = providerIdToAssign
+      self.providerIds = providerIds
     }
 
     public var variables: GraphQLMap? {
-      return ["title": title, "providerIdToAssign": providerIdToAssign]
+      return ["title": title, "providerIds": providerIds]
     }
 
     public struct Data: GraphQLSelectionSet {
@@ -49,7 +49,7 @@ public extension GQL {
 
       public static var selections: [GraphQLSelection] {
         return [
-          GraphQLField("createConversation", arguments: ["title": GraphQLVariable("title"), "providerIdToAssign": GraphQLVariable("providerIdToAssign")], type: .nonNull(.object(CreateConversation.selections))),
+          GraphQLField("createConversation", arguments: ["title": GraphQLVariable("title"), "providerIds": GraphQLVariable("providerIds")], type: .nonNull(.object(CreateConversation.selections))),
         ]
       }
 

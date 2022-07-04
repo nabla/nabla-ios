@@ -64,12 +64,12 @@ class ConversationRepositoryImpl: ConversationRepository {
     
     func createConversation(
         title: String?,
-        providerIdToAssign: UUID?,
+        providerIds: [UUID]?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> Cancellable {
         remoteDataSource.createConversation(
             title: title,
-            providerIdToAssign: providerIdToAssign,
+            providerIds: providerIds,
             handler: handler
                 .pullbackError { error in
                     switch error {

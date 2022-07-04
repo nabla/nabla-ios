@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `showComposer` parameter to `NablaViewFactory.createConversationViewController` that can be set to false to hide the message composer for the patient.
 - `PaginatedWatcher` now returns proper `NablaError` in case of error instead of the basic `Error`.
 - Extract `NablaClient` from `NablaMessagingCore` to a new `NablaCore` library.
+- Replaced `providerIdToAssign` by a list a `providerIds` in `NablaMessagingClient.createConversation`.
 
 ### Fixed
 

@@ -6,7 +6,7 @@ protocol ConversationRepository {
     func watchConversations(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher
     func createConversation(
         title: String?,
-        providerIdToAssign: UUID?,
+        providerIds: [UUID]?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> Cancellable
 }

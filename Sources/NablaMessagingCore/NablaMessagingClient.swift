@@ -13,18 +13,18 @@ public class NablaMessagingClient {
 
     /// Create a new conversation on behalf of the current user.
     /// - Parameter title: optional - title for the conversation
-    /// - Parameter providerIdToAssign: optional - id of a provider to which the conversation should be assigned. Make sure the specified provider has enough rights to be assigned a conversation. See [Roles and Permissions](https://docs.nabla.com/docs/roles-and-permissions).
+    /// - Parameter providerIds: optional - list providers ids that will participate in the conversation. Make sure the specified providers have enough rights to participate to a conversation. See [Roles and Permissions](https://docs.nabla.com/docs/roles-and-permissions).
     /// - Parameter handler: Handler called when the ``Conversation`` is created or an ``Error`` if something went wrong.
     /// - Returns: A ``Cancellable`` of the task
     public func createConversation(
         title: String? = nil,
-        providerIdToAssign: UUID? = nil,
+        providerIds: [UUID]? = nil,
         handler: @escaping (Result<Conversation, NablaError>
         ) -> Void
     ) -> Cancellable {
         container.createConversationInteractor.execute(
             title: title,
-            providerIdToAssign: providerIdToAssign,
+            providerIds: providerIds,
             handler: .init(handler)
         )
     }

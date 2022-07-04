@@ -9,16 +9,16 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     
     var logger: Logger = LoggerMock()
 
-    var createConversationReceivedInvocations: [(title: String?, providerIdToAssign: UUID?, handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
-    var createConversationClosure: ((_ title: String?, _ providerIdToAssign: UUID?, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
+    var createConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
+    var createConversationClosure: ((_ title: String?, _ providerIds: [UUID]?, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
     
     func createConversation(
         title: String?,
-        providerIdToAssign: UUID?,
+        providerIds: [UUID]?,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
-        createConversationReceivedInvocations.append((title: title, providerIdToAssign: providerIdToAssign, handler: handler, ()))
-        return createConversationClosure?(title, providerIdToAssign, handler) ?? CancellableMock()
+        createConversationReceivedInvocations.append((title: title, providerIds: providerIds, handler: handler, ()))
+        return createConversationClosure?(title, providerIds, handler) ?? CancellableMock()
     }
 
     var watchItemsReceivedInvocations: [(conversationId: UUID, handler: (Result<ConversationItems, NablaError>) -> Void)] = []

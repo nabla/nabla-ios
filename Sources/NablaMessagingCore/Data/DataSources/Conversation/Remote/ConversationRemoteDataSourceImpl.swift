@@ -16,13 +16,13 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     
     func createConversation(
         title: String?,
-        providerIdToAssign: UUID?,
+        providerIds: [UUID]?,
         handler: ResultHandler<RemoteConversation, GQLError>
     ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.CreateConversationMutation(
                 title: title,
-                providerIdToAssign: providerIdToAssign
+                providerIds: providerIds
             ),
             handler: handler.pullback { $0.createConversation.conversation.fragments.conversationFragment }
         )

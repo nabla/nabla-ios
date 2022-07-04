@@ -18,7 +18,7 @@ struct TestEnvironment {
     
     static func make(filePath: String = #filePath, function: String = #function) -> TestEnvironment {
         // swiftlint:disable:next force_unwrapping
-        let userId = UUID(uuidString: "64cffe69-0746-46ea-979b-13f933958087")!
+        let userId = UUID(uuidString: "f004ddd7-2013-490a-a021-c422014cddc6")!
         let session = makeMockSession(filePath: filePath, function: function)
         let networkConfiguration = NetworkConfiguration(session: session)
         let coreContainer = CoreContainer(
@@ -62,9 +62,9 @@ extension TestEnvironment: SessionTokenProvider {
         completion(
             .init(
                 // Expires 07/06/2054
-                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY1NjY4MTAyOSwic2Vzc2lvbl91dWlkIjoiNGZiOWRjMzEtYTlhNy00NWNlLWI3Y2EtY2M2YWZiMDViOTA2Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.Rjgad8kHhwIBIGm1LNaqtMIgL_AvJozLSvX0iwk_yJo",
+                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmMDA0ZGRkNy0yMDEzLTQ5MGEtYTAyMS1jNDIyMDE0Y2RkYzYiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY1NjY4NDkyOSwic2Vzc2lvbl91dWlkIjoiOTNmOGRkNjUtNzE2Ny00NjY0LWFkMWItZWYwZjM5Mjc2YzU2Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.Bc4-99CMnWESw88X2a0U9psxe22Zb5hoEX0taK_XYlQ",
                 // Expires 07/06/2054
-                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NjQ0NTY3MjksInNlc3Npb25fdXVpZCI6IjRmYjlkYzMxLWE5YTctNDVjZS1iN2NhLWNjNmFmYjA1YjkwNiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.cl_acPmIMFtR5S965M2XRmMbbB9c_LWeUr_bMdiF_1A"
+                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmMDA0ZGRkNy0yMDEzLTQ5MGEtYTAyMS1jNDIyMDE0Y2RkYzYiLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NjQ0NjA2MjksInNlc3Npb25fdXVpZCI6IjkzZjhkZDY1LTcxNjctNDY2NC1hZDFiLWVmMGYzOTI3NmM1NiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.tI9kvGuS8AyTbr307OSWtdAuWvC94whRDI2oC0536bs"
             )
         )
     }

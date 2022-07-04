@@ -8,7 +8,7 @@ protocol NablaMessagingClientProtocol {
 
     func createConversation(
         title: String?,
-        providerIdToAssign: UUID?,
+        providerIds: [UUID]?,
         handler: @escaping (Result<Conversation, NablaError>
         ) -> Void
     ) -> Cancellable
@@ -73,14 +73,14 @@ extension NablaMessagingClientProtocol {
         title: String?,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
-        createConversation(title: title, providerIdToAssign: nil, handler: handler)
+        createConversation(title: title, providerIds: nil, handler: handler)
     }
     
     func createConversation(
-        providerIdToAssign: UUID?,
+        providerIds: [UUID]?,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
-        createConversation(title: nil, providerIdToAssign: providerIdToAssign, handler: handler)
+        createConversation(title: nil, providerIds: providerIds, handler: handler)
     }
     
     func createConversation(
@@ -88,7 +88,7 @@ extension NablaMessagingClientProtocol {
     ) -> Cancellable {
         createConversation(
             title: nil,
-            providerIdToAssign: nil,
+            providerIds: nil,
             handler: handler
         )
     }

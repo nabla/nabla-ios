@@ -4,7 +4,7 @@ import NablaCore
 protocol ConversationRemoteDataSource {
     func createConversation(
         title: String?,
-        providerIdToAssign: UUID?,
+        providerIds: [UUID]?,
         handler: ResultHandler<RemoteConversation, GQLError>
     ) -> Cancellable
     
