@@ -2,9 +2,11 @@ import Foundation
 
 enum ConversationTransformer {
     static func transform(data: RemoteConversationList) -> [Conversation] {
-        data.conversations.conversations.map { conversation in
-            transform(fragment: conversation.fragments.conversationFragment)
-        }
+        data.conversations.conversations
+            .map { conversation in
+                transform(fragment: conversation.fragments.conversationFragment)
+            }
+            .sorted { $0.lastModified > $1.lastModified }
     }
     
     static func transform(fragment: RemoteConversation) -> Conversation {
