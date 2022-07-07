@@ -16,7 +16,7 @@ class AuthenticatorImpl: Authenticator {
         session = Session(
             userId: userId,
             provider: provider,
-            tokens: nil
+            authTokens: nil
         )
     }
     
@@ -31,17 +31,17 @@ class AuthenticatorImpl: Authenticator {
             return
         }
         
-        if let tokens = session.tokens, !Self.isExpired(tokens.accessToken) {
-            handler(.success(.authenticated(accessToken: tokens.accessToken)))
+        if let authTokens = session.authTokens, !Self.isExpired(authTokens.accessToken) {
+            handler(.success(.authenticated(accessToken: authTokens.accessToken)))
             return
         }
         
         let task = makeOrReuseRenewSessionTask(session: session)
         task.addOnComplete { [session] result in
             switch result {
-            case let .success(tokens):
-                session.tokens = tokens
-                handler(.success(.authenticated(accessToken: tokens.accessToken)))
+            case let .success(authTokens):
+                session.authTokens = authTokens
+                handler(.success(.authenticated(accessToken: authTokens.accessToken)))
             case let .failure(error):
                 handler(.failure(error))
             }
@@ -80,7 +80,7 @@ class AuthenticatorImpl: Authenticator {
     private let httpManager: HTTPManager
     
     private var session: Session?
-    private var renewTask: SharedTask<Result<Tokens, AuthenticationError>>?
+    private var renewTask: SharedTask<Result<AuthTokens, AuthenticationError>>?
     
     private static func isExpired(_ token: String) -> Bool {
         do {
@@ -92,11 +92,11 @@ class AuthenticatorImpl: Authenticator {
         }
     }
     
-    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<Tokens, AuthenticationError>> {
+    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<AuthTokens, AuthenticationError>> {
         if let existing = renewTask {
             return existing
         }
-        let renewTask = SharedTask<Result<Tokens, AuthenticationError>> { [weak self] completion in
+        let renewTask = SharedTask<Result<AuthTokens, AuthenticationError>> { [weak self] completion in
             guard let self = self else { return }
             self.renewSession(session) { result in
                 completion(result)
@@ -112,27 +112,27 @@ class AuthenticatorImpl: Authenticator {
         notificationCenter.post(name: Constants.tokenChangedNotification, object: nil)
     }
     
-    private func renewSession(_ session: Session, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
-        if let tokens = session.tokens, !Self.isExpired(tokens.refreshToken) {
-            fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
+    private func renewSession(_ session: Session, completion: @escaping (Result<AuthTokens, AuthenticationError>) -> Void) {
+        if let authTokens = session.authTokens, !Self.isExpired(authTokens.refreshToken) {
+            fetchTokens(refreshToken: authTokens.refreshToken, completion: completion)
             return
         }
         requireTokens(session: session, completion: completion)
     }
     
-    private func requireTokens(session: Session, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
-        session.provider.provideTokens(forUserId: session.userId) { [weak self] tokens in
+    private func requireTokens(session: Session, completion: @escaping (Result<AuthTokens, AuthenticationError>) -> Void) {
+        session.provider.provideTokens(forUserId: session.userId) { [weak self] authTokens in
             guard let self = self else {
                 return completion(.failure(AuthenticationProviderFailedToProvideTokensError()))
             }
             
-            if let tokens = tokens {
-                if Self.isExpired(tokens.refreshToken) {
+            if let authTokens = authTokens {
+                if Self.isExpired(authTokens.refreshToken) {
                     completion(.failure(AuthenticationProviderDidProvideExpiredTokensError()))
-                } else if Self.isExpired(tokens.accessToken) {
-                    self.fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
+                } else if Self.isExpired(authTokens.accessToken) {
+                    self.fetchTokens(refreshToken: authTokens.refreshToken, completion: completion)
                 } else {
-                    completion(.success(tokens))
+                    completion(.success(authTokens))
                 }
             } else {
                 completion(.failure(AuthenticationProviderFailedToProvideTokensError()))
@@ -140,7 +140,7 @@ class AuthenticatorImpl: Authenticator {
         }
     }
     
-    private func fetchTokens(refreshToken: String, completion: @escaping (Result<Tokens, AuthenticationError>) -> Void) {
+    private func fetchTokens(refreshToken: String, completion: @escaping (Result<AuthTokens, AuthenticationError>) -> Void) {
         let request = RefreshTokenEndpoint.request(refreshToken: refreshToken)
         httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request) { result in
             switch result {
@@ -151,11 +151,11 @@ class AuthenticatorImpl: Authenticator {
                     completion(.failure(FailedToRefreshTokensError(reason: error)))
                 }
             case let .success(response):
-                let tokens = Tokens(
+                let authTokens = AuthTokens(
                     accessToken: response.accessToken,
                     refreshToken: response.refreshToken
                 )
-                completion(.success(tokens))
+                completion(.success(authTokens))
             }
         }
     }

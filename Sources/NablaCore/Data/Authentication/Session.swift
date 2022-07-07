@@ -5,16 +5,16 @@ class Session {
     
     let userId: UUID
     let provider: SessionTokenProvider
-    var tokens: Tokens?
+    var authTokens: AuthTokens?
     
     init(
         userId: UUID,
         provider: SessionTokenProvider,
-        tokens: Tokens?
+        authTokens: AuthTokens?
     ) {
         self.userId = userId
         self.provider = provider
-        self.tokens = tokens
+        self.authTokens = authTokens
     }
     
     // MARK: - Private

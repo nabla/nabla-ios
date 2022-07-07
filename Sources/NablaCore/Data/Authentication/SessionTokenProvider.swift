@@ -6,5 +6,5 @@ import Foundation
 /// the SDK is only interested in fresh versions each time it calls back.
 ///
 public protocol SessionTokenProvider {
-    func provideTokens(forUserId userId: UUID, completion: @escaping (Tokens?) -> Void)
+    func provideTokens(forUserId userId: UUID, completion: @escaping (AuthTokens?) -> Void)
 }

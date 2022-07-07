@@ -58,7 +58,7 @@ struct TestEnvironment {
 }
 
 extension TestEnvironment: SessionTokenProvider {
-    func provideTokens(forUserId _: UUID, completion: (Tokens?) -> Void) {
+    func provideTokens(forUserId _: UUID, completion: (AuthTokens?) -> Void) {
         completion(
             .init(
                 // Expires 07/06/2054
