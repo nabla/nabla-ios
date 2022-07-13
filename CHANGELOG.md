@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha09] - 2022-07-13
+
+### Added
+
+### Changed
 - Conversations in `watchConversations()` are now correctly sorted by their `lastModified` date.
 - `Tokens` has been renamed to `AuthTokens` for more clarity.
 
