@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Tokens` has been renamed to `AuthTokens` for more clarity.
 
 ### Fixed
-
+- Fix for `watchConversations()` that would return the same `Conversation` multiple times under certain conditions.
 
 ## [1.0.0-alpha08] - 2022-07-04
 

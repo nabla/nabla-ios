@@ -31,6 +31,10 @@ final class PaginatedWatcherAndSubscriptionHolder: PaginatedWatcher {
         self.watcher = watcher
     }
     
+    deinit {
+        cancel()
+    }
+    
     // MARK: - Private
     
     private let watcher: PaginatedWatcher

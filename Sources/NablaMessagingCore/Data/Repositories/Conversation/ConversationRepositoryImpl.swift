@@ -59,7 +59,7 @@ class ConversationRepositoryImpl: ConversationRepository {
         let eventsSubscription = makeOrReuseConversationEventsSubscription()
         holder.hold(eventsSubscription)
         
-        return watcher
+        return holder
     }
     
     func createConversation(

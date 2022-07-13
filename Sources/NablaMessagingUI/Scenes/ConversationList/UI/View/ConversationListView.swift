@@ -22,7 +22,10 @@ public class ConversationListView: UIView, ConversationListViewContract {
     
     override public func didMoveToSuperview() {
         super.didMoveToSuperview()
-        presenter?.start()
+        
+        if superview != nil {
+            presenter?.start()
+        }
     }
     
     // MARK: - ConversationListViewContract
