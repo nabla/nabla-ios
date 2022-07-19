@@ -36,7 +36,7 @@ class GQLClientImpl: GQLClient {
         query: Query,
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
-    ) -> GQLWatcher<Query> {
+    ) -> Watcher {
         let apolloWatcher = apollo.watch(query: query, cachePolicy: cachePolicy) { [weak self] response in
             guard let self = self else { return handler(.failure(.internalError)) }
             let result = self.parseApolloResponse(response)

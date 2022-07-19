@@ -3,7 +3,7 @@ import NablaCore
 
 class UmbrellaCancellable: Cancellable {
     func add(_ cancellable: Cancellable) {
-        queue.append(cancellable)
+        children.append(cancellable)
     }
     
     private(set) var isCancelled: Bool = false
@@ -11,11 +11,15 @@ class UmbrellaCancellable: Cancellable {
     // MARK: - Cancellable
     
     func cancel() {
-        queue.forEach { $0.cancel() }
+        children.forEach { $0.cancel() }
         isCancelled = true
+    }
+    
+    deinit {
+        cancel()
     }
     
     // MARK: - Private
     
-    private var queue: [Cancellable] = []
+    private var children: [Cancellable] = []
 }

@@ -1,6 +1,7 @@
 import Foundation
 import NablaCore
 
+// sourcery: AutoMockable
 protocol ConversationItemRemoteDataSource {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID,

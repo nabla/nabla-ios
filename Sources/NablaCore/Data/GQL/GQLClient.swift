@@ -18,7 +18,7 @@ public protocol GQLClient {
         query: Query,
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
-    ) -> GQLWatcher<Query>
+    ) -> Watcher
     
     func subscribe<Subscription: GQLSubscription>(
         subscription: Subscription,

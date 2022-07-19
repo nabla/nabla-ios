@@ -18,6 +18,11 @@ public class GQLWatcher<Query: GQLQuery>: Watcher {
         self.apollo = apollo
     }
     
+    deinit {
+        cancel()
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     // MARK: - Private
     
     private let apollo: GraphQLQueryWatcher<Query>
@@ -33,9 +38,5 @@ public class GQLWatcher<Query: GQLQuery>: Watcher {
     
     @objc private func refetchNotificationHandler() {
         refetch()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 }
