@@ -40,7 +40,7 @@ public enum NablaTheme {
     
     // MARK: - Components
 
-    enum ConversationPreview {
+    public enum ConversationPreview {
         /// Background color for the conversations list view. Default set to NablaTheme.backgroundColor
         public static var backgroundColor = NablaTheme.backgroundColor
         /// Background color of a conversation in the conversations list. Default set to NablaTheme.backgroundColor
@@ -67,7 +67,7 @@ public enum NablaTheme {
         public static var createConversationColor = NablaTheme.primaryColor
     }
 
-    enum Conversation {
+    public enum Conversation {
         /// Background color for the conversation screen. Default set to NablaTheme.backgroundColor
         public static var backgroundColor = NablaTheme.backgroundColor
         
@@ -226,7 +226,7 @@ public enum NablaTheme {
         public static var retryButtonTitleColor = NablaTheme.primaryColor
     }
 
-    enum Shared {
+    public enum Shared {
         /// Tint color used for the loading indicator. Default set to NablaTheme.primaryColor
         public static var loadingViewIndicatorTintColor = NablaTheme.primaryColor
 

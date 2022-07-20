@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
-
+- Make some `NablaTheme` property public instead of internal.
 
 ## [1.0.0-alpha09] - 2022-07-13
 
