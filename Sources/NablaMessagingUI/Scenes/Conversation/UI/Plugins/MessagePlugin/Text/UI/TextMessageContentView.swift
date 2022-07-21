@@ -6,8 +6,8 @@ final class TextMessageContentView: UIView, MessageContentView {
     
     init() {
         super.init(frame: .zero)
-        addSubview(label)
-        label.pinToSuperView(insets: .all(10))
+        addSubview(textView)
+        textView.pinToSuperView(insets: .all(10))
     }
     
     @available(*, unavailable)
@@ -18,25 +18,63 @@ final class TextMessageContentView: UIView, MessageContentView {
     // MARK: - MessageContentView
     
     func configure(with viewModel: TextMessageContentViewModel, sender: ConversationMessageSender) {
-        label.text = viewModel.text
+        textView.text = viewModel.text
         switch sender {
         case .me:
-            label.textColor = NablaTheme.Conversation.textMessagePatientTextColor
+            textView.textColor = NablaTheme.Conversation.textMessagePatientTextColor
+            textView.linkTextAttributes = [
+                .foregroundColor: NablaTheme.Conversation.textMessagePatientTextColor,
+                .underlineColor: NablaTheme.Conversation.textMessagePatientTextColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ]
         case .them:
-            label.textColor = NablaTheme.Conversation.textMessageProviderTextColor
+            textView.textColor = NablaTheme.Conversation.textMessageProviderTextColor
+            textView.linkTextAttributes = [
+                .foregroundColor: NablaTheme.Conversation.textMessageProviderTextColor,
+                .underlineColor: NablaTheme.Conversation.textMessageProviderTextColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ]
         }
     }
     
     func prepareForReuse() {
-        label.text = nil
+        textView.text = nil
     }
 
     // MARK: - Private
     
-    private lazy var label: UILabel = {
-        let label = UILabel().prepareForAutoLayout()
-        label.numberOfLines = 0
-        label.font = NablaTheme.Conversation.textMessageFont
-        return label
+    private lazy var textView: UITextView = {
+        let view = OnlyLinkAttributeClickableUITextView().prepareForAutoLayout()
+        view.isEditable = false
+        view.isScrollEnabled = false
+        view.isSelectable = true // required for dataDetectorTypes
+        view.backgroundColor = .clear
+        view.textContainerInset = .zero
+        view.dataDetectorTypes = [.link, .phoneNumber]
+        view.font = NablaTheme.Conversation.textMessageFont
+        
+        view.setContentHuggingPriority(.required, for: .horizontal)
+        view.setContentHuggingPriority(.required, for: .vertical)
+        view.setContentCompressionResistancePriority(.required, for: .horizontal)
+        view.setContentCompressionResistancePriority(.required, for: .vertical)
+        
+        return view
     }()
+    
+    // Extracted from https://stackoverflow.com/a/42645444/2508174
+    private class OnlyLinkAttributeClickableUITextView: UITextView {
+        override func point(inside point: CGPoint, with _: UIEvent?) -> Bool {
+            let tapLocation = point.applying(CGAffineTransform(translationX: -textContainerInset.left, y: -textContainerInset.top))
+            let characterAtIndex = layoutManager.characterIndex(for: tapLocation, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
+            let linkAttributeAtIndex = textStorage.attribute(.link, at: characterAtIndex, effectiveRange: nil)
+
+            // Returns true for points located on linked text
+            return linkAttributeAtIndex != nil
+        }
+
+        override func becomeFirstResponder() -> Bool {
+            // Returning false disables double-tap selection of link text
+            false
+        }
+    }
 }

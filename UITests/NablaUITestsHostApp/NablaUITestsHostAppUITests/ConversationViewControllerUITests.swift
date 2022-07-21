@@ -60,7 +60,7 @@ final class ConversationViewControllerUITests: XCTestCase {
         }
         
         XCTContext.runActivity(named: "Type some text and verify that send button is enabled") { _ in
-            let textView = app.textViews.element(boundBy: 0)
+            let textView = app.composerTextView
             
             textView.tap()
             textView.typeText(textMessageContent)
@@ -70,7 +70,7 @@ final class ConversationViewControllerUITests: XCTestCase {
         XCTContext.runActivity(named: "Tap on send and assert that message is added in sending state") { _ in
             sendButton.tap()
             XCTAssertFalse(sendButton.isEnabled)
-            _ = app.cells.staticTexts[textMessageContent].waitUntilExistsAssert()
+            _ = app.cellTextView(withText: textMessageContent).waitUntilExistsAssert()
             _ = app.cells.buttons["Sending…"].waitUntilExistsAssert()
         }
     }
@@ -84,7 +84,7 @@ final class ConversationViewControllerUITests: XCTestCase {
         
         // WHEN & THEN
         XCTContext.runActivity(named: "Type some text and send") { _ in
-            let textView = app.textViews.element(boundBy: 0)
+            let textView = app.composerTextView
             
             textView.tap()
             textView.typeText(textMessageContent)
@@ -111,7 +111,7 @@ final class ConversationViewControllerUITests: XCTestCase {
         
         // WHEN & THEN
         XCTContext.runActivity(named: "Type some text and send") { _ in
-            let textView = app.textViews.element(boundBy: 0)
+            let textView = app.composerTextView
             
             textView.tap()
             textView.typeText(textMessageContent)
@@ -119,12 +119,12 @@ final class ConversationViewControllerUITests: XCTestCase {
         }
         
         XCTContext.runActivity(named: "Long press on message and tap delete") { _ in
-            app.cells.staticTexts[textMessageContent].press(forDuration: 1)
+            app.cellTextView(withText: textMessageContent).press(forDuration: 1)
             app.buttons["Delete"].tap()
         }
         
         XCTContext.runActivity(named: "Verify that message is replaced by deleted message") { _ in
-            _ = app.cells.staticTexts[textMessageContent].waitUntilDisappearsAssert()
+            _ = app.cellTextView(withText: textMessageContent).waitUntilDisappearsAssert()
             _ = app.cells.staticTexts["Deleted message"].waitUntilExistsAssert()
         }
     }
@@ -159,20 +159,30 @@ final class ConversationViewControllerUITests: XCTestCase {
         
         // WHEN & THEN
         XCTContext.runActivity(named: "Tap on first message and check Sent appears") { _ in
-            app.staticTexts["Hello"].waitUntilExists().tap()
+            app.cellTextView(withText: "Hello").waitUntilExists().tap()
             app.buttons["Sent"].waitUntilExistsAssert()
         }
         
         XCTContext.runActivity(named: "Tap again and check Sent disappears") { _ in
-            app.staticTexts["Hello"].waitUntilExists().tap()
+            app.cellTextView(withText: "Hello").waitUntilExists().tap()
             app.buttons["Sent"].waitUntilDisappearsAssert()
         }
         
         XCTContext.runActivity(named: "Tap on second message and check we have a second date separator") { _ in
-            app.staticTexts["World!"].tap()
+            app.cellTextView(withText: "World!").tap()
             app.buttons["Sent"].waitUntilExistsAssert()
             let dateSeparators = app.staticTexts.containing(.init(format: "label BEGINSWITH 'Today at '"))
             XCTAssertEqual(2, dateSeparators.count)
         }
+    }
+}
+
+private extension XCUIApplication {
+    var composerTextView: XCUIElement {
+        textViews["composerInputTextView"]
+    }
+    
+    func cellTextView(withText text: String) -> XCUIElement {
+        textViews.element(matching: NSPredicate(format: "value = '\(text)' and identifier != 'composerInputTextView'"))
     }
 }

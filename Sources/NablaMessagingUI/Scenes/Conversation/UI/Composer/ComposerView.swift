@@ -170,6 +170,7 @@ final class ComposerView: UIView {
         textView.scrollIndicatorInsets = .all(Constants.textViewMinHeight / 4)
         textView.delegate = self
         textView.backgroundColor = NablaTheme.Conversation.composerBackgroundColor
+        textView.accessibilityIdentifier = "composerInputTextView"
         return textView
     }()
     
