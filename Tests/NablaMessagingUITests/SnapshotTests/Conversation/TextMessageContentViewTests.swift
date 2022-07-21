@@ -76,4 +76,68 @@ final class TextMessageContentViewTests: XCTestCase {
         // THEN
         assertSnapshot(matching: sut, as: .image(size: size))
     }
+    
+    func testTextConfigureMeWithLink() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .me(isContiguous: false),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithLinksStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+    }
+    
+    func testTextConfigureThemWithLink() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithLinksStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+    }
+    
+    func testTextConfigureMeWithPhoneNumber() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .me(isContiguous: false),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithPhoneNumbersStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+    }
+    
+    func testTextConfigureThemWithPhoneNumber() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithPhoneNumbersStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+    }
 }

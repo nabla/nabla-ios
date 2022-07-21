@@ -28,4 +28,12 @@ public extension String {
     static var placeholderStub: Self {
         "Placeholder"
     }
+    
+    static var textWithLinksStub: Self {
+        "Hey, did you check https://www.google.com/ ? It's much better than https://www.apple.com/ !"
+    }
+    
+    static var textWithPhoneNumbersStub: Self {
+        "Hey, my new phone number is +33602040502 please replace my old one which was 0734249202"
+    }
 }
