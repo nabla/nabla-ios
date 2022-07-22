@@ -1,5 +1,12 @@
 mutation SendMessage($conversationId: UUID!, $content: SendMessageContentInput!, $clientId: UUID!, $replyToMessageId: UUID) {
-    sendMessage(conversationId: $conversationId, content: $content, clientId: $clientId, replyToMessageId: $replyToMessageId) {
+    sendMessageV2(
+        conversationId: $conversationId,
+        input: {
+            content: $content,
+            clientId: $clientId,
+            replyToMessageId: $replyToMessageId,
+        }
+    ) {
         message {
             ...MessageFragment
         }
