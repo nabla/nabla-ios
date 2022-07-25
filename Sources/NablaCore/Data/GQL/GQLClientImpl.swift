@@ -151,7 +151,8 @@ class GQLClientImpl: GQLClient {
                 guard let statusCode = response?.statusCode else { return .networkError(message: responseCodeError.errorDescription) }
                 switch statusCode {
                 case 401: return .authenticationError(AuthorizationDeniedError(reason: responseCodeError))
-                case 400 ..< 500: return .networkError(message: responseCodeError.errorDescription)
+                case 407, 408: return .networkError(message: responseCodeError.errorDescription)
+                case 400 ..< 500: return .serverError(message: responseCodeError.errorDescription)
                 case 500...: return .serverError(message: responseCodeError.errorDescription)
                 default: return .unknownError
                 }

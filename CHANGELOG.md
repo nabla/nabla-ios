@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Make some `NablaTheme` property public instead of internal.
+- A `NetworkError` will now be returned in case of a network error instead of a `ServerError` before.
 
 ## [1.0.0-alpha09] - 2022-07-13
 

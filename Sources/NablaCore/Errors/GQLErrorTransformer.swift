@@ -19,7 +19,7 @@ public enum GQLErrorTransformer {
         case let .authenticationError(authenticationError):
             return authenticationError
         case let .networkError(message):
-            return ServerError(message: message)
+            return NetworkError(message: message)
         }
     }
 }
