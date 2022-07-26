@@ -15,11 +15,10 @@ public extension Calendar {
         return compare(date, to: year, toGranularity: .year) == .orderedDescending
     }
 
-    func areDatesMoreThanAnHourApart(_ date1: Date, _ date2: Date) -> Bool {
+    func areDatesAtLeastAnHourApart(_ date1: Date, _ date2: Date) -> Bool {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour], from: date1, to: date2)
         guard let hours = components.hour else { return false }
-
-        return hours > 1
+        return hours >= 1
     }
 }

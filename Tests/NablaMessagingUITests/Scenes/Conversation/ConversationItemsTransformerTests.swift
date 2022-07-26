@@ -198,7 +198,7 @@ final class ConversationItemsTransformerTests: XCTestCase {
     func testTwoNonConsecutiveMessagesUseOneDateSeparatorEach() throws {
         // GIVEN
         let item1 = TextMessageItem.mock(dateOffset: 0)
-        let item2 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 1)
+        let item2 = TextMessageItem.mock(dateOffset: 60 * 60)
         // WHEN
         let transformed = transform(items: [item1, item2])
         // THEN
@@ -211,10 +211,30 @@ final class ConversationItemsTransformerTests: XCTestCase {
         XCTAssertEqual(transformed[3].id, item2.id)
     }
     
+    func testThreeNonConsecutiveMessagesUseOneDateSeparatorEach() throws {
+        // GIVEN
+        let item1 = TextMessageItem.mock(dateOffset: 0)
+        let item2 = TextMessageItem.mock(dateOffset: 60 * 60)
+        let item3 = TextMessageItem.mock(dateOffset: 60 * 60 * 2)
+        // WHEN
+        let transformed = transform(items: [item1, item2, item3])
+        // THEN
+        XCTRequireEqual(transformed.count, 6)
+        XCTAssert(transformed[0] is DateSeparatorViewItem)
+        XCTAssert(transformed[1] is TextMessageViewItem)
+        XCTAssertEqual(transformed[1].id, item1.id)
+        XCTAssert(transformed[2] is DateSeparatorViewItem)
+        XCTAssert(transformed[3] is TextMessageViewItem)
+        XCTAssertEqual(transformed[3].id, item2.id)
+        XCTAssert(transformed[4] is DateSeparatorViewItem)
+        XCTAssert(transformed[5] is TextMessageViewItem)
+        XCTAssertEqual(transformed[5].id, item3.id)
+    }
+    
     func testTwoAlmostNonConsecutiveMessagesUseSingleDateSeparator() throws {
         // GIVEN
         let item1 = TextMessageItem.mock(dateOffset: 0)
-        let item2 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 - 1)
+        let item2 = TextMessageItem.mock(dateOffset: 60 * 60 - 1)
         // WHEN
         let transformed = transform(items: [item1, item2])
         // THEN
@@ -230,8 +250,8 @@ final class ConversationItemsTransformerTests: XCTestCase {
         // GIVEN
         let item1 = TextMessageItem.mock(dateOffset: 0)
         let item2 = TextMessageItem.mock(dateOffset: 1)
-        let item3 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 1)
-        let item4 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 2)
+        let item3 = TextMessageItem.mock(dateOffset: 60 * 60 + 1)
+        let item4 = TextMessageItem.mock(dateOffset: 60 * 60 + 2)
         // WHEN
         let transformed = transform(items: [item1, item2, item3, item4])
         // THEN
@@ -246,6 +266,35 @@ final class ConversationItemsTransformerTests: XCTestCase {
         XCTAssertEqual(transformed[4].id, item3.id)
         XCTAssert(transformed[5] is TextMessageViewItem)
         XCTAssertEqual(transformed[5].id, item4.id)
+    }
+    
+    func testThreeNonConsecutiveGroupsOfMessageUseOneDateSeparatorEach() throws {
+        // GIVEN
+        let item1 = TextMessageItem.mock(dateOffset: 0)
+        let item2 = TextMessageItem.mock(dateOffset: 1)
+        let item3 = TextMessageItem.mock(dateOffset: 60 * 60 + 1)
+        let item4 = TextMessageItem.mock(dateOffset: 60 * 60 + 2)
+        let item5 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 2)
+        let item6 = TextMessageItem.mock(dateOffset: 60 * 60 * 2 + 3)
+        // WHEN
+        let transformed = transform(items: [item1, item2, item3, item4, item5, item6])
+        // THEN
+        XCTRequireEqual(transformed.count, 9)
+        XCTAssert(transformed[0] is DateSeparatorViewItem)
+        XCTAssert(transformed[1] is TextMessageViewItem)
+        XCTAssertEqual(transformed[1].id, item1.id)
+        XCTAssert(transformed[2] is TextMessageViewItem)
+        XCTAssertEqual(transformed[2].id, item2.id)
+        XCTAssert(transformed[3] is DateSeparatorViewItem)
+        XCTAssert(transformed[4] is TextMessageViewItem)
+        XCTAssertEqual(transformed[4].id, item3.id)
+        XCTAssert(transformed[5] is TextMessageViewItem)
+        XCTAssertEqual(transformed[5].id, item4.id)
+        XCTAssert(transformed[6] is DateSeparatorViewItem)
+        XCTAssert(transformed[7] is TextMessageViewItem)
+        XCTAssertEqual(transformed[7].id, item5.id)
+        XCTAssert(transformed[8] is TextMessageViewItem)
+        XCTAssertEqual(transformed[8].id, item6.id)
     }
 
     // MARK: - Focused Text Item

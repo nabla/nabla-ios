@@ -139,12 +139,12 @@ enum ConversationItemsTransformer {
             }
             currentItem.isContiguous = previousItem.sender == currentItem.sender
             viewItems[index + 1 + insertedItemsCount] = currentItem
-            guard Calendar.current.areDatesMoreThanAnHourApart(previousItem.date, currentItem.date) else {
+            guard Calendar.current.areDatesAtLeastAnHourApart(previousItem.date, currentItem.date) else {
                 return
             }
             currentItem.isContiguous = false
             viewItems[index + 1 + insertedItemsCount] = currentItem
-            viewItems.insert(DateSeparatorViewItem(id: UUID(), date: currentItem.date), at: index + 1)
+            viewItems.insert(DateSeparatorViewItem(id: UUID(), date: currentItem.date), at: index + 1 + insertedItemsCount)
             insertedItemsCount += 1
         }
     }
