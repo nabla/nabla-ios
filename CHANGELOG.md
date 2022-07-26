@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha10] - 2022-07-26
+
+### Added
 - You can now tap on links and phone numbers in text messages.
 
 ### Changed
