@@ -11,11 +11,9 @@ public extension GQL {
     public let operationDefinition: String =
       """
       mutation SendMessage($conversationId: UUID!, $content: SendMessageContentInput!, $clientId: UUID!, $replyToMessageId: UUID) {
-        sendMessage(
+        sendMessageV2(
           conversationId: $conversationId
-          content: $content
-          clientId: $clientId
-          replyToMessageId: $replyToMessageId
+          input: {content: $content, clientId: $clientId, replyToMessageId: $replyToMessageId}
         ) {
           __typename
           message {
@@ -67,7 +65,7 @@ public extension GQL {
 
       public static var selections: [GraphQLSelection] {
         return [
-          GraphQLField("sendMessage", arguments: ["conversationId": GraphQLVariable("conversationId"), "content": GraphQLVariable("content"), "clientId": GraphQLVariable("clientId"), "replyToMessageId": GraphQLVariable("replyToMessageId")], type: .nonNull(.object(SendMessage.selections))),
+          GraphQLField("sendMessageV2", arguments: ["conversationId": GraphQLVariable("conversationId"), "input": ["content": GraphQLVariable("content"), "clientId": GraphQLVariable("clientId"), "replyToMessageId": GraphQLVariable("replyToMessageId")]], type: .nonNull(.object(SendMessageV2.selections))),
         ]
       }
 
@@ -77,20 +75,20 @@ public extension GQL {
         self.resultMap = unsafeResultMap
       }
 
-      public init(sendMessage: SendMessage) {
-        self.init(unsafeResultMap: ["__typename": "Mutation", "sendMessage": sendMessage.resultMap])
+      public init(sendMessageV2: SendMessageV2) {
+        self.init(unsafeResultMap: ["__typename": "Mutation", "sendMessageV2": sendMessageV2.resultMap])
       }
 
-      public var sendMessage: SendMessage {
+      public var sendMessageV2: SendMessageV2 {
         get {
-          return SendMessage(unsafeResultMap: resultMap["sendMessage"]! as! ResultMap)
+          return SendMessageV2(unsafeResultMap: resultMap["sendMessageV2"]! as! ResultMap)
         }
         set {
-          resultMap.updateValue(newValue.resultMap, forKey: "sendMessage")
+          resultMap.updateValue(newValue.resultMap, forKey: "sendMessageV2")
         }
       }
 
-      public struct SendMessage: GraphQLSelectionSet {
+      public struct SendMessageV2: GraphQLSelectionSet {
         public static let possibleTypes: [String] = ["SendMessageOutput"]
 
         public static var selections: [GraphQLSelection] {

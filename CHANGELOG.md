@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a bug preventing conversation from appearing "seen" the first time you tap on them.
 
 ## [1.0.0-alpha10] - 2022-07-26
 

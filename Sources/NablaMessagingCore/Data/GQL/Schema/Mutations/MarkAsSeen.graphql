@@ -1,5 +1,8 @@
 mutation MaskAsSeen($conversationId: UUID!) {
     markAsSeen(conversationId: $conversationId) {
-        __typename
+        conversation {
+            id
+            unreadMessageCount
+        }
     }
 }

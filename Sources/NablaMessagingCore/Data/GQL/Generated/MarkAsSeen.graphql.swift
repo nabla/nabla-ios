@@ -13,6 +13,11 @@ public extension GQL {
       mutation MaskAsSeen($conversationId: UUID!) {
         markAsSeen(conversationId: $conversationId) {
           __typename
+          conversation {
+            __typename
+            id
+            unreadMessageCount
+          }
         }
       }
       """
@@ -63,6 +68,7 @@ public extension GQL {
         public static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("conversation", type: .nonNull(.object(Conversation.selections))),
           ]
         }
 
@@ -72,8 +78,8 @@ public extension GQL {
           self.resultMap = unsafeResultMap
         }
 
-        public init() {
-          self.init(unsafeResultMap: ["__typename": "MarkConversationAsSeenOutput"])
+        public init(conversation: Conversation) {
+          self.init(unsafeResultMap: ["__typename": "MarkConversationAsSeenOutput", "conversation": conversation.resultMap])
         }
 
         public var __typename: String {
@@ -82,6 +88,64 @@ public extension GQL {
           }
           set {
             resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+        public var conversation: Conversation {
+          get {
+            return Conversation(unsafeResultMap: resultMap["conversation"]! as! ResultMap)
+          }
+          set {
+            resultMap.updateValue(newValue.resultMap, forKey: "conversation")
+          }
+        }
+
+        public struct Conversation: GraphQLSelectionSet {
+          public static let possibleTypes: [String] = ["Conversation"]
+
+          public static var selections: [GraphQLSelection] {
+            return [
+              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+              GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
+              GraphQLField("unreadMessageCount", type: .nonNull(.scalar(Int.self))),
+            ]
+          }
+
+          public private(set) var resultMap: ResultMap
+
+          public init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
+          }
+
+          public init(id: GQL.UUID, unreadMessageCount: Int) {
+            self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "unreadMessageCount": unreadMessageCount])
+          }
+
+          public var __typename: String {
+            get {
+              return resultMap["__typename"]! as! String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "__typename")
+            }
+          }
+
+          public var id: GQL.UUID {
+            get {
+              return resultMap["id"]! as! GQL.UUID
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "id")
+            }
+          }
+
+          public var unreadMessageCount: Int {
+            get {
+              return resultMap["unreadMessageCount"]! as! Int
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "unreadMessageCount")
+            }
           }
         }
       }
