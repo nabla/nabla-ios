@@ -4,8 +4,13 @@ import NablaCore
 final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInteractor {
     // MARK: - Initializer
 
-    init(authenticator: Authenticator, repository: ConversationItemRepository) {
-        self.repository = repository
+    init(
+        authenticator: Authenticator,
+        itemsRepository: ConversationItemRepository,
+        conversationsRepository: ConversationRepository
+    ) {
+        self.itemsRepository = itemsRepository
+        self.conversationsRepository = conversationsRepository
         super.init(authenticator: authenticator)
     }
 
@@ -24,17 +29,19 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
             handler(.failure(InvalidMessageError()))
             return Failure()
         }
-        return repository.sendMessage(
+        let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
+        return itemsRepository.sendMessage(
             message,
             replyToMessageId: replyToMessageId,
-            inConversationWithId: conversationId,
+            inConversationWithId: transientId,
             handler: handler
         )
     }
     
     // MARK: - Private
 
-    private let repository: ConversationItemRepository
+    private let itemsRepository: ConversationItemRepository
+    private let conversationsRepository: ConversationRepository
 
     private func isMessageValid(_ message: MessageInput) -> Bool {
         switch message {

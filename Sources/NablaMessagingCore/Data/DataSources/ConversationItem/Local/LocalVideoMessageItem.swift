@@ -1,6 +1,7 @@
 import Foundation
 
 struct LocalVideoMessageItem: LocalMediaConversationMessage {
+    let conversationId: UUID
     let clientId: UUID
     let date: Date
     var sendingState: ConversationMessageSendingState

@@ -22,6 +22,7 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
         return repository.createConversation(
             title: title,
             providerIds: providerIds,
+            initialMessage: nil,
             handler: handler
         )
     }

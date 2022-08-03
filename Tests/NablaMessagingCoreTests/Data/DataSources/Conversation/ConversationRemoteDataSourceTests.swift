@@ -5,10 +5,9 @@ import NablaMessagingCoreTestsUtils
 import SwiftyMocky
 import XCTest
 
-class ConversationItemRemoteDataSourceTests: XCTestCase {
+class ConversationRemoteDataSourceTests: XCTestCase {
     private var mockGqlClient: GQLClientMock!
     private var mockGqlStore: GQLStoreMock!
-    private var logger = ConsoleLogger()
 
     override func setUp() {
         super.setUp()
@@ -28,7 +27,7 @@ class ConversationItemRemoteDataSourceTests: XCTestCase {
     func testMarkConversationAsSeenCallsClientWithCorrectMutation() {
         // GIVEN
         let conversationId = UUID()
-        let sut = ConversationItemRemoteDataSourceImpl(gqlClient: mockGqlClient, gqlStore: mockGqlStore, logger: logger)
+        let sut = ConversationRemoteDataSourceImpl(gqlClient: mockGqlClient, gqlStore: mockGqlStore)
         Given(mockGqlClient, .perform(mutation: .any(GQL.MaskAsSeenMutation.self), handler: .any, willReturn: CancellableMock()))
         // WHEN
         _ = sut.markConversationAsSeen(conversationId: conversationId, handler: .void)

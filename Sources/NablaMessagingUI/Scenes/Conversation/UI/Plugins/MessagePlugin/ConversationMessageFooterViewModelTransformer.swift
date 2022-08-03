@@ -5,11 +5,11 @@ struct ConversationMessageFooterViewModelTransformer {
 
     static func transform(item: ConversationViewMessageItem) -> ConversationMessageFooterViewModel? {
         switch item.sendingState {
-        case .sending:
+        case .sending, .toBeSent:
             return .init(text: L10n.conversationMessageStatusSending, color: .lightGray)
         case .sent where item.isFocused:
             return .init(text: L10n.conversationMessageStatusSent, color: .lightGray)
-        case .sent, .toBeSent:
+        case .sent:
             return nil
         case .failed:
             return .init(text: L10n.conversationMessageStatusFailed, color: .red)

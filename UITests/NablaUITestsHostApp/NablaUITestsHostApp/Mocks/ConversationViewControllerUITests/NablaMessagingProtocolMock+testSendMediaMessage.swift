@@ -12,7 +12,6 @@ extension NablaMessagingClientProtocolMock {
 
         watchItemsClosure = { _, handler in
             handler(.success(.init(
-                conversationId: .init(),
                 hasMore: false,
                 items: []
             )))
@@ -23,7 +22,6 @@ extension NablaMessagingClientProtocolMock {
             
             self.watchItemsReceivedInvocations.forEach { params in
                 params.handler(.success(.init(
-                    conversationId: .init(),
                     hasMore: false,
                     items: [
                         ImageMessageItem(

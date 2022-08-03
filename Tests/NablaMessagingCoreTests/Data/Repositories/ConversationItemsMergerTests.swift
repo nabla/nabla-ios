@@ -4,7 +4,7 @@ import NablaMessagingCoreTestsUtils
 import XCTest
 
 class ConversationItemsMergerTests: XCTestCase {
-    private let conversationId = UUID()
+    private let conversationId = TransientUUID(remoteId: .init())
     
     private let remoteDataSource = ConversationItemRemoteDataSourceMock()
     private let localDataSource = ConversationItemLocalDataSourceMock()
@@ -22,9 +22,9 @@ class ConversationItemsMergerTests: XCTestCase {
     func testWatchersAreCancelledOnDeinit() throws {
         // GIVEN
         var sut: ConversationItemsMerger? = .init(
+            conversationId: conversationId,
             remoteDataSource: remoteDataSource,
             localDataSource: localDataSource,
-            conversationId: conversationId,
             handler: .void
         )
         sut?.resume()

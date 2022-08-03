@@ -3,37 +3,26 @@ import NablaCore
 
 protocol ConversationItemRepository {
     func watchConversationItems(
-        ofConversationWithId: UUID,
+        ofConversationWithId: TransientUUID,
         handler: ResultHandler<ConversationItems, NablaError>
     ) -> PaginatedWatcher
     
     func sendMessage(
         _ message: MessageInput,
         replyToMessageId: UUID?,
-        inConversationWithId: UUID,
+        inConversationWithId: TransientUUID,
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable
     
     func retrySending(
         itemWithId itemId: UUID,
-        inConversationWithId: UUID,
+        inConversationWithId: TransientUUID,
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable
     
     func deleteMessage(
         withId messageId: UUID,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
-    
-    func setIsTyping(
-        _ isTyping: Bool,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
-    
-    func markConversationAsSeen(
-        conversationId: UUID,
+        conversationId: TransientUUID,
         handler: ResultHandler<Void, NablaError>
     ) -> Cancellable
 }

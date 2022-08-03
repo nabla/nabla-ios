@@ -74,7 +74,7 @@ final class ConversationViewControllerTests: XCTestCase {
         sut.configure(withState: .loaded(items: [
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.deletedProvider)),
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.provider(provider))),
-            DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .toBeSent, replyTo: nil),
+            DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .sent, replyTo: nil),
             DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mock),
             DateSeparatorViewItem(id: UUID(), date: Date(timeIntervalSince1970: 0)),
             TextMessageViewItem(id: UUID(), date: Date(), sender: .patient, sendingState: .failed, replyTo: nil, text: .loremStub),

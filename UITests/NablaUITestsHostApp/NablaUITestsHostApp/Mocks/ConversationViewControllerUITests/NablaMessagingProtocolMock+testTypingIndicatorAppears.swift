@@ -32,7 +32,6 @@ extension NablaMessagingClientProtocolMock {
 
         watchItemsClosure = { _, handler in
             handler(.success(.init(
-                conversationId: .init(),
                 hasMore: false,
                 items: []
             )))

@@ -15,3 +15,10 @@ public final class Failure: Watcher {
     
     public init() {}
 }
+
+public final class Success: Watcher {
+    public func cancel() {}
+    public func refetch() {}
+    
+    public init() {}
+}

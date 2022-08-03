@@ -20,6 +20,14 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
         createConversationReceivedInvocations.append((title: title, providerIds: providerIds, handler: handler, ()))
         return createConversationClosure?(title, providerIds, handler) ?? CancellableMock()
     }
+    
+    var createDraftConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, Void)] = []
+    var createDraftConversationClosure: ((_ title: String?, _ providerIds: [UUID]?) -> Conversation)?
+    
+    func createDraftConversation(title: String?, providerIds: [UUID]?) -> Conversation {
+        createDraftConversationReceivedInvocations.append((title: title, providerIds: providerIds, ()))
+        return createDraftConversationClosure?(title, providerIds) ?? Conversation.mock()
+    }
 
     var watchItemsReceivedInvocations: [(conversationId: UUID, handler: (Result<ConversationItems, NablaError>) -> Void)] = []
     var watchItemsClosure: ((_ conversationId: UUID, _ handler: @escaping (Result<ConversationItems, NablaError>) -> Void) -> PaginatedWatcher)?

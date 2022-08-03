@@ -13,11 +13,13 @@ class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     // MARK: - Internal
     
     func getConversationItems(ofConversationWithId conversationId: UUID) -> [LocalConversationItem] {
-        conversationItems[conversationId] ?? []
+        conversationItems.values
+            .filter { $0.conversationId == conversationId }
+            .sorted(\.date)
     }
     
-    func getConversationItem(withClientId clientId: UUID, inConversationWithId conversationId: UUID) -> LocalConversationItem? {
-        conversationItems[conversationId]?.first { $0.clientId == clientId }
+    func getConversationItem(withClientId clientId: UUID) -> LocalConversationItem? {
+        conversationItems[clientId]
     }
     
     func watchConversationItems(
@@ -28,31 +30,41 @@ class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     }
     
     func addConversationItem(
-        _ conversationItem: LocalConversationItem,
-        toConversationWithId conversationId: UUID
+        _ conversationItem: LocalConversationItem
     ) {
-        var items = conversationItems[conversationId] ?? []
-        items.append(conversationItem)
-        items.sort(\.date)
-        conversationItems[conversationId] = items
-        notifyChange(forConversationWithId: conversationId)
+        conversationItems[conversationItem.clientId] = conversationItem
+        notifyChange(forConversationWithId: conversationItem.conversationId)
     }
     
     func updateConversationItem(
-        _ conversationItem: LocalConversationItem,
-        inConversationWithId conversationId: UUID
+        _ conversationItem: LocalConversationItem
     ) {
-        var items = conversationItems[conversationId] ?? []
-        guard let index = items.firstIndex(where: { $0.clientId == conversationItem.clientId }) else { return }
-        items[index] = conversationItem
-        items.sort(\.date)
-        conversationItems[conversationId] = items
-        notifyChange(forConversationWithId: conversationId)
+        updateConversationItems([conversationItem])
+    }
+    
+    func updateConversationItems(
+        _ conversationItems: [LocalConversationItem]
+    ) {
+        var conversationIds = Set<UUID>()
+        for conversationItem in conversationItems {
+            self.conversationItems[conversationItem.clientId] = conversationItem
+            conversationIds.insert(conversationItem.conversationId)
+        }
+        for conversationId in conversationIds {
+            notifyChange(forConversationWithId: conversationId)
+        }
+    }
+    
+    func removeConversationItem(
+        withClientId clientId: UUID
+    ) {
+        conversationItems.removeValue(forKey: clientId)
+        notifyChange(forConversationWithId: clientId)
     }
     
     // MARK: - Private
     
-    private var conversationItems = [UUID: [LocalConversationItem]]()
+    private var conversationItems = [UUID: LocalConversationItem]()
     
     private func notifyChange(forConversationWithId conversationId: UUID) {
         NotificationCenter.default.post(

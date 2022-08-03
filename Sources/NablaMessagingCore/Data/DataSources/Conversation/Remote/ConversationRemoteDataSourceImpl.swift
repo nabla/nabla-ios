@@ -1,5 +1,8 @@
 import Foundation
 import NablaCore
+#if canImport(NablaUtils)
+    import NablaUtils
+#endif
 
 final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     // MARK: - Initializer
@@ -17,14 +20,41 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     func createConversation(
         title: String?,
         providerIds: [UUID]?,
+        initialMessage: GQL.SendMessageInput?,
         handler: ResultHandler<RemoteConversation, GQLError>
     ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.CreateConversationMutation(
                 title: title,
-                providerIds: providerIds
+                providerIds: providerIds,
+                initialMessage: initialMessage
             ),
-            handler: handler.pullback { $0.createConversation.conversation.fragments.conversationFragment }
+            handler: handler.pullback { [weak self] response in
+                let conversation = response.createConversation.conversation.fragments.conversationFragment
+                self?.appendToCache(conversation: conversation)
+                return conversation
+            }
+        )
+    }
+    
+    func setIsTyping(
+        _ isTyping: Bool,
+        conversationId: UUID,
+        handler: ResultHandler<Void, GQLError>
+    ) -> Cancellable {
+        gqlClient.perform(
+            mutation: GQL.SetTypingMutation(conversationId: conversationId, isTyping: isTyping),
+            handler: handler.pullback(void)
+        )
+    }
+    
+    func markConversationAsSeen(
+        conversationId: UUID,
+        handler: ResultHandler<Void, GQLError>
+    ) -> Cancellable {
+        gqlClient.perform(
+            mutation: GQL.MaskAsSeenMutation(conversationId: conversationId),
+            handler: handler.pullback(void)
         )
     }
     

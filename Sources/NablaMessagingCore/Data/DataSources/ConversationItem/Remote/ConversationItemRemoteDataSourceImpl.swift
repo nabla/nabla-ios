@@ -34,20 +34,21 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     }
     
     func send(
-        localMessageClientId: UUID,
-        remoteMessageInput: GQL.SendMessageContentInput,
+        remoteMessageInput: GQL.SendMessageInput,
         conversationId: UUID,
-        replyToMessageId: UUID?,
         handler: ResultHandler<Void, GQLError>
     ) -> Cancellable {
         gqlClient.perform(
             mutation: GQL.SendMessageMutation(
                 conversationId: conversationId,
-                content: remoteMessageInput,
-                clientId: localMessageClientId,
-                replyToMessageId: replyToMessageId
+                input: remoteMessageInput
             ),
-            handler: handler.pullback(void)
+            handler: handler.pullback { [weak self] response in
+                let item = GQL.ConversationItemFragment(
+                    message: response.sendMessageV2.message.fragments.messageFragment
+                )
+                self?.append(item: item, toCacheOfConversationWithId: conversationId)
+            }
         )
     }
 
@@ -80,27 +81,6 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 handler(.success(event))
             }
         })
-    }
-    
-    func setIsTyping(
-        _ isTyping: Bool,
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable {
-        gqlClient.perform(
-            mutation: GQL.SetTypingMutation(conversationId: conversationId, isTyping: isTyping),
-            handler: handler.pullback(void)
-        )
-    }
-    
-    func markConversationAsSeen(
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable {
-        gqlClient.perform(
-            mutation: GQL.MaskAsSeenMutation(conversationId: conversationId),
-            handler: handler.pullback(void)
-        )
     }
     
     // MARK: - Private

@@ -1,0 +1,18 @@
+## Note: all of the config entries below are just examples with placeholders. Be sure to edit and adjust to your needs when uncommenting.
+
+## In case your config entries all use a common input/output parent directory, you can specify those here.
+##   Every input/output paths in the rest of the config will then be expressed relative to these.
+##   Those two top-level keys are optional and default to "." (the directory of the config file).
+input_dir: Resources
+output_dir: Generated
+
+strings:
+  inputs:
+    - en.lproj/Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      output: Strings+Generated.swift
+      params:
+        enumName: L10n
+        publicAccess: false
+        bundle: NablaMessagingCore.resourcesBundle

@@ -34,10 +34,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     self.logger.warning(message: "Failed to send a media", extra: ["type": type(of: media), "reason": error])
                 }
             })
-            sendMediaCancellable.append(cancellable)
+            sendMessageActions.append(cancellable)
         }
         if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            sendMessageAction = client.sendMessage(.text(content: text), replyingToMessageWithId: replyToUUID, inConversationWithId: conversationId) { result in
+            let cancellable = client.sendMessage(.text(content: text), replyingToMessageWithId: replyToUUID, inConversationWithId: conversationId) { result in
                 switch result {
                 case .success:
                     break
@@ -45,6 +45,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     self.logger.warning(message: "Failed to send text", extra: ["reason": error])
                 }
             }
+            sendMessageActions.append(cancellable)
         }
     }
     
@@ -220,15 +221,13 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
     private var itemsWatcher: PaginatedWatcher?
     private var conversationWatcher: Cancellable?
-    private var sendMessageAction: Cancellable?
+    private var sendMessageActions = [Cancellable]()
     private var sendAudioMessageAction: Cancellable?
     private var deleteMessageAction: Cancellable?
     private var setTypingAction: Cancellable?
     private var loadMoreItemsAction: Cancellable?
     private var markAsSeenAction: Cancellable?
     private let localTypingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
-
-    private var sendMediaCancellable: [Cancellable] = []
     
     private var canRecordAudio: Bool {
         Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String != nil

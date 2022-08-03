@@ -1,6 +1,8 @@
 import Foundation
 
 enum ConversationTransformer {
+    // MARK: - Internal
+    
     static func transform(data: RemoteConversationList) -> [Conversation] {
         data.conversations.conversations
             .map { conversation in
@@ -21,6 +23,21 @@ enum ConversationTransformer {
             providers: transform(providers: fragment.providers)
         )
     }
+    
+    static func transform(conversation: LocalConversation) -> Conversation {
+        Conversation(
+            id: conversation.id,
+            title: conversation.title,
+            subtitle: nil,
+            inboxPreviewTitle: conversation.title ?? L10n.draftConversationDefaultTitle,
+            lastMessagePreview: nil,
+            lastModified: conversation.creationDate,
+            patientUnreadMessageCount: 0,
+            providers: []
+        )
+    }
+    
+    // MARK: - Private
     
     private static func transform(providers: [RemoteConversation.Provider]) -> [ProviderInConversation] {
         providers

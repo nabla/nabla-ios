@@ -15,5 +15,9 @@ private class ApolloCancellable: NablaCore.Cancellable {
         apollo.cancel()
     }
     
+    deinit {
+        cancel()
+    }
+    
     private let apollo: Apollo.Cancellable
 }

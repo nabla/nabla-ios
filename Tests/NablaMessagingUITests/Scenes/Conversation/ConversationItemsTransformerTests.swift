@@ -4,11 +4,8 @@ import NablaMessagingCoreTestsUtils
 import XCTest
 
 final class ConversationItemsTransformerTests: XCTestCase {
-    private var conversation: Conversation!
-
     override func setUp() {
         super.setUp()
-        conversation = .mock()
     }
 
     private func transform(
@@ -18,7 +15,6 @@ final class ConversationItemsTransformerTests: XCTestCase {
     ) -> [ConversationViewItem] {
         ConversationItemsTransformer.transform(
             conversationItems: ConversationItems(
-                conversationId: conversation.id,
                 hasMore: hasMore,
                 items: items
             ),

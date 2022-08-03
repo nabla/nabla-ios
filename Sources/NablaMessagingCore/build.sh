@@ -12,7 +12,15 @@ assert_is_installed "mint"
 
 echo "--- NablaMessagingCore - Build ---"
 
+# -- Swiftgen --
+GENERATED_FOLDER="$DIRNAME"/Generated
+echo "Create Generated folder in $GENERATED_FOLDER if not existing"
+mkdir -p "$GENERATED_FOLDER"
 
+echo "Execute swiftgen"
+mint run -m ../../Mintfile swiftgen config run --config "$DIRNAME"/swiftgen.yml
+
+# -- Apollo --
 # This should be kept in sync with the files in ApolloCodegen/Sources/ApolloCodegen/main.swift
 input_output_files=(
   "$DIRNAME/Data/GQL/Schema"

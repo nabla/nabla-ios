@@ -70,13 +70,13 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
 		return __value
     }
 
-    open func getConversationItem(withClientId clientId: UUID, inConversationWithId conversationId: UUID) -> LocalConversationItem? {
-        addInvocation(.m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(Parameter<UUID>.value(`clientId`), Parameter<UUID>.value(`conversationId`)))
-		let perform = methodPerformValue(.m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(Parameter<UUID>.value(`clientId`), Parameter<UUID>.value(`conversationId`))) as? (UUID, UUID) -> Void
-		perform?(`clientId`, `conversationId`)
+    open func getConversationItem(withClientId clientId: UUID) -> LocalConversationItem? {
+        addInvocation(.m_getConversationItem__withClientId_clientId(Parameter<UUID>.value(`clientId`)))
+		let perform = methodPerformValue(.m_getConversationItem__withClientId_clientId(Parameter<UUID>.value(`clientId`))) as? (UUID) -> Void
+		perform?(`clientId`)
 		var __value: LocalConversationItem? = nil
 		do {
-		    __value = try methodReturnValue(.m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(Parameter<UUID>.value(`clientId`), Parameter<UUID>.value(`conversationId`))).casted()
+		    __value = try methodReturnValue(.m_getConversationItem__withClientId_clientId(Parameter<UUID>.value(`clientId`))).casted()
 		} catch {
 			// do nothing
 		}
@@ -97,25 +97,39 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
 		return __value
     }
 
-    open func addConversationItem(_ conversationItem: LocalConversationItem, toConversationWithId conversationId: UUID) {
-        addInvocation(.m_addConversationItem__conversationItemtoConversationWithId_conversationId(Parameter<LocalConversationItem>.value(`conversationItem`), Parameter<UUID>.value(`conversationId`)))
-		let perform = methodPerformValue(.m_addConversationItem__conversationItemtoConversationWithId_conversationId(Parameter<LocalConversationItem>.value(`conversationItem`), Parameter<UUID>.value(`conversationId`))) as? (LocalConversationItem, UUID) -> Void
-		perform?(`conversationItem`, `conversationId`)
+    open func addConversationItem(_ conversationItem: LocalConversationItem) {
+        addInvocation(.m_addConversationItem__conversationItem(Parameter<LocalConversationItem>.value(`conversationItem`)))
+		let perform = methodPerformValue(.m_addConversationItem__conversationItem(Parameter<LocalConversationItem>.value(`conversationItem`))) as? (LocalConversationItem) -> Void
+		perform?(`conversationItem`)
     }
 
-    open func updateConversationItem(_ conversationItem: LocalConversationItem, inConversationWithId conversationId: UUID) {
-        addInvocation(.m_updateConversationItem__conversationIteminConversationWithId_conversationId(Parameter<LocalConversationItem>.value(`conversationItem`), Parameter<UUID>.value(`conversationId`)))
-		let perform = methodPerformValue(.m_updateConversationItem__conversationIteminConversationWithId_conversationId(Parameter<LocalConversationItem>.value(`conversationItem`), Parameter<UUID>.value(`conversationId`))) as? (LocalConversationItem, UUID) -> Void
-		perform?(`conversationItem`, `conversationId`)
+    open func updateConversationItem(_ conversationItem: LocalConversationItem) {
+        addInvocation(.m_updateConversationItem__conversationItem(Parameter<LocalConversationItem>.value(`conversationItem`)))
+		let perform = methodPerformValue(.m_updateConversationItem__conversationItem(Parameter<LocalConversationItem>.value(`conversationItem`))) as? (LocalConversationItem) -> Void
+		perform?(`conversationItem`)
+    }
+
+    open func updateConversationItems(_ conversationItems: [LocalConversationItem]) {
+        addInvocation(.m_updateConversationItems__conversationItems(Parameter<[LocalConversationItem]>.value(`conversationItems`)))
+		let perform = methodPerformValue(.m_updateConversationItems__conversationItems(Parameter<[LocalConversationItem]>.value(`conversationItems`))) as? ([LocalConversationItem]) -> Void
+		perform?(`conversationItems`)
+    }
+
+    open func removeConversationItem(withClientId clientId: UUID) {
+        addInvocation(.m_removeConversationItem__withClientId_clientId(Parameter<UUID>.value(`clientId`)))
+		let perform = methodPerformValue(.m_removeConversationItem__withClientId_clientId(Parameter<UUID>.value(`clientId`))) as? (UUID) -> Void
+		perform?(`clientId`)
     }
 
 
     fileprivate enum MethodType {
         case m_getConversationItems__ofConversationWithId_conversationId(Parameter<UUID>)
-        case m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(Parameter<UUID>, Parameter<UUID>)
+        case m_getConversationItem__withClientId_clientId(Parameter<UUID>)
         case m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback(Parameter<UUID>, Parameter<([LocalConversationItem]) -> Void>)
-        case m_addConversationItem__conversationItemtoConversationWithId_conversationId(Parameter<LocalConversationItem>, Parameter<UUID>)
-        case m_updateConversationItem__conversationIteminConversationWithId_conversationId(Parameter<LocalConversationItem>, Parameter<UUID>)
+        case m_addConversationItem__conversationItem(Parameter<LocalConversationItem>)
+        case m_updateConversationItem__conversationItem(Parameter<LocalConversationItem>)
+        case m_updateConversationItems__conversationItems(Parameter<[LocalConversationItem]>)
+        case m_removeConversationItem__withClientId_clientId(Parameter<UUID>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -124,10 +138,9 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "ofConversationWithId conversationId"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(let lhsClientid, let lhsConversationid), .m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(let rhsClientid, let rhsConversationid)):
+            case (.m_getConversationItem__withClientId_clientId(let lhsClientid), .m_getConversationItem__withClientId_clientId(let rhsClientid)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsClientid, rhs: rhsClientid, with: matcher), lhsClientid, rhsClientid, "withClientId clientId"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "inConversationWithId conversationId"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback(let lhsConversationid, let lhsCallback), .m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback(let rhsConversationid, let rhsCallback)):
@@ -136,16 +149,24 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher), lhsCallback, rhsCallback, "callback"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_addConversationItem__conversationItemtoConversationWithId_conversationId(let lhsConversationitem, let lhsConversationid), .m_addConversationItem__conversationItemtoConversationWithId_conversationId(let rhsConversationitem, let rhsConversationid)):
+            case (.m_addConversationItem__conversationItem(let lhsConversationitem), .m_addConversationItem__conversationItem(let rhsConversationitem)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationitem, rhs: rhsConversationitem, with: matcher), lhsConversationitem, rhsConversationitem, "_ conversationItem"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "toConversationWithId conversationId"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_updateConversationItem__conversationIteminConversationWithId_conversationId(let lhsConversationitem, let lhsConversationid), .m_updateConversationItem__conversationIteminConversationWithId_conversationId(let rhsConversationitem, let rhsConversationid)):
+            case (.m_updateConversationItem__conversationItem(let lhsConversationitem), .m_updateConversationItem__conversationItem(let rhsConversationitem)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationitem, rhs: rhsConversationitem, with: matcher), lhsConversationitem, rhsConversationitem, "_ conversationItem"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "inConversationWithId conversationId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_updateConversationItems__conversationItems(let lhsConversationitems), .m_updateConversationItems__conversationItems(let rhsConversationitems)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationitems, rhs: rhsConversationitems, with: matcher), lhsConversationitems, rhsConversationitems, "_ conversationItems"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_removeConversationItem__withClientId_clientId(let lhsClientid), .m_removeConversationItem__withClientId_clientId(let rhsClientid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsClientid, rhs: rhsClientid, with: matcher), lhsClientid, rhsClientid, "withClientId clientId"))
 				return Matcher.ComparisonResult(results)
             default: return .none
             }
@@ -154,19 +175,23 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
         func intValue() -> Int {
             switch self {
             case let .m_getConversationItems__ofConversationWithId_conversationId(p0): return p0.intValue
-            case let .m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(p0, p1): return p0.intValue + p1.intValue
+            case let .m_getConversationItem__withClientId_clientId(p0): return p0.intValue
             case let .m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback(p0, p1): return p0.intValue + p1.intValue
-            case let .m_addConversationItem__conversationItemtoConversationWithId_conversationId(p0, p1): return p0.intValue + p1.intValue
-            case let .m_updateConversationItem__conversationIteminConversationWithId_conversationId(p0, p1): return p0.intValue + p1.intValue
+            case let .m_addConversationItem__conversationItem(p0): return p0.intValue
+            case let .m_updateConversationItem__conversationItem(p0): return p0.intValue
+            case let .m_updateConversationItems__conversationItems(p0): return p0.intValue
+            case let .m_removeConversationItem__withClientId_clientId(p0): return p0.intValue
             }
         }
         func assertionName() -> String {
             switch self {
             case .m_getConversationItems__ofConversationWithId_conversationId: return ".getConversationItems(ofConversationWithId:)"
-            case .m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId: return ".getConversationItem(withClientId:inConversationWithId:)"
+            case .m_getConversationItem__withClientId_clientId: return ".getConversationItem(withClientId:)"
             case .m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback: return ".watchConversationItems(ofConversationWithId:callback:)"
-            case .m_addConversationItem__conversationItemtoConversationWithId_conversationId: return ".addConversationItem(_:toConversationWithId:)"
-            case .m_updateConversationItem__conversationIteminConversationWithId_conversationId: return ".updateConversationItem(_:inConversationWithId:)"
+            case .m_addConversationItem__conversationItem: return ".addConversationItem(_:)"
+            case .m_updateConversationItem__conversationItem: return ".updateConversationItem(_:)"
+            case .m_updateConversationItems__conversationItems: return ".updateConversationItems(_:)"
+            case .m_removeConversationItem__withClientId_clientId: return ".removeConversationItem(withClientId:)"
             }
         }
     }
@@ -183,8 +208,8 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
         public static func getConversationItems(ofConversationWithId conversationId: Parameter<UUID>, willReturn: [LocalConversationItem]...) -> MethodStub {
             return Given(method: .m_getConversationItems__ofConversationWithId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func getConversationItem(withClientId clientId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, willReturn: LocalConversationItem?...) -> MethodStub {
-            return Given(method: .m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(`clientId`, `conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func getConversationItem(withClientId clientId: Parameter<UUID>, willReturn: LocalConversationItem?...) -> MethodStub {
+            return Given(method: .m_getConversationItem__withClientId_clientId(`clientId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, callback: Parameter<([LocalConversationItem]) -> Void>, willReturn: Cancellable...) -> MethodStub {
             return Given(method: .m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback(`conversationId`, `callback`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -196,9 +221,9 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
 			willProduce(stubber)
 			return given
         }
-        public static func getConversationItem(withClientId clientId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, willProduce: (Stubber<LocalConversationItem?>) -> Void) -> MethodStub {
+        public static func getConversationItem(withClientId clientId: Parameter<UUID>, willProduce: (Stubber<LocalConversationItem?>) -> Void) -> MethodStub {
             let willReturn: [LocalConversationItem?] = []
-			let given: Given = { return Given(method: .m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(`clientId`, `conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_getConversationItem__withClientId_clientId(`clientId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (LocalConversationItem?).self)
 			willProduce(stubber)
 			return given
@@ -216,10 +241,12 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
         fileprivate var method: MethodType
 
         public static func getConversationItems(ofConversationWithId conversationId: Parameter<UUID>) -> Verify { return Verify(method: .m_getConversationItems__ofConversationWithId_conversationId(`conversationId`))}
-        public static func getConversationItem(withClientId clientId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>) -> Verify { return Verify(method: .m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(`clientId`, `conversationId`))}
+        public static func getConversationItem(withClientId clientId: Parameter<UUID>) -> Verify { return Verify(method: .m_getConversationItem__withClientId_clientId(`clientId`))}
         public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, callback: Parameter<([LocalConversationItem]) -> Void>) -> Verify { return Verify(method: .m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback(`conversationId`, `callback`))}
-        public static func addConversationItem(_ conversationItem: Parameter<LocalConversationItem>, toConversationWithId conversationId: Parameter<UUID>) -> Verify { return Verify(method: .m_addConversationItem__conversationItemtoConversationWithId_conversationId(`conversationItem`, `conversationId`))}
-        public static func updateConversationItem(_ conversationItem: Parameter<LocalConversationItem>, inConversationWithId conversationId: Parameter<UUID>) -> Verify { return Verify(method: .m_updateConversationItem__conversationIteminConversationWithId_conversationId(`conversationItem`, `conversationId`))}
+        public static func addConversationItem(_ conversationItem: Parameter<LocalConversationItem>) -> Verify { return Verify(method: .m_addConversationItem__conversationItem(`conversationItem`))}
+        public static func updateConversationItem(_ conversationItem: Parameter<LocalConversationItem>) -> Verify { return Verify(method: .m_updateConversationItem__conversationItem(`conversationItem`))}
+        public static func updateConversationItems(_ conversationItems: Parameter<[LocalConversationItem]>) -> Verify { return Verify(method: .m_updateConversationItems__conversationItems(`conversationItems`))}
+        public static func removeConversationItem(withClientId clientId: Parameter<UUID>) -> Verify { return Verify(method: .m_removeConversationItem__withClientId_clientId(`clientId`))}
     }
 
     public struct Perform {
@@ -229,17 +256,23 @@ open class ConversationItemLocalDataSourceMock: ConversationItemLocalDataSource,
         public static func getConversationItems(ofConversationWithId conversationId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
             return Perform(method: .m_getConversationItems__ofConversationWithId_conversationId(`conversationId`), performs: perform)
         }
-        public static func getConversationItem(withClientId clientId: Parameter<UUID>, inConversationWithId conversationId: Parameter<UUID>, perform: @escaping (UUID, UUID) -> Void) -> Perform {
-            return Perform(method: .m_getConversationItem__withClientId_clientIdinConversationWithId_conversationId(`clientId`, `conversationId`), performs: perform)
+        public static func getConversationItem(withClientId clientId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_getConversationItem__withClientId_clientId(`clientId`), performs: perform)
         }
         public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, callback: Parameter<([LocalConversationItem]) -> Void>, perform: @escaping (UUID, @escaping ([LocalConversationItem]) -> Void) -> Void) -> Perform {
             return Perform(method: .m_watchConversationItems__ofConversationWithId_conversationIdcallback_callback(`conversationId`, `callback`), performs: perform)
         }
-        public static func addConversationItem(_ conversationItem: Parameter<LocalConversationItem>, toConversationWithId conversationId: Parameter<UUID>, perform: @escaping (LocalConversationItem, UUID) -> Void) -> Perform {
-            return Perform(method: .m_addConversationItem__conversationItemtoConversationWithId_conversationId(`conversationItem`, `conversationId`), performs: perform)
+        public static func addConversationItem(_ conversationItem: Parameter<LocalConversationItem>, perform: @escaping (LocalConversationItem) -> Void) -> Perform {
+            return Perform(method: .m_addConversationItem__conversationItem(`conversationItem`), performs: perform)
         }
-        public static func updateConversationItem(_ conversationItem: Parameter<LocalConversationItem>, inConversationWithId conversationId: Parameter<UUID>, perform: @escaping (LocalConversationItem, UUID) -> Void) -> Perform {
-            return Perform(method: .m_updateConversationItem__conversationIteminConversationWithId_conversationId(`conversationItem`, `conversationId`), performs: perform)
+        public static func updateConversationItem(_ conversationItem: Parameter<LocalConversationItem>, perform: @escaping (LocalConversationItem) -> Void) -> Perform {
+            return Perform(method: .m_updateConversationItem__conversationItem(`conversationItem`), performs: perform)
+        }
+        public static func updateConversationItems(_ conversationItems: Parameter<[LocalConversationItem]>, perform: @escaping ([LocalConversationItem]) -> Void) -> Perform {
+            return Perform(method: .m_updateConversationItems__conversationItems(`conversationItems`), performs: perform)
+        }
+        public static func removeConversationItem(withClientId clientId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_removeConversationItem__withClientId_clientId(`clientId`), performs: perform)
         }
     }
 
@@ -388,16 +421,16 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
 		return __value
     }
 
-    open func send(localMessageClientId: UUID, remoteMessageInput: GQL.SendMessageContentInput, conversationId: UUID, replyToMessageId: UUID?, handler: ResultHandler<Void, GQLError>) -> Cancellable {
-        addInvocation(.m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(Parameter<UUID>.value(`localMessageClientId`), Parameter<GQL.SendMessageContentInput>.value(`remoteMessageInput`), Parameter<UUID>.value(`conversationId`), Parameter<UUID?>.value(`replyToMessageId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`)))
-		let perform = methodPerformValue(.m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(Parameter<UUID>.value(`localMessageClientId`), Parameter<GQL.SendMessageContentInput>.value(`remoteMessageInput`), Parameter<UUID>.value(`conversationId`), Parameter<UUID?>.value(`replyToMessageId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))) as? (UUID, GQL.SendMessageContentInput, UUID, UUID?, ResultHandler<Void, GQLError>) -> Void
-		perform?(`localMessageClientId`, `remoteMessageInput`, `conversationId`, `replyToMessageId`, `handler`)
+    open func send(remoteMessageInput: GQL.SendMessageInput, conversationId: UUID, handler: ResultHandler<Void, GQLError>) -> Cancellable {
+        addInvocation(.m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(Parameter<GQL.SendMessageInput>.value(`remoteMessageInput`), Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`)))
+		let perform = methodPerformValue(.m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(Parameter<GQL.SendMessageInput>.value(`remoteMessageInput`), Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))) as? (GQL.SendMessageInput, UUID, ResultHandler<Void, GQLError>) -> Void
+		perform?(`remoteMessageInput`, `conversationId`, `handler`)
 		var __value: Cancellable
 		do {
-		    __value = try methodReturnValue(.m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(Parameter<UUID>.value(`localMessageClientId`), Parameter<GQL.SendMessageContentInput>.value(`remoteMessageInput`), Parameter<UUID>.value(`conversationId`), Parameter<UUID?>.value(`replyToMessageId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))).casted()
+		    __value = try methodReturnValue(.m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(Parameter<GQL.SendMessageInput>.value(`remoteMessageInput`), Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for send(localMessageClientId: UUID, remoteMessageInput: GQL.SendMessageContentInput, conversationId: UUID, replyToMessageId: UUID?, handler: ResultHandler<Void, GQLError>). Use given")
-			Failure("Stub return value not specified for send(localMessageClientId: UUID, remoteMessageInput: GQL.SendMessageContentInput, conversationId: UUID, replyToMessageId: UUID?, handler: ResultHandler<Void, GQLError>). Use given")
+			onFatalFailure("Stub return value not specified for send(remoteMessageInput: GQL.SendMessageInput, conversationId: UUID, handler: ResultHandler<Void, GQLError>). Use given")
+			Failure("Stub return value not specified for send(remoteMessageInput: GQL.SendMessageInput, conversationId: UUID, handler: ResultHandler<Void, GQLError>). Use given")
 		}
 		return __value
     }
@@ -416,42 +449,12 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
 		return __value
     }
 
-    open func setIsTyping(_ isTyping: Bool, conversationId: UUID, handler: ResultHandler<Void, GQLError>) -> Cancellable {
-        addInvocation(.m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(Parameter<Bool>.value(`isTyping`), Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`)))
-		let perform = methodPerformValue(.m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(Parameter<Bool>.value(`isTyping`), Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))) as? (Bool, UUID, ResultHandler<Void, GQLError>) -> Void
-		perform?(`isTyping`, `conversationId`, `handler`)
-		var __value: Cancellable
-		do {
-		    __value = try methodReturnValue(.m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(Parameter<Bool>.value(`isTyping`), Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for setIsTyping(_ isTyping: Bool, conversationId: UUID, handler: ResultHandler<Void, GQLError>). Use given")
-			Failure("Stub return value not specified for setIsTyping(_ isTyping: Bool, conversationId: UUID, handler: ResultHandler<Void, GQLError>). Use given")
-		}
-		return __value
-    }
-
-    open func markConversationAsSeen(conversationId: UUID, handler: ResultHandler<Void, GQLError>) -> Cancellable {
-        addInvocation(.m_markConversationAsSeen__conversationId_conversationIdhandler_handler(Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`)))
-		let perform = methodPerformValue(.m_markConversationAsSeen__conversationId_conversationIdhandler_handler(Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))) as? (UUID, ResultHandler<Void, GQLError>) -> Void
-		perform?(`conversationId`, `handler`)
-		var __value: Cancellable
-		do {
-		    __value = try methodReturnValue(.m_markConversationAsSeen__conversationId_conversationIdhandler_handler(Parameter<UUID>.value(`conversationId`), Parameter<ResultHandler<Void, GQLError>>.value(`handler`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for markConversationAsSeen(conversationId: UUID, handler: ResultHandler<Void, GQLError>). Use given")
-			Failure("Stub return value not specified for markConversationAsSeen(conversationId: UUID, handler: ResultHandler<Void, GQLError>). Use given")
-		}
-		return __value
-    }
-
 
     fileprivate enum MethodType {
         case m_watchConversationItems__ofConversationWithId_conversationIdhandler_handler(Parameter<UUID>, Parameter<ResultHandler<RemoteConversationItems, GQLError>>)
         case m_subscribeToConversationItemsEvents__ofConversationWithId_conversationIdhandler_handler(Parameter<UUID>, Parameter<ResultHandler<RemoteConversationEvent, GQLError>>)
-        case m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(Parameter<UUID>, Parameter<GQL.SendMessageContentInput>, Parameter<UUID>, Parameter<UUID?>, Parameter<ResultHandler<Void, GQLError>>)
+        case m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(Parameter<GQL.SendMessageInput>, Parameter<UUID>, Parameter<ResultHandler<Void, GQLError>>)
         case m_delete__messageId_messageIdhandler_handler(Parameter<UUID>, Parameter<ResultHandler<Void, GQLError>>)
-        case m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(Parameter<Bool>, Parameter<UUID>, Parameter<ResultHandler<Void, GQLError>>)
-        case m_markConversationAsSeen__conversationId_conversationIdhandler_handler(Parameter<UUID>, Parameter<ResultHandler<Void, GQLError>>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -467,31 +470,16 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(let lhsLocalmessageclientid, let lhsRemotemessageinput, let lhsConversationid, let lhsReplytomessageid, let lhsHandler), .m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(let rhsLocalmessageclientid, let rhsRemotemessageinput, let rhsConversationid, let rhsReplytomessageid, let rhsHandler)):
+            case (.m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(let lhsRemotemessageinput, let lhsConversationid, let lhsHandler), .m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(let rhsRemotemessageinput, let rhsConversationid, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsLocalmessageclientid, rhs: rhsLocalmessageclientid, with: matcher), lhsLocalmessageclientid, rhsLocalmessageclientid, "localMessageClientId"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsRemotemessageinput, rhs: rhsRemotemessageinput, with: matcher), lhsRemotemessageinput, rhsRemotemessageinput, "remoteMessageInput"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "conversationId"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsReplytomessageid, rhs: rhsReplytomessageid, with: matcher), lhsReplytomessageid, rhsReplytomessageid, "replyToMessageId"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_delete__messageId_messageIdhandler_handler(let lhsMessageid, let lhsHandler), .m_delete__messageId_messageIdhandler_handler(let rhsMessageid, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessageid, rhs: rhsMessageid, with: matcher), lhsMessageid, rhsMessageid, "messageId"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
-				return Matcher.ComparisonResult(results)
-
-            case (.m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(let lhsIstyping, let lhsConversationid, let lhsHandler), .m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(let rhsIstyping, let rhsConversationid, let rhsHandler)):
-				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsIstyping, rhs: rhsIstyping, with: matcher), lhsIstyping, rhsIstyping, "_ isTyping"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "conversationId"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
-				return Matcher.ComparisonResult(results)
-
-            case (.m_markConversationAsSeen__conversationId_conversationIdhandler_handler(let lhsConversationid, let lhsHandler), .m_markConversationAsSeen__conversationId_conversationIdhandler_handler(let rhsConversationid, let rhsHandler)):
-				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "conversationId"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
             default: return .none
@@ -502,20 +490,16 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
             switch self {
             case let .m_watchConversationItems__ofConversationWithId_conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
             case let .m_subscribeToConversationItemsEvents__ofConversationWithId_conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
-            case let .m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
+            case let .m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_delete__messageId_messageIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
-            case let .m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_markConversationAsSeen__conversationId_conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
             }
         }
         func assertionName() -> String {
             switch self {
             case .m_watchConversationItems__ofConversationWithId_conversationIdhandler_handler: return ".watchConversationItems(ofConversationWithId:handler:)"
             case .m_subscribeToConversationItemsEvents__ofConversationWithId_conversationIdhandler_handler: return ".subscribeToConversationItemsEvents(ofConversationWithId:handler:)"
-            case .m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler: return ".send(localMessageClientId:remoteMessageInput:conversationId:replyToMessageId:handler:)"
+            case .m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler: return ".send(remoteMessageInput:conversationId:handler:)"
             case .m_delete__messageId_messageIdhandler_handler: return ".delete(messageId:handler:)"
-            case .m_setIsTyping__isTypingconversationId_conversationIdhandler_handler: return ".setIsTyping(_:conversationId:handler:)"
-            case .m_markConversationAsSeen__conversationId_conversationIdhandler_handler: return ".markConversationAsSeen(conversationId:handler:)"
             }
         }
     }
@@ -535,17 +519,11 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
         public static func subscribeToConversationItemsEvents(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<RemoteConversationEvent, GQLError>>, willReturn: Cancellable...) -> MethodStub {
             return Given(method: .m_subscribeToConversationItemsEvents__ofConversationWithId_conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func send(localMessageClientId: Parameter<UUID>, remoteMessageInput: Parameter<GQL.SendMessageContentInput>, conversationId: Parameter<UUID>, replyToMessageId: Parameter<UUID?>, handler: Parameter<ResultHandler<Void, GQLError>>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(`localMessageClientId`, `remoteMessageInput`, `conversationId`, `replyToMessageId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func send(remoteMessageInput: Parameter<GQL.SendMessageInput>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(`remoteMessageInput`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func delete(messageId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, willReturn: Cancellable...) -> MethodStub {
             return Given(method: .m_delete__messageId_messageIdhandler_handler(`messageId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(`isTyping`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func markConversationAsSeen(conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_markConversationAsSeen__conversationId_conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<RemoteConversationItems, GQLError>>, willProduce: (Stubber<PaginatedWatcher>) -> Void) -> MethodStub {
             let willReturn: [PaginatedWatcher] = []
@@ -561,9 +539,9 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
 			willProduce(stubber)
 			return given
         }
-        public static func send(localMessageClientId: Parameter<UUID>, remoteMessageInput: Parameter<GQL.SendMessageContentInput>, conversationId: Parameter<UUID>, replyToMessageId: Parameter<UUID?>, handler: Parameter<ResultHandler<Void, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+        public static func send(remoteMessageInput: Parameter<GQL.SendMessageInput>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
             let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(`localMessageClientId`, `remoteMessageInput`, `conversationId`, `replyToMessageId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(`remoteMessageInput`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Cancellable).self)
 			willProduce(stubber)
 			return given
@@ -575,20 +553,6 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
 			willProduce(stubber)
 			return given
         }
-        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(`isTyping`, `conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func markConversationAsSeen(conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_markConversationAsSeen__conversationId_conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
-			willProduce(stubber)
-			return given
-        }
     }
 
     public struct Verify {
@@ -596,10 +560,8 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
 
         public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<RemoteConversationItems, GQLError>>) -> Verify { return Verify(method: .m_watchConversationItems__ofConversationWithId_conversationIdhandler_handler(`conversationId`, `handler`))}
         public static func subscribeToConversationItemsEvents(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<RemoteConversationEvent, GQLError>>) -> Verify { return Verify(method: .m_subscribeToConversationItemsEvents__ofConversationWithId_conversationIdhandler_handler(`conversationId`, `handler`))}
-        public static func send(localMessageClientId: Parameter<UUID>, remoteMessageInput: Parameter<GQL.SendMessageContentInput>, conversationId: Parameter<UUID>, replyToMessageId: Parameter<UUID?>, handler: Parameter<ResultHandler<Void, GQLError>>) -> Verify { return Verify(method: .m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(`localMessageClientId`, `remoteMessageInput`, `conversationId`, `replyToMessageId`, `handler`))}
+        public static func send(remoteMessageInput: Parameter<GQL.SendMessageInput>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>) -> Verify { return Verify(method: .m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(`remoteMessageInput`, `conversationId`, `handler`))}
         public static func delete(messageId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>) -> Verify { return Verify(method: .m_delete__messageId_messageIdhandler_handler(`messageId`, `handler`))}
-        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>) -> Verify { return Verify(method: .m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(`isTyping`, `conversationId`, `handler`))}
-        public static func markConversationAsSeen(conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>) -> Verify { return Verify(method: .m_markConversationAsSeen__conversationId_conversationIdhandler_handler(`conversationId`, `handler`))}
     }
 
     public struct Perform {
@@ -612,17 +574,11 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
         public static func subscribeToConversationItemsEvents(ofConversationWithId conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<RemoteConversationEvent, GQLError>>, perform: @escaping (UUID, ResultHandler<RemoteConversationEvent, GQLError>) -> Void) -> Perform {
             return Perform(method: .m_subscribeToConversationItemsEvents__ofConversationWithId_conversationIdhandler_handler(`conversationId`, `handler`), performs: perform)
         }
-        public static func send(localMessageClientId: Parameter<UUID>, remoteMessageInput: Parameter<GQL.SendMessageContentInput>, conversationId: Parameter<UUID>, replyToMessageId: Parameter<UUID?>, handler: Parameter<ResultHandler<Void, GQLError>>, perform: @escaping (UUID, GQL.SendMessageContentInput, UUID, UUID?, ResultHandler<Void, GQLError>) -> Void) -> Perform {
-            return Perform(method: .m_send__localMessageClientId_localMessageClientIdremoteMessageInput_remoteMessageInputconversationId_conversationIdreplyToMessageId_replyToMessageIdhandler_handler(`localMessageClientId`, `remoteMessageInput`, `conversationId`, `replyToMessageId`, `handler`), performs: perform)
+        public static func send(remoteMessageInput: Parameter<GQL.SendMessageInput>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, perform: @escaping (GQL.SendMessageInput, UUID, ResultHandler<Void, GQLError>) -> Void) -> Perform {
+            return Perform(method: .m_send__remoteMessageInput_remoteMessageInputconversationId_conversationIdhandler_handler(`remoteMessageInput`, `conversationId`, `handler`), performs: perform)
         }
         public static func delete(messageId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, perform: @escaping (UUID, ResultHandler<Void, GQLError>) -> Void) -> Perform {
             return Perform(method: .m_delete__messageId_messageIdhandler_handler(`messageId`, `handler`), performs: perform)
-        }
-        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, perform: @escaping (Bool, UUID, ResultHandler<Void, GQLError>) -> Void) -> Perform {
-            return Perform(method: .m_setIsTyping__isTypingconversationId_conversationIdhandler_handler(`isTyping`, `conversationId`, `handler`), performs: perform)
-        }
-        public static func markConversationAsSeen(conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<Void, GQLError>>, perform: @escaping (UUID, ResultHandler<Void, GQLError>) -> Void) -> Perform {
-            return Perform(method: .m_markConversationAsSeen__conversationId_conversationIdhandler_handler(`conversationId`, `handler`), performs: perform)
         }
     }
 

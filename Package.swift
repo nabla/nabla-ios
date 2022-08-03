@@ -68,6 +68,7 @@ let package = Package(
             ],
             exclude: [
                 "build.sh",
+                "swiftgen.yml",
                 "Data/GQL/Schema",
             ]
         ),

@@ -15,7 +15,8 @@ class WatchConversationInteractorImpl: AuthenticatedInteractor, WatchConversatio
         guard isAuthenticated(handler: handler) else {
             return Failure()
         }
-        return repository.watchConversation(conversationId, handler: handler)
+        let transientId = repository.getConversationTransientId(from: conversationId)
+        return repository.watchConversation(withId: transientId, handler: handler)
     }
     
     // MARK: - private

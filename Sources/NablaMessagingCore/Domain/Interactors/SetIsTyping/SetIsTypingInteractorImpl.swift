@@ -4,7 +4,7 @@ import NablaCore
 final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInteractor {
     // MARK: - Initializer
 
-    init(authenticator: Authenticator, repository: ConversationItemRepository) {
+    init(authenticator: Authenticator, repository: ConversationRepository) {
         self.repository = repository
         super.init(authenticator: authenticator)
     }
@@ -19,10 +19,11 @@ final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInter
         guard isAuthenticated(handler: handler) else {
             return Failure()
         }
-        return repository.setIsTyping(isTyping, conversationId: conversationId, handler: handler)
+        let transientId = repository.getConversationTransientId(from: conversationId)
+        return repository.setIsTyping(isTyping, conversationId: transientId, handler: handler)
     }
     
     // MARK: - Private
     
-    private let repository: ConversationItemRepository
+    private let repository: ConversationRepository
 }

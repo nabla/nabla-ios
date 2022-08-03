@@ -27,9 +27,9 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testStoresMessageItems() {
         // GIVEN
-        let item = LocalTextMessageItem.mock()
+        let item = LocalTextMessageItem.mock(conversationId: conversationId)
         // WHEN
-        sut.addConversationItem(item, toConversationWithId: conversationId)
+        sut.addConversationItem(item)
         let items = sut.getConversationItems(ofConversationWithId: conversationId)
         // THEN
         XCTRequireEqual(items.count, 1)
@@ -38,10 +38,10 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testStoresMessageItemsToTheCorrectConversation() {
         // GIVEN
-        let item = LocalTextMessageItem.mock()
         let otherConversationId = UUID()
+        let item = LocalTextMessageItem.mock(conversationId: otherConversationId)
         // WHEN
-        sut.addConversationItem(item, toConversationWithId: otherConversationId)
+        sut.addConversationItem(item)
         let items = sut.getConversationItems(ofConversationWithId: conversationId)
         // THEN
         XCTRequireEqual(items.count, 0)
@@ -49,11 +49,11 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testStoresMessageItemsInDateOrder() {
         // GIVEN
-        let item1 = LocalTextMessageItem.mock(dateOffset: 0)
-        let item2 = LocalTextMessageItem.mock(dateOffset: 1)
+        let item1 = LocalTextMessageItem.mock(conversationId: conversationId, dateOffset: 0)
+        let item2 = LocalTextMessageItem.mock(conversationId: conversationId, dateOffset: 1)
         // WHEN
-        sut.addConversationItem(item2, toConversationWithId: conversationId)
-        sut.addConversationItem(item1, toConversationWithId: conversationId)
+        sut.addConversationItem(item2)
+        sut.addConversationItem(item1)
         let items = sut.getConversationItems(ofConversationWithId: conversationId)
         // THEN
         XCTRequireEqual(items.count, 2)
@@ -65,11 +65,11 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testUpdatesMessageItems() {
         // GIVEN
-        var item = LocalTextMessageItem.mock(sendingState: .toBeSent)
-        sut.addConversationItem(item, toConversationWithId: conversationId)
+        var item = LocalTextMessageItem.mock(conversationId: conversationId, sendingState: .toBeSent)
+        sut.addConversationItem(item)
         // WHEN
         item.sendingState = .failed
-        sut.updateConversationItem(item, inConversationWithId: conversationId)
+        sut.updateConversationItem(item)
         let items = sut.getConversationItems(ofConversationWithId: conversationId)
         // THEN
         XCTRequireEqual(items.count, 1)
@@ -82,8 +82,8 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testNotifiesCurrentValueOnStart() {
         // GIVEN
-        let item = LocalTextMessageItem.mock()
-        sut.addConversationItem(item, toConversationWithId: conversationId)
+        let item = LocalTextMessageItem.mock(conversationId: conversationId)
+        sut.addConversationItem(item)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
         let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
@@ -97,7 +97,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testNotifiesChangesWhenAddingMessageItem() {
         // GIVEN
-        let item = LocalTextMessageItem.mock()
+        let item = LocalTextMessageItem.mock(conversationId: conversationId)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         let watcherWasCalledWithNewValue = expectation(description: "watcher was called with new value")
         // WHEN
@@ -112,7 +112,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
                 XCTFail("Unexpect watcher callback call")
             }
         }
-        sut.addConversationItem(item, toConversationWithId: conversationId)
+        sut.addConversationItem(item)
         // THEN
         wait(for: [watcherWasCalledWithInitialValue, watcherWasCalledWithNewValue], timeout: 0)
         XCTAssertNotNil(watcher) // `watcher` must be retained past the `wait` for tests to work
@@ -120,8 +120,8 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testNotifiesChangesWhenUpdatingMessageItem() {
         // GIVEN
-        var item = LocalTextMessageItem.mock(sendingState: .toBeSent)
-        sut.addConversationItem(item, toConversationWithId: conversationId)
+        var item = LocalTextMessageItem.mock(conversationId: conversationId, sendingState: .toBeSent)
+        sut.addConversationItem(item)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         let watcherWasCalledWithUpdatedValue = expectation(description: "watcher was called with updated value")
         // WHEN
@@ -137,7 +137,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
             }
         }
         item.sendingState = .sent
-        sut.updateConversationItem(item, inConversationWithId: conversationId)
+        sut.updateConversationItem(item)
         // THEN
         wait(for: [watcherWasCalledWithInitialValue, watcherWasCalledWithUpdatedValue], timeout: 0)
         XCTAssertNotNil(watcher) // `watcher` must be retained past the `wait` for tests to work
@@ -145,8 +145,8 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testDoesNotNotifyChangesFromOtherConversations() {
         // GIVEN
-        let item = LocalTextMessageItem.mock()
         let otherConversationId = UUID()
+        let item = LocalTextMessageItem.mock(conversationId: otherConversationId)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
         let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
@@ -157,7 +157,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
                 XCTFail("Unexpect watcher callback call")
             }
         }
-        sut.addConversationItem(item, toConversationWithId: otherConversationId)
+        sut.addConversationItem(item)
         // THEN
         wait(for: [watcherWasCalledWithInitialValue], timeout: 0)
         XCTAssertNotNil(watcher) // `watcher` must be retained past the `wait` for tests to work
@@ -165,7 +165,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testStopsNotifyingChangesWhenCancelled() {
         // GIVEN
-        let item = LocalTextMessageItem.mock()
+        let item = LocalTextMessageItem.mock(conversationId: conversationId)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
         let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
@@ -177,7 +177,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
             }
         }
         watcher.cancel()
-        sut.addConversationItem(item, toConversationWithId: conversationId)
+        sut.addConversationItem(item)
         // THEN
         wait(for: [watcherWasCalledWithInitialValue], timeout: 0)
         XCTAssertNotNil(watcher)
@@ -185,7 +185,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
     
     func testStopsNotifyingChangesWhenDeallocated() {
         // GIVEN
-        let item = LocalTextMessageItem.mock()
+        let item = LocalTextMessageItem.mock(conversationId: conversationId)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
         var watcher: Cancellable? = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
@@ -197,7 +197,7 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
             }
         }
         watcher = nil
-        sut.addConversationItem(item, toConversationWithId: conversationId)
+        sut.addConversationItem(item)
         // THEN
         wait(for: [watcherWasCalledWithInitialValue], timeout: 0)
         XCTAssertNil(watcher) // Silences "variable 'watcher' was written to, but never read" warning

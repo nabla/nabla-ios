@@ -6,6 +6,45 @@ import Foundation
 
 /// GQL namespace
 public enum GQL {
+  public struct SendMessageInput: GraphQLMapConvertible {
+    public var graphQLMap: GraphQLMap
+
+    /// - Parameters:
+    ///   - content
+    ///   - clientId
+    ///   - replyToMessageId
+    public init(content: SendMessageContentInput, clientId: GQL.UUID, replyToMessageId: Swift.Optional<GQL.UUID?> = nil) {
+      graphQLMap = ["content": content, "clientId": clientId, "replyToMessageId": replyToMessageId]
+    }
+
+    public var content: SendMessageContentInput {
+      get {
+        return graphQLMap["content"] as! SendMessageContentInput
+      }
+      set {
+        graphQLMap.updateValue(newValue, forKey: "content")
+      }
+    }
+
+    public var clientId: GQL.UUID {
+      get {
+        return graphQLMap["clientId"] as! GQL.UUID
+      }
+      set {
+        graphQLMap.updateValue(newValue, forKey: "clientId")
+      }
+    }
+
+    public var replyToMessageId: Swift.Optional<GQL.UUID?> {
+      get {
+        return graphQLMap["replyToMessageId"] as? Swift.Optional<GQL.UUID?> ?? Swift.Optional<GQL.UUID?>.none
+      }
+      set {
+        graphQLMap.updateValue(newValue, forKey: "replyToMessageId")
+      }
+    }
+  }
+
   public struct SendMessageContentInput: GraphQLMapConvertible {
     public var graphQLMap: GraphQLMap
 

@@ -4,8 +4,13 @@ import NablaCore
 final class RetrySendingMessageInteractorImpl: AuthenticatedInteractor, RetrySendingMessageInteractor {
     // MARK: - Initializer
 
-    init(authenticator: Authenticator, repository: ConversationItemRepository) {
-        self.repository = repository
+    init(
+        authenticator: Authenticator,
+        itemsRepository: ConversationItemRepository,
+        conversationsRepository: ConversationRepository
+    ) {
+        self.itemsRepository = itemsRepository
+        self.conversationsRepository = conversationsRepository
         super.init(authenticator: authenticator)
     }
 
@@ -19,10 +24,12 @@ final class RetrySendingMessageInteractorImpl: AuthenticatedInteractor, RetrySen
         guard isAuthenticated(handler: handler) else {
             return Failure()
         }
-        return repository.retrySending(itemWithId: itemId, inConversationWithId: conversationId, handler: handler)
+        let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
+        return itemsRepository.retrySending(itemWithId: itemId, inConversationWithId: transientId, handler: handler)
     }
     
     // MARK: - Private
     
-    private let repository: ConversationItemRepository
+    private let itemsRepository: ConversationItemRepository
+    private let conversationsRepository: ConversationRepository
 }

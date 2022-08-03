@@ -1,10 +1,12 @@
 mutation CreateConversation(
     $title: String,
     $providerIds: [UUID!],
+    $initialMessage: SendMessageInput
 ) {
     createConversation(
         title: $title,
         providerIds: $providerIds,
+        initialMessage: $initialMessage
     ) {
         conversation {
             ...ConversationFragment

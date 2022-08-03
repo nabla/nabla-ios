@@ -19,14 +19,24 @@ public class NablaMessagingClient {
     public func createConversation(
         title: String? = nil,
         providerIds: [UUID]? = nil,
-        handler: @escaping (Result<Conversation, NablaError>
-        ) -> Void
+        handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
         container.createConversationInteractor.execute(
             title: title,
             providerIds: providerIds,
             handler: .init(handler)
         )
+    }
+    
+    /// Create a new conversation on the user's device. The conversation won't be sent to the server until at least one message is sent.
+    /// - Parameter title: optional - title for the conversation
+    /// - Parameter providerIds: optional - list providers ids that will participate in the conversation. Make sure the specified providers have enough rights to participate to a conversation. See [Roles and Permissions](https://docs.nabla.com/docs/roles-and-permissions).
+    /// - Returns: The created ``Conversation``.
+    public func createDraftConversation(
+        title: String? = nil,
+        providerIds: [UUID]? = nil
+    ) -> Conversation {
+        container.createDraftConversationInteractor.execute(title: title, providerIds: providerIds)
     }
 
     /// Watch the list of messages in a conversation.
@@ -83,7 +93,9 @@ public class NablaMessagingClient {
     /// Watch the list of conversations the current user is involved in.
     /// - Parameter handler: The callback to call when new items are received.
     /// - Returns: A ``PaginatedWatcher`` of the task
-    public func watchConversations(handler: @escaping (Result<ConversationList, NablaError>) -> Void) -> PaginatedWatcher {
+    public func watchConversations(
+        handler: @escaping (Result<ConversationList, NablaError>) -> Void
+    ) -> PaginatedWatcher {
         container.watchConversationsInteractor.execute(handler: .init(handler))
     }
 

@@ -5,21 +5,14 @@ class ConversationItemsMerger: PaginatedWatcher {
     // MARK: - Internal
     
     func resume() {
-        remoteWatcher = remoteDataSource.watchConversationItems(
-            ofConversationWithId: conversationId,
-            handler: .init { [weak self] result in
-                guard let self = self else {
-                    return
-                }
-                self.remoteData = result
-                self.notifyNewValues()
+        observeLocalData(localId: conversationId.localId)
+        
+        if let remoteId = conversationId.remoteId {
+            observeRemoteData(remoteId: remoteId)
+        } else {
+            remoteIdObserver = conversationId.observeRemoteId { [weak self] remoteId in
+                self?.observeRemoteData(remoteId: remoteId)
             }
-        )
-
-        localWatcher = localDataSource.watchConversationItems(ofConversationWithId: conversationId) { [weak self] items in
-            guard let self = self else { return }
-            self.localData = items
-            self.notifyNewValues()
         }
     }
     
@@ -44,17 +37,18 @@ class ConversationItemsMerger: PaginatedWatcher {
     func cancel() {
         localWatcher?.cancel()
         remoteWatcher?.cancel()
+        remoteIdObserver?.cancel()
     }
     
     init(
+        conversationId: TransientUUID,
         remoteDataSource: ConversationItemRemoteDataSource,
         localDataSource: ConversationItemLocalDataSource,
-        conversationId: UUID,
         handler: ResultHandler<ConversationItems, GQLError>
     ) {
+        self.conversationId = conversationId
         self.remoteDataSource = remoteDataSource
         self.localDataSource = localDataSource
-        self.conversationId = conversationId
         self.handler = handler
     }
     
@@ -67,34 +61,52 @@ class ConversationItemsMerger: PaginatedWatcher {
     private let remoteDataSource: ConversationItemRemoteDataSource
     private let localDataSource: ConversationItemLocalDataSource
     
-    private let conversationId: UUID
+    private let conversationId: TransientUUID
     private let handler: ResultHandler<ConversationItems, GQLError>
     
     private var remoteWatcher: PaginatedWatcher?
     private var localWatcher: Cancellable?
+    private var remoteIdObserver: Cancellable?
     
     private var remoteData: Result<RemoteConversationItems, GQLError>?
     private var localData: [LocalConversationItem]?
     
+    private func observeLocalData(localId: UUID) {
+        localWatcher = localDataSource.watchConversationItems(ofConversationWithId: localId) { [weak self] items in
+            guard let self = self else { return }
+            self.localData = items
+            self.notifyNewValues()
+        }
+    }
+    
+    private func observeRemoteData(remoteId: UUID) {
+        remoteWatcher = remoteDataSource.watchConversationItems(
+            ofConversationWithId: remoteId,
+            handler: .init { [weak self] result in
+                guard let self = self else { return }
+                self.remoteData = result
+                self.notifyNewValues()
+            }
+        )
+    }
+    
     private func notifyNewValues() {
-        let remoteConversation: RemoteConversationItems
+        let remoteConversation: RemoteConversationItems.Conversation.Conversation?
         switch remoteData {
         case .none:
-            return // Wait for remote data before emitting any value
+            remoteConversation = nil
         case let .success(remoteData):
-            remoteConversation = remoteData
+            remoteConversation = remoteData.conversation.conversation
         case let .failure(error):
             handler(.failure(error))
             return
         }
         
-        let item = remoteConversation.conversation.conversation.items
         let localItems = localData ?? []
-        let remoteItems = item.data.compactMap { $0?.fragments.conversationItemFragment }
+        let remoteItems = remoteConversation?.items.data.compactMap { $0?.fragments.conversationItemFragment } ?? []
         let mergedItems = merge(remoteItems, localItems)
         let newValue = ConversationItems(
-            conversationId: remoteConversation.conversation.conversation.id,
-            hasMore: item.hasMore,
+            hasMore: remoteConversation?.items.hasMore ?? false,
             items: mergedItems
         )
         handler(.success(newValue))

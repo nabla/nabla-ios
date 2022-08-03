@@ -9,9 +9,13 @@ protocol NablaMessagingClientProtocol {
     func createConversation(
         title: String?,
         providerIds: [UUID]?,
-        handler: @escaping (Result<Conversation, NablaError>
-        ) -> Void
+        handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable
+    
+    func createDraftConversation(
+        title: String?,
+        providerIds: [UUID]?
+    ) -> Conversation
 
     func watchItems(
         ofConversationWithId conversationId: UUID,
@@ -90,6 +94,20 @@ extension NablaMessagingClientProtocol {
             title: nil,
             providerIds: nil,
             handler: handler
+        )
+    }
+    
+    func createDraftConversation() -> Conversation {
+        createDraftConversation(
+            title: nil,
+            providerIds: nil
+        )
+    }
+    
+    func createDraftConversation(title: String?) -> Conversation {
+        createDraftConversation(
+            title: title,
+            providerIds: nil
         )
     }
 }

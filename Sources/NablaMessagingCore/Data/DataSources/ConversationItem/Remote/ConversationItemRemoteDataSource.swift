@@ -14,26 +14,13 @@ protocol ConversationItemRemoteDataSource {
     ) -> Cancellable
     
     func send(
-        localMessageClientId: UUID,
-        remoteMessageInput: GQL.SendMessageContentInput,
+        remoteMessageInput: GQL.SendMessageInput,
         conversationId: UUID,
-        replyToMessageId: UUID?,
         handler: ResultHandler<Void, GQLError>
     ) -> Cancellable
     
     func delete(
         messageId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable
-    
-    func setIsTyping(
-        _ isTyping: Bool,
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable
-    
-    func markConversationAsSeen(
-        conversationId: UUID,
         handler: ResultHandler<Void, GQLError>
     ) -> Cancellable
 }

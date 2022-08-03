@@ -10,11 +10,8 @@ public extension GQL {
     /// The raw GraphQL definition of this operation.
     public let operationDefinition: String =
       """
-      mutation SendMessage($conversationId: UUID!, $content: SendMessageContentInput!, $clientId: UUID!, $replyToMessageId: UUID) {
-        sendMessageV2(
-          conversationId: $conversationId
-          input: {content: $content, clientId: $clientId, replyToMessageId: $replyToMessageId}
-        ) {
+      mutation SendMessage($conversationId: UUID!, $input: SendMessageInput!) {
+        sendMessageV2(conversationId: $conversationId, input: $input) {
           __typename
           message {
             __typename
@@ -45,19 +42,15 @@ public extension GQL {
     }
 
     public var conversationId: GQL.UUID
-    public var content: SendMessageContentInput
-    public var clientId: GQL.UUID
-    public var replyToMessageId: GQL.UUID?
+    public var input: SendMessageInput
 
-    public init(conversationId: GQL.UUID, content: SendMessageContentInput, clientId: GQL.UUID, replyToMessageId: GQL.UUID? = nil) {
+    public init(conversationId: GQL.UUID, input: SendMessageInput) {
       self.conversationId = conversationId
-      self.content = content
-      self.clientId = clientId
-      self.replyToMessageId = replyToMessageId
+      self.input = input
     }
 
     public var variables: GraphQLMap? {
-      return ["conversationId": conversationId, "content": content, "clientId": clientId, "replyToMessageId": replyToMessageId]
+      return ["conversationId": conversationId, "input": input]
     }
 
     public struct Data: GraphQLSelectionSet {
@@ -65,7 +58,7 @@ public extension GQL {
 
       public static var selections: [GraphQLSelection] {
         return [
-          GraphQLField("sendMessageV2", arguments: ["conversationId": GraphQLVariable("conversationId"), "input": ["content": GraphQLVariable("content"), "clientId": GraphQLVariable("clientId"), "replyToMessageId": GraphQLVariable("replyToMessageId")]], type: .nonNull(.object(SendMessageV2.selections))),
+          GraphQLField("sendMessageV2", arguments: ["conversationId": GraphQLVariable("conversationId"), "input": GraphQLVariable("input")], type: .nonNull(.object(SendMessageV2.selections))),
         ]
       }
 
