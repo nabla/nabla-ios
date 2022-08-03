@@ -11,7 +11,7 @@ class UmbrellaCancellable: Cancellable {
     // MARK: - Cancellable
     
     func cancel() {
-        children.forEach { $0.cancel() }
+        children.removeAll() // Whe do not own the `children`, we only release them. Someone else might still use them.
         isCancelled = true
     }
     

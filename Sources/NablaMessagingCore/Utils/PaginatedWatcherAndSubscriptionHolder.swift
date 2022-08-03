@@ -10,7 +10,7 @@ final class PaginatedWatcherAndSubscriptionHolder: PaginatedWatcher {
     
     func cancel() {
         watcher.cancel()
-        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll() // Whe do not own the `cancellables`, we only release them. Someone else might still use them.
     }
     
     func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
