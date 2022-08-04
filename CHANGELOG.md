@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha11] - 2022-08-04
+
+### Added
+
 - Introduced `NablaMessagingClient.createDraftConversation` to create a conversation locally that does not exist yet server side.
 - Adds some `initialMessage` argument to `createConversation` to pre-populate conversations.
 - Server-made i18n will now follow user's device language.
