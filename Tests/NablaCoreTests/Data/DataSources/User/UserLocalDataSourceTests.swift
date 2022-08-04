@@ -28,8 +28,8 @@ class UserLocalDataSourceTests: XCTestCase {
         _ = sut.getCurrentUser()
         sut.setCurrentUser(nil)
         // THEN
-        Verify(store, .get(forKey: .value("currentUser")))
-        Verify(store, .set(.any(LocalUser?.self), forKey: .value("currentUser")))
+        Verify(store, .get(forKey: .value("currentUser_v2")))
+        Verify(store, .set(.any(LocalUser?.self), forKey: .value("currentUser_v2")))
     }
     
     // MARK: getCurrentUser()

@@ -7,7 +7,7 @@ public enum AuthenticationState {
 
 public protocol Authenticator {
     func authenticate(
-        userId: UUID,
+        userId: String,
         provider: SessionTokenProvider
     )
     func logOut()

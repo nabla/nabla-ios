@@ -3,12 +3,12 @@ import Foundation
 class Session {
     // MARK: - Internal
     
-    let userId: UUID
+    let userId: String
     let provider: SessionTokenProvider
     var authTokens: AuthTokens?
     
     init(
-        userId: UUID,
+        userId: String,
         provider: SessionTokenProvider,
         authTokens: AuthTokens?
     ) {

@@ -9,7 +9,7 @@ class ViewController: DemoViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let userId = UUID() // Replace with your own `userId`
+        let userId = "dummy_user_id" // In a real scenario, you need to replace it with your own stable user id.
         NablaClient.shared.authenticate(userId: userId, provider: FakeAuthenticator.shared)
         let view = NablaViewFactory.createConversationListView(delegate: self)
         setContentView(view)

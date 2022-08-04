@@ -10,7 +10,7 @@ class AuthenticatorImpl: Authenticator {
     // MARK: - Internal
     
     func authenticate(
-        userId: UUID,
+        userId: String,
         provider: SessionTokenProvider
     ) {
         session = Session(

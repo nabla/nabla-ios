@@ -31,7 +31,7 @@ class UserLocalDataSourceImpl: UserLocalDataSource {
     // MARK: - Private
     
     private enum Constants {
-        static let currentUserStoreKey = "currentUser"
+        static let currentUserStoreKey = "currentUser_v2"
     }
     
     private let logger: Logger

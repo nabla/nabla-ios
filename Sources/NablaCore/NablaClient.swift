@@ -69,10 +69,10 @@ public class NablaClient {
 
     /// Authenticate the current user.
     /// - Parameters:
-    ///   - userId: Identifies the user between sessions.
+    ///   - userId: Identifies the user between sessions, will be passed when calling the ``SessionTokenProvider``.
     ///   - provider: ``Tokens`` provider
     public func authenticate(
-        userId: UUID,
+        userId: String,
         provider: SessionTokenProvider
     ) {
         if let currentUser = container.userRepository.getCurrentUser(), currentUser.id != userId {

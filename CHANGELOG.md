@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Server-made i18n will now follow user's device language.
 
 ### Changed
+- `NablaClient.authenticate` now takes a `String` rather than a `UUID` to identify the user. This ID should be uniquely representing your current app user and will be passed to the `SessionTokenProvider` when a call to your backend is needed to get fresh authentication tokens.
 
 ### Fixed
 

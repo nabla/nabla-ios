@@ -1,5 +1,5 @@
 import Foundation
 
 public struct User: Codable {
-    public let id: UUID
+    public let id: String
 }

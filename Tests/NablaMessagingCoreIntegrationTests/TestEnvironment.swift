@@ -17,8 +17,7 @@ struct TestEnvironment {
     let session: DVR.Session
     
     static func make(filePath: String = #filePath, function: String = #function) -> TestEnvironment {
-        // swiftlint:disable:next force_unwrapping
-        let userId = UUID(uuidString: "64cffe69-0746-46ea-979b-13f933958087")!
+        let userId = "64cffe69-0746-46ea-979b-13f933958087"
         let session = makeMockSession(filePath: filePath, function: function)
         let networkConfiguration = NetworkConfiguration(session: session)
         let coreContainer = CoreContainer(
@@ -58,7 +57,7 @@ struct TestEnvironment {
 }
 
 extension TestEnvironment: SessionTokenProvider {
-    func provideTokens(forUserId _: UUID, completion: (AuthTokens?) -> Void) {
+    func provideTokens(forUserId _: String, completion: (AuthTokens?) -> Void) {
         completion(
             .init(
                 // Expires 07/06/2054
