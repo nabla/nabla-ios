@@ -30,9 +30,13 @@ class TransientUUID {
     init(localId: UUID, remoteId: UUID?) {
         self.localId = localId
         self.remoteId = remoteId
+        
+        selfObserveCancellable = observeRemoteId { _ in }
     }
     
     // MARK: - Private
     
     private lazy var remoteIdNotifier: Notifier<UUID> = .init(id: localId.uuidString)
+    
+    private var selfObserveCancellable: Cancellable?
 }

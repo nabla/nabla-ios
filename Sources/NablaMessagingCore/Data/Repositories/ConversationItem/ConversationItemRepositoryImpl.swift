@@ -459,6 +459,9 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             itemsLocalDataSource.updateConversationItem(copy)
             toBeSentMessageHandlers[copy.clientId] = handler
             return Success()
+        } else if let remoteId = conversationId.remoteId {
+            // Last minute check in case the conversation has been created since previous checks
+            return performSend(localConversationMessage, inConversationWithId: remoteId, handler: handler)
         } else {
             conversationsBeingCreated.insert(conversationId.localId)
             copy.sendingState = .sending

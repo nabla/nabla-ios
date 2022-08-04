@@ -91,6 +91,19 @@ class TransientUUIDTests: XCTestCase {
         XCTAssertNotNil(cancellable2)
     }
     
+    func testMultipleInstancesWithTheSameLocalIdShareRemoteIdEvenWithoutObserver() {
+        // GIVEN
+        let localId = UUID()
+        let sut1 = TransientUUID(localId: localId, remoteId: nil)
+        let sut2 = TransientUUID(localId: localId, remoteId: nil)
+        let futurRemoteId = UUID()
+        // WHEN
+        sut1.set(remoteId: futurRemoteId)
+        // THEN
+        XCTAssertEqual(sut1.remoteId, futurRemoteId)
+        XCTAssertEqual(sut2.remoteId, futurRemoteId)
+    }
+    
     func testMultipleInstancesWithDifferentLocalIdDontShareRemoteIdObserver() {
         // GIVEN
         let sut1 = TransientUUID(localId: UUID(), remoteId: nil)
