@@ -11,7 +11,7 @@ protocol ConversationRepository {
     func createConversation(
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: GQL.SendMessageInput?,
+        initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> Cancellable
     

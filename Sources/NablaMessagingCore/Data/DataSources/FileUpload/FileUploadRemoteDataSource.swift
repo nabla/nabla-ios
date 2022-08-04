@@ -7,5 +7,5 @@ enum FileUploadRemoteDataSourceError: Error {
 }
 
 protocol FileUploadRemoteDataSource {
-    func upload(file: RemoteFileUpload, handler: ResultHandler<UUID, FileUploadRemoteDataSourceError>)
+    func upload(file: RemoteFileUpload, handler: ResultHandler<UUID, FileUploadRemoteDataSourceError>) -> Cancellable
 }

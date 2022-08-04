@@ -13,10 +13,10 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
     func upload(
         file: RemoteFileUpload,
         handler: ResultHandler<UUID, FileUploadRemoteDataSourceError>
-    ) {
+    ) -> Cancellable {
         guard let data = try? Data(contentsOf: file.fileUrl) else {
             handler(.failure(.cannotReadFileData))
-            return
+            return Failure()
         }
         
         let upload = UploadData(
@@ -25,7 +25,7 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
             fileName: file.fileName,
             mimeType: file.mimeType
         )
-        uploadClient.upload(
+        return uploadClient.upload(
             upload,
             handler: handler.pullbackError(FileUploadRemoteDataSourceError.uploadError)
         )

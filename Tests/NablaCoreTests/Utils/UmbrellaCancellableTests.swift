@@ -1,6 +1,5 @@
 @testable import NablaCore
 import NablaCoreTestsUtils
-@testable import NablaMessagingCore
 import XCTest
 
 class UmbrellaCancellableTests: XCTestCase {

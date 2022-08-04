@@ -19,11 +19,13 @@ public class NablaMessagingClient {
     public func createConversation(
         title: String? = nil,
         providerIds: [UUID]? = nil,
+        initialMessage: MessageInput? = nil,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
         container.createConversationInteractor.execute(
             title: title,
             providerIds: providerIds,
+            initialMessage: initialMessage,
             handler: .init(handler)
         )
     }

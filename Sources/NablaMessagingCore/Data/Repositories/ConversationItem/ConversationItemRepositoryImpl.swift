@@ -315,39 +315,39 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         conversationId: TransientUUID,
         handler: ResultHandler<Void, NablaError>
     ) -> UmbrellaCancellable {
-        let umbrellaCancellable = UmbrellaCancellable()
-        makeRemoteMessageInput(
+        let umbrella = UmbrellaCancellable()
+        let task = makeRemoteMessageInput(
             from: localConversationMessage,
-            handler: .init { [weak self] result in
-                guard let self = self else { return }
+            handler: .init { [weak self, weak umbrella] result in
+                guard let self = self, let umbrella = umbrella, !umbrella.isCancelled else { return }
                 
                 switch result {
                 case let .success(remoteMessage):
-                    guard !umbrellaCancellable.isCancelled else { return }
                     let task = self.sendMessage(
                         remoteMessage,
                         existingLocalConversationMessage: localConversationMessage,
                         inConversationWithId: conversationId,
                         handler: handler
                     )
-                    umbrellaCancellable.add(task)
+                    umbrella.add(task)
                 case let .failure(error):
                     handler(.failure(error))
                 }
             }
         )
-        return umbrellaCancellable
+        umbrella.add(task)
+        return umbrella
     }
     
     private func makeRemoteMessageInput(
         from localConversationItem: LocalConversationItem,
         handler: ResultHandler<RemoteMessageInput, NablaError>
-    ) {
+    ) -> Cancellable {
         if let localTextItem = localConversationItem as? LocalTextMessageItem {
             handler(.success(.text(localTextItem.content)))
         } else if let localImageItem = localConversationItem as? LocalImageMessageItem {
             let media = localImageItem.content.media
-            fileUploadRemoteDataSource.upload(
+            return fileUploadRemoteDataSource.upload(
                 file: transform(media),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError)
@@ -355,7 +355,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             )
         } else if let localDocumentItem = localConversationItem as? LocalDocumentMessageItem {
             let media = localDocumentItem.content.media
-            fileUploadRemoteDataSource.upload(
+            return fileUploadRemoteDataSource.upload(
                 file: transform(media),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError)
@@ -363,7 +363,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             )
         } else if let localAudioItem = localConversationItem as? LocalAudioMessageItem {
             let media = localAudioItem.content.media
-            fileUploadRemoteDataSource.upload(
+            return fileUploadRemoteDataSource.upload(
                 file: transform(media),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError)
@@ -371,15 +371,16 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             )
         } else if let localVideoItem = localConversationItem as? LocalVideoMessageItem {
             let media = localVideoItem.content.media
-            fileUploadRemoteDataSource.upload(
+            return fileUploadRemoteDataSource.upload(
                 file: transform(media),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError)
                     .pullback { .video(.init(fileUploadUUID: $0, media: media)) }
             )
-        } else {
-            logger.error(message: "Unknown local conversation item", extra: ["type": type(of: localConversationItem)])
         }
+        
+        logger.error(message: "Unknown local conversation item", extra: ["type": type(of: localConversationItem)])
+        return Failure()
     }
     
     private func sendMessage(
@@ -544,15 +545,15 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             return ServerError(underlyingError: error)
         }
     }
-}
-
-private func transform(_ media: Media) -> RemoteFileUpload {
-    .init(
-        fileName: media.fileName,
-        fileUrl: media.fileUrl,
-        mimeType: media.mimeType,
-        purpose: .message
-    )
+    
+    private func transform(_ media: Media) -> RemoteFileUpload {
+        .init(
+            fileName: media.fileName,
+            fileUrl: media.fileUrl,
+            mimeType: media.mimeType,
+            purpose: .message
+        )
+    }
 }
 
 private struct Weak<T: AnyObject> {

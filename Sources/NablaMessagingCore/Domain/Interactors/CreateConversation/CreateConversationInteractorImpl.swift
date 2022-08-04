@@ -14,6 +14,7 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
     func execute(
         title: String?,
         providerIds: [UUID]?,
+        initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> Cancellable {
         guard isAuthenticated(handler: handler) else {
@@ -22,7 +23,7 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
         return repository.createConversation(
             title: title,
             providerIds: providerIds,
-            initialMessage: nil,
+            initialMessage: initialMessage,
             handler: handler
         )
     }

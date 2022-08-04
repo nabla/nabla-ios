@@ -9,10 +9,12 @@ class ConversationRepositoryImpl: ConversationRepository {
 
     init(
         remoteDataSource: ConversationRemoteDataSource,
-        localDataSource: ConversationLocalDataSource
+        localDataSource: ConversationLocalDataSource,
+        fileUploadDataSource: FileUploadRemoteDataSource
     ) {
         self.remoteDataSource = remoteDataSource
         self.localDataSource = localDataSource
+        self.fileUploadDataSource = fileUploadDataSource
     }
 
     // MARK: - Internal
@@ -76,26 +78,43 @@ class ConversationRepositoryImpl: ConversationRepository {
     func createConversation(
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: GQL.SendMessageInput?,
+        initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> Cancellable {
-        remoteDataSource.createConversation(
-            title: title,
-            providerIds: providerIds,
-            initialMessage: initialMessage,
-            handler: handler
-                .pullbackError { error in
-                    switch error {
-                    case let .entityNotFound(message):
-                        return ProviderNotFoundError(message: message)
-                    case let .permissionRequired(message):
-                        return ProviderMissingPermissionError(message: message)
-                    default:
-                        return GQLErrorTransformer.transform(gqlError: error)
-                    }
+        let umbrella = UmbrellaCancellable()
+        
+        let prepareTask = prepareInitialMessage(
+            initialMessage,
+            handler: .init { [weak umbrella, remoteDataSource] result in
+                guard let umbrella = umbrella, !umbrella.isCancelled else { return }
+                
+                switch result {
+                case let .failure(error):
+                    handler(.failure(error))
+                case let .success(intialMessageInput):
+                    let createTask = remoteDataSource.createConversation(
+                        title: title,
+                        providerIds: providerIds,
+                        initialMessage: intialMessageInput,
+                        handler: handler
+                            .pullbackError { error in
+                                switch error {
+                                case let .entityNotFound(message):
+                                    return ProviderNotFoundError(message: message)
+                                case let .permissionRequired(message):
+                                    return ProviderMissingPermissionError(message: message)
+                                default:
+                                    return GQLErrorTransformer.transform(gqlError: error)
+                                }
+                            }
+                            .pullback(ConversationTransformer.transform)
+                    )
+                    umbrella.add(createTask)
                 }
-                .pullback(ConversationTransformer.transform)
+            }
         )
+        umbrella.add(prepareTask)
+        return umbrella
     }
     
     func createDraftConversation(
@@ -133,6 +152,7 @@ class ConversationRepositoryImpl: ConversationRepository {
     
     private let remoteDataSource: ConversationRemoteDataSource
     private let localDataSource: ConversationLocalDataSource
+    private let fileUploadDataSource: FileUploadRemoteDataSource
 
     private weak var conversationsEventsSubscription: Cancellable?
     private let remoteTypingDebouncer: Debouncer = .init(
@@ -149,86 +169,66 @@ class ConversationRepositoryImpl: ConversationRepository {
         conversationsEventsSubscription = subscription
         return subscription
     }
-}
-
-private final class ConversationWatcher: Watcher {
-    // MARK: - Internal
     
-    func refetch() {
-        remoteWatcher?.refetch()
-    }
-    
-    func cancel() {
-        localWatcher?.cancel()
-        remoteWatcher?.cancel()
-        remoteIdObserver?.cancel()
-    }
-    
-    init(
-        conversationId: TransientUUID,
-        localDataSource: ConversationLocalDataSource,
-        remoteDataSource: ConversationRemoteDataSource,
-        handler: ResultHandler<Conversation, GQLError>
-    ) {
-        self.conversationId = conversationId
-        self.handler = handler
-        self.localDataSource = localDataSource
-        self.remoteDataSource = remoteDataSource
+    private func prepareInitialMessage(
+        _ message: MessageInput?,
+        handler: ResultHandler<GQL.SendMessageInput?, NablaError>
+    ) -> Cancellable {
+        guard let message = message else {
+            handler(.success(nil))
+            return Success()
+        }
         
-        if let remoteId = conversationId.remoteId {
-            observeRemoteData(remoteId: remoteId)
-        } else {
-            observeLocalData(localId: conversationId.localId)
-            
-            remoteIdObserver = conversationId.observeRemoteId { [weak self] remoteId in
-                self?.observeRemoteData(remoteId: remoteId)
-            }
+        switch message {
+        case let .text(content):
+            handler(.success(.init(content: .init(textInput: .init(text: content)), clientId: .init())))
+            return Success()
+        case let .image(content):
+            return fileUploadDataSource.upload(
+                file: transform(content),
+                handler: handler
+                    .pullbackError(Self.transformFileUploadError(_:))
+                    .pullback { .init(content: .init(imageInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+            )
+        case let .video(content):
+            return fileUploadDataSource.upload(
+                file: transform(content),
+                handler: handler
+                    .pullbackError(Self.transformFileUploadError(_:))
+                    .pullback { .init(content: .init(videoInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+            )
+        case let .document(content):
+            return fileUploadDataSource.upload(
+                file: transform(content),
+                handler: handler
+                    .pullbackError(Self.transformFileUploadError(_:))
+                    .pullback { .init(content: .init(documentInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+            )
+        case let .audio(content):
+            return fileUploadDataSource.upload(
+                file: transform(content),
+                handler: handler
+                    .pullbackError(Self.transformFileUploadError(_:))
+                    .pullback { .init(content: .init(audioInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+            )
         }
     }
     
-    deinit {
-        cancel()
-    }
-    
-    // MARK: - Private
-    
-    private let conversationId: TransientUUID
-    private let handler: ResultHandler<Conversation, GQLError>
-    private let localDataSource: ConversationLocalDataSource
-    private let remoteDataSource: ConversationRemoteDataSource
-    
-    private var localWatcher: Cancellable?
-    private var remoteIdObserver: Cancellable?
-    private var remoteWatcher: Watcher?
-    
-    private var remoteConversationResult: Result<RemoteConversation, GQLError>?
-    private var localConversation: LocalConversation?
-    
-    private func observeLocalData(localId: UUID) {
-        localWatcher = localDataSource.watchConversation(localId) { [weak self] localConversation in
-            self?.localConversation = localConversation
-            self?.notifyChange()
-        }
-    }
-    
-    private func observeRemoteData(remoteId: UUID) {
-        remoteWatcher = remoteDataSource.watchConversation(
-            remoteId,
-            handler: .init { [weak self] result in
-                self?.remoteConversationResult = result
-                self?.notifyChange()
-            }
+    private func transform(_ media: Media) -> RemoteFileUpload {
+        .init(
+            fileName: media.fileName,
+            fileUrl: media.fileUrl,
+            mimeType: media.mimeType,
+            purpose: .message
         )
     }
     
-    private func notifyChange() {
-        if let remoteConversationResult = remoteConversationResult {
-            switch remoteConversationResult {
-            case let .failure(error): handler(.failure(error))
-            case let .success(conversation): handler(.success(ConversationTransformer.transform(fragment: conversation)))
-            }
-        } else if let localConversation = localConversation {
-            handler(.success(ConversationTransformer.transform(conversation: localConversation)))
+    private static func transformFileUploadError(_ error: FileUploadRemoteDataSourceError) -> NablaError {
+        switch error {
+        case .cannotReadFileData:
+            return CanNotReadFileDataError()
+        case let .uploadError(error):
+            return ServerError(underlyingError: error)
         }
     }
 }

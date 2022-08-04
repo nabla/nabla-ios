@@ -42,20 +42,26 @@ public final class UploadClient {
 
     // MARK: - Public
     
-    public func upload(_ data: UploadData, handler: ResultHandler<UUID, UploadClientError>) {
+    public func upload(_ data: UploadData, handler: ResultHandler<UUID, UploadClientError>) -> Cancellable {
+        let umbrella = UmbrellaCancellable()
+        
         authenticator.getAccessToken(
-            handler: .init { [weak self] result in
+            handler: .init { [weak self, weak umbrella] result in
+                guard let self = self, let umbrella = umbrella, !umbrella.isCancelled else { return }
                 guard let state = result.value else {
                     handler(.failure(.noAccessToken))
                     return
                 }
                 switch state {
                 case let .authenticated(accessToken: token):
-                    self?.doUpload(authToken: token, data: data, handler: handler)
+                    let task = self.doUpload(authToken: token, data: data, handler: handler)
+                    umbrella.add(task)
                 case .notAuthenticated:
                     handler(.failure(.noAccessToken))
                 }
             })
+        
+        return umbrella
     }
     
     // MARK: - Private
@@ -104,7 +110,7 @@ public final class UploadClient {
         authToken: String,
         data: UploadData,
         handler: ResultHandler<UUID, UploadClientError>
-    ) {
+    ) -> Cancellable {
         var request = UploadEndpoint.request()
         var headers = makeHeaders(authToken: authToken)
         var body: Data?
@@ -115,13 +121,13 @@ public final class UploadClient {
             body = multipartFormData.body
         case .failure:
             handler(.failure(.impossibleToBuildFormData))
-            return
+            return Failure()
         }
         
         request = request.headers(headers)
         request = request.body(body)
         
-        httpManager.fetch(UploadEndpoint.Result.self, associatedTo: request) { result in
+        return httpManager.fetch(UploadEndpoint.Result.self, associatedTo: request) { result in
             guard
                 let uuidString = result.value?.first,
                 let uuid = UUID(uuidString: uuidString)

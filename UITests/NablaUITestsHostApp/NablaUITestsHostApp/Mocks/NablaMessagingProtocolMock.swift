@@ -9,16 +9,17 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     
     var logger: Logger = LoggerMock()
 
-    var createConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
-    var createConversationClosure: ((_ title: String?, _ providerIds: [UUID]?, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
+    var createConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, initialMessage: MessageInput?, handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
+    var createConversationClosure: ((_ title: String?, _ providerIds: [UUID]?, _ initialMessage: MessageInput?, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
     
     func createConversation(
         title: String?,
         providerIds: [UUID]?,
+        initialMessage: MessageInput?,
         handler: @escaping (Result<Conversation, NablaError>) -> Void
     ) -> Cancellable {
-        createConversationReceivedInvocations.append((title: title, providerIds: providerIds, handler: handler, ()))
-        return createConversationClosure?(title, providerIds, handler) ?? CancellableMock()
+        createConversationReceivedInvocations.append((title: title, providerIds: providerIds, initialMessage: initialMessage, handler: handler, ()))
+        return createConversationClosure?(title, providerIds, initialMessage, handler) ?? CancellableMock()
     }
     
     var createDraftConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, Void)] = []

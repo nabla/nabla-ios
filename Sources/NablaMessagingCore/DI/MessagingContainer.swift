@@ -77,7 +77,8 @@ class MessagingContainer {
 
     private lazy var conversationRepository: ConversationRepository = ConversationRepositoryImpl(
         remoteDataSource: conversationRemoteDataSource,
-        localDataSource: conversationLocalDataSource
+        localDataSource: conversationLocalDataSource,
+        fileUploadDataSource: fileUploadRemoteDataSource
     )
 
     private lazy var conversationItemRepository: ConversationItemRepository = ConversationItemRepositoryImpl(
