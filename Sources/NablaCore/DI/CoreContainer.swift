@@ -18,6 +18,7 @@ public class CoreContainer {
     public private(set) lazy var extraHeaders: ExtraHeaders = ExtraHeadersImpl([
         HTTPHeaders.Platform: environment.platform,
         HTTPHeaders.Version: environment.version,
+        HTTPHeaders.AcceptLanguage: environment.languageCode,
     ])
 
     public private(set) lazy var authenticator: Authenticator = AuthenticatorImpl(httpManager: httpManager)

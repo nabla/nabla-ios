@@ -32,6 +32,10 @@ class EnvironmentImpl: Environment {
         return components.url!.appendingPathComponent(graphqlPath)
     }
     
+    var languageCode: String {
+        Locale.current.languageCode ?? "en"
+    }
+    
     init(
         networkConfiguration: NetworkConfiguration
     ) {
