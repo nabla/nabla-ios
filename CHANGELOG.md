@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+
+## [1.0.0-alpha13] - 2022-08-05
+
+### Added
+
+### Changed
+
+### Fixed
+
 - Fixed MessagingUI and MessagingCore pods resource_bundles
 
 ## [1.0.0-alpha12] - 2022-08-05
