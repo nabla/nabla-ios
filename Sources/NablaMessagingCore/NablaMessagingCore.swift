@@ -3,7 +3,7 @@ import UIKit
 
 final class NablaMessagingCore {
     static let resourcesBundle: Bundle = {
-        if let url = bundle.url(forResource: "Resources", withExtension: "bundle"),
+        if let url = bundle.url(forResource: "MessagingCoreResources", withExtension: "bundle"),
            let bundle = Bundle(url: url) {
             return bundle
         } else {
