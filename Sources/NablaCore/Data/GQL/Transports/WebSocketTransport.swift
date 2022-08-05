@@ -117,5 +117,16 @@ extension WebSocketTransport: ApolloWebSocketTransportDelegate {
             extra = [:]
         }
         logger.info(message: "Websocket did disconnect", extra: extra)
+        if let error = error, isAuthError(error) {
+            updateAuthenticationHeader()
+        }
+    }
+    
+    private func isAuthError(_ error: Error) -> Bool {
+        guard
+            let websocketError = error as? WebSocketError,
+            let wsError = websocketError.error as? WebSocket.WSError
+        else { return false }
+        return wsError.code == 401
     }
 }

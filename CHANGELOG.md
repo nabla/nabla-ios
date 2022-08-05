@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Prevents websocket disconnects when keeping the app in foreground but inactive for a long time.
 
 ## [1.0.0-alpha11] - 2022-08-04
 
