@@ -70,6 +70,9 @@ let package = Package(
                 "build.sh",
                 "swiftgen.yml",
                 "Data/GQL/Schema",
+            ],
+            resources: [
+                .process("Resources"),
             ]
         ),
         .target(
