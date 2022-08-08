@@ -128,6 +128,15 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
             for: Constants.conversationsRootQuery,
             onlyIfExists: true,
             body: { cache in
+                let alreadyInCache = cache.conversations.conversations
+                    .contains { existingConversation in
+                        existingConversation.fragments.conversationFragment.id == conversation.id
+                    }
+                
+                if alreadyInCache {
+                    return
+                }
+                
                 cache.conversations.conversations.append(.init(unsafeResultMap: conversation.resultMap))
             },
             completion: { _ in }
