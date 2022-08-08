@@ -14,7 +14,14 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
         file: RemoteFileUpload,
         handler: ResultHandler<UUID, FileUploadRemoteDataSourceError>
     ) -> Cancellable {
-        guard let data = try? Data(contentsOf: file.fileUrl) else {
+        let data: Data
+        do {
+            let secure = file.fileUrl.startAccessingSecurityScopedResource()
+            data = try Data(contentsOf: file.fileUrl)
+            if secure {
+                file.fileUrl.stopAccessingSecurityScopedResource()
+            }
+        } catch {
             handler(.failure(.cannotReadFileData))
             return Failure()
         }
