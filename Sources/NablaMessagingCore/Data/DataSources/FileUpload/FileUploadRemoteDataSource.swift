@@ -6,6 +6,7 @@ enum FileUploadRemoteDataSourceError: Error {
     case uploadError(UploadClientError)
 }
 
+// sourcery: AutoMockable
 protocol FileUploadRemoteDataSource {
     func upload(file: RemoteFileUpload, handler: ResultHandler<UUID, FileUploadRemoteDataSourceError>) -> Cancellable
 }

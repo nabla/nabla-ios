@@ -87,7 +87,6 @@ class MessagingContainer {
         fileUploadRemoteDataSource: fileUploadRemoteDataSource,
         conversationLocalDataSource: conversationLocalDataSource,
         conversationRemoteDataSource: conversationRemoteDataSource,
-        uploadClient: coreContainer.uploadClient,
         logger: coreContainer.logger
     )
     

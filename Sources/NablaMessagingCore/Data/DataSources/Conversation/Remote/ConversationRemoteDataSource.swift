@@ -1,6 +1,7 @@
 import Foundation
 import NablaCore
 
+// sourcery: AutoMockable
 protocol ConversationRemoteDataSource {
     func createConversation(
         title: String?,

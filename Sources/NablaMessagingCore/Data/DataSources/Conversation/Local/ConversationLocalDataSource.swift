@@ -1,6 +1,7 @@
 import Foundation
 import NablaCore
 
+// sourcery: AutoMockable
 protocol ConversationLocalDataSource {
     func getConversation(withId id: UUID) -> LocalConversation?
     

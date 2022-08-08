@@ -10,7 +10,6 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         fileUploadRemoteDataSource: FileUploadRemoteDataSource,
         conversationLocalDataSource: ConversationLocalDataSource,
         conversationRemoteDataSource: ConversationRemoteDataSource,
-        uploadClient: UploadClient,
         logger: Logger
     ) {
         self.itemsRemoteDataSource = itemsRemoteDataSource
@@ -18,7 +17,6 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         self.fileUploadRemoteDataSource = fileUploadRemoteDataSource
         self.conversationLocalDataSource = conversationLocalDataSource
         self.conversationRemoteDataSource = conversationRemoteDataSource
-        self.uploadClient = uploadClient
         self.logger = logger
     }
     
@@ -120,7 +118,6 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private let fileUploadRemoteDataSource: FileUploadRemoteDataSource
     private let conversationLocalDataSource: ConversationLocalDataSource
     private let conversationRemoteDataSource: ConversationRemoteDataSource
-    private let uploadClient: UploadClient
     private let logger: Logger
     
     private var conversationEventsSubscriptions = [UUID: Weak<ConversationItemsSubscriber>]()
@@ -331,6 +328,9 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                     )
                     umbrella.add(task)
                 case let .failure(error):
+                    var copy = localConversationMessage
+                    copy.sendingState = .failed
+                    self.itemsLocalDataSource.updateConversationItem(copy)
                     handler(.failure(error))
                 }
             }
