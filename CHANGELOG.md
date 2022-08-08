@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+
+## [1.0.0-alpha14] - 2022-08-08
+
+### Added
+
+### Changed
+
+### Fixed
+
 - Fixed an issue when sending documents from iCloud files.
 - Fixed an issue where new conversations would appear twice in the list.
 
