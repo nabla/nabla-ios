@@ -253,7 +253,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private func applySnapshot(items: [ConversationViewItem], animatingDifferences: Bool = true) {
         var seen = Set<UUID>()
-        let items = items.reversed().compactMap { item -> DiffableConversationViewItem? in
+        let items = items.compactMap { item -> DiffableConversationViewItem? in
             guard !seen.contains(item.id) else {
                 logger.error(message: "Found duplicated item", extra: ["id": item.id])
                 return nil

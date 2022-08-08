@@ -15,9 +15,9 @@ public extension Array {
         }
     }
     
-    mutating func sort<T: Comparable>(_ keypath: KeyPath<Element, T>) {
+    mutating func sort<T: Comparable>(_ keyPath: KeyPath<Element, T>, using compare: (T, T) -> Bool) {
         sort { lhs, rhs in
-            lhs[keyPath: keypath] < rhs[keyPath: keypath]
+            compare(lhs[keyPath: keyPath], rhs[keyPath: keyPath])
         }
     }
 }

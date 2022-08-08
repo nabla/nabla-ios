@@ -72,15 +72,15 @@ final class ConversationViewControllerTests: XCTestCase {
         let provider = Provider.mock(prefix: "Dr", firstName: "John", lastName: "Doe")
         // WHEN
         sut.configure(withState: .loaded(items: [
-            ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.deletedProvider)),
-            ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.provider(provider))),
-            DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .sent, replyTo: nil),
-            DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mock),
-            DateSeparatorViewItem(id: UUID(), date: Date(timeIntervalSince1970: 0)),
-            TextMessageViewItem(id: UUID(), date: Date(), sender: .patient, sendingState: .failed, replyTo: nil, text: .loremStub),
-            TypingIndicatorViewItem(sender: .provider(provider)),
-            AudioMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, audio: .mock),
             HasMoreIndicatorViewItem(),
+            AudioMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, audio: .mock),
+            TypingIndicatorViewItem(sender: .provider(provider)),
+            TextMessageViewItem(id: UUID(), date: Date(), sender: .patient, sendingState: .failed, replyTo: nil, text: .loremStub),
+            DateSeparatorViewItem(id: UUID(), date: Date(timeIntervalSince1970: 0)),
+            DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mock),
+            DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .sent, replyTo: nil),
+            ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.provider(provider))),
+            ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.deletedProvider)),
         ]))
         // THEN
         assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))

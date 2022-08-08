@@ -21,8 +21,7 @@ enum ConversationItemsTransformer {
             .map {
                 TypingIndicatorViewItem(sender: .provider($0.provider))
             }
-
-        viewItems.append(contentsOf: typingItems)
+        viewItems.insert(contentsOf: typingItems, at: 0)
 
         groupByDateAndSender(&viewItems)
         focusOnTextItemIfNeeded(&viewItems, focusedTextItemId: focusedTextItemId)
@@ -124,26 +123,26 @@ enum ConversationItemsTransformer {
     }
 
     private static func groupByDateAndSender(_ viewItems: inout [ConversationViewItem]) {
-        if let firstItem = viewItems.first as? ConversationViewMessageItem {
-            viewItems.insert(DateSeparatorViewItem(id: UUID(), date: firstItem.date), at: 0)
+        if let lastItem = viewItems.last as? ConversationViewMessageItem {
+            viewItems.append(DateSeparatorViewItem(id: UUID(), date: lastItem.date))
         }
         
         var insertedItemsCount = 0
         zip(viewItems, viewItems.dropFirst()).enumerated().forEach { arg in
             let (index, tuple) = arg
-            let (previous, current) = tuple
+            let (current, previous) = tuple
             guard
                 let previousItem = previous as? ConversationViewMessageItem,
                 var currentItem = current as? ConversationViewMessageItem else {
                 return
             }
             currentItem.isContiguous = previousItem.sender == currentItem.sender
-            viewItems[index + 1 + insertedItemsCount] = currentItem
-            guard Calendar.current.areDatesAtLeastAnHourApart(previousItem.date, currentItem.date) else {
+            viewItems[index + insertedItemsCount] = currentItem
+            guard Calendar.current.areDatesAtLeastAnHourApart(currentItem.date, previousItem.date) else {
                 return
             }
             currentItem.isContiguous = false
-            viewItems[index + 1 + insertedItemsCount] = currentItem
+            viewItems[index + insertedItemsCount] = currentItem
             viewItems.insert(DateSeparatorViewItem(id: UUID(), date: currentItem.date), at: index + 1 + insertedItemsCount)
             insertedItemsCount += 1
         }
@@ -166,7 +165,7 @@ enum ConversationItemsTransformer {
                 id: UUID(),
                 date: focusedTextItem.date
             ),
-            at: focusedTextItemAndIndex.offset
+            at: focusedTextItemAndIndex.offset + 1
         )
     }
 }

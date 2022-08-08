@@ -128,7 +128,7 @@ class ConversationItemsMerger: PaginatedWatcher {
         let localTransformer = LocalConversationItemTransformer(existingItems: mergedItems)
         let localOnlyItems = localItemsByClientId.values.compactMap(localTransformer.transform(_:))
         mergedItems.append(contentsOf: localOnlyItems)
-        mergedItems.sort(\.date)
+        mergedItems.sort(\.date, using: >)
         return mergedItems
     }
     
