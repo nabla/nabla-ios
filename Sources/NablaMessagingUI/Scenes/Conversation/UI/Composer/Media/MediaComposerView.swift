@@ -49,7 +49,7 @@ class MediaComposerView: UIView, MediaComposerViewContract {
         view.dataSource = self
         view.delegate = self
         view.bounces = true
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         
         view.register(MediaComposerCollectionViewCell.self)
         return view
