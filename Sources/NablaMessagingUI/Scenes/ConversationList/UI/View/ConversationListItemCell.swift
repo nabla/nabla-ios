@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 private enum Constants {
@@ -40,7 +41,7 @@ class ConversationListItemCell: UITableViewCell, Reusable {
     private func setUp() {
         contentView.backgroundColor = NablaTheme.ConversationPreview.previewBackgroundColor
         contentView.addSubview(avatarView)
-        avatarView.pinToSuperView(edges: .leading, insets: .only(leading: 16))
+        avatarView.nabla.pinToSuperView(edges: .leading, insets: .nabla.only(leading: 16))
         avatarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         avatarView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 16).isActive = true
         
@@ -58,18 +59,18 @@ class ConversationListItemCell: UITableViewCell, Reusable {
         stackView.bottomAnchor.constraint(greaterThanOrEqualTo: contentView.bottomAnchor, constant: -16).isActive = true
         
         contentView.addSubview(timeLabel)
-        timeLabel.pinToSuperView(edges: [.trailing], insets: .only(trailing: 16))
+        timeLabel.nabla.pinToSuperView(edges: [.trailing], insets: .nabla.only(trailing: 16))
         timeLabel.firstBaselineAnchor.constraint(equalTo: titleLabel.firstBaselineAnchor).isActive = true
         timeLabel.leadingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
         
         contentView.addSubview(unreadIndicatorView)
-        unreadIndicatorView.pinToSuperView(edges: .trailing, insets: .only(trailing: 16))
+        unreadIndicatorView.nabla.pinToSuperView(edges: .trailing, insets: .nabla.only(trailing: 16))
         unreadIndicatorView.centerYAnchor.constraint(equalTo: subtitleLabel.centerYAnchor).isActive = true
     }
     
     private func createAvatarView() -> AvatarView {
         let avatarView = AvatarView()
-        avatarView.constraintToSize(CGSize(width: Constants.avatarSize, height: Constants.avatarSize))
+        avatarView.nabla.constraintToSize(CGSize(width: Constants.avatarSize, height: Constants.avatarSize))
         return avatarView
     }
     
@@ -97,7 +98,7 @@ class ConversationListItemCell: UITableViewCell, Reusable {
     private func createUnreadIndicatorView() -> UIView {
         let view = UIView()
         view.backgroundColor = NablaTheme.ConversationPreview.previewUnreadIndicatorColor
-        view.constraintToSize(CGSize(width: Constants.unreadIndicatorSize, height: Constants.unreadIndicatorSize))
+        view.nabla.constraintToSize(CGSize(width: Constants.unreadIndicatorSize, height: Constants.unreadIndicatorSize))
         view.layer.cornerRadius = Constants.unreadIndicatorSize / 2
         view.clipsToBounds = true
         return view

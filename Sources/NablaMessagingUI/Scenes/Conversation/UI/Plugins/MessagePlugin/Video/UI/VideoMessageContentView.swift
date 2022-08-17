@@ -24,11 +24,13 @@ final class VideoMessageContentView: UIView, MessageContentView {
     
     // MARK: - MessageContentView
     
-    func configure(with viewModel: VideoMessageContentViewModel, sender _: ConversationMessageSender) {
+    func configure(with viewModel: VideoMessageContentViewModel) {
         playerView.player = AVPlayer(url: viewModel.url)
 
-        constraintToSize(idealSize(contentSize: viewModel.originalVideoSize))
+        nabla.constraintToSize(idealSize(contentSize: viewModel.originalVideoSize))
     }
+    
+    func configure(sender: ConversationMessageSender) {}
     
     func prepareForReuse() {
         playerView.player = nil
@@ -40,7 +42,7 @@ final class VideoMessageContentView: UIView, MessageContentView {
 
     private func setUp() {
         addSubview(playerView.view)
-        playerView.view.pinToSuperView()
+        playerView.view.nabla.pinToSuperView()
     }
     
     private func makePlayerView() -> AVPlayerViewController {

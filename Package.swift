@@ -23,13 +23,14 @@ let package = Package(
             targets: ["NablaMessagingUI"]
         ),
         .library(
-            name: "NablaUtils",
-            targets: ["NablaUtils"]
+            name: "NablaVideoCall",
+            targets: ["NablaVideoCall"]
         ),
     ],
     dependencies: [
         // SDK
         .package(url: "https://github.com/apollographql/apollo-ios", from: "0.50.0"),
+        .package(name: "LiveKit", url: "https://github.com/livekit/client-sdk-swift.git", from: "1.0.3"),
         
         // Tests
         .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", from: "4.1.0"),
@@ -40,9 +41,15 @@ let package = Package(
         .target(
             name: "NablaCore",
             dependencies: [
-                .target(name: "NablaUtils"),
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloWebSocket", package: "apollo-ios"),
+            ],
+            exclude: [
+                "build.sh",
+                "Data/GQL/Schema",
+            ],
+            resources: [
+                .process("Resources"),
             ]
         ),
         .target(
@@ -64,7 +71,6 @@ let package = Package(
             name: "NablaMessagingCore",
             dependencies: [
                 .target(name: "NablaCore"),
-                .target(name: "NablaUtils"),
             ],
             exclude: [
                 "build.sh",
@@ -107,7 +113,6 @@ let package = Package(
         .target(
             name: "NablaMessagingUI",
             dependencies: [
-                .target(name: "NablaUtils"),
                 .target(name: "NablaMessagingCore"),
             ],
             exclude: [
@@ -133,12 +138,18 @@ let package = Package(
             ]
         ),
         .target(
-            name: "NablaUtils",
-            dependencies: []
-        ),
-        .testTarget(
-            name: "NablaUtilsTests",
-            dependencies: ["NablaUtils"]
+            name: "NablaVideoCall",
+            dependencies: [
+                .target(name: "NablaCore"),
+                .product(name: "LiveKit", package: "LiveKit"),
+            ],
+            exclude: [
+                "build.sh",
+                "swiftgen.yml",
+            ],
+            resources: [
+                .process("Resources"),
+            ]
         ),
     ]
 )

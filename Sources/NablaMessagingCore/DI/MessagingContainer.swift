@@ -1,21 +1,23 @@
 import Foundation
 import NablaCore
 
-class MessagingContainer {
-    // MARK: - Initializer
-
-    init(coreContainer: CoreContainer) {
-        self.coreContainer = coreContainer
-    }
-
-    // MARK: - Internal
+public class MessagingContainer {
+    // MARK: - Public
     
-    var logger: Logger {
+    public let coreContainer: CoreContainer
+    
+    public var logger: Logger {
         coreContainer.logger
     }
     
+    // MARK: - Internal
+    
     var gqlClient: GQLClient {
         coreContainer.gqlClient
+    }
+    
+    var logOutInteractor: LogOutInteractor {
+        coreContainer.logOutInteractor
     }
 
     private(set) lazy var createConversationInteractor: CreateConversationInteractor = CreateConversationInteractorImpl(
@@ -70,10 +72,18 @@ class MessagingContainer {
         authenticator: coreContainer.authenticator,
         repository: conversationRepository
     )
+    
+    private(set) lazy var gateKeepers: GateKeepers = .init(supportVideoCallActionRequests: self.coreContainer.videoCallClient != nil)
+    
+    // MARK: Initializer
+
+    init(
+        coreContainer: CoreContainer
+    ) {
+        self.coreContainer = coreContainer
+    }
 
     // MARK: - Private
-    
-    private let coreContainer: CoreContainer
 
     private lazy var conversationRepository: ConversationRepository = ConversationRepositoryImpl(
         remoteDataSource: conversationRemoteDataSource,

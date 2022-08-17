@@ -183,6 +183,221 @@ open class CancellableMock: Cancellable, Mock {
     }
 }
 
+// MARK: - DeviceLocalDataSource
+
+open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+    public var deviceId: UUID? {
+		get {	invocations.append(.p_deviceId_get); return __p_deviceId ?? optionalGivenGetterValue(.p_deviceId_get, "DeviceLocalDataSourceMock - stub value for deviceId was not defined") }
+		set {	invocations.append(.p_deviceId_set(.value(newValue))); __p_deviceId = newValue }
+	}
+	private var __p_deviceId: (UUID)?
+
+    public var deviceModel: String {
+		get {	invocations.append(.p_deviceModel_get); return __p_deviceModel ?? givenGetterValue(.p_deviceModel_get, "DeviceLocalDataSourceMock - stub value for deviceModel was not defined") }
+	}
+	private var __p_deviceModel: (String)?
+
+    public var deviceOSVersion: String {
+		get {	invocations.append(.p_deviceOSVersion_get); return __p_deviceOSVersion ?? givenGetterValue(.p_deviceOSVersion_get, "DeviceLocalDataSourceMock - stub value for deviceOSVersion was not defined") }
+	}
+	private var __p_deviceOSVersion: (String)?
+
+    public var codeVersion: Int {
+		get {	invocations.append(.p_codeVersion_get); return __p_codeVersion ?? givenGetterValue(.p_codeVersion_get, "DeviceLocalDataSourceMock - stub value for codeVersion was not defined") }
+	}
+	private var __p_codeVersion: (Int)?
+
+
+
+
+
+
+    fileprivate enum MethodType {
+        case p_deviceId_get
+		case p_deviceId_set(Parameter<UUID?>)
+        case p_deviceModel_get
+        case p_deviceOSVersion_get
+        case p_codeVersion_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_deviceId_get,.p_deviceId_get): return Matcher.ComparisonResult.match
+			case (.p_deviceId_set(let left),.p_deviceId_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<UUID?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_deviceModel_get,.p_deviceModel_get): return Matcher.ComparisonResult.match
+            case (.p_deviceOSVersion_get,.p_deviceOSVersion_get): return Matcher.ComparisonResult.match
+            case (.p_codeVersion_get,.p_codeVersion_get): return Matcher.ComparisonResult.match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .p_deviceId_get: return 0
+			case .p_deviceId_set(let newValue): return newValue.intValue
+            case .p_deviceModel_get: return 0
+            case .p_deviceOSVersion_get: return 0
+            case .p_codeVersion_get: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_deviceId_get: return "[get] .deviceId"
+			case .p_deviceId_set: return "[set] .deviceId"
+            case .p_deviceModel_get: return "[get] .deviceModel"
+            case .p_deviceOSVersion_get: return "[get] .deviceOSVersion"
+            case .p_codeVersion_get: return "[get] .codeVersion"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func deviceId(getter defaultValue: UUID?...) -> PropertyStub {
+            return Given(method: .p_deviceId_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func deviceModel(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_deviceModel_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func deviceOSVersion(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_deviceOSVersion_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func codeVersion(getter defaultValue: Int...) -> PropertyStub {
+            return Given(method: .p_codeVersion_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static var deviceId: Verify { return Verify(method: .p_deviceId_get) }
+		public static func deviceId(set newValue: Parameter<UUID?>) -> Verify { return Verify(method: .p_deviceId_set(newValue)) }
+        public static var deviceModel: Verify { return Verify(method: .p_deviceModel_get) }
+        public static var deviceOSVersion: Verify { return Verify(method: .p_deviceOSVersion_get) }
+        public static var codeVersion: Verify { return Verify(method: .p_codeVersion_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
 // MARK: - GQLClient
 
 open class GQLClientMock: GQLClient, Mock {
@@ -829,12 +1044,12 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
 
 
 
-    open func set<T: Codable>(_ object: T, forKey key: String) throws {
-        addInvocation(.m_set__objectforKey_key(Parameter<T>.value(`object`).wrapAsGeneric(), Parameter<String>.value(`key`)))
-		let perform = methodPerformValue(.m_set__objectforKey_key(Parameter<T>.value(`object`).wrapAsGeneric(), Parameter<String>.value(`key`))) as? (T, String) -> Void
+    open func set<T: Codable>(_ object: T?, forKey key: String) throws {
+        addInvocation(.m_set__objectforKey_key(Parameter<T?>.value(`object`).wrapAsGeneric(), Parameter<String>.value(`key`)))
+		let perform = methodPerformValue(.m_set__objectforKey_key(Parameter<T?>.value(`object`).wrapAsGeneric(), Parameter<String>.value(`key`))) as? (T?, String) -> Void
 		perform?(`object`, `key`)
 		do {
-		    _ = try methodReturnValue(.m_set__objectforKey_key(Parameter<T>.value(`object`).wrapAsGeneric(), Parameter<String>.value(`key`))).casted() as Void
+		    _ = try methodReturnValue(.m_set__objectforKey_key(Parameter<T?>.value(`object`).wrapAsGeneric(), Parameter<String>.value(`key`))).casted() as Void
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
@@ -915,10 +1130,10 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
         public static func get<T: Codable>(forKey key: Parameter<String>, willReturn: T?...) -> MethodStub {
             return Given(method: .m_get__forKey_key(`key`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func set<T:Codable>(_ object: Parameter<T>, forKey key: Parameter<String>, willThrow: Error...) -> MethodStub {
+        public static func set<T:Codable>(_ object: Parameter<T?>, forKey key: Parameter<String>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_set__objectforKey_key(`object`.wrapAsGeneric(), `key`), products: willThrow.map({ StubProduct.throw($0) }))
         }
-        public static func set<T: Codable>(_ object: Parameter<T>, forKey key: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func set<T: Codable>(_ object: Parameter<T?>, forKey key: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_set__objectforKey_key(`object`.wrapAsGeneric(), `key`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -940,7 +1155,7 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func set<T>(_ object: Parameter<T>, forKey key: Parameter<String>) -> Verify where T:Codable { return Verify(method: .m_set__objectforKey_key(`object`.wrapAsGeneric(), `key`))}
+        public static func set<T>(_ object: Parameter<T?>, forKey key: Parameter<String>) -> Verify where T:Codable { return Verify(method: .m_set__objectforKey_key(`object`.wrapAsGeneric(), `key`))}
         public static func get(forKey key: Parameter<String>) -> Verify { return Verify(method: .m_get__forKey_key(`key`))}
         public static func clear() -> Verify { return Verify(method: .m_clear)}
     }
@@ -949,7 +1164,7 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func set<T>(_ object: Parameter<T>, forKey key: Parameter<String>, perform: @escaping (T, String) -> Void) -> Perform where T:Codable {
+        public static func set<T>(_ object: Parameter<T?>, forKey key: Parameter<String>, perform: @escaping (T?, String) -> Void) -> Perform where T:Codable {
             return Perform(method: .m_set__objectforKey_key(`object`.wrapAsGeneric(), `key`), performs: perform)
         }
         public static func get(forKey key: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {

@@ -8,9 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Introduced `NablaVideoCall` SDK and video call requests from `NablaMessagingCore`.
+
 ### Changed
 
-- Changed `ConversationItems.items` in `NablaMessagingClient.watchItems(ofConversationWithId:)` output ordering to be descending.    
+- Changed `ConversationItems.items` in `NablaMessagingClient.watchItems(ofConversationWithId:)` output ordering to be descending. 
+- Removed `NablaUtils` target.   
+- A new `modules` parameter is now required when calling `NablaClient.initialize()`:
+```swift
+NablaClient.initialize(
+    apiKey = "Your API Key",
+    modules = [
+        NablaMessagingModule()
+    ]
+)
+```
 
 ### Fixed
 

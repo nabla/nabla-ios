@@ -1,8 +1,5 @@
 import Foundation
 import NablaCore
-#if canImport(NablaUtils)
-    import NablaUtils
-#endif
 
 class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     // MARK: - Initializer

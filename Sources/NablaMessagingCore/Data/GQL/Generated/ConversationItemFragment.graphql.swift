@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct ConversationItemFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment ConversationItemFragment on ConversationItem {
         __typename
@@ -23,9 +23,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["Message", "ConversationActivity"]
+     static let possibleTypes: [String] = ["Message", "ConversationActivity"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLTypeCase(
           variants: ["Message": AsMessage.selections, "ConversationActivity": AsConversationActivity.selections],
@@ -36,13 +36,13 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -51,7 +51,7 @@ public extension GQL {
       }
     }
 
-    public var asMessage: AsMessage? {
+     var asMessage: AsMessage? {
       get {
         if !AsMessage.possibleTypes.contains(__typename) { return nil }
         return AsMessage(unsafeResultMap: resultMap)
@@ -62,10 +62,10 @@ public extension GQL {
       }
     }
 
-    public struct AsMessage: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Message"]
+     struct AsMessage: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Message"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -73,13 +73,13 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -88,7 +88,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -97,14 +97,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var messageFragment: MessageFragment {
+         var messageFragment: MessageFragment {
           get {
             return MessageFragment(unsafeResultMap: resultMap)
           }
@@ -115,7 +115,7 @@ public extension GQL {
       }
     }
 
-    public var asConversationActivity: AsConversationActivity? {
+     var asConversationActivity: AsConversationActivity? {
       get {
         if !AsConversationActivity.possibleTypes.contains(__typename) { return nil }
         return AsConversationActivity(unsafeResultMap: resultMap)
@@ -126,10 +126,10 @@ public extension GQL {
       }
     }
 
-    public struct AsConversationActivity: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["ConversationActivity"]
+     struct AsConversationActivity: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["ConversationActivity"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -137,13 +137,13 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -152,7 +152,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -161,14 +161,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var conversationActivityFragment: ConversationActivityFragment {
+         var conversationActivityFragment: ConversationActivityFragment {
           get {
             return ConversationActivityFragment(unsafeResultMap: resultMap)
           }

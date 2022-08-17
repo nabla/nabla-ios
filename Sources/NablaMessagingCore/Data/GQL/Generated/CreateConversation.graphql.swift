@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   final class CreateConversationMutation: GraphQLMutation {
     /// The raw GraphQL definition of this operation.
-    public let operationDefinition: String =
+     let operationDefinition: String =
       """
       mutation CreateConversation($title: String, $providerIds: [UUID!], $initialMessage: SendMessageInput) {
         createConversation(
@@ -25,9 +25,9 @@ public extension GQL {
       }
       """
 
-    public let operationName: String = "CreateConversation"
+     let operationName: String = "CreateConversation"
 
-    public var queryDocument: String {
+     var queryDocument: String {
       var document: String = operationDefinition
       document.append("\n" + ConversationFragment.fragmentDefinition)
       document.append("\n" + ProviderInConversationFragment.fragmentDefinition)
@@ -36,40 +36,40 @@ public extension GQL {
       return document
     }
 
-    public var title: String?
-    public var providerIds: [GQL.UUID]?
-    public var initialMessage: SendMessageInput?
+     var title: String?
+     var providerIds: [GQL.UUID]?
+     var initialMessage: SendMessageInput?
 
-    public init(title: String? = nil, providerIds: [GQL.UUID]?, initialMessage: SendMessageInput? = nil) {
+     init(title: String? = nil, providerIds: [GQL.UUID]?, initialMessage: SendMessageInput? = nil) {
       self.title = title
       self.providerIds = providerIds
       self.initialMessage = initialMessage
     }
 
-    public var variables: GraphQLMap? {
+     var variables: GraphQLMap? {
       return ["title": title, "providerIds": providerIds, "initialMessage": initialMessage]
     }
 
-    public struct Data: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Mutation"]
+     struct Data: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Mutation"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("createConversation", arguments: ["title": GraphQLVariable("title"), "providerIds": GraphQLVariable("providerIds"), "initialMessage": GraphQLVariable("initialMessage")], type: .nonNull(.object(CreateConversation.selections))),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(createConversation: CreateConversation) {
+       init(createConversation: CreateConversation) {
         self.init(unsafeResultMap: ["__typename": "Mutation", "createConversation": createConversation.resultMap])
       }
 
-      public var createConversation: CreateConversation {
+       var createConversation: CreateConversation {
         get {
           return CreateConversation(unsafeResultMap: resultMap["createConversation"]! as! ResultMap)
         }
@@ -78,27 +78,27 @@ public extension GQL {
         }
       }
 
-      public struct CreateConversation: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["CreateConversationOutput"]
+       struct CreateConversation: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["CreateConversationOutput"]
 
-        public static var selections: [GraphQLSelection] {
+         static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("conversation", type: .nonNull(.object(Conversation.selections))),
           ]
         }
 
-        public private(set) var resultMap: ResultMap
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public init(conversation: Conversation) {
+         init(conversation: Conversation) {
           self.init(unsafeResultMap: ["__typename": "CreateConversationOutput", "conversation": conversation.resultMap])
         }
 
-        public var __typename: String {
+         var __typename: String {
           get {
             return resultMap["__typename"]! as! String
           }
@@ -107,7 +107,7 @@ public extension GQL {
           }
         }
 
-        public var conversation: Conversation {
+         var conversation: Conversation {
           get {
             return Conversation(unsafeResultMap: resultMap["conversation"]! as! ResultMap)
           }
@@ -116,23 +116,23 @@ public extension GQL {
           }
         }
 
-        public struct Conversation: GraphQLSelectionSet {
-          public static let possibleTypes: [String] = ["Conversation"]
+         struct Conversation: GraphQLSelectionSet {
+           static let possibleTypes: [String] = ["Conversation"]
 
-          public static var selections: [GraphQLSelection] {
+           static var selections: [GraphQLSelection] {
             return [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
               GraphQLFragmentSpread(ConversationFragment.self),
             ]
           }
 
-          public private(set) var resultMap: ResultMap
+           private(set) var resultMap: ResultMap
 
-          public init(unsafeResultMap: ResultMap) {
+           init(unsafeResultMap: ResultMap) {
             self.resultMap = unsafeResultMap
           }
 
-          public var __typename: String {
+           var __typename: String {
             get {
               return resultMap["__typename"]! as! String
             }
@@ -141,7 +141,7 @@ public extension GQL {
             }
           }
 
-          public var fragments: Fragments {
+           var fragments: Fragments {
             get {
               return Fragments(unsafeResultMap: resultMap)
             }
@@ -150,14 +150,14 @@ public extension GQL {
             }
           }
 
-          public struct Fragments {
-            public private(set) var resultMap: ResultMap
+           struct Fragments {
+             private(set) var resultMap: ResultMap
 
-            public init(unsafeResultMap: ResultMap) {
+             init(unsafeResultMap: ResultMap) {
               self.resultMap = unsafeResultMap
             }
 
-            public var conversationFragment: ConversationFragment {
+             var conversationFragment: ConversationFragment {
               get {
                 return ConversationFragment(unsafeResultMap: resultMap)
               }

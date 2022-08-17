@@ -29,12 +29,11 @@ class ImageDetailViewController: UIViewController, ImageDetailViewContract {
     private func setUp() {
         view.backgroundColor = NablaTheme.ImageDetail.backgroundColor
         view.addSubview(imageView)
-        imageView.pinToSuperView()
+        imageView.nabla.pinToSuperView()
     }
     
     private func makeImageView() -> UIURLImageView {
         let imageView = UIURLImageView(frame: .zero)
-        imageView.prepareForAutoLayout()
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

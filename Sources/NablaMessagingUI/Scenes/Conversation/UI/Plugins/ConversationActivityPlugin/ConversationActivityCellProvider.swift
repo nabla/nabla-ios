@@ -5,7 +5,7 @@ final class ConversationActivityCellProvider: ConversationCellProvider {
     private var presenters: [UUID: ConversationActivityPresenter] = [:]
     
     func prepare(collectionView: UICollectionView) {
-        collectionView.register(ConversationActivityCell.self)
+        collectionView.nabla.register(ConversationActivityCell.self)
     }
     
     func provideCell(
@@ -18,7 +18,7 @@ final class ConversationActivityCellProvider: ConversationCellProvider {
             return nil
         }
         
-        let cell = collectionView.dequeueReusableCell(ofClass: ConversationActivityCell.self, for: indexPath)
+        let cell = collectionView.nabla.dequeueReusableCell(ofClass: ConversationActivityCell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
             item: item,
             delegate: delegate

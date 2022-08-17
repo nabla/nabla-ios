@@ -15,7 +15,8 @@ final class ConversationViewControllerTests: XCTestCase {
             conversationId: UUID(),
             showComposer: true,
             client: NablaMessagingClientProtocolMock(),
-            logger: LoggerMock()
+            logger: LoggerMock(),
+            videoCallClient: nil
         )
         sut.presenter = ConversationPresenterMock()
     }
@@ -42,7 +43,8 @@ final class ConversationViewControllerTests: XCTestCase {
             conversationId: UUID(),
             showComposer: false,
             client: NablaMessagingClientProtocolMock(),
-            logger: LoggerMock()
+            logger: LoggerMock(),
+            videoCallClient: nil
         )
         sut.presenter = ConversationPresenterMock()
         // WHEN

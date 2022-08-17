@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct ProviderFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment ProviderFragment on Provider {
         __typename
@@ -23,9 +23,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["Provider"]
+     static let possibleTypes: [String] = ["Provider"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -36,17 +36,17 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, avatarUrl: AvatarUrl? = nil, `prefix`: String? = nil, firstName: String, lastName: String) {
+     init(id: GQL.UUID, avatarUrl: AvatarUrl? = nil, `prefix`: String? = nil, firstName: String, lastName: String) {
       self.init(unsafeResultMap: ["__typename": "Provider", "id": id, "avatarUrl": avatarUrl.flatMap { (value: AvatarUrl) -> ResultMap in value.resultMap }, "prefix": `prefix`, "firstName": firstName, "lastName": lastName])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -55,7 +55,7 @@ public extension GQL {
       }
     }
 
-    public var id: GQL.UUID {
+     var id: GQL.UUID {
       get {
         return resultMap["id"]! as! GQL.UUID
       }
@@ -64,7 +64,7 @@ public extension GQL {
       }
     }
 
-    public var avatarUrl: AvatarUrl? {
+     var avatarUrl: AvatarUrl? {
       get {
         return (resultMap["avatarUrl"] as? ResultMap).flatMap { AvatarUrl(unsafeResultMap: $0) }
       }
@@ -73,7 +73,7 @@ public extension GQL {
       }
     }
 
-    public var `prefix`: String? {
+     var `prefix`: String? {
       get {
         return resultMap["prefix"] as? String
       }
@@ -82,7 +82,7 @@ public extension GQL {
       }
     }
 
-    public var firstName: String {
+     var firstName: String {
       get {
         return resultMap["firstName"]! as! String
       }
@@ -91,7 +91,7 @@ public extension GQL {
       }
     }
 
-    public var lastName: String {
+     var lastName: String {
       get {
         return resultMap["lastName"]! as! String
       }
@@ -100,27 +100,27 @@ public extension GQL {
       }
     }
 
-    public struct AvatarUrl: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["EphemeralUrl"]
+     struct AvatarUrl: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["EphemeralUrl"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLFragmentSpread(EphemeralUrlFragment.self),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(expiresAt: GQL.DateTime, url: String) {
+       init(expiresAt: GQL.DateTime, url: String) {
         self.init(unsafeResultMap: ["__typename": "EphemeralUrl", "expiresAt": expiresAt, "url": url])
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -129,7 +129,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -138,14 +138,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var ephemeralUrlFragment: EphemeralUrlFragment {
+         var ephemeralUrlFragment: EphemeralUrlFragment {
           get {
             return EphemeralUrlFragment(unsafeResultMap: resultMap)
           }
@@ -159,7 +159,7 @@ public extension GQL {
 
   struct MaybeProviderFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment MaybeProviderFragment on MaybeProvider {
         __typename
@@ -174,9 +174,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["Provider", "DeletedProvider"]
+     static let possibleTypes: [String] = ["Provider", "DeletedProvider"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLTypeCase(
           variants: ["Provider": AsProvider.selections, "DeletedProvider": AsDeletedProvider.selections],
@@ -187,17 +187,17 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public static func makeDeletedProvider(`_`: EmptyObject) -> MaybeProviderFragment {
+     static func makeDeletedProvider(`_`: EmptyObject) -> MaybeProviderFragment {
       return MaybeProviderFragment(unsafeResultMap: ["__typename": "DeletedProvider", "_": `_`])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -206,7 +206,7 @@ public extension GQL {
       }
     }
 
-    public var asProvider: AsProvider? {
+     var asProvider: AsProvider? {
       get {
         if !AsProvider.possibleTypes.contains(__typename) { return nil }
         return AsProvider(unsafeResultMap: resultMap)
@@ -217,10 +217,10 @@ public extension GQL {
       }
     }
 
-    public struct AsProvider: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Provider"]
+     struct AsProvider: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Provider"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -228,13 +228,13 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -243,7 +243,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -252,14 +252,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var providerFragment: ProviderFragment {
+         var providerFragment: ProviderFragment {
           get {
             return ProviderFragment(unsafeResultMap: resultMap)
           }
@@ -270,7 +270,7 @@ public extension GQL {
       }
     }
 
-    public var asDeletedProvider: AsDeletedProvider? {
+     var asDeletedProvider: AsDeletedProvider? {
       get {
         if !AsDeletedProvider.possibleTypes.contains(__typename) { return nil }
         return AsDeletedProvider(unsafeResultMap: resultMap)
@@ -281,10 +281,10 @@ public extension GQL {
       }
     }
 
-    public struct AsDeletedProvider: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["DeletedProvider"]
+     struct AsDeletedProvider: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["DeletedProvider"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -292,17 +292,17 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(`_`: EmptyObject) {
+       init(`_`: EmptyObject) {
         self.init(unsafeResultMap: ["__typename": "DeletedProvider", "_": `_`])
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -311,7 +311,7 @@ public extension GQL {
         }
       }
 
-      public var `_`: EmptyObject {
+       var `_`: EmptyObject {
         get {
           return resultMap["_"]! as! EmptyObject
         }

@@ -4,7 +4,7 @@ struct LocalConversationItemTransformer {
     // MARK: - Initializer
 
     init(existingItems: [ConversationItem]) {
-        self.existingItems = existingItems.toDictionary(\.id)
+        self.existingItems = existingItems.nabla.toDictionary(\.id)
     }
 
     // MARK: - Public

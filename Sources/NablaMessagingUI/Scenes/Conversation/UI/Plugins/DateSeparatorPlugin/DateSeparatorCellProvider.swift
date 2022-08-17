@@ -5,7 +5,7 @@ final class DateSeparatorCellProvider: ConversationCellProvider {
     private var presenters: [UUID: DateSeparatorPresenter] = [:]
 
     func prepare(collectionView: UICollectionView) {
-        collectionView.register(DateSeparatorCell.self)
+        collectionView.nabla.register(DateSeparatorCell.self)
     }
 
     func provideCell(
@@ -18,7 +18,7 @@ final class DateSeparatorCellProvider: ConversationCellProvider {
             return nil
         }
 
-        let cell = collectionView.dequeueReusableCell(ofClass: DateSeparatorCell.self, for: indexPath)
+        let cell = collectionView.nabla.dequeueReusableCell(ofClass: DateSeparatorCell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
             item: item,
             delegate: delegate

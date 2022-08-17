@@ -45,6 +45,8 @@ enum ConversationItemsTransformer {
             return transform(audioMessage)
         } else if let videoMessage = item as? VideoMessageItem {
             return transform(videoMessage)
+        } else if let videoCallActionRequest = item as? VideoCallActionRequest {
+            return transform(videoCallActionRequest)
         }
         return nil
     }
@@ -119,6 +121,23 @@ enum ConversationItemsTransformer {
             sendingState: videoMessage.sendingState,
             replyTo: videoMessage.replyTo.flatMap(transform(item:)) as? ConversationViewMessageItem,
             video: videoMessage.content
+        )
+    }
+    
+    static func transform(_ videoCallActionRequest: VideoCallActionRequest) -> ConversationViewItem {
+        let room: VideoCallActionRequestViewItem.Room? = {
+            switch videoCallActionRequest.status {
+            case .closed: return nil
+            case let .open(room): return .init(url: room.url, token: room.token)
+            }
+        }()
+        
+        return VideoCallActionRequestViewItem(
+            id: videoCallActionRequest.id,
+            date: videoCallActionRequest.date,
+            sender: videoCallActionRequest.sender,
+            sendingState: .sent,
+            room: room
         )
     }
 

@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct PatientFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment PatientFragment on Patient {
         __typename
@@ -16,26 +16,26 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["Patient"]
+     static let possibleTypes: [String] = ["Patient"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID) {
+     init(id: GQL.UUID) {
       self.init(unsafeResultMap: ["__typename": "Patient", "id": id])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -44,7 +44,7 @@ public extension GQL {
       }
     }
 
-    public var id: GQL.UUID {
+     var id: GQL.UUID {
       get {
         return resultMap["id"]! as! GQL.UUID
       }

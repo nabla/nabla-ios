@@ -106,6 +106,14 @@ internal enum L10n {
   internal static let inboxTitle = L10n.tr("Localizable", "inbox_title")
   /// [Deleted provider]
   internal static let providerDeletedName = L10n.tr("Localizable", "provider_deleted_name")
+  /// Ended
+  internal static let videoCallActionRequestButtonClosed = L10n.tr("Localizable", "video_call_action_request_button_closed")
+  /// Join
+  internal static let videoCallActionRequestButtonDefault = L10n.tr("Localizable", "video_call_action_request_button_default")
+  /// Return to call
+  internal static let videoCallActionRequestButtonInProgress = L10n.tr("Localizable", "video_call_action_request_button_in_progress")
+  /// Remote consultation
+  internal static let videoCallActionRequestTitle = L10n.tr("Localizable", "video_call_action_request_title")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces
@@ -114,7 +122,7 @@ internal enum L10n {
 
 extension L10n {
   private static func tr(_ table: String, _ key: String, _ args: CVarArg...) -> String {
-    let format = NablaMessagingUI.resourcesBundle.localizedString(forKey: key, value: nil, table: table)
+    let format = NablaMessagingUIPackage.resourcesBundle.localizedString(forKey: key, value: nil, table: table)
     return String(format: format, locale: Locale.current, arguments: args)
   }
 }

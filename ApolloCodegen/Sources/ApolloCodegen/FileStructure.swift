@@ -5,8 +5,8 @@ import Foundation
 struct FileStructure {
     let rootFolderURL: URL
     let codegenFolderUrl: URL
-    let gqlFolderURL: URL
     let cliFolderURL: URL
+    let xplatformSchemaFolderUrl: URL
 
     init() throws {
         // Grab the parent folder of this file on the filesystem
@@ -21,17 +21,18 @@ struct FileStructure {
         
         rootFolderURL = codegenFolderUrl
             .apollo.parentFolderURL() // Result: root folder
-        
-        gqlFolderURL = rootFolderURL
-            .apollo.childFolderURL(folderName: "Sources")
-            .apollo.childFolderURL(folderName: "NablaMessagingCore")
-            .apollo.childFolderURL(folderName: "Data")
-            .apollo.childFolderURL(folderName: "GQL")
 
         // Set up the folder where you want the typescript CLI to download.
         cliFolderURL = rootFolderURL
             .apollo.childFolderURL(folderName: "ApolloCodegen")
             .apollo.childFolderURL(folderName: "ApolloCLI")
+        
+        // TODO: Copy server schema inside ios sdk folder
+        xplatformSchemaFolderUrl = rootFolderURL
+            .apollo.parentFolderURL() // sdk folder
+            .apollo.parentFolderURL() // health folder
+            .apollo.childFolderURL(folderName: "graphql")
+            .apollo.childFolderURL(folderName: "sdk")
     }
 }
 
@@ -40,8 +41,8 @@ extension FileStructure: CustomDebugStringConvertible {
         """
         Root folder URL: \(rootFolderURL)
         ApolloCodgegen folder URL: \(codegenFolderUrl)
-        GQL folder URL: \(gqlFolderURL)
         CLI folder URL: \(cliFolderURL)
+        XPlatform schema folder URL: \(xplatformSchemaFolderUrl)
         """
     }
 }

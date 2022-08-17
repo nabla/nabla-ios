@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 public class ConversationListView: UIView, ConversationListViewContract {
@@ -35,7 +36,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
         case let .loaded(viewModel):
             let animated = !self.viewModel.items.isEmpty
             self.viewModel = viewModel
-            tableView.reload(animated: animated)
+            tableView.nabla.reload(animated: animated)
             loadingIndicator.isHidden = true
             errorView.isHidden = true
             tableView.isHidden = false
@@ -73,19 +74,19 @@ public class ConversationListView: UIView, ConversationListViewContract {
     private func setUp() {
         backgroundColor = NablaTheme.ConversationPreview.backgroundColor
         addSubview(tableView)
-        tableView.pinToSuperView()
+        tableView.nabla.pinToSuperView()
         addSubview(loadingIndicator)
-        loadingIndicator.centerInSuperView()
+        loadingIndicator.nabla.constraintToCenterInSuperView()
         addSubview(errorView)
-        errorView.pinToSuperView()
+        errorView.nabla.pinToSuperView()
     }
     
     private func createTableView() -> UITableView {
         let tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(ConversationListItemCell.self)
-        tableView.separatorInset = .only(left: 70)
+        tableView.nabla.register(ConversationListItemCell.self)
+        tableView.separatorInset = .nabla.only(left: 70)
         tableView.backgroundColor = NablaTheme.ConversationPreview.backgroundColor
         return tableView
     }
@@ -117,7 +118,7 @@ extension ConversationListView: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(ofClass: ConversationListItemCell.self, for: indexPath)
+        let cell = tableView.nabla.dequeueReusableCell(ofClass: ConversationListItemCell.self, for: indexPath)
         cell.configure(with: viewModel.items[indexPath.row])
         return cell
     }

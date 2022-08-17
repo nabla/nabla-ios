@@ -15,4 +15,4 @@ strings:
       params:
         enumName: L10n
         publicAccess: false
-        bundle: NablaMessagingCore.resourcesBundle
+        bundle: NablaMessagingCorePackage.resourcesBundle

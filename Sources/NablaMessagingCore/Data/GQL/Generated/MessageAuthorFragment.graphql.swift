@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct MessageAuthorFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment MessageAuthorFragment on MessageAuthor {
         __typename
@@ -31,9 +31,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["System", "Patient", "Provider", "DeletedProvider"]
+     static let possibleTypes: [String] = ["System", "Patient", "Provider", "DeletedProvider"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLTypeCase(
           variants: ["Provider": AsProvider.selections, "Patient": AsPatient.selections, "System": AsSystem.selections, "DeletedProvider": AsDeletedProvider.selections],
@@ -44,21 +44,21 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public static func makePatient(id: GQL.UUID) -> MessageAuthorFragment {
+     static func makePatient(id: GQL.UUID) -> MessageAuthorFragment {
       return MessageAuthorFragment(unsafeResultMap: ["__typename": "Patient", "id": id])
     }
 
-    public static func makeDeletedProvider(empty: EmptyObject) -> MessageAuthorFragment {
+     static func makeDeletedProvider(empty: EmptyObject) -> MessageAuthorFragment {
       return MessageAuthorFragment(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -67,7 +67,7 @@ public extension GQL {
       }
     }
 
-    public var asProvider: AsProvider? {
+     var asProvider: AsProvider? {
       get {
         if !AsProvider.possibleTypes.contains(__typename) { return nil }
         return AsProvider(unsafeResultMap: resultMap)
@@ -78,10 +78,10 @@ public extension GQL {
       }
     }
 
-    public struct AsProvider: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Provider"]
+     struct AsProvider: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Provider"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -89,13 +89,13 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -104,7 +104,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -113,14 +113,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var providerFragment: ProviderFragment {
+         var providerFragment: ProviderFragment {
           get {
             return ProviderFragment(unsafeResultMap: resultMap)
           }
@@ -131,7 +131,7 @@ public extension GQL {
       }
     }
 
-    public var asPatient: AsPatient? {
+     var asPatient: AsPatient? {
       get {
         if !AsPatient.possibleTypes.contains(__typename) { return nil }
         return AsPatient(unsafeResultMap: resultMap)
@@ -142,10 +142,10 @@ public extension GQL {
       }
     }
 
-    public struct AsPatient: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Patient"]
+     struct AsPatient: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Patient"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -153,17 +153,17 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(id: GQL.UUID) {
+       init(id: GQL.UUID) {
         self.init(unsafeResultMap: ["__typename": "Patient", "id": id])
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -172,7 +172,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -181,14 +181,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var patientFragment: PatientFragment {
+         var patientFragment: PatientFragment {
           get {
             return PatientFragment(unsafeResultMap: resultMap)
           }
@@ -199,7 +199,7 @@ public extension GQL {
       }
     }
 
-    public var asSystem: AsSystem? {
+     var asSystem: AsSystem? {
       get {
         if !AsSystem.possibleTypes.contains(__typename) { return nil }
         return AsSystem(unsafeResultMap: resultMap)
@@ -210,10 +210,10 @@ public extension GQL {
       }
     }
 
-    public struct AsSystem: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["System"]
+     struct AsSystem: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["System"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -221,13 +221,13 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -236,7 +236,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -245,14 +245,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var systemMessageFragment: SystemMessageFragment {
+         var systemMessageFragment: SystemMessageFragment {
           get {
             return SystemMessageFragment(unsafeResultMap: resultMap)
           }
@@ -263,7 +263,7 @@ public extension GQL {
       }
     }
 
-    public var asDeletedProvider: AsDeletedProvider? {
+     var asDeletedProvider: AsDeletedProvider? {
       get {
         if !AsDeletedProvider.possibleTypes.contains(__typename) { return nil }
         return AsDeletedProvider(unsafeResultMap: resultMap)
@@ -274,10 +274,10 @@ public extension GQL {
       }
     }
 
-    public struct AsDeletedProvider: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["DeletedProvider"]
+     struct AsDeletedProvider: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["DeletedProvider"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
@@ -285,17 +285,17 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(empty: EmptyObject) {
+       init(empty: EmptyObject) {
         self.init(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -304,7 +304,7 @@ public extension GQL {
         }
       }
 
-      public var empty: EmptyObject {
+       var empty: EmptyObject {
         get {
           return resultMap["empty"]! as! EmptyObject
         }

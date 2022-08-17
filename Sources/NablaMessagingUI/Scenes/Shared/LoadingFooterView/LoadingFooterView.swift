@@ -25,6 +25,6 @@ class LoadingFooterView: UIView {
         let activityIndicatorView = UIActivityIndicatorView(style: .medium)
         activityIndicatorView.startAnimating()
         addSubview(activityIndicatorView)
-        activityIndicatorView.centerInSuperView()
+        activityIndicatorView.nabla.constraintToCenterInSuperView()
     }
 }

@@ -15,6 +15,8 @@ struct SwiftScript: ParsableCommand {
 
     /// The sub-command to actually generate code.
     struct GenerateCode: ParsableCommand {
+        @Argument() var packageName: String
+        
         static var configuration = CommandConfiguration(
             commandName: "generate",
             abstract: "Generates swift code from your schema + your operations based on information set up in the `GenerateCode` command."
@@ -22,21 +24,31 @@ struct SwiftScript: ParsableCommand {
 
         mutating func run() throws {
             CodegenLogger.level = .error
-
+            
+            let supportedPackageNames = ["NablaCore", "NablaMessagingCore"]
+            guard supportedPackageNames.contains(packageName) else {
+                throw CommandError(message: "Unknown package name \"\(packageName)\". Supported package names are: \(supportedPackageNames)")
+            }
+            
+            try codegen(packageName: packageName)
+        }
+        
+        private func codegen(packageName: String) throws {
             let fileStructure = try FileStructure()
             CodegenLogger.log("File structure: \(fileStructure)")
-
-            let folderForInputs = fileStructure.gqlFolderURL
+            
+            let packageFolder = fileStructure.rootFolderURL
+                .apollo.childFolderURL(folderName: "Sources")
+                .apollo.childFolderURL(folderName: packageName)
+            
+            let gqlFolder = packageFolder
+                .apollo.childFolderURL(folderName: "Data")
+                .apollo.childFolderURL(folderName: "GQL")
+            
+            let folderForInputs = gqlFolder
                 .apollo.childFolderURL(folderName: "Schema")
 
-            // TODO: Copy server schema inside ios sdk folder
-            let folderForXPlatformSchema = fileStructure.rootFolderURL
-                .apollo.parentFolderURL() // sdk folder
-                .apollo.parentFolderURL() // health folder
-                .apollo.childFolderURL(folderName: "graphql")
-                .apollo.childFolderURL(folderName: "sdk")
-
-            let folderForOutputs = fileStructure.gqlFolderURL
+            let folderForOutputs = gqlFolder
                 .apollo.childFolderURL(folderName: "Generated")
 
             let authenticatedOutputFormat = ApolloCodegenOptions.OutputFormat.multipleFiles(
@@ -48,10 +60,11 @@ struct SwiftScript: ParsableCommand {
             let authenticatedCodegenOptions = ApolloCodegenOptions(
                 includes: "\(folderForInputs.path)/**/*.graphql",
                 mergeInFieldsFromFragmentSpreads: false,
+                modifier: .internal, // Does not work, see extra command in build.sh
                 namespace: "GQL",
                 outputFormat: authenticatedOutputFormat,
                 customScalarFormat: .passthroughWithPrefix("GQL."),
-                urlToSchemaFile: folderForXPlatformSchema.appendingPathComponent("patient.graphql")
+                urlToSchemaFile: fileStructure.xplatformSchemaFolderUrl.appendingPathComponent("patient.graphql")
             )
 
             try ApolloCodegen.run(from: fileStructure.codegenFolderUrl,
@@ -68,4 +81,8 @@ extension URL {
     static func multiple(_ strings: [String]) -> URL? {
         URL(string: strings.joined(separator: ","))
     }
+}
+
+struct CommandError: Error {
+    let message: String
 }

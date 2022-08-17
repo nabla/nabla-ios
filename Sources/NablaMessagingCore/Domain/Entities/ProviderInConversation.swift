@@ -6,7 +6,7 @@ public struct ProviderInConversation {
     public let seenUntil: Date?
     
     public var isTyping: Bool {
-        isInactiveAt.map(\.isFuture) ?? false
+        isInactiveAt.map(\.nabla.isFuture) ?? false
     }
 
     // MARK: - Private

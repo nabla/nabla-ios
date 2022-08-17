@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct AudioMessageContentFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment AudioMessageContentFragment on AudioMessageContent {
         __typename
@@ -26,26 +26,26 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["AudioMessageContent"]
+     static let possibleTypes: [String] = ["AudioMessageContent"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("audioFileUpload", type: .nonNull(.object(AudioFileUpload.selections))),
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(audioFileUpload: AudioFileUpload) {
+     init(audioFileUpload: AudioFileUpload) {
       self.init(unsafeResultMap: ["__typename": "AudioMessageContent", "audioFileUpload": audioFileUpload.resultMap])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -54,7 +54,7 @@ public extension GQL {
       }
     }
 
-    public var audioFileUpload: AudioFileUpload {
+     var audioFileUpload: AudioFileUpload {
       get {
         return AudioFileUpload(unsafeResultMap: resultMap["audioFileUpload"]! as! ResultMap)
       }
@@ -63,10 +63,10 @@ public extension GQL {
       }
     }
 
-    public struct AudioFileUpload: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["AudioFileUpload"]
+     struct AudioFileUpload: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["AudioFileUpload"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -77,17 +77,17 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(id: GQL.UUID, url: Url, fileName: String, mimeType: String, durationMs: Int? = nil) {
+       init(id: GQL.UUID, url: Url, fileName: String, mimeType: String, durationMs: Int? = nil) {
         self.init(unsafeResultMap: ["__typename": "AudioFileUpload", "id": id, "url": url.resultMap, "fileName": fileName, "mimeType": mimeType, "durationMs": durationMs])
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -96,7 +96,7 @@ public extension GQL {
         }
       }
 
-      public var id: GQL.UUID {
+       var id: GQL.UUID {
         get {
           return resultMap["id"]! as! GQL.UUID
         }
@@ -105,7 +105,7 @@ public extension GQL {
         }
       }
 
-      public var url: Url {
+       var url: Url {
         get {
           return Url(unsafeResultMap: resultMap["url"]! as! ResultMap)
         }
@@ -114,7 +114,7 @@ public extension GQL {
         }
       }
 
-      public var fileName: String {
+       var fileName: String {
         get {
           return resultMap["fileName"]! as! String
         }
@@ -123,7 +123,7 @@ public extension GQL {
         }
       }
 
-      public var mimeType: String {
+       var mimeType: String {
         get {
           return resultMap["mimeType"]! as! String
         }
@@ -132,7 +132,7 @@ public extension GQL {
         }
       }
 
-      public var durationMs: Int? {
+       var durationMs: Int? {
         get {
           return resultMap["durationMs"] as? Int
         }
@@ -141,27 +141,27 @@ public extension GQL {
         }
       }
 
-      public struct Url: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["EphemeralUrl"]
+       struct Url: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["EphemeralUrl"]
 
-        public static var selections: [GraphQLSelection] {
+         static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLFragmentSpread(EphemeralUrlFragment.self),
           ]
         }
 
-        public private(set) var resultMap: ResultMap
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public init(expiresAt: GQL.DateTime, url: String) {
+         init(expiresAt: GQL.DateTime, url: String) {
           self.init(unsafeResultMap: ["__typename": "EphemeralUrl", "expiresAt": expiresAt, "url": url])
         }
 
-        public var __typename: String {
+         var __typename: String {
           get {
             return resultMap["__typename"]! as! String
           }
@@ -170,7 +170,7 @@ public extension GQL {
           }
         }
 
-        public var fragments: Fragments {
+         var fragments: Fragments {
           get {
             return Fragments(unsafeResultMap: resultMap)
           }
@@ -179,14 +179,14 @@ public extension GQL {
           }
         }
 
-        public struct Fragments {
-          public private(set) var resultMap: ResultMap
+         struct Fragments {
+           private(set) var resultMap: ResultMap
 
-          public init(unsafeResultMap: ResultMap) {
+           init(unsafeResultMap: ResultMap) {
             self.resultMap = unsafeResultMap
           }
 
-          public var ephemeralUrlFragment: EphemeralUrlFragment {
+           var ephemeralUrlFragment: EphemeralUrlFragment {
             get {
               return EphemeralUrlFragment(unsafeResultMap: resultMap)
             }

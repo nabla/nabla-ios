@@ -3,10 +3,16 @@ import Foundation
 class KeyValueStoreImpl: KeyValueStore {
     // MARK: - Internal
     
-    func set<T: Codable>(_ object: T, forKey key: String) throws {
+    func set<T: Codable>(_ object: T?, forKey key: String) throws {
+        defer {
+            userDefaults.synchronize()
+        }
+        guard let object = object else {
+            userDefaults.removeObject(forKey: key)
+            return
+        }
         let data = try JSONEncoder().encode(object)
         userDefaults.set(data, forKey: format(key: key))
-        userDefaults.synchronize()
     }
     
     func get<T: Codable>(forKey key: String) throws -> T? {

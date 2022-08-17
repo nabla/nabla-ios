@@ -47,13 +47,13 @@ class AvatarView: UIView {
     
     private func setUp() {
         addSubview(imageAvatarView)
-        imageAvatarView.pinToSuperView()
+        imageAvatarView.nabla.pinToSuperView()
         
         addSubview(initialsAvatarView)
-        initialsAvatarView.pinToSuperView()
+        initialsAvatarView.nabla.pinToSuperView()
         
         addSubview(deletedAvatarView)
-        deletedAvatarView.pinToSuperView()
+        deletedAvatarView.nabla.pinToSuperView()
     }
     
     private func update() {

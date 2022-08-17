@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   final class MaskAsSeenMutation: GraphQLMutation {
     /// The raw GraphQL definition of this operation.
-    public let operationDefinition: String =
+     let operationDefinition: String =
       """
       mutation MaskAsSeen($conversationId: UUID!) {
         markAsSeen(conversationId: $conversationId) {
@@ -22,38 +22,38 @@ public extension GQL {
       }
       """
 
-    public let operationName: String = "MaskAsSeen"
+     let operationName: String = "MaskAsSeen"
 
-    public var conversationId: GQL.UUID
+     var conversationId: GQL.UUID
 
-    public init(conversationId: GQL.UUID) {
+     init(conversationId: GQL.UUID) {
       self.conversationId = conversationId
     }
 
-    public var variables: GraphQLMap? {
+     var variables: GraphQLMap? {
       return ["conversationId": conversationId]
     }
 
-    public struct Data: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Mutation"]
+     struct Data: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Mutation"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("markAsSeen", arguments: ["conversationId": GraphQLVariable("conversationId")], type: .nonNull(.object(MarkAsSeen.selections))),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(markAsSeen: MarkAsSeen) {
+       init(markAsSeen: MarkAsSeen) {
         self.init(unsafeResultMap: ["__typename": "Mutation", "markAsSeen": markAsSeen.resultMap])
       }
 
-      public var markAsSeen: MarkAsSeen {
+       var markAsSeen: MarkAsSeen {
         get {
           return MarkAsSeen(unsafeResultMap: resultMap["markAsSeen"]! as! ResultMap)
         }
@@ -62,27 +62,27 @@ public extension GQL {
         }
       }
 
-      public struct MarkAsSeen: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["MarkConversationAsSeenOutput"]
+       struct MarkAsSeen: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["MarkConversationAsSeenOutput"]
 
-        public static var selections: [GraphQLSelection] {
+         static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("conversation", type: .nonNull(.object(Conversation.selections))),
           ]
         }
 
-        public private(set) var resultMap: ResultMap
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public init(conversation: Conversation) {
+         init(conversation: Conversation) {
           self.init(unsafeResultMap: ["__typename": "MarkConversationAsSeenOutput", "conversation": conversation.resultMap])
         }
 
-        public var __typename: String {
+         var __typename: String {
           get {
             return resultMap["__typename"]! as! String
           }
@@ -91,7 +91,7 @@ public extension GQL {
           }
         }
 
-        public var conversation: Conversation {
+         var conversation: Conversation {
           get {
             return Conversation(unsafeResultMap: resultMap["conversation"]! as! ResultMap)
           }
@@ -100,10 +100,10 @@ public extension GQL {
           }
         }
 
-        public struct Conversation: GraphQLSelectionSet {
-          public static let possibleTypes: [String] = ["Conversation"]
+         struct Conversation: GraphQLSelectionSet {
+           static let possibleTypes: [String] = ["Conversation"]
 
-          public static var selections: [GraphQLSelection] {
+           static var selections: [GraphQLSelection] {
             return [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
               GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -111,17 +111,17 @@ public extension GQL {
             ]
           }
 
-          public private(set) var resultMap: ResultMap
+           private(set) var resultMap: ResultMap
 
-          public init(unsafeResultMap: ResultMap) {
+           init(unsafeResultMap: ResultMap) {
             self.resultMap = unsafeResultMap
           }
 
-          public init(id: GQL.UUID, unreadMessageCount: Int) {
+           init(id: GQL.UUID, unreadMessageCount: Int) {
             self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "unreadMessageCount": unreadMessageCount])
           }
 
-          public var __typename: String {
+           var __typename: String {
             get {
               return resultMap["__typename"]! as! String
             }
@@ -130,7 +130,7 @@ public extension GQL {
             }
           }
 
-          public var id: GQL.UUID {
+           var id: GQL.UUID {
             get {
               return resultMap["id"]! as! GQL.UUID
             }
@@ -139,7 +139,7 @@ public extension GQL {
             }
           }
 
-          public var unreadMessageCount: Int {
+           var unreadMessageCount: Int {
             get {
               return resultMap["unreadMessageCount"]! as! Int
             }

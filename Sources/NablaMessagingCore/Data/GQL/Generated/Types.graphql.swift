@@ -5,19 +5,19 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public enum GQL {
-  public struct SendMessageInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+ enum GQL {
+   struct SendMessageInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - content
     ///   - clientId
     ///   - replyToMessageId
-    public init(content: SendMessageContentInput, clientId: GQL.UUID, replyToMessageId: Swift.Optional<GQL.UUID?> = nil) {
+     init(content: SendMessageContentInput, clientId: GQL.UUID, replyToMessageId: Swift.Optional<GQL.UUID?> = nil) {
       graphQLMap = ["content": content, "clientId": clientId, "replyToMessageId": replyToMessageId]
     }
 
-    public var content: SendMessageContentInput {
+     var content: SendMessageContentInput {
       get {
         return graphQLMap["content"] as! SendMessageContentInput
       }
@@ -26,7 +26,7 @@ public enum GQL {
       }
     }
 
-    public var clientId: GQL.UUID {
+     var clientId: GQL.UUID {
       get {
         return graphQLMap["clientId"] as! GQL.UUID
       }
@@ -35,7 +35,7 @@ public enum GQL {
       }
     }
 
-    public var replyToMessageId: Swift.Optional<GQL.UUID?> {
+     var replyToMessageId: Swift.Optional<GQL.UUID?> {
       get {
         return graphQLMap["replyToMessageId"] as? Swift.Optional<GQL.UUID?> ?? Swift.Optional<GQL.UUID?>.none
       }
@@ -45,8 +45,8 @@ public enum GQL {
     }
   }
 
-  public struct SendMessageContentInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct SendMessageContentInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - textInput
@@ -54,11 +54,11 @@ public enum GQL {
     ///   - videoInput
     ///   - documentInput
     ///   - audioInput
-    public init(textInput: Swift.Optional<SendTextMessageInput?> = nil, imageInput: Swift.Optional<SendImageMessageInput?> = nil, videoInput: Swift.Optional<SendVideoMessageInput?> = nil, documentInput: Swift.Optional<SendDocumentMessageInput?> = nil, audioInput: Swift.Optional<SendAudioMessageInput?> = nil) {
+     init(textInput: Swift.Optional<SendTextMessageInput?> = nil, imageInput: Swift.Optional<SendImageMessageInput?> = nil, videoInput: Swift.Optional<SendVideoMessageInput?> = nil, documentInput: Swift.Optional<SendDocumentMessageInput?> = nil, audioInput: Swift.Optional<SendAudioMessageInput?> = nil) {
       graphQLMap = ["textInput": textInput, "imageInput": imageInput, "videoInput": videoInput, "documentInput": documentInput, "audioInput": audioInput]
     }
 
-    public var textInput: Swift.Optional<SendTextMessageInput?> {
+     var textInput: Swift.Optional<SendTextMessageInput?> {
       get {
         return graphQLMap["textInput"] as? Swift.Optional<SendTextMessageInput?> ?? Swift.Optional<SendTextMessageInput?>.none
       }
@@ -67,7 +67,7 @@ public enum GQL {
       }
     }
 
-    public var imageInput: Swift.Optional<SendImageMessageInput?> {
+     var imageInput: Swift.Optional<SendImageMessageInput?> {
       get {
         return graphQLMap["imageInput"] as? Swift.Optional<SendImageMessageInput?> ?? Swift.Optional<SendImageMessageInput?>.none
       }
@@ -76,7 +76,7 @@ public enum GQL {
       }
     }
 
-    public var videoInput: Swift.Optional<SendVideoMessageInput?> {
+     var videoInput: Swift.Optional<SendVideoMessageInput?> {
       get {
         return graphQLMap["videoInput"] as? Swift.Optional<SendVideoMessageInput?> ?? Swift.Optional<SendVideoMessageInput?>.none
       }
@@ -85,7 +85,7 @@ public enum GQL {
       }
     }
 
-    public var documentInput: Swift.Optional<SendDocumentMessageInput?> {
+     var documentInput: Swift.Optional<SendDocumentMessageInput?> {
       get {
         return graphQLMap["documentInput"] as? Swift.Optional<SendDocumentMessageInput?> ?? Swift.Optional<SendDocumentMessageInput?>.none
       }
@@ -94,7 +94,7 @@ public enum GQL {
       }
     }
 
-    public var audioInput: Swift.Optional<SendAudioMessageInput?> {
+     var audioInput: Swift.Optional<SendAudioMessageInput?> {
       get {
         return graphQLMap["audioInput"] as? Swift.Optional<SendAudioMessageInput?> ?? Swift.Optional<SendAudioMessageInput?>.none
       }
@@ -104,16 +104,16 @@ public enum GQL {
     }
   }
 
-  public struct SendTextMessageInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct SendTextMessageInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - text
-    public init(text: String) {
+     init(text: String) {
       graphQLMap = ["text": text]
     }
 
-    public var text: String {
+     var text: String {
       get {
         return graphQLMap["text"] as! String
       }
@@ -123,16 +123,16 @@ public enum GQL {
     }
   }
 
-  public struct SendImageMessageInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct SendImageMessageInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - upload
-    public init(upload: UploadInput) {
+     init(upload: UploadInput) {
       graphQLMap = ["upload": upload]
     }
 
-    public var upload: UploadInput {
+     var upload: UploadInput {
       get {
         return graphQLMap["upload"] as! UploadInput
       }
@@ -142,16 +142,16 @@ public enum GQL {
     }
   }
 
-  public struct UploadInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct UploadInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - uuid
-    public init(uuid: GQL.UUID) {
+     init(uuid: GQL.UUID) {
       graphQLMap = ["uuid": uuid]
     }
 
-    public var uuid: GQL.UUID {
+     var uuid: GQL.UUID {
       get {
         return graphQLMap["uuid"] as! GQL.UUID
       }
@@ -161,16 +161,16 @@ public enum GQL {
     }
   }
 
-  public struct SendVideoMessageInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct SendVideoMessageInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - upload
-    public init(upload: UploadInput) {
+     init(upload: UploadInput) {
       graphQLMap = ["upload": upload]
     }
 
-    public var upload: UploadInput {
+     var upload: UploadInput {
       get {
         return graphQLMap["upload"] as! UploadInput
       }
@@ -180,16 +180,16 @@ public enum GQL {
     }
   }
 
-  public struct SendDocumentMessageInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct SendDocumentMessageInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - upload
-    public init(upload: UploadInput) {
+     init(upload: UploadInput) {
       graphQLMap = ["upload": upload]
     }
 
-    public var upload: UploadInput {
+     var upload: UploadInput {
       get {
         return graphQLMap["upload"] as! UploadInput
       }
@@ -199,16 +199,16 @@ public enum GQL {
     }
   }
 
-  public struct SendAudioMessageInput: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct SendAudioMessageInput: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - upload
-    public init(upload: UploadInput) {
+     init(upload: UploadInput) {
       graphQLMap = ["upload": upload]
     }
 
-    public var upload: UploadInput {
+     var upload: UploadInput {
       get {
         return graphQLMap["upload"] as! UploadInput
       }
@@ -218,17 +218,17 @@ public enum GQL {
     }
   }
 
-  public struct OpaqueCursorPage: GraphQLMapConvertible {
-    public var graphQLMap: GraphQLMap
+   struct OpaqueCursorPage: GraphQLMapConvertible {
+     var graphQLMap: GraphQLMap
 
     /// - Parameters:
     ///   - cursor
     ///   - numberOfItems
-    public init(cursor: Swift.Optional<String?> = nil, numberOfItems: Swift.Optional<Int?> = nil) {
+     init(cursor: Swift.Optional<String?> = nil, numberOfItems: Swift.Optional<Int?> = nil) {
       graphQLMap = ["cursor": cursor, "numberOfItems": numberOfItems]
     }
 
-    public var cursor: Swift.Optional<String?> {
+     var cursor: Swift.Optional<String?> {
       get {
         return graphQLMap["cursor"] as? Swift.Optional<String?> ?? Swift.Optional<String?>.none
       }
@@ -237,7 +237,7 @@ public enum GQL {
       }
     }
 
-    public var numberOfItems: Swift.Optional<Int?> {
+     var numberOfItems: Swift.Optional<Int?> {
       get {
         return graphQLMap["numberOfItems"] as? Swift.Optional<Int?> ?? Swift.Optional<Int?>.none
       }
@@ -247,27 +247,27 @@ public enum GQL {
     }
   }
 
-  public enum EmptyObject: RawRepresentable, Equatable, Hashable, CaseIterable, Apollo.JSONDecodable, Apollo.JSONEncodable {
-    public typealias RawValue = String
+   enum EmptyObject: RawRepresentable, Equatable, Hashable, CaseIterable, Apollo.JSONDecodable, Apollo.JSONEncodable {
+     typealias RawValue = String
     case empty
     /// Auto generated constant for unknown enum values
     case __unknown(RawValue)
 
-    public init?(rawValue: RawValue) {
+     init?(rawValue: RawValue) {
       switch rawValue {
         case "EMPTY": self = .empty
         default: self = .__unknown(rawValue)
       }
     }
 
-    public var rawValue: RawValue {
+     var rawValue: RawValue {
       switch self {
         case .empty: return "EMPTY"
         case .__unknown(let value): return value
       }
     }
 
-    public static func == (lhs: EmptyObject, rhs: EmptyObject) -> Bool {
+     static func == (lhs: EmptyObject, rhs: EmptyObject) -> Bool {
       switch (lhs, rhs) {
         case (.empty, .empty): return true
         case (.__unknown(let lhsValue), .__unknown(let rhsValue)): return lhsValue == rhsValue
@@ -275,7 +275,7 @@ public enum GQL {
       }
     }
 
-    public static var allCases: [EmptyObject] {
+     static var allCases: [EmptyObject] {
       return [
         .empty,
       ]

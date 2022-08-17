@@ -52,8 +52,8 @@ class AudioRecorderComposerView: UIView, AudioRecorderComposerViewContract {
     private func setUp() {
         let recordingIndocatorContainer = UIView()
         recordingIndocatorContainer.addSubview(recordingIndocator)
-        recordingIndocator.centerInSuperView(along: .vertical)
-        recordingIndocator.pinToSuperView(edges: .horizontal)
+        recordingIndocator.nabla.constraintToCenterInSuperView(along: .vertical)
+        recordingIndocator.nabla.pinToSuperView(edges: .nabla.horizontal)
 
         let stackView = UIStackView(arrangedSubviews: [recordingIndocatorContainer, durationLabel])
         stackView.axis = .horizontal
@@ -62,7 +62,7 @@ class AudioRecorderComposerView: UIView, AudioRecorderComposerViewContract {
         stackView.alignment = .fill
 
         addSubview(stackView)
-        stackView.centerInSuperView()
+        stackView.nabla.constraintToCenterInSuperView()
 
         backgroundColor = NablaTheme.Conversation.audioComposerBackgroundColor
         clipsToBounds = true
@@ -77,7 +77,7 @@ class AudioRecorderComposerView: UIView, AudioRecorderComposerViewContract {
     private func makeRecordingIndicator() -> UIView {
         let view = UIView()
         view.backgroundColor = NablaTheme.Conversation.audioComposerRecordIndicatorColor
-        view.constraintToSize(.init(width: 8, height: 8))
+        view.nabla.constraintToSize(.init(width: 8, height: 8))
         view.layer.cornerRadius = 4
         view.clipsToBounds = true
         return view

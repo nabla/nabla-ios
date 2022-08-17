@@ -1,3 +1,4 @@
+import NablaCore
 import UIKit
 
 class DemoViewController: UIViewController {
@@ -14,13 +15,7 @@ class DemoViewController: UIViewController {
     func setContentView(_ contentView: UIView) {
         view.subviews.forEach { $0.removeFromSuperview() }
         view.addSubview(contentView)
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
+        contentView.nabla.pinToSuperView()
     }
     
     // MARK: Handlers

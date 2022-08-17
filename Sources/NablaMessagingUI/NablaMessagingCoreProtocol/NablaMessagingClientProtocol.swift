@@ -4,8 +4,6 @@ import NablaMessagingCore
 
 // sourcery: AutoMockable
 protocol NablaMessagingClientProtocol {
-    var logger: Logger { get }
-
     func createConversation(
         title: String?,
         providerIds: [UUID]?,

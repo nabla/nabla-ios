@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 final class TypingIndicatorContentView: UIView, MessageContentView {
@@ -7,7 +8,7 @@ final class TypingIndicatorContentView: UIView, MessageContentView {
     init() {
         super.init(frame: .zero)
         addSubview(typingIndicatorView)
-        typingIndicatorView.pinToSuperView(insets: .init(horizontal: 4, vertical: 2))
+        typingIndicatorView.nabla.pinToSuperView(insets: .nabla.make(horizontal: 4, vertical: 2))
     }
     
     @available(*, unavailable)
@@ -17,7 +18,9 @@ final class TypingIndicatorContentView: UIView, MessageContentView {
     
     // MARK: - MessageContentView
     
-    func configure(with _: Void, sender _: ConversationMessageSender) {}
+    func configure(with _: Void) {}
+    
+    func configure(sender: ConversationMessageSender) {}
     
     func prepareForReuse() {}
     

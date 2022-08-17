@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct TextMessageContentFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment TextMessageContentFragment on TextMessageContent {
         __typename
@@ -16,26 +16,26 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["TextMessageContent"]
+     static let possibleTypes: [String] = ["TextMessageContent"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("text", type: .nonNull(.scalar(String.self))),
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(text: String) {
+     init(text: String) {
       self.init(unsafeResultMap: ["__typename": "TextMessageContent", "text": text])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -44,7 +44,7 @@ public extension GQL {
       }
     }
 
-    public var text: String {
+     var text: String {
       get {
         return resultMap["text"]! as! String
       }

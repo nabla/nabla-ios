@@ -1,5 +1,6 @@
 import AVKit
 import Foundation
+import NablaCore
 import NablaMessagingCore
 import UIKit
 
@@ -63,13 +64,13 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         contentView.backgroundColor = NablaTheme.Conversation.mediaComposerBackgroundColor
 
         addSubview(imageView)
-        imageView.pinToSuperView()
+        imageView.nabla.pinToSuperView()
 
         addSubview(playerView)
-        playerView.pinToSuperView()
+        playerView.nabla.pinToSuperView()
 
         addSubview(deleteButtonContainerView)
-        deleteButtonContainerView.pinToSuperView(edges: [.top, .trailing], insets: .init(horizontal: 5, vertical: 5))
+        deleteButtonContainerView.nabla.pinToSuperView(edges: [.top, .trailing], insets: .nabla.make(horizontal: 5, vertical: 5))
 
         layer.cornerRadius = 10.0
         clipsToBounds = true
@@ -100,8 +101,8 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         let view = UIView()
         view.backgroundColor = NablaTheme.Conversation.mediaComposerDeleteButtonBackgroundColor
         view.addSubview(deleteButton)
-        deleteButton.pinToSuperView()
-        view.constraintToSize(.init(width: 15, height: 15))
+        deleteButton.nabla.pinToSuperView()
+        view.nabla.constraintToSize(.init(width: 15, height: 15))
         view.layer.cornerRadius = 7
         view.clipsToBounds = true
         return view

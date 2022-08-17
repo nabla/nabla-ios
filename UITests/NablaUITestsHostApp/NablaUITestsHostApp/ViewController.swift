@@ -1,3 +1,4 @@
+import NablaCore
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import UIKit
@@ -11,10 +12,7 @@ final class ViewController: UIViewController {
         view.backgroundColor = .white
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: createConversationButton)
 
-        let view = NablaViewFactory.createConversationListView(
-            delegate: self,
-            client: NablaMessagingClientProtocolMock.shared
-        )
+        let view = NablaMessagingClientProtocolMock.shared.views.createConversationListView(delegate: self)
         setContentView(view)
     }
     
@@ -30,7 +28,7 @@ final class ViewController: UIViewController {
             case let .failure(error):
                 print(error)
             case let .success(conversation):
-                let destination = NablaViewFactory.createConversationViewController(conversation)
+                let destination = NablaMessagingClientProtocolMock.shared.views.createConversationViewController(conversation)
                 self.navigationController?.pushViewController(destination, animated: true)
             }
         }
@@ -48,22 +46,15 @@ final class ViewController: UIViewController {
     private func setContentView(_ contentView: UIView) {
         view.subviews.forEach { $0.removeFromSuperview() }
         view.addSubview(contentView)
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
+        contentView.nabla.pinToSuperView()
     }
 }
 
 extension ViewController: ConversationListDelegate {
     func conversationList(didSelect conversation: Conversation) {
-        let destination = NablaViewFactory.createConversationViewController(
+        let destination = NablaMessagingClientProtocolMock.shared.views.createConversationViewController(
             conversation,
-            showComposer: true,
-            client: NablaMessagingClientProtocolMock.shared
+            showComposer: true
         )
         navigationController?.pushViewController(destination, animated: true)
     }

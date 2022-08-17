@@ -16,7 +16,7 @@ final class InboxViewController: UIViewController, InboxViewContract {
 
     func setContentView(_ innerView: UIView) {
         view.addSubview(innerView)
-        innerView.pinToSuperView()
+        innerView.nabla.pinToSuperView()
     }
 
     // MARK: - InboxViewContract

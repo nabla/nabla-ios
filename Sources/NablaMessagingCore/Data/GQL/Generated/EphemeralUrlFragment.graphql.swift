@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct EphemeralUrlFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment EphemeralUrlFragment on EphemeralUrl {
         __typename
@@ -17,9 +17,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["EphemeralUrl"]
+     static let possibleTypes: [String] = ["EphemeralUrl"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("expiresAt", type: .nonNull(.scalar(GQL.DateTime.self))),
@@ -27,17 +27,17 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(expiresAt: GQL.DateTime, url: String) {
+     init(expiresAt: GQL.DateTime, url: String) {
       self.init(unsafeResultMap: ["__typename": "EphemeralUrl", "expiresAt": expiresAt, "url": url])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -46,7 +46,7 @@ public extension GQL {
       }
     }
 
-    public var expiresAt: GQL.DateTime {
+     var expiresAt: GQL.DateTime {
       get {
         return resultMap["expiresAt"]! as! GQL.DateTime
       }
@@ -55,7 +55,7 @@ public extension GQL {
       }
     }
 
-    public var url: String {
+     var url: String {
       get {
         return resultMap["url"]! as! String
       }

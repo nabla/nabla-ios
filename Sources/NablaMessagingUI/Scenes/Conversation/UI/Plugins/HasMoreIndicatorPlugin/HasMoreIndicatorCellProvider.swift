@@ -5,7 +5,7 @@ final class HasMoreIndicatorCellProvider: ConversationCellProvider {
     // MARK: - Internal
     
     func prepare(collectionView: UICollectionView) {
-        collectionView.register(HasMoreIndicatorCell.self)
+        collectionView.nabla.register(HasMoreIndicatorCell.self)
     }
     
     func provideCell(
@@ -18,7 +18,7 @@ final class HasMoreIndicatorCellProvider: ConversationCellProvider {
             return nil
         }
         
-        let cell = collectionView.dequeueReusableCell(ofClass: HasMoreIndicatorCell.self, for: indexPath)
+        let cell = collectionView.nabla.dequeueReusableCell(ofClass: HasMoreIndicatorCell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
             item: item,
             delegate: delegate

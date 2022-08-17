@@ -30,6 +30,7 @@ protocol ConversationViewContract: AnyObject {
     @available(iOS 14, *) func displayDocumentPicker()
     func displayImageDetail(for media: ImageFile)
     func displayDocumentDetail(for media: DocumentFile)
+    func displayVideoCallRoom(url: String, token: String)
     func showErrorAlert(viewModel: AlertViewModel)
     func set(replyToMessage: ConversationViewMessageItem)
     func scrollToItem(withId id: UUID)

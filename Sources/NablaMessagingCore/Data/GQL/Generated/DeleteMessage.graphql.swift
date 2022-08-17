@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   final class DeleteMessageMutation: GraphQLMutation {
     /// The raw GraphQL definition of this operation.
-    public let operationDefinition: String =
+     let operationDefinition: String =
       """
       mutation DeleteMessage($messageId: UUID!) {
         deleteMessage(id: $messageId) {
@@ -25,9 +25,9 @@ public extension GQL {
       }
       """
 
-    public let operationName: String = "DeleteMessage"
+     let operationName: String = "DeleteMessage"
 
-    public var queryDocument: String {
+     var queryDocument: String {
       var document: String = operationDefinition
       document.append("\n" + MessageContentFragment.fragmentDefinition)
       document.append("\n" + TextMessageContentFragment.fragmentDefinition)
@@ -36,39 +36,43 @@ public extension GQL {
       document.append("\n" + DocumentMessageContentFragment.fragmentDefinition)
       document.append("\n" + AudioMessageContentFragment.fragmentDefinition)
       document.append("\n" + EphemeralUrlFragment.fragmentDefinition)
+      document.append("\n" + LivekitRoomMessageContentFragment.fragmentDefinition)
+      document.append("\n" + LivekitRoomFragment.fragmentDefinition)
+      document.append("\n" + LivekitRoomOpenStatusFragment.fragmentDefinition)
+      document.append("\n" + LivekitRoomClosedStatusFragment.fragmentDefinition)
       return document
     }
 
-    public var messageId: GQL.UUID
+     var messageId: GQL.UUID
 
-    public init(messageId: GQL.UUID) {
+     init(messageId: GQL.UUID) {
       self.messageId = messageId
     }
 
-    public var variables: GraphQLMap? {
+     var variables: GraphQLMap? {
       return ["messageId": messageId]
     }
 
-    public struct Data: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Mutation"]
+     struct Data: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Mutation"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("deleteMessage", arguments: ["id": GraphQLVariable("messageId")], type: .nonNull(.object(DeleteMessage.selections))),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(deleteMessage: DeleteMessage) {
+       init(deleteMessage: DeleteMessage) {
         self.init(unsafeResultMap: ["__typename": "Mutation", "deleteMessage": deleteMessage.resultMap])
       }
 
-      public var deleteMessage: DeleteMessage {
+       var deleteMessage: DeleteMessage {
         get {
           return DeleteMessage(unsafeResultMap: resultMap["deleteMessage"]! as! ResultMap)
         }
@@ -77,27 +81,27 @@ public extension GQL {
         }
       }
 
-      public struct DeleteMessage: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["DeleteMessageOutput"]
+       struct DeleteMessage: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["DeleteMessageOutput"]
 
-        public static var selections: [GraphQLSelection] {
+         static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("message", type: .nonNull(.object(Message.selections))),
           ]
         }
 
-        public private(set) var resultMap: ResultMap
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public init(message: Message) {
+         init(message: Message) {
           self.init(unsafeResultMap: ["__typename": "DeleteMessageOutput", "message": message.resultMap])
         }
 
-        public var __typename: String {
+         var __typename: String {
           get {
             return resultMap["__typename"]! as! String
           }
@@ -106,7 +110,7 @@ public extension GQL {
           }
         }
 
-        public var message: Message {
+         var message: Message {
           get {
             return Message(unsafeResultMap: resultMap["message"]! as! ResultMap)
           }
@@ -115,10 +119,10 @@ public extension GQL {
           }
         }
 
-        public struct Message: GraphQLSelectionSet {
-          public static let possibleTypes: [String] = ["Message"]
+         struct Message: GraphQLSelectionSet {
+           static let possibleTypes: [String] = ["Message"]
 
-          public static var selections: [GraphQLSelection] {
+           static var selections: [GraphQLSelection] {
             return [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
               GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -126,17 +130,17 @@ public extension GQL {
             ]
           }
 
-          public private(set) var resultMap: ResultMap
+           private(set) var resultMap: ResultMap
 
-          public init(unsafeResultMap: ResultMap) {
+           init(unsafeResultMap: ResultMap) {
             self.resultMap = unsafeResultMap
           }
 
-          public init(id: GQL.UUID, content: Content) {
+           init(id: GQL.UUID, content: Content) {
             self.init(unsafeResultMap: ["__typename": "Message", "id": id, "content": content.resultMap])
           }
 
-          public var __typename: String {
+           var __typename: String {
             get {
               return resultMap["__typename"]! as! String
             }
@@ -145,7 +149,7 @@ public extension GQL {
             }
           }
 
-          public var id: GQL.UUID {
+           var id: GQL.UUID {
             get {
               return resultMap["id"]! as! GQL.UUID
             }
@@ -154,7 +158,7 @@ public extension GQL {
             }
           }
 
-          public var content: Content {
+           var content: Content {
             get {
               return Content(unsafeResultMap: resultMap["content"]! as! ResultMap)
             }
@@ -163,35 +167,31 @@ public extension GQL {
             }
           }
 
-          public struct Content: GraphQLSelectionSet {
-            public static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "VideoMessageContent", "DocumentMessageContent", "DeletedMessageContent", "AudioMessageContent", "LivekitRoomMessageContent"]
+           struct Content: GraphQLSelectionSet {
+             static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "VideoMessageContent", "DocumentMessageContent", "DeletedMessageContent", "AudioMessageContent", "LivekitRoomMessageContent"]
 
-            public static var selections: [GraphQLSelection] {
+             static var selections: [GraphQLSelection] {
               return [
                 GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
                 GraphQLFragmentSpread(MessageContentFragment.self),
               ]
             }
 
-            public private(set) var resultMap: ResultMap
+             private(set) var resultMap: ResultMap
 
-            public init(unsafeResultMap: ResultMap) {
+             init(unsafeResultMap: ResultMap) {
               self.resultMap = unsafeResultMap
             }
 
-            public static func makeTextMessageContent(text: String) -> Content {
+             static func makeTextMessageContent(text: String) -> Content {
               return Content(unsafeResultMap: ["__typename": "TextMessageContent", "text": text])
             }
 
-            public static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
+             static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
               return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
             }
 
-            public static func makeLivekitRoomMessageContent() -> Content {
-              return Content(unsafeResultMap: ["__typename": "LivekitRoomMessageContent"])
-            }
-
-            public var __typename: String {
+             var __typename: String {
               get {
                 return resultMap["__typename"]! as! String
               }
@@ -200,7 +200,7 @@ public extension GQL {
               }
             }
 
-            public var fragments: Fragments {
+             var fragments: Fragments {
               get {
                 return Fragments(unsafeResultMap: resultMap)
               }
@@ -209,14 +209,14 @@ public extension GQL {
               }
             }
 
-            public struct Fragments {
-              public private(set) var resultMap: ResultMap
+             struct Fragments {
+               private(set) var resultMap: ResultMap
 
-              public init(unsafeResultMap: ResultMap) {
+               init(unsafeResultMap: ResultMap) {
                 self.resultMap = unsafeResultMap
               }
 
-              public var messageContentFragment: MessageContentFragment {
+               var messageContentFragment: MessageContentFragment {
                 get {
                   return MessageContentFragment(unsafeResultMap: resultMap)
                 }

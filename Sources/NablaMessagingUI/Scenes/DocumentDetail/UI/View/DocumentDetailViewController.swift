@@ -31,6 +31,6 @@ class DocumentDetailViewController: UIViewController, DocumentDetailViewContract
     
     private func setUp() {
         view.addSubview(pdfView)
-        pdfView.pinToSuperView()
+        pdfView.nabla.pinToSuperView()
     }
 }

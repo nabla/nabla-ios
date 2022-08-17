@@ -1,8 +1,5 @@
 import Foundation
 import NablaCore
-#if canImport(NablaUtils)
-    import NablaUtils
-#endif
 
 private enum Constants {
     static let localItemsDidChangeNotification = Notification.Name(rawValue: "com.nabla.localConversationItemsDidChangeNotification")
@@ -15,7 +12,7 @@ class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     func getConversationItems(ofConversationWithId conversationId: UUID) -> [LocalConversationItem] {
         conversationItems.values
             .filter { $0.conversationId == conversationId }
-            .sorted(\.date)
+            .nabla.sorted(\.date)
     }
     
     func getConversationItem(withClientId clientId: UUID) -> LocalConversationItem? {

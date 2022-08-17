@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 final class LoadingView: UIView {
@@ -14,7 +15,7 @@ final class LoadingView: UIView {
         
         activityIndicator.tintColor = NablaTheme.Shared.loadingViewIndicatorTintColor
         addSubview(activityIndicator)
-        activityIndicator.center(in: self)
+        activityIndicator.nabla.constraintToCenterInSuperView()
     }
     
     // MARK: - Public

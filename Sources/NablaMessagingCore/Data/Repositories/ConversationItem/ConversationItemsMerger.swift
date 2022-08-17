@@ -44,11 +44,13 @@ class ConversationItemsMerger: PaginatedWatcher {
         conversationId: TransientUUID,
         remoteDataSource: ConversationItemRemoteDataSource,
         localDataSource: ConversationItemLocalDataSource,
+        logger: Logger,
         handler: ResultHandler<ConversationItems, GQLError>
     ) {
         self.conversationId = conversationId
         self.remoteDataSource = remoteDataSource
         self.localDataSource = localDataSource
+        self.logger = logger
         self.handler = handler
     }
     
@@ -60,6 +62,7 @@ class ConversationItemsMerger: PaginatedWatcher {
     
     private let remoteDataSource: ConversationItemRemoteDataSource
     private let localDataSource: ConversationItemLocalDataSource
+    private let logger: Logger
     
     private let conversationId: TransientUUID
     private let handler: ResultHandler<ConversationItems, GQLError>
@@ -113,28 +116,24 @@ class ConversationItemsMerger: PaginatedWatcher {
     }
     
     private func merge(_ remoteItems: [RemoteConversationItem], _ localItems: [LocalConversationItem]) -> [ConversationItem] {
-        var localItemsByClientId = localItems.toDictionary(\.clientId)
+        var localItemsByClientId = localItems.nabla.toDictionary(\.clientId)
+        let transformer = RemoteConversationItemTransformer(logger: logger)
         
         var mergedItems = remoteItems.compactMap { remoteItem -> ConversationItem? in
             guard let clientId = remoteItem.clientId else {
-                return RemoteConversationItemTransformer.transform(remoteItem)
+                return transformer.transform(remoteItem)
             }
             if let localItem = localItemsByClientId[clientId] {
                 localItemsByClientId.removeValue(forKey: clientId)
-                return merge(remoteItem, localItem)
+                // Always use the remote item as source of truth.
+                // Come change this when we support editing messages locally.
+                transformer.transform(remoteItem)
             }
-            return RemoteConversationItemTransformer.transform(remoteItem)
+            return transformer.transform(remoteItem)
         }
         let localTransformer = LocalConversationItemTransformer(existingItems: mergedItems)
         let localOnlyItems = localItemsByClientId.values.compactMap(localTransformer.transform(_:))
         mergedItems.append(contentsOf: localOnlyItems)
-        mergedItems.sort(\.date, using: >)
-        return mergedItems
-    }
-    
-    private func merge(_ remoteItem: RemoteConversationItem, _: LocalConversationItem) -> ConversationItem? {
-        // Always use the remote item as source of truth.
-        // Come change this when we support editing messages locally.
-        RemoteConversationItemTransformer.transform(remoteItem)
+        return mergedItems.nabla.sorted(\.date, using: >)
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 protocol HasMoreIndicatorViewContract: AnyObject {}
@@ -29,6 +30,6 @@ final class HasMoreIndicatorCell: UICollectionViewCell, Reusable, HasMoreIndicat
     private func setUpSubviews() {
         guard contentView.subviews.isEmpty else { return }
         contentView.addSubview(loadingIndicatorView)
-        loadingIndicatorView.pinToSuperView(insets: .init(all: 8))
+        loadingIndicatorView.nabla.pinToSuperView(insets: .nabla.all(8))
     }
 }

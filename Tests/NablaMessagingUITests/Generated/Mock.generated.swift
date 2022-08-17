@@ -340,6 +340,12 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?()
     }
 
+    open func didTapJoinVideoCall(url: String, token: String) {
+        addInvocation(.m_didTapJoinVideoCall__url_urltoken_token(Parameter<String>.value(`url`), Parameter<String>.value(`token`)))
+		let perform = methodPerformValue(.m_didTapJoinVideoCall__url_urltoken_token(Parameter<String>.value(`url`), Parameter<String>.value(`token`))) as? (String, String) -> Void
+		perform?(`url`, `token`)
+    }
+
     @available(iOS 14, *)
 	open func didTapDocumentLibraryButton() {
         addInvocation(.m_didTapDocumentLibraryButton)
@@ -378,6 +384,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         case m_didTapMessagePreview__withId_withId(Parameter<UUID>)
         case m_didTapCameraButton
         case m_didTapPhotoLibraryButton
+        case m_didTapJoinVideoCall__url_urltoken_token(Parameter<String>, Parameter<String>)
         case m_didTapDocumentLibraryButton
         case m_didReachEndOfConversation
         case m_retry
@@ -437,6 +444,12 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 
             case (.m_didTapPhotoLibraryButton, .m_didTapPhotoLibraryButton): return .match
 
+            case (.m_didTapJoinVideoCall__url_urltoken_token(let lhsUrl, let lhsToken), .m_didTapJoinVideoCall__url_urltoken_token(let rhsUrl, let rhsToken)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher), lhsUrl, rhsUrl, "url"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsToken, rhs: rhsToken, with: matcher), lhsToken, rhsToken, "token"))
+				return Matcher.ComparisonResult(results)
+
             case (.m_didTapDocumentLibraryButton, .m_didTapDocumentLibraryButton): return .match
 
             case (.m_didReachEndOfConversation, .m_didReachEndOfConversation): return .match
@@ -461,6 +474,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case let .m_didTapMessagePreview__withId_withId(p0): return p0.intValue
             case .m_didTapCameraButton: return 0
             case .m_didTapPhotoLibraryButton: return 0
+            case let .m_didTapJoinVideoCall__url_urltoken_token(p0, p1): return p0.intValue + p1.intValue
             case .m_didTapDocumentLibraryButton: return 0
             case .m_didReachEndOfConversation: return 0
             case .m_retry: return 0
@@ -480,6 +494,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case .m_didTapMessagePreview__withId_withId: return ".didTapMessagePreview(withId:)"
             case .m_didTapCameraButton: return ".didTapCameraButton()"
             case .m_didTapPhotoLibraryButton: return ".didTapPhotoLibraryButton()"
+            case .m_didTapJoinVideoCall__url_urltoken_token: return ".didTapJoinVideoCall(url:token:)"
             case .m_didTapDocumentLibraryButton: return ".didTapDocumentLibraryButton()"
             case .m_didReachEndOfConversation: return ".didReachEndOfConversation()"
             case .m_retry: return ".retry()"
@@ -513,6 +528,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         public static func didTapMessagePreview(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_didTapMessagePreview__withId_withId(`withId`))}
         public static func didTapCameraButton() -> Verify { return Verify(method: .m_didTapCameraButton)}
         public static func didTapPhotoLibraryButton() -> Verify { return Verify(method: .m_didTapPhotoLibraryButton)}
+        public static func didTapJoinVideoCall(url: Parameter<String>, token: Parameter<String>) -> Verify { return Verify(method: .m_didTapJoinVideoCall__url_urltoken_token(`url`, `token`))}
         @available(iOS 14, *)
 		public static func didTapDocumentLibraryButton() -> Verify { return Verify(method: .m_didTapDocumentLibraryButton)}
         public static func didReachEndOfConversation() -> Verify { return Verify(method: .m_didReachEndOfConversation)}
@@ -556,6 +572,9 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         }
         public static func didTapPhotoLibraryButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_didTapPhotoLibraryButton, performs: perform)
+        }
+        public static func didTapJoinVideoCall(url: Parameter<String>, token: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
+            return Perform(method: .m_didTapJoinVideoCall__url_urltoken_token(`url`, `token`), performs: perform)
         }
         @available(iOS 14, *)
 		public static func didTapDocumentLibraryButton(perform: @escaping () -> Void) -> Perform {
@@ -890,11 +909,6 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var logger: Logger {
-		get {	invocations.append(.p_logger_get); return __p_logger ?? givenGetterValue(.p_logger_get, "NablaMessagingClientProtocolMock - stub value for logger was not defined") }
-	}
-	private var __p_logger: (Logger)?
-
 
 
 
@@ -1148,7 +1162,6 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         case m_createConversation__handler_handler(Parameter<(Result<Conversation, NablaError>) -> Void>)
         case m_createDraftConversation
         case m_createDraftConversation__title_title(Parameter<String?>)
-        case p_logger_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -1253,7 +1266,6 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher), lhsTitle, rhsTitle, "title"))
 				return Matcher.ComparisonResult(results)
-            case (.p_logger_get,.p_logger_get): return Matcher.ComparisonResult.match
             default: return .none
             }
         }
@@ -1277,7 +1289,6 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case let .m_createConversation__handler_handler(p0): return p0.intValue
             case .m_createDraftConversation: return 0
             case let .m_createDraftConversation__title_title(p0): return p0.intValue
-            case .p_logger_get: return 0
             }
         }
         func assertionName() -> String {
@@ -1299,7 +1310,6 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             case .m_createConversation__handler_handler: return ".createConversation(handler:)"
             case .m_createDraftConversation: return ".createDraftConversation()"
             case .m_createDraftConversation__title_title: return ".createDraftConversation(title:)"
-            case .p_logger_get: return "[get] .logger"
             }
         }
     }
@@ -1312,9 +1322,6 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
             super.init(products)
         }
 
-        public static func logger(getter defaultValue: Logger...) -> PropertyStub {
-            return Given(method: .p_logger_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
 
         public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, initialMessage: Parameter<MessageInput?>, handler: Parameter<(Result<Conversation, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
             return Given(method: .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(`title`, `providerIds`, `initialMessage`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -1498,7 +1505,6 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func createConversation(handler: Parameter<(Result<Conversation, NablaError>) -> Void>) -> Verify { return Verify(method: .m_createConversation__handler_handler(`handler`))}
         public static func createDraftConversation() -> Verify { return Verify(method: .m_createDraftConversation)}
         public static func createDraftConversation(title: Parameter<String?>) -> Verify { return Verify(method: .m_createDraftConversation__title_title(`title`))}
-        public static var logger: Verify { return Verify(method: .p_logger_get) }
     }
 
     public struct Perform {

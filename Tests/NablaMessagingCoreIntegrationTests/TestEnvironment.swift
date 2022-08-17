@@ -1,6 +1,7 @@
 import DVR
 import Foundation
 @testable import NablaCore
+import NablaCoreTestsUtils
 @testable import NablaMessagingCore
 
 struct TestEnvironment {
@@ -20,18 +21,27 @@ struct TestEnvironment {
         let userId = "64cffe69-0746-46ea-979b-13f933958087"
         let session = makeMockSession(filePath: filePath, function: function)
         let networkConfiguration = NetworkConfiguration(session: session)
+        
+        let deviceLocalDataSource = DeviceLocalDataSourceMock()
+        deviceLocalDataSource.given(.deviceId(getter: nil))
+        deviceLocalDataSource.given(.codeVersion(getter: 42))
+        deviceLocalDataSource.given(.deviceModel(getter: "Mocked: Simulator"))
+        deviceLocalDataSource.given(.deviceOSVersion(getter: "Mocked: iOS13"))
+        
         let coreContainer = CoreContainer(
             name: "tests",
             networkConfiguration: networkConfiguration,
-            logger: ConsoleLogger()
+            logger: ConsoleLogger(),
+            modules: []
         )
         coreContainer.urlSessionClient = MockURLSessionClient(session: session)
+        coreContainer.deviceLocalDataSource = deviceLocalDataSource
         let nablaClient = NablaClient(
             apiKey: "test-api-key",
             container: coreContainer
         )
         let messagingContainer = MessagingContainer(coreContainer: coreContainer)
-        let messagingClient = NablaMessagingClient(parent: nablaClient, container: messagingContainer)
+        let messagingClient = NablaMessagingClient(container: messagingContainer)
         let env = TestEnvironment(
             nablaClient: nablaClient,
             messagingClient: messagingClient,
@@ -51,7 +61,7 @@ struct TestEnvironment {
         return Session(
             outputDirectory: outputDirectory.absoluteString,
             cassetteName: cassetteName,
-            testBundle: Bundle.module
+            testBundle: NablaMessagingCoreIntegrationTestsPackage.bunble
         )
     }
 }
@@ -60,10 +70,10 @@ extension TestEnvironment: SessionTokenProvider {
     func provideTokens(forUserId _: String, completion: (AuthTokens?) -> Void) {
         completion(
             .init(
-                // Expires 07/06/2054
-                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY1ODc0MTg3OCwic2Vzc2lvbl91dWlkIjoiZTY4N2YwMDEtNThjNC00MmZjLWIwODctZGM4YzZhYjVhZmM5Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.qiWgPWO17PmPnxT251C6OXsbZ8RZlUdA3zW5clouPYE",
-                // Expires 07/06/2054
-                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NjY1MTc1NzgsInNlc3Npb25fdXVpZCI6ImU2ODdmMDAxLTU4YzQtNDJmYy1iMDg3LWRjOGM2YWI1YWZjOSIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.EXw2bgYQzBNAH9qutj8Fa8SzyLMqJcGTTHwwBa3HkLM"
+                // Expires 19/03/2054
+                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY2MDY1NDE4MSwic2Vzc2lvbl91dWlkIjoiYTQzZWI4YjgtMzMyMS00NTk3LWIyNmUtYzVjZDZmODQ2YmQ4Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.8TPWc93epthhHRY7aUTzaaV0O6ynACx3O_zuIceeCQM",
+                // Expires 19/03/2054
+                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2Njg0Mjk4ODEsInNlc3Npb25fdXVpZCI6ImE0M2ViOGI4LTMzMjEtNDU5Ny1iMjZlLWM1Y2Q2Zjg0NmJkOCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.dpaqFygTHBKthnPJEFECHUChUZ9i8A3X0XzDOh_WJm8"
             )
         )
     }

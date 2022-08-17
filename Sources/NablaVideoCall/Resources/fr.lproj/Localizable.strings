@@ -1,0 +1,5 @@
+"permissions_denied_error_message" = "Vous devez autoriser les accès au microphone et à la caméra pour accèder à la téléconsultation.";
+"permissions_denied_error_action" = "Accéder aux Réglages";
+
+"failed_to_connect_error_message" = "Impossible de rejoinder l'appel. Réessayez plus tard.";
+"failed_to_connect_error_action" = "Réessayer";

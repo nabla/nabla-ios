@@ -1,13 +1,15 @@
+import NablaCore
 import NablaMessagingCore
+import NablaCore
 import UIKit
 
 private enum Constants {
     static let avatarSize: CGFloat = 28
     static let bodyMaxWidth: CGFloat = 300
     static let spacing: CGFloat = 8
-    static let messagePadding: UIEdgeInsets = .all(4)
-    static let systemPadding = UIEdgeInsets(horizontal: 0, vertical: 6)
-    static let padding = UIEdgeInsets(horizontal: 10, vertical: 1)
+    static let messagePadding: UIEdgeInsets = .nabla.all(4)
+    static let systemPadding: UIEdgeInsets = .nabla.make(horizontal: 0, vertical: 6)
+    static let padding: UIEdgeInsets = .nabla.make(horizontal: 10, vertical: 1)
     static let authorFontSize: CGFloat = 14
     static let footerFontSize: CGFloat = 12
 }
@@ -37,7 +39,8 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         configure(with: viewModel.sender)
         configure(with: viewModel.footer)
         configure(with: viewModel.replyTo, sender: viewModel.sender)
-        content.configure(with: viewModel.content, sender: viewModel.sender)
+        content.configure(with: viewModel.content)
+        content.configure(sender: viewModel.sender)
         menuElements = viewModel.menuElements
     }
     
@@ -86,10 +89,10 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         guard contentView.subviews.isEmpty else { return }
         
         contentView.addSubview(contentStackView)
-        contentStackView.pinToSuperView(insets: .horizontal(8), priority: .defaultHigh)
+        contentStackView.nabla.pinToSuperView(insets: .nabla.horizontal(8), priority: .defaultHigh)
 
         contentView.addSubview(replyView)
-        replyView.centerInSuperView(along: .vertical)
+        replyView.nabla.constraintToCenterInSuperView(along: .vertical)
 
         replyView.trailingAnchor.constraint(equalTo: contentStackView.leadingAnchor, constant: 0).isActive = true
 
@@ -149,7 +152,6 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     
     private func makeContainer() -> UIView {
         let view = UIView()
-        view.prepareForAutoLayout()
         view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius
         view.clipsToBounds = true
 
@@ -157,17 +159,14 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         stackView.axis = .vertical
 
         view.addSubview(stackView)
-        stackView.pinToSuperView()
+        stackView.nabla.pinToSuperView()
         content.addGestureRecognizer(contentTapGestureRecognizer)
-        NSLayoutConstraint.activate([
-            view.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.bodyMaxWidth),
-        ])
+        content.nabla.constraintWidth(Constants.bodyMaxWidth, relation: .lessThanOrEqual)
         return view
     }
     
     private func makeAuthorLabel() -> UILabel {
         let label = UILabel()
-        label.prepareForAutoLayout()
         label.font = NablaTheme.Conversation.messageAuthorLabelFont
         label.numberOfLines = 1
         label.textColor = NablaTheme.Conversation.messageAuthorLabelColor
@@ -180,7 +179,6 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
             authorLabel,
             UISpacerView(axis: .horizontal),
         ])
-        hstack.prepareForAutoLayout()
         hstack.axis = .horizontal
         hstack.alignment = .bottom
         hstack.distribution = .fill
@@ -197,7 +195,6 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     
     private func makeFooterLabel() -> UILabel {
         let label = UILabel()
-        label.prepareForAutoLayout()
         label.font = NablaTheme.Conversation.messageFooterLabelFont
         label.numberOfLines = 0
         label.isHidden = true
@@ -209,29 +206,25 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     
     private func makeAvatarView() -> AvatarView {
         let avatarView = AvatarView()
-        avatarView.prepareForAutoLayout()
         return avatarView
     }
     
     private func makeAvatarContainerView() -> UIView {
         let view = UIView()
-        view.prepareForAutoLayout()
-        view.constraintToSize(CGSize(width: Constants.avatarSize, height: Constants.avatarSize))
+        view.nabla.constraintToSize(CGSize(width: Constants.avatarSize, height: Constants.avatarSize))
         view.addSubview(avatarView)
-        avatarView.pinToSuperView()
+        avatarView.nabla.pinToSuperView()
         return view
     }
 
     private func makeContentStackView() -> UIStackView {
         let contentStack = UIStackView(arrangedSubviews: [container, footerLabel])
-        contentStack.prepareForAutoLayout()
         contentStack.axis = .vertical
         contentStack.alignment = .trailing
         contentStack.distribution = .fill
         contentStack.spacing = 4
 
         let hstack = UIStackView(arrangedSubviews: [leftSpacer, avatarContainerView, contentStack, rightSpacer])
-        hstack.prepareForAutoLayout()
         hstack.axis = .horizontal
         hstack.alignment = .top
         hstack.distribution = .fill
@@ -247,7 +240,6 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
                 color: .clear
             ),
         ])
-        stack.prepareForAutoLayout()
         stack.axis = .vertical
         stack.alignment = .fill
         stack.distribution = .fill
@@ -258,17 +250,17 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private func makeReplyView() -> UIView {
         let view = UIView()
         view.backgroundColor = NablaTheme.secondaryBackgroundColor
-        view.constraintToSize(.init(width: 32, height: 32))
+        view.nabla.constraintToSize(.init(width: 32, height: 32))
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
         view.alpha = 0
 
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "arrowshape.turn.up.left.fill")
-        imageView.constraintToSize(.init(width: 17, height: 14))
+        imageView.nabla.constraintToSize(.init(width: 17, height: 14))
         imageView.tintColor = NablaTheme.primaryTextColor
         view.addSubview(imageView)
-        imageView.centerInSuperView()
+        imageView.nabla.constraintToCenterInSuperView()
 
         return view
     }

@@ -1,8 +1,5 @@
 import Foundation
 import NablaMessagingCore
-#if canImport(NablaUtils)
-    import NablaUtils
-#endif
 
 final class ConversationActivityPresenter: Presenter {
     var item: ConversationActivityViewItem

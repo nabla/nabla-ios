@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct MessageFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment MessageFragment on Message {
         __typename
@@ -30,9 +30,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["Message"]
+     static let possibleTypes: [String] = ["Message"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -44,17 +44,17 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, clientId: GQL.UUID? = nil, createdAt: GQL.DateTime, author: Author, content: Content, replyTo: ReplyTo? = nil) {
+     init(id: GQL.UUID, clientId: GQL.UUID? = nil, createdAt: GQL.DateTime, author: Author, content: Content, replyTo: ReplyTo? = nil) {
       self.init(unsafeResultMap: ["__typename": "Message", "id": id, "clientId": clientId, "createdAt": createdAt, "author": author.resultMap, "content": content.resultMap, "replyTo": replyTo.flatMap { (value: ReplyTo) -> ResultMap in value.resultMap }])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -63,7 +63,7 @@ public extension GQL {
       }
     }
 
-    public var id: GQL.UUID {
+     var id: GQL.UUID {
       get {
         return resultMap["id"]! as! GQL.UUID
       }
@@ -72,7 +72,7 @@ public extension GQL {
       }
     }
 
-    public var clientId: GQL.UUID? {
+     var clientId: GQL.UUID? {
       get {
         return resultMap["clientId"] as? GQL.UUID
       }
@@ -81,7 +81,7 @@ public extension GQL {
       }
     }
 
-    public var createdAt: GQL.DateTime {
+     var createdAt: GQL.DateTime {
       get {
         return resultMap["createdAt"]! as! GQL.DateTime
       }
@@ -90,7 +90,7 @@ public extension GQL {
       }
     }
 
-    public var author: Author {
+     var author: Author {
       get {
         return Author(unsafeResultMap: resultMap["author"]! as! ResultMap)
       }
@@ -99,7 +99,7 @@ public extension GQL {
       }
     }
 
-    public var content: Content {
+     var content: Content {
       get {
         return Content(unsafeResultMap: resultMap["content"]! as! ResultMap)
       }
@@ -108,7 +108,7 @@ public extension GQL {
       }
     }
 
-    public var replyTo: ReplyTo? {
+     var replyTo: ReplyTo? {
       get {
         return (resultMap["replyTo"] as? ResultMap).flatMap { ReplyTo(unsafeResultMap: $0) }
       }
@@ -117,31 +117,31 @@ public extension GQL {
       }
     }
 
-    public struct Author: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["System", "Patient", "Provider", "DeletedProvider"]
+     struct Author: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["System", "Patient", "Provider", "DeletedProvider"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLFragmentSpread(MessageAuthorFragment.self),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public static func makePatient(id: GQL.UUID) -> Author {
+       static func makePatient(id: GQL.UUID) -> Author {
         return Author(unsafeResultMap: ["__typename": "Patient", "id": id])
       }
 
-      public static func makeDeletedProvider(empty: EmptyObject) -> Author {
+       static func makeDeletedProvider(empty: EmptyObject) -> Author {
         return Author(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -150,7 +150,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -159,14 +159,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var messageAuthorFragment: MessageAuthorFragment {
+         var messageAuthorFragment: MessageAuthorFragment {
           get {
             return MessageAuthorFragment(unsafeResultMap: resultMap)
           }
@@ -177,35 +177,31 @@ public extension GQL {
       }
     }
 
-    public struct Content: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "VideoMessageContent", "DocumentMessageContent", "DeletedMessageContent", "AudioMessageContent", "LivekitRoomMessageContent"]
+     struct Content: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["TextMessageContent", "ImageMessageContent", "VideoMessageContent", "DocumentMessageContent", "DeletedMessageContent", "AudioMessageContent", "LivekitRoomMessageContent"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLFragmentSpread(MessageContentFragment.self),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public static func makeTextMessageContent(text: String) -> Content {
+       static func makeTextMessageContent(text: String) -> Content {
         return Content(unsafeResultMap: ["__typename": "TextMessageContent", "text": text])
       }
 
-      public static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
+       static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
         return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
       }
 
-      public static func makeLivekitRoomMessageContent() -> Content {
-        return Content(unsafeResultMap: ["__typename": "LivekitRoomMessageContent"])
-      }
-
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -214,7 +210,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -223,14 +219,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var messageContentFragment: MessageContentFragment {
+         var messageContentFragment: MessageContentFragment {
           get {
             return MessageContentFragment(unsafeResultMap: resultMap)
           }
@@ -241,23 +237,23 @@ public extension GQL {
       }
     }
 
-    public struct ReplyTo: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Message"]
+     struct ReplyTo: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Message"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLFragmentSpread(ReplyMessageFragment.self),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -266,7 +262,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -275,14 +271,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var replyMessageFragment: ReplyMessageFragment {
+         var replyMessageFragment: ReplyMessageFragment {
           get {
             return ReplyMessageFragment(unsafeResultMap: resultMap)
           }

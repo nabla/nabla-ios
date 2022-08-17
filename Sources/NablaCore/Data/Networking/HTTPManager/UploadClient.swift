@@ -1,7 +1,4 @@
 import Foundation
-#if canImport(NablaUtils)
-    import NablaUtils
-#endif
 
 public enum UploadClientError: Error {
     case noAccessToken
@@ -48,7 +45,7 @@ public final class UploadClient {
         authenticator.getAccessToken(
             handler: .init { [weak self, weak umbrella] result in
                 guard let self = self, let umbrella = umbrella, !umbrella.isCancelled else { return }
-                guard let state = result.value else {
+                guard let state = result.nabla.value else {
                     handler(.failure(.noAccessToken))
                     return
                 }
@@ -129,7 +126,7 @@ public final class UploadClient {
         
         return httpManager.fetch(UploadEndpoint.Result.self, associatedTo: request) { result in
             guard
-                let uuidString = result.value?.first,
+                let uuidString = result.nabla.value?.first,
                 let uuid = UUID(uuidString: uuidString)
             else {
                 handler(.failure(.noValidData))

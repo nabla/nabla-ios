@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 final class TextMessageContentView: UIView, MessageContentView {
@@ -7,7 +8,7 @@ final class TextMessageContentView: UIView, MessageContentView {
     init() {
         super.init(frame: .zero)
         addSubview(textView)
-        textView.pinToSuperView(insets: .all(10))
+        textView.nabla.pinToSuperView(insets: .nabla.all(10))
     }
     
     @available(*, unavailable)
@@ -17,8 +18,11 @@ final class TextMessageContentView: UIView, MessageContentView {
     
     // MARK: - MessageContentView
     
-    func configure(with viewModel: TextMessageContentViewModel, sender: ConversationMessageSender) {
+    func configure(with viewModel: TextMessageContentViewModel) {
         textView.text = viewModel.text
+    }
+    
+    func configure(sender: ConversationMessageSender) {
         switch sender {
         case .me:
             textView.textColor = NablaTheme.Conversation.textMessagePatientTextColor
@@ -44,7 +48,7 @@ final class TextMessageContentView: UIView, MessageContentView {
     // MARK: - Private
     
     private lazy var textView: UITextView = {
-        let view = OnlyLinkAttributeClickableUITextView().prepareForAutoLayout()
+        let view = OnlyLinkAttributeClickableUITextView()
         view.isEditable = false
         view.isScrollEnabled = false
         view.isSelectable = true // required for dataDetectorTypes

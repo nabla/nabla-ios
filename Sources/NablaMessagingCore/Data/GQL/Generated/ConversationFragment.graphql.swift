@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct ConversationFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment ConversationFragment on Conversation {
         __typename
@@ -26,9 +26,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["Conversation"]
+     static let possibleTypes: [String] = ["Conversation"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -42,17 +42,17 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, title: String? = nil, subtitle: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, providers: [Provider]) {
+     init(id: GQL.UUID, title: String? = nil, subtitle: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, providers: [Provider]) {
       self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "subtitle": subtitle, "lastMessagePreview": lastMessagePreview, "unreadMessageCount": unreadMessageCount, "inboxPreviewTitle": inboxPreviewTitle, "updatedAt": updatedAt, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -61,7 +61,7 @@ public extension GQL {
       }
     }
 
-    public var id: GQL.UUID {
+     var id: GQL.UUID {
       get {
         return resultMap["id"]! as! GQL.UUID
       }
@@ -70,7 +70,7 @@ public extension GQL {
       }
     }
 
-    public var title: String? {
+     var title: String? {
       get {
         return resultMap["title"] as? String
       }
@@ -79,7 +79,7 @@ public extension GQL {
       }
     }
 
-    public var subtitle: String? {
+     var subtitle: String? {
       get {
         return resultMap["subtitle"] as? String
       }
@@ -88,7 +88,7 @@ public extension GQL {
       }
     }
 
-    public var lastMessagePreview: String? {
+     var lastMessagePreview: String? {
       get {
         return resultMap["lastMessagePreview"] as? String
       }
@@ -97,7 +97,7 @@ public extension GQL {
       }
     }
 
-    public var unreadMessageCount: Int {
+     var unreadMessageCount: Int {
       get {
         return resultMap["unreadMessageCount"]! as! Int
       }
@@ -106,7 +106,7 @@ public extension GQL {
       }
     }
 
-    public var inboxPreviewTitle: String {
+     var inboxPreviewTitle: String {
       get {
         return resultMap["inboxPreviewTitle"]! as! String
       }
@@ -115,7 +115,7 @@ public extension GQL {
       }
     }
 
-    public var updatedAt: GQL.DateTime {
+     var updatedAt: GQL.DateTime {
       get {
         return resultMap["updatedAt"]! as! GQL.DateTime
       }
@@ -124,7 +124,7 @@ public extension GQL {
       }
     }
 
-    public var providers: [Provider] {
+     var providers: [Provider] {
       get {
         return (resultMap["providers"] as! [ResultMap]).map { (value: ResultMap) -> Provider in Provider(unsafeResultMap: value) }
       }
@@ -133,23 +133,23 @@ public extension GQL {
       }
     }
 
-    public struct Provider: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["ProviderInConversation"]
+     struct Provider: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["ProviderInConversation"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLFragmentSpread(ProviderInConversationFragment.self),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -158,7 +158,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -167,14 +167,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var providerInConversationFragment: ProviderInConversationFragment {
+         var providerInConversationFragment: ProviderInConversationFragment {
           get {
             return ProviderInConversationFragment(unsafeResultMap: resultMap)
           }

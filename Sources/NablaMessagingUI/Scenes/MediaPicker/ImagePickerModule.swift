@@ -62,8 +62,8 @@ extension ImagePickerModule: UIImagePickerControllerDelegate, UINavigationContro
         DispatchQueue.global(qos: .userInitiated).async {
             let result = self.mediaReader.readMedia(from: info)
             DispatchQueue.main.async {
-                let medias = [result.value].compactMap { $0 }
-                let errors = [result.error].compactMap { $0 }
+                let medias = [result.nabla.value].compactMap { $0 }
+                let errors = [result.nabla.error].compactMap { $0 }
                 self.delegate?.imagePicker(controller, didSelect: medias, errors: errors)
             }
         }
@@ -86,8 +86,8 @@ extension ImagePickerModule: PHPickerViewControllerDelegate {
         DispatchQueue.global(qos: .userInitiated).async {
             self.mediaReader.readMedia(from: results.map(\.itemProvider)) { results in
                 DispatchQueue.main.async {
-                    let medias = results.compactMap(\.value)
-                    let errors = results.compactMap(\.error)
+                    let medias = results.compactMap(\.nabla.value)
+                    let errors = results.compactMap(\.nabla.error)
                     self.delegate?.imagePicker(controller, didSelect: medias, errors: errors)
                 }
             }

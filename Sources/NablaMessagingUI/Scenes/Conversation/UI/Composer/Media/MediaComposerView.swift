@@ -35,13 +35,13 @@ class MediaComposerView: UIView, MediaComposerViewContract {
     private func setUp() {
         guard subviews.isEmpty else { return }
         addSubview(collectionView)
-        collectionView.pinToSuperView()
+        collectionView.nabla.pinToSuperView()
     }
     
     private func makeCollectionView() -> UICollectionView {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = .init(width: 40, height: 40)
-        flowLayout.sectionInset = .init(horizontal: 16.0, vertical: 8.0)
+        flowLayout.sectionInset = .nabla.make(horizontal: 16.0, vertical: 8.0)
         flowLayout.scrollDirection = .horizontal
         flowLayout.minimumInteritemSpacing = 16.0
         
@@ -51,7 +51,7 @@ class MediaComposerView: UIView, MediaComposerViewContract {
         view.bounces = true
         view.backgroundColor = .clear
         
-        view.register(MediaComposerCollectionViewCell.self)
+        view.nabla.register(MediaComposerCollectionViewCell.self)
         return view
     }
 }
@@ -64,7 +64,7 @@ extension MediaComposerView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(ofClass: MediaComposerCollectionViewCell.self, for: indexPath)
+        let cell = collectionView.nabla.dequeueReusableCell(ofClass: MediaComposerCollectionViewCell.self, for: indexPath)
         cell.configure(with: viewModels[indexPath.item])
         cell.delegate = self
         return cell

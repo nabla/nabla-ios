@@ -30,6 +30,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             conversationId: conversationId,
             remoteDataSource: itemsRemoteDataSource,
             localDataSource: itemsLocalDataSource,
+            logger: logger,
             handler: handler.pullbackError(GQLErrorTransformer.transform)
         )
         merger.resume()

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E412CB18281AC831001979B5 /* NablaMessagingUI in Frameworks */ = {isa = PBXBuildFile; productRef = E412CB17281AC831001979B5 /* NablaMessagingUI */; };
+		E457673028748CC500B771ED /* NablaVideoCall in Frameworks */ = {isa = PBXBuildFile; productRef = E457672F28748CC500B771ED /* NablaVideoCall */; };
 		E4CD916E2819D29E00562EC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD916D2819D29E00562EC5 /* AppDelegate.swift */; };
 		E4CD91702819D29E00562EC5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD916F2819D29E00562EC5 /* SceneDelegate.swift */; };
 		E4CD91722819D29E00562EC5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CD91712819D29E00562EC5 /* ViewController.swift */; };
@@ -80,6 +81,7 @@
 			files = (
 				E412CB18281AC831001979B5 /* NablaMessagingUI in Frameworks */,
 				E4CD91852819D37300562EC5 /* NablaMessagingCore in Frameworks */,
+				E457673028748CC500B771ED /* NablaVideoCall in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +95,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E457672E28748CC500B771ED /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E4CD91612819D29E00562EC5 = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +109,7 @@
 				E4CD916C2819D29E00562EC5 /* NablaUITestsHostApp */,
 				FF8049DD283D19610076EFF8 /* NablaUITestsHostAppUITests */,
 				E4CD916B2819D29E00562EC5 /* Products */,
+				E457672E28748CC500B771ED /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -200,6 +210,7 @@
 			packageProductDependencies = (
 				E4CD91842819D37300562EC5 /* NablaMessagingCore */,
 				E412CB17281AC831001979B5 /* NablaMessagingUI */,
+				E457672F28748CC500B771ED /* NablaVideoCall */,
 			);
 			productName = NablaExampleApp;
 			productReference = E4CD916A2819D29E00562EC5 /* NablaUITestsHostApp.app */;
@@ -576,6 +587,10 @@
 		E412CB17281AC831001979B5 /* NablaMessagingUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NablaMessagingUI;
+		};
+		E457672F28748CC500B771ED /* NablaVideoCall */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NablaVideoCall;
 		};
 		E4CD91842819D37300562EC5 /* NablaMessagingCore */ = {
 			isa = XCSwiftPackageProductDependency;

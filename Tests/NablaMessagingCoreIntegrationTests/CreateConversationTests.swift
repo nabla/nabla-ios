@@ -4,10 +4,15 @@ import DVR
 import XCTest
 
 class CreateConversationTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        clearUserDefaults()
+    }
+    
     func testCreateConversation() throws {
         let env = TestEnvironment.make()
         
-        let expectation = expectation(description: "Create conversation did complete")
+        let createConversationDidCompleteExpectation = expectation(description: "Create conversation did complete")
         var createConversationAction: Any?
         
         env.session.beginRecording()
@@ -20,8 +25,16 @@ class CreateConversationTests: XCTestCase {
             case let .failure(error):
                 XCTFail("Received error: \(error)")
             case .success:
-                expectation.fulfill()
+                break
             }
+            createConversationDidCompleteExpectation.fulfill()
+        }
+        
+        // If we don't wait for this mutation, the recording becomes flaky, then so does the tests.
+        // Yet, this mutation is hidden in the SDK, no way to access it from the outside. We wait some arbitrary time instead.
+        let registerOrUpdateDeviceExpectation = expectation(description: "The registerOrUpdateDeivce mutation did complete")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            registerOrUpdateDeviceExpectation.fulfill()
         }
         
         waitForExpectations(timeout: 10)
@@ -84,5 +97,15 @@ class CreateConversationTests: XCTestCase {
         watcher2.cancel()
         
         env.session.endRecording()
+    }
+}
+
+extension XCTestCase {
+    func clearUserDefaults() {
+        UserDefaults.resetStandardUserDefaults()
+        for key in UserDefaults.standard.dictionaryRepresentation().keys {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
+        UserDefaults.standard.synchronize()
     }
 }

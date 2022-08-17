@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct DocumentMessageContentFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment DocumentMessageContentFragment on DocumentMessageContent {
         __typename
@@ -32,26 +32,26 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["DocumentMessageContent"]
+     static let possibleTypes: [String] = ["DocumentMessageContent"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("documentFileUpload", type: .nonNull(.object(DocumentFileUpload.selections))),
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(documentFileUpload: DocumentFileUpload) {
+     init(documentFileUpload: DocumentFileUpload) {
       self.init(unsafeResultMap: ["__typename": "DocumentMessageContent", "documentFileUpload": documentFileUpload.resultMap])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -60,7 +60,7 @@ public extension GQL {
       }
     }
 
-    public var documentFileUpload: DocumentFileUpload {
+     var documentFileUpload: DocumentFileUpload {
       get {
         return DocumentFileUpload(unsafeResultMap: resultMap["documentFileUpload"]! as! ResultMap)
       }
@@ -69,10 +69,10 @@ public extension GQL {
       }
     }
 
-    public struct DocumentFileUpload: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["DocumentFileUpload"]
+     struct DocumentFileUpload: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["DocumentFileUpload"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -83,17 +83,17 @@ public extension GQL {
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(id: GQL.UUID, url: Url, fileName: String, mimeType: String, thumbnail: Thumbnail? = nil) {
+       init(id: GQL.UUID, url: Url, fileName: String, mimeType: String, thumbnail: Thumbnail? = nil) {
         self.init(unsafeResultMap: ["__typename": "DocumentFileUpload", "id": id, "url": url.resultMap, "fileName": fileName, "mimeType": mimeType, "thumbnail": thumbnail.flatMap { (value: Thumbnail) -> ResultMap in value.resultMap }])
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -102,7 +102,7 @@ public extension GQL {
         }
       }
 
-      public var id: GQL.UUID {
+       var id: GQL.UUID {
         get {
           return resultMap["id"]! as! GQL.UUID
         }
@@ -111,7 +111,7 @@ public extension GQL {
         }
       }
 
-      public var url: Url {
+       var url: Url {
         get {
           return Url(unsafeResultMap: resultMap["url"]! as! ResultMap)
         }
@@ -120,7 +120,7 @@ public extension GQL {
         }
       }
 
-      public var fileName: String {
+       var fileName: String {
         get {
           return resultMap["fileName"]! as! String
         }
@@ -129,7 +129,7 @@ public extension GQL {
         }
       }
 
-      public var mimeType: String {
+       var mimeType: String {
         get {
           return resultMap["mimeType"]! as! String
         }
@@ -138,7 +138,7 @@ public extension GQL {
         }
       }
 
-      public var thumbnail: Thumbnail? {
+       var thumbnail: Thumbnail? {
         get {
           return (resultMap["thumbnail"] as? ResultMap).flatMap { Thumbnail(unsafeResultMap: $0) }
         }
@@ -147,27 +147,27 @@ public extension GQL {
         }
       }
 
-      public struct Url: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["EphemeralUrl"]
+       struct Url: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["EphemeralUrl"]
 
-        public static var selections: [GraphQLSelection] {
+         static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("url", type: .nonNull(.scalar(String.self))),
           ]
         }
 
-        public private(set) var resultMap: ResultMap
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public init(url: String) {
+         init(url: String) {
           self.init(unsafeResultMap: ["__typename": "EphemeralUrl", "url": url])
         }
 
-        public var __typename: String {
+         var __typename: String {
           get {
             return resultMap["__typename"]! as! String
           }
@@ -176,7 +176,7 @@ public extension GQL {
           }
         }
 
-        public var url: String {
+         var url: String {
           get {
             return resultMap["url"]! as! String
           }
@@ -186,27 +186,27 @@ public extension GQL {
         }
       }
 
-      public struct Thumbnail: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["ImageFileUpload"]
+       struct Thumbnail: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["ImageFileUpload"]
 
-        public static var selections: [GraphQLSelection] {
+         static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("url", type: .nonNull(.object(Url.selections))),
           ]
         }
 
-        public private(set) var resultMap: ResultMap
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public init(url: Url) {
+         init(url: Url) {
           self.init(unsafeResultMap: ["__typename": "ImageFileUpload", "url": url.resultMap])
         }
 
-        public var __typename: String {
+         var __typename: String {
           get {
             return resultMap["__typename"]! as! String
           }
@@ -215,7 +215,7 @@ public extension GQL {
           }
         }
 
-        public var url: Url {
+         var url: Url {
           get {
             return Url(unsafeResultMap: resultMap["url"]! as! ResultMap)
           }
@@ -224,27 +224,27 @@ public extension GQL {
           }
         }
 
-        public struct Url: GraphQLSelectionSet {
-          public static let possibleTypes: [String] = ["EphemeralUrl"]
+         struct Url: GraphQLSelectionSet {
+           static let possibleTypes: [String] = ["EphemeralUrl"]
 
-          public static var selections: [GraphQLSelection] {
+           static var selections: [GraphQLSelection] {
             return [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
               GraphQLField("url", type: .nonNull(.scalar(String.self))),
             ]
           }
 
-          public private(set) var resultMap: ResultMap
+           private(set) var resultMap: ResultMap
 
-          public init(unsafeResultMap: ResultMap) {
+           init(unsafeResultMap: ResultMap) {
             self.resultMap = unsafeResultMap
           }
 
-          public init(url: String) {
+           init(url: String) {
             self.init(unsafeResultMap: ["__typename": "EphemeralUrl", "url": url])
           }
 
-          public var __typename: String {
+           var __typename: String {
             get {
               return resultMap["__typename"]! as! String
             }
@@ -253,7 +253,7 @@ public extension GQL {
             }
           }
 
-          public var url: String {
+           var url: String {
             get {
               return resultMap["url"]! as! String
             }

@@ -8,6 +8,7 @@ class ConversationItemsMergerTests: XCTestCase {
     
     private let remoteDataSource = ConversationItemRemoteDataSourceMock()
     private let localDataSource = ConversationItemLocalDataSourceMock()
+    private let logger = LoggerMock()
     
     private let remoteWatcher = PaginatedWatcherMock()
     private let localCancellable = CancellableMock()
@@ -25,6 +26,7 @@ class ConversationItemsMergerTests: XCTestCase {
             conversationId: conversationId,
             remoteDataSource: remoteDataSource,
             localDataSource: localDataSource,
+            logger: logger,
             handler: .void
         )
         sut?.resume()

@@ -6,8 +6,6 @@ import NablaMessagingCore
 
 final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     func addRefetchTriggers(_: RefetchTrigger...) {}
-    
-    var logger: Logger = LoggerMock()
 
     var createConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, initialMessage: MessageInput?, handler: (Result<Conversation, NablaError>) -> Void, Void)] = []
     var createConversationClosure: ((_ title: String?, _ providerIds: [UUID]?, _ initialMessage: MessageInput?, _ handler: @escaping (Result<Conversation, NablaError>) -> Void) -> Cancellable)?
@@ -119,4 +117,10 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
 
 extension NablaMessagingClientProtocolMock {
     static var shared = NablaMessagingClientProtocolMock()
+}
+
+extension NablaMessagingClientProtocolMock {
+    var views: NablaMessagingViewFactory {
+        NablaMessagingViewFactory(client: self, logger: LoggerMock(), videoCallClient: nil)
+    }
 }

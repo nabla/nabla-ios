@@ -58,28 +58,28 @@ class ConversationMessagePreviewView: UIView {
         stackView.setCustomSpacing(26, after: vStack)
 
         addSubview(stackView)
-        stackView.pinToSuperView(insets: .init(top: 10, leading: 10, bottom: 0, trailing: 10))
+        stackView.nabla.pinToSuperView(insets: .init(top: 10, leading: 10, bottom: 0, trailing: 10))
 
         previewImageView.isHidden = true
     }
 
     private func makeSeparatorView() -> UIView {
         let view = UIView()
-        view.constraintWidth(1)
+        view.nabla.constraintWidth(1)
         return view
     }
 
     private func makeIconImageView() -> UIImageView {
         let imageView = UIImageView()
-        imageView.constraintToSize(.init(width: 10, height: 10))
+        imageView.nabla.constraintToSize(.init(width: 10, height: 10))
         return imageView
     }
 
     private func makeIconImageViewContainer() -> UIView {
         let view = UIView()
         view.addSubview(iconImageView)
-        iconImageView.centerInSuperView(along: .vertical)
-        iconImageView.pinToSuperView(edges: .horizontal)
+        iconImageView.nabla.constraintToCenterInSuperView(along: .vertical)
+        iconImageView.nabla.pinToSuperView(edges: .nabla.horizontal)
         return view
     }
 
@@ -97,7 +97,7 @@ class ConversationMessagePreviewView: UIView {
 
     private func makePreviewImageView() -> UIURLImageView {
         let imageView = UIURLImageView()
-        imageView.constraintToSize(.init(width: 32, height: 32))
+        imageView.nabla.constraintToSize(.init(width: 32, height: 32))
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true

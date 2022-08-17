@@ -1,9 +1,7 @@
 import Foundation
 import NablaCore
 import NablaMessagingCore
-#if canImport(NablaUtils)
-    import NablaUtils
-#endif
+
 import UIKit
 
 class MessagePresenter<

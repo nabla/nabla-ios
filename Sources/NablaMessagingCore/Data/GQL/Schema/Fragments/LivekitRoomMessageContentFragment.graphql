@@ -1,0 +1,5 @@
+fragment LivekitRoomMessageContentFragment on LivekitRoomMessageContent {
+    livekitRoom {
+        ...LivekitRoomFragment
+    }
+}

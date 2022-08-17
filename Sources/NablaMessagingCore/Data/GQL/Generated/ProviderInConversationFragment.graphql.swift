@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   struct ProviderInConversationFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
-    public static let fragmentDefinition: String =
+     static let fragmentDefinition: String =
       """
       fragment ProviderInConversationFragment on ProviderInConversation {
         __typename
@@ -22,9 +22,9 @@ public extension GQL {
       }
       """
 
-    public static let possibleTypes: [String] = ["ProviderInConversation"]
+     static let possibleTypes: [String] = ["ProviderInConversation"]
 
-    public static var selections: [GraphQLSelection] {
+     static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
@@ -34,17 +34,17 @@ public extension GQL {
       ]
     }
 
-    public private(set) var resultMap: ResultMap
+     private(set) var resultMap: ResultMap
 
-    public init(unsafeResultMap: ResultMap) {
+     init(unsafeResultMap: ResultMap) {
       self.resultMap = unsafeResultMap
     }
 
-    public init(id: GQL.UUID, provider: Provider, typingAt: GQL.DateTime? = nil, seenUntil: GQL.DateTime? = nil) {
+     init(id: GQL.UUID, provider: Provider, typingAt: GQL.DateTime? = nil, seenUntil: GQL.DateTime? = nil) {
       self.init(unsafeResultMap: ["__typename": "ProviderInConversation", "id": id, "provider": provider.resultMap, "typingAt": typingAt, "seenUntil": seenUntil])
     }
 
-    public var __typename: String {
+     var __typename: String {
       get {
         return resultMap["__typename"]! as! String
       }
@@ -53,7 +53,7 @@ public extension GQL {
       }
     }
 
-    public var id: GQL.UUID {
+     var id: GQL.UUID {
       get {
         return resultMap["id"]! as! GQL.UUID
       }
@@ -62,7 +62,7 @@ public extension GQL {
       }
     }
 
-    public var provider: Provider {
+     var provider: Provider {
       get {
         return Provider(unsafeResultMap: resultMap["provider"]! as! ResultMap)
       }
@@ -71,7 +71,7 @@ public extension GQL {
       }
     }
 
-    public var typingAt: GQL.DateTime? {
+     var typingAt: GQL.DateTime? {
       get {
         return resultMap["typingAt"] as? GQL.DateTime
       }
@@ -80,7 +80,7 @@ public extension GQL {
       }
     }
 
-    public var seenUntil: GQL.DateTime? {
+     var seenUntil: GQL.DateTime? {
       get {
         return resultMap["seenUntil"] as? GQL.DateTime
       }
@@ -89,23 +89,23 @@ public extension GQL {
       }
     }
 
-    public struct Provider: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Provider"]
+     struct Provider: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Provider"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLFragmentSpread(ProviderFragment.self),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public var __typename: String {
+       var __typename: String {
         get {
           return resultMap["__typename"]! as! String
         }
@@ -114,7 +114,7 @@ public extension GQL {
         }
       }
 
-      public var fragments: Fragments {
+       var fragments: Fragments {
         get {
           return Fragments(unsafeResultMap: resultMap)
         }
@@ -123,14 +123,14 @@ public extension GQL {
         }
       }
 
-      public struct Fragments {
-        public private(set) var resultMap: ResultMap
+       struct Fragments {
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public var providerFragment: ProviderFragment {
+         var providerFragment: ProviderFragment {
           get {
             return ProviderFragment(unsafeResultMap: resultMap)
           }

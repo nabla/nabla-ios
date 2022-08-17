@@ -1,0 +1,5 @@
+"permissions_denied_error_message" = "Permissions to access microphone and camera are needed for remote consultations.";
+"permissions_denied_error_action" = "Go to Settings";
+
+"failed_to_connect_error_message" = "Failed to connect to your call. Please try again later.";
+"failed_to_connect_error_action" = "Retry";

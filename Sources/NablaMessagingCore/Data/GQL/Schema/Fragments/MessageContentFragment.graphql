@@ -17,4 +17,7 @@ fragment MessageContentFragment on MessageContent {
     ... on DeletedMessageContent {
         empty: _
     }
+    ... on LivekitRoomMessageContent {
+        ...LivekitRoomMessageContentFragment
+    }
 }

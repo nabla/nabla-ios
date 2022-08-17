@@ -1,19 +1,35 @@
 import Foundation
 import NablaCore
 
-enum RemoteConversationItemTransformer {
-    static func transform(_ remoteConversationItem: RemoteConversationItem) -> ConversationItem? {
+final class RemoteConversationItemTransformer {
+    // MARK: - Internal
+    
+    func transform(_ remoteConversationItem: RemoteConversationItem) -> ConversationItem? {
         if let message = remoteConversationItem.asMessage?.fragments.messageFragment {
             return transform(message)
         }
         if let activity = remoteConversationItem.asConversationActivity?.fragments.conversationActivityFragment {
             return transform(activity)
         }
-        assertionFailure("Unknown remote conversation item type: \(remoteConversationItem.__typename)")
+        logger.error(message: "Unknown remote conversation item type", extra: ["type": remoteConversationItem.__typename])
         return nil
     }
     
-    private static func transform(_ message: GQL.MessageFragment) -> ConversationItem? {
+    // AMRK: Init
+    
+    init(
+        logger: Logger
+    ) {
+        self.logger = logger
+    }
+
+    // MARK: - Private
+    
+    private let logger: Logger
+    
+    // MARK: Message
+    
+    private func transform(_ message: GQL.MessageFragment) -> ConversationItem? {
         let messageContentFragment = message.content.fragments.messageContentFragment
         let replyToFragment = message.replyTo?.fragments.replyMessageFragment
         if let textContent = messageContentFragment.asTextMessageContent?.fragments.textMessageContentFragment {
@@ -113,13 +129,20 @@ enum RemoteConversationItemTransformer {
                     mimeType: .from(rawValue: videoContent.videoFileUpload.mimeType)
                 )
             )
+        } else if let livekitRoomContent = message.content.fragments.messageContentFragment.asLivekitRoomMessageContent {
+            return VideoCallActionRequest(
+                id: message.id,
+                date: message.createdAt,
+                sender: transform(message.author.fragments.messageAuthorFragment),
+                status: transform(livekitRoomContent.fragments.livekitRoomMessageContentFragment.livekitRoom.fragments.livekitRoomFragment.status)
+            )
         }
 
-        assertionFailure("Unknown message content \(String(describing: message.content))")
+        logger.error(message: "Unknown message content", extra: ["content": String(describing: message.content)])
         return nil
     }
 
-    private static func transform(_ replyTo: GQL.ReplyMessageFragment?) -> ConversationMessage? {
+    private func transform(_ replyTo: GQL.ReplyMessageFragment?) -> ConversationMessage? {
         guard let replyTo = replyTo else { return nil }
         let messageContentFragment = replyTo.content.fragments.messageContentFragment
         if let textContent = messageContentFragment.asTextMessageContent?.fragments.textMessageContentFragment {
@@ -221,11 +244,11 @@ enum RemoteConversationItemTransformer {
             )
         }
 
-        assertionFailure("Unknown message content \(String(describing: replyTo.content))")
+        logger.error(message: "Unknown message content", extra: ["content": String(describing: replyTo.content)])
         return nil
     }
     
-    private static func transform(_ author: GQL.MessageAuthorFragment) -> ConversationMessageSender {
+    private func transform(_ author: GQL.MessageAuthorFragment) -> ConversationMessageSender {
         if let provider = author.asProvider?.fragments.providerFragment {
             return .provider(RemoteConversationProviderTransformer.transform(provider: provider))
         } else if author.asPatient != nil {
@@ -235,17 +258,32 @@ enum RemoteConversationItemTransformer {
         } else if author.asDeletedProvider != nil {
             return .deleted
         } else {
-            assertionFailure("[Should not get here] Received an unknown author type \(author.__typename)")
+            logger.error(message: "[Should not get here] Received an unknown author type", extra: ["type": author.__typename])
             return .unknown
         }
     }
+    
+    // MARK: Conversation Activity
 
-    private static func transform(_ activity: GQL.ConversationActivityFragment) -> ConversationItem? {
+    private func transform(_ activity: GQL.ConversationActivityFragment) -> ConversationItem {
         let provider = activity.content.provider.fragments.maybeProviderFragment
         return ConversationActivity(
             id: activity.id,
             date: activity.activityTime,
             activity: .providerJoined(RemoteConversationProviderTransformer.transform(maybeProvider: provider))
         )
+    }
+
+    // MARK: Livekit
+    
+    private func transform(_ livekitRoomStatus: GQL.LivekitRoomFragment.Status) -> VideoCallActionRequest.Status {
+        if livekitRoomStatus.asLivekitRoomClosedStatus != nil {
+            return .closed
+        }
+        if let openStatus = livekitRoomStatus.asLivekitRoomOpenStatus?.fragments.livekitRoomOpenStatusFragment {
+            return .open(.init(url: openStatus.url, token: openStatus.token))
+        }
+        logger.error(message: "Unknow livekit room status", extra: ["status": livekitRoomStatus])
+        return .closed
     }
 }

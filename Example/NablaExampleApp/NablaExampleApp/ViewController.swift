@@ -11,7 +11,7 @@ class ViewController: DemoViewController {
         
         let userId = "dummy_user_id" // In a real scenario, you need to replace it with your own stable user id.
         NablaClient.shared.authenticate(userId: userId, provider: FakeAuthenticator.shared)
-        let view = NablaViewFactory.createConversationListView(delegate: self)
+        let view = NablaClient.shared.messaging.views.createConversationListView(delegate: self)
         setContentView(view)
     }
     
@@ -23,7 +23,7 @@ class ViewController: DemoViewController {
             case let .failure(error):
                 print(error)
             case let .success(conversation):
-                let destination = NablaViewFactory.createConversationViewController(conversation)
+                let destination = NablaClient.shared.messaging.views.createConversationViewController(conversation)
                 self.navigationController?.pushViewController(destination, animated: true)
             }
         }
@@ -36,7 +36,7 @@ class ViewController: DemoViewController {
 
 extension ViewController: ConversationListDelegate {
     func conversationList(didSelect conversation: Conversation) {
-        let destination = NablaViewFactory.createConversationViewController(conversation)
+        let destination = NablaClient.shared.messaging.views.createConversationViewController(conversation)
         navigationController?.pushViewController(destination, animated: true)
     }
 }

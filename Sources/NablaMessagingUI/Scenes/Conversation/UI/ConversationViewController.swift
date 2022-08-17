@@ -10,11 +10,13 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     init(
         showComposer: Bool,
         logger: Logger,
+        videoCallClient: VideoCallClient?,
         providers: [ConversationCellProvider]
     ) {
         self.showComposer = showComposer
         self.logger = logger
         self.providers = providers
+        self.videoCallClient = videoCallClient
         super.init(nibName: nil, bundle: nil)
         navigationItem.titleView = titleView
     }
@@ -87,6 +89,24 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let picker = DocumentPickerModule.makeViewController(delegate: self)
         present(picker, animated: true)
     }
+    
+    func displayVideoCallRoom(url: String, token: String) {
+        guard let client = videoCallClient else {
+            logger.error(message: "Trying to open some video call but the NablaVideoCallModule is missing.")
+            return
+        }
+        
+        if let currentVideoCallToken = client.currentVideoCallToken {
+            if currentVideoCallToken == token {
+                client.openCurrentVideoCall()
+            } else {
+                logger.warning(message: "Can not join a video call while another is in progress.")
+            }
+        } else {
+            let modal = client.views.createVideoCallRoomViewController(url: url, token: token)
+            present(modal, animated: true)
+        }
+    }
 
     func showErrorAlert(viewModel: AlertViewModel) {
         present(
@@ -122,6 +142,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private let showComposer: Bool
     private let logger: Logger
     private let providers: [ConversationCellProvider]
+    private let videoCallClient: VideoCallClient?
+    
     private var state: ConversationViewState = .loading {
         didSet {
             updateLayoutAfterStateChange(oldValue: oldValue)
@@ -132,11 +154,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private lazy var titleView: TitleView = makeTitleView()
     
-    private let loadingView: LoadingView = .init().prepareForAutoLayout()
+    private let loadingView: LoadingView = .init()
     
-    private let errorView: ErrorView = .init().prepareForAutoLayout()
+    private let errorView: ErrorView = .init()
     
-    private let loadedView: UIView = .init().prepareForAutoLayout()
+    private let loadedView: UIView = .init()
 
     private lazy var collectionView: UICollectionView = makeCollectionView()
     private lazy var composerView: ComposerView = makeComposerView()
@@ -149,7 +171,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
     
     private func makeComposerView() -> ComposerView {
-        let composerView = ComposerView(dependencies: .init(logger: logger)).prepareForAutoLayout()
+        let composerView = ComposerView(dependencies: .init(logger: logger))
         composerView.placeHolder = L10n.conversationComposerPlaceholder
         composerView.delegate = self
         return composerView
@@ -161,7 +183,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let group: NSCollectionLayoutGroup = .vertical(layoutSize: layoutSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         let layout = FlippedCollectionViewCompositionalLayout(section: section)
-        let collectionView = FlippedCollectionView(frame: .zero, collectionViewLayout: layout).prepareForAutoLayout()
+        let collectionView = FlippedCollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.keyboardDismissMode = .interactive
         collectionView.delegate = self
         return collectionView
@@ -213,28 +235,28 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
     
     private func switchToLoadingLayout() {
-        view.removeSubviews()
+        view.nabla.removeSubviews()
         view.addSubview(loadingView)
-        loadingView.pinToSuperView()
+        loadingView.nabla.pinToSuperView()
     }
     
     private func switchToErrorLayout(viewModel: ErrorViewModel) {
-        view.removeSubviews()
+        view.nabla.removeSubviews()
         view.addSubview(errorView)
-        errorView.pinToSuperView()
+        errorView.nabla.pinToSuperView()
         errorView.configure(with: viewModel)
     }
     
     private func switchToLoadedLayout(with containedView: UIView) {
-        view.removeSubviews()
+        view.nabla.removeSubviews()
         if showComposer {
             view.addSubview(composerView)
-            composerView.pinToSuperView(edges: .horizontal)
+            composerView.nabla.pinToSuperView(edges: .nabla.horizontal)
         }
         view.addSubview(loadedView)
         loadedView.addSubview(containedView)
-        loadedView.pinToSuperView(edges: .horizontal)
-        containedView.pinToSuperView()
+        loadedView.nabla.pinToSuperView(edges: .nabla.horizontal)
+        containedView.nabla.pinToSuperView()
 
         loadedView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         if showComposer {
@@ -248,7 +270,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private func switchLoadedLayout(from fromView: UIView, to toView: UIView) {
         fromView.removeFromSuperview()
         loadedView.addSubview(toView)
-        toView.pinToSuperView()
+        toView.nabla.pinToSuperView()
     }
     
     private func applySnapshot(items: [ConversationViewItem], animatingDifferences: Bool = true) {
@@ -336,6 +358,10 @@ extension ConversationViewController: ConversationCellPresenterDelegate {
 
     func didTapMessagePreview(withId id: UUID) {
         presenter?.didTapMessagePreview(withId: id)
+    }
+    
+    func didTapJoinVideoCall(url: String, token: String) {
+        presenter?.didTapJoinVideoCall(url: url, token: token)
     }
 }
 

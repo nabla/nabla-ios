@@ -14,6 +14,7 @@ final class LogOutInteractorImpl: LogOutInteractor {
                 logger.error(message: "Failed to clear cache on logout", extra: ["reason": error])
             }
         }
+        keyValueStore.clear()
         extraActions.forEach { $0() }
     }
     
@@ -27,11 +28,13 @@ final class LogOutInteractorImpl: LogOutInteractor {
         userRepository: UserRepository,
         authenticator: Authenticator,
         gqlStore: GQLStore,
+        keyValueStore: KeyValueStore,
         logger: Logger
     ) {
         self.userRepository = userRepository
         self.authenticator = authenticator
         self.gqlStore = gqlStore
+        self.keyValueStore = keyValueStore
         self.logger = logger
     }
     
@@ -40,6 +43,7 @@ final class LogOutInteractorImpl: LogOutInteractor {
     private let userRepository: UserRepository
     private let authenticator: Authenticator
     private let gqlStore: GQLStore
+    private let keyValueStore: KeyValueStore
     private let logger: Logger
     
     private var extraActions = [() -> Void]()

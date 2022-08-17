@@ -1,11 +1,12 @@
 import Foundation
+import NablaCore
 import UIKit
 
 private enum Constants {
     static let thumbnailSize: CGSize = .init(width: 14, height: 14)
     static let imageSize: CGSize = .init(width: 200, height: 124)
     static let bottomViewHeight: CGFloat = 48
-    static let bottomViewPadding = NSDirectionalEdgeInsets(horizontal: 12, vertical: 0)
+    static let bottomViewPadding: NSDirectionalEdgeInsets = .nabla.make(horizontal: 12, vertical: 0)
 }
 
 class DocumentMessageContentView: UIView, MessageContentView {
@@ -23,10 +24,13 @@ class DocumentMessageContentView: UIView, MessageContentView {
     
     // MARK: - MessageContentView
     
-    func configure(with viewModel: DocumentMessageContentViewModel, sender: ConversationMessageSender) {
+    func configure(with viewModel: DocumentMessageContentViewModel) {
         imageView.url = viewModel.url
         label.text = viewModel.filename
-        
+    }
+    
+    
+    func configure(sender: ConversationMessageSender) {
         switch sender {
         case .me:
             label.textColor = NablaTheme.Conversation.documentMessagePatientTitleColor
@@ -59,12 +63,12 @@ class DocumentMessageContentView: UIView, MessageContentView {
         hstack.distribution = .fill
         
         addSubview(hstack)
-        hstack.pinToSuperView()
+        hstack.nabla.pinToSuperView()
     }
     
     private func createImageView() -> UIURLImageView {
         let imageView = UIURLImageView(frame: .zero)
-        imageView.constraintToSize(Constants.imageSize)
+        imageView.nabla.constraintToSize(Constants.imageSize)
         imageView.image = CoreAssets.Assets.documentPlaceholder.image
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -82,7 +86,7 @@ class DocumentMessageContentView: UIView, MessageContentView {
         let imageView = UIImageView()
         imageView.image = NablaTheme.Conversation.documentMessageIcon
         imageView.contentMode = .scaleAspectFit
-        imageView.constraintToSize(Constants.thumbnailSize)
+        imageView.nabla.constraintToSize(Constants.thumbnailSize)
         return imageView
     }
     
@@ -91,12 +95,12 @@ class DocumentMessageContentView: UIView, MessageContentView {
         vStack.axis = .horizontal
         vStack.spacing = 4
         vStack.alignment = .center
-        vStack.constraintHeight(Constants.bottomViewHeight)
+        vStack.nabla.constraintHeight(Constants.bottomViewHeight)
         
         let view = UIView()
         view.addSubview(vStack)
         
-        vStack.pinToSuperView(insets: Constants.bottomViewPadding)
+        vStack.nabla.pinToSuperView(insets: Constants.bottomViewPadding)
         
         return view
     }

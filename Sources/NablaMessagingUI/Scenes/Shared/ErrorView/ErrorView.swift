@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 protocol ErrorViewDelegate: AnyObject {
@@ -39,8 +40,7 @@ final class ErrorView: UIView {
         stackView.spacing = 8
         
         addSubview(stackView)
-        stackView.centerInSuperView()
-        stackView.pinToSuperView(edges: .horizontal, insets: .all(8), priority: .defaultHigh)
+        stackView.nabla.constraintToCenterInSuperView(insets: .init(x: 8, y: 8))
     }
     
     private func makeLabel() -> UILabel {

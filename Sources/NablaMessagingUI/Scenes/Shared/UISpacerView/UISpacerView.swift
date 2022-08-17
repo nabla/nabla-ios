@@ -29,9 +29,9 @@ class UISpacerView: UIView {
         case .expands:
             switch axis {
             case .horizontal:
-                widthAnchor.constraint(equalToConstant: 1000).with(priority: .defaultLow).isActive = true
+                widthAnchor.constraint(equalToConstant: 1000).nabla.with(priority: .defaultLow).isActive = true
             case .vertical:
-                heightAnchor.constraint(equalToConstant: 1000).with(priority: .defaultLow).isActive = true
+                heightAnchor.constraint(equalToConstant: 1000).nabla.with(priority: .defaultLow).isActive = true
             @unknown default:
                 break
             }

@@ -13,7 +13,7 @@ final class ImageMessageContentView: UIView, MessageContentView {
     init() {
         super.init(frame: .zero)
         addSubview(imageView)
-        imageView.pinToSuperView()
+        imageView.nabla.pinToSuperView()
     }
     
     @available(*, unavailable)
@@ -23,11 +23,13 @@ final class ImageMessageContentView: UIView, MessageContentView {
     
     // MARK: - MessageContentView
     
-    func configure(with viewModel: ImageMessageContentViewModel, sender _: ConversationMessageSender) {
+    func configure(with viewModel: ImageMessageContentViewModel) {
         imageView.url = viewModel.url
 
-        constraintToSize(idealSize(contentSize: viewModel.originalImageSize))
+        nabla.constraintToSize(idealSize(contentSize: viewModel.originalImageSize))
     }
+    
+    func configure(sender: ConversationMessageSender) {}
     
     func prepareForReuse() {
         imageView.url = nil
@@ -36,7 +38,7 @@ final class ImageMessageContentView: UIView, MessageContentView {
     // MARK: - Private
     
     private lazy var imageView: UIURLImageView = {
-        let imageView = UIURLImageView().prepareForAutoLayout()
+        let imageView = UIURLImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()

@@ -1,3 +1,4 @@
+import NablaCore
 import UIKit
 
 final class LoadingButton: UIControl {
@@ -47,23 +48,11 @@ final class LoadingButton: UIControl {
     
     private func setUpSubviews() {
         addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: topAnchor),
-            button.bottomAnchor.constraint(equalTo: bottomAnchor),
-            button.leadingAnchor.constraint(equalTo: leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
+        button.nabla.pinToSuperView()
         button.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         addSubview(loadingIndicator)
-        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadingIndicator.topAnchor.constraint(equalTo: topAnchor),
-            loadingIndicator.bottomAnchor.constraint(equalTo: bottomAnchor),
-            loadingIndicator.leadingAnchor.constraint(equalTo: leadingAnchor),
-            loadingIndicator.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
+        loadingIndicator.nabla.pinToSuperView()
         loadingIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     

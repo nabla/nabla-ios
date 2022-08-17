@@ -20,10 +20,16 @@ public class NablaClient {
         apiKey: String,
         name: String,
         logger: Logger = ConsoleLogger(),
-        networkConfiguration: NetworkConfiguration? = nil
+        networkConfiguration: NetworkConfiguration? = nil,
+        modules: [Module]
     ) {
         let configuration = networkConfiguration ?? DefaultNetworkConfiguration()
-        let container = CoreContainer(name: name, networkConfiguration: configuration, logger: logger)
+        let container = CoreContainer(
+            name: name,
+            networkConfiguration: configuration,
+            logger: logger,
+            modules: modules
+        )
         self.init(apiKey: apiKey, container: container)
     }
     
@@ -53,7 +59,8 @@ public class NablaClient {
     public static func initialize(
         apiKey: String,
         logger: Logger = ConsoleLogger(),
-        networkConfiguration: NetworkConfiguration? = nil
+        networkConfiguration: NetworkConfiguration? = nil,
+        modules: [Module]
     ) {
         guard _shared == nil else {
             logger.warning(message: "NablaClient.initialize(configuration:) should only be called once. Ignoring this call and using the previously created shared instance.")
@@ -63,7 +70,8 @@ public class NablaClient {
             apiKey: apiKey,
             name: Constants.defaultName,
             logger: logger,
-            networkConfiguration: networkConfiguration
+            networkConfiguration: networkConfiguration,
+            modules: modules
         )
     }
 
@@ -81,6 +89,8 @@ public class NablaClient {
         }
         container.userRepository.setCurrentUser(User(id: userId))
         container.authenticator.authenticate(userId: userId, provider: provider)
+        
+        registerDeviceAction = container.registerDeviceInteractor.execute()
     }
 
     /// Log the current user out
@@ -114,4 +124,6 @@ public class NablaClient {
     private static func formatApiKey(_ apiKey: String) -> String {
         apiKey.replacingOccurrences(of: "Authorization: Bearer ", with: "")
     }
+    
+    private var registerDeviceAction: Cancellable?
 }

@@ -5,10 +5,10 @@ import Apollo
 import Foundation
 
 /// GQL namespace
-public extension GQL {
+ extension GQL {
   final class SetTypingMutation: GraphQLMutation {
     /// The raw GraphQL definition of this operation.
-    public let operationDefinition: String =
+     let operationDefinition: String =
       """
       mutation SetTyping($conversationId: UUID!, $isTyping: Boolean!) {
         setTyping(conversationId: $conversationId, isTyping: $isTyping) {
@@ -17,40 +17,40 @@ public extension GQL {
       }
       """
 
-    public let operationName: String = "SetTyping"
+     let operationName: String = "SetTyping"
 
-    public var conversationId: GQL.UUID
-    public var isTyping: Bool
+     var conversationId: GQL.UUID
+     var isTyping: Bool
 
-    public init(conversationId: GQL.UUID, isTyping: Bool) {
+     init(conversationId: GQL.UUID, isTyping: Bool) {
       self.conversationId = conversationId
       self.isTyping = isTyping
     }
 
-    public var variables: GraphQLMap? {
+     var variables: GraphQLMap? {
       return ["conversationId": conversationId, "isTyping": isTyping]
     }
 
-    public struct Data: GraphQLSelectionSet {
-      public static let possibleTypes: [String] = ["Mutation"]
+     struct Data: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["Mutation"]
 
-      public static var selections: [GraphQLSelection] {
+       static var selections: [GraphQLSelection] {
         return [
           GraphQLField("setTyping", arguments: ["conversationId": GraphQLVariable("conversationId"), "isTyping": GraphQLVariable("isTyping")], type: .nonNull(.object(SetTyping.selections))),
         ]
       }
 
-      public private(set) var resultMap: ResultMap
+       private(set) var resultMap: ResultMap
 
-      public init(unsafeResultMap: ResultMap) {
+       init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
       }
 
-      public init(setTyping: SetTyping) {
+       init(setTyping: SetTyping) {
         self.init(unsafeResultMap: ["__typename": "Mutation", "setTyping": setTyping.resultMap])
       }
 
-      public var setTyping: SetTyping {
+       var setTyping: SetTyping {
         get {
           return SetTyping(unsafeResultMap: resultMap["setTyping"]! as! ResultMap)
         }
@@ -59,26 +59,26 @@ public extension GQL {
         }
       }
 
-      public struct SetTyping: GraphQLSelectionSet {
-        public static let possibleTypes: [String] = ["SetTypingOutput"]
+       struct SetTyping: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["SetTypingOutput"]
 
-        public static var selections: [GraphQLSelection] {
+         static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           ]
         }
 
-        public private(set) var resultMap: ResultMap
+         private(set) var resultMap: ResultMap
 
-        public init(unsafeResultMap: ResultMap) {
+         init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
         }
 
-        public init() {
+         init() {
           self.init(unsafeResultMap: ["__typename": "SetTypingOutput"])
         }
 
-        public var __typename: String {
+         var __typename: String {
           get {
             return resultMap["__typename"]! as! String
           }

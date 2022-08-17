@@ -7,7 +7,7 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
     // MARK: - Internal
     
     func prepare(collectionView: UICollectionView) {
-        collectionView.register(Cell.self)
+        collectionView.nabla.register(Cell.self)
     }
     
     func provideCell(
@@ -20,7 +20,7 @@ final class TypingIndicatorCellProvider: ConversationCellProvider {
             return nil
         }
         
-        let cell = collectionView.dequeueReusableCell(ofClass: Cell.self, for: indexPath)
+        let cell = collectionView.nabla.dequeueReusableCell(ofClass: Cell.self, for: indexPath)
         let presenter = findOrCreatePresenter(
             item: item,
             delegate: delegate

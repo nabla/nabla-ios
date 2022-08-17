@@ -10,6 +10,7 @@ public class CoreContainer {
         userRepository: userRepository,
         authenticator: authenticator,
         gqlStore: gqlStore,
+        keyValueStore: keyValueStore,
         logger: logger
     )
     
@@ -51,27 +52,50 @@ public class CoreContainer {
 
     public private(set) lazy var gqlStore: GQLStore = GQLStoreImpl(apolloStore: apolloStore)
     
+    public let modules: [Module]
+    
+    public private(set) lazy var messagingClient: MessagingClient? = messagingModule?.makeClient(container: self)
+    
+    public private(set) lazy var videoCallClient: VideoCallClient? = videoCallModule?.makeClient(container: self)
+    
     // MARK: - Internal
     
     private(set) lazy var headersRequestBehavior = HeadersRequestBehavior(headers: extraHeaders)
     
+    private(set) lazy var registerDeviceInteractor: RegisterDeviceInteractor = RegisterDeviceInteractorImpl(
+        modules: modules,
+        deviceRepository: deviceRepository
+    )
+    
     // Mutable for mocking purposes
     lazy var urlSessionClient: URLSessionClient = .init()
+    
+    // Mutable for mocking purposes
+    lazy var deviceLocalDataSource: DeviceLocalDataSource = DeviceLocalDataSourceImpl(
+        store: keyValueStore,
+        logger: logger
+    )
     
     init(
         name: String,
         networkConfiguration: NetworkConfiguration,
-        logger: Logger
+        logger: Logger,
+        modules: [Module]
     ) {
         self.name = name
         self.networkConfiguration = networkConfiguration
         self.logger = logger
+        self.modules = modules
+        messagingModule = modules.first(as: MessagingModule.self)
+        videoCallModule = modules.first(as: VideoCallModule.self)
     }
 
     // MARK: - Private
 
     private let name: String
     private let networkConfiguration: NetworkConfiguration
+    private let messagingModule: MessagingModule?
+    private let videoCallModule: VideoCallModule?
     
     private lazy var reachabilityRefetchTrigger: ReachabilityRefetchTrigger = .init(environment: environment)
 
@@ -110,8 +134,22 @@ public class CoreContainer {
     )
 
     private lazy var keyValueStore: KeyValueStore = KeyValueStoreImpl(namespace: name)
+    
+    private lazy var deviceRemoteDataSource: DeviceRemoteDataSource = DeviceRemoteDataSourceImpl(gqlClient: gqlClient)
+    
+    private lazy var deviceRepository: DeviceRepository = DeviceRepositoryImpl(
+        deviceLocalDataSource: deviceLocalDataSource,
+        deviceRemoteDataSource: deviceRemoteDataSource,
+        logger: logger
+    )
 }
 
 private struct URLProvider: BaseURLProvider {
     let baseURL: URL
+}
+
+private extension Array {
+    func first<T>(as _: T.Type) -> T? {
+        first(where: { $0 is T }) as? T
+    }
 }

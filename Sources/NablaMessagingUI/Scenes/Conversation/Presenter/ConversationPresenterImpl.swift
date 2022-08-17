@@ -1,9 +1,6 @@
 import Foundation
 import NablaCore
 import NablaMessagingCore
-#if canImport(NablaUtils)
-    import NablaUtils
-#endif
 
 final class ConversationPresenterImpl: ConversationPresenter {
     // MARK: - Internal
@@ -160,6 +157,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
         } else {
             focusedPatientTextItemId = id
         }
+    }
+    
+    func didTapJoinVideoCall(url: String, token: String) {
+        view?.displayVideoCallRoom(url: url, token: token)
     }
 
     func retry() {

@@ -2,14 +2,14 @@ import Foundation
 import NablaCore
 
 /// Main entry-point for SDK messaging features.
-public class NablaMessagingClient {
+public class NablaMessagingClient: NablaCore.MessagingClient {
     // MARK: - Public
     
-    public static let shared = NablaMessagingClient(client: .shared)
-
-    public var logger: Logger {
-        container.logger
+    public static var shared: NablaMessagingClient {
+        NablaClient.shared.messaging
     }
+    
+    public let container: MessagingContainer
 
     /// Create a new conversation on behalf of the current user.
     /// - Parameter title: optional - title for the conversation
@@ -177,26 +177,24 @@ public class NablaMessagingClient {
         container.gqlClient.addRefetchTriggers(triggers)
     }
 
-    public convenience init(client: NablaClient) {
+    public convenience init(container: CoreContainer) {
         self.init(
-            parent: client,
-            container: MessagingContainer(coreContainer: client.container)
+            container: MessagingContainer(
+                coreContainer: container
+            )
         )
     }
 
     // MARK: - Internal
     
     init(
-        parent: NablaClient,
         container: MessagingContainer
     ) {
         self.container = container
-        parent.container.logOutInteractor.addAction {
+        container.logOutInteractor.addAction {
             // TODO: Clear any user related data
         }
     }
     
     // MARK: - Private
-
-    private let container: MessagingContainer
 }

@@ -19,7 +19,8 @@ Pod::Spec.new do |spec|
   spec.platform           = :ios, "13.0"
   spec.swift_versions     = '5.0'
   spec.source             = { :git => "https://github.com/nabla/nabla-ios.git", :tag => "#{spec.version}" }
-  spec.source_files       = ["Sources/#{spec.name}/**/*.swift", "Sources/NablaUtils/**/*.swift"]
+  spec.source_files       = ["Sources/#{spec.name}/**/*.swift"]
+  spec.resource_bundles   = {"NablaCoreResources" => "Sources/#{spec.name}/Resources/**/*"}
 
   spec.dependency           'Apollo/WebSocket', '~> 0.50'
 end

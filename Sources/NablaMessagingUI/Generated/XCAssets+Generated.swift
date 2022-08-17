@@ -24,6 +24,7 @@ public enum CoreAssets {
   public enum Assets {
     public static let close = CoreImageAsset(name: "close")
     public static let documentPlaceholder = CoreImageAsset(name: "documentPlaceholder")
+    public static let videoCallActionRequestIcon = CoreImageAsset(name: "videoCallActionRequestIcon")
   }
   public enum Colors {
     public static let accessory = ColorAsset(name: "accessory")
@@ -61,7 +62,7 @@ public final class ColorAsset {
   #if os(iOS) || os(tvOS)
   @available(iOS 11.0, tvOS 11.0, *)
   public func color(compatibleWith traitCollection: UITraitCollection) -> Color {
-    let bundle = NablaMessagingUI.resourcesBundle
+    let bundle = NablaMessagingUIPackage.resourcesBundle
     guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
       fatalError("Unable to load color asset named \(name).")
     }
@@ -77,7 +78,7 @@ public final class ColorAsset {
 public extension ColorAsset.Color {
   @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
   convenience init?(asset: ColorAsset) {
-    let bundle = NablaMessagingUI.resourcesBundle
+    let bundle = NablaMessagingUIPackage.resourcesBundle
     #if os(iOS) || os(tvOS)
     self.init(named: asset.name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
@@ -99,7 +100,7 @@ public struct CoreImageAsset {
 
   @available(iOS 8.0, tvOS 9.0, watchOS 2.0, macOS 10.7, *)
   public var image: Image {
-    let bundle = NablaMessagingUI.resourcesBundle
+    let bundle = NablaMessagingUIPackage.resourcesBundle
     #if os(iOS) || os(tvOS)
     let image = Image(named: name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
@@ -117,7 +118,7 @@ public struct CoreImageAsset {
   #if os(iOS) || os(tvOS)
   @available(iOS 8.0, tvOS 9.0, *)
   public func image(compatibleWith traitCollection: UITraitCollection) -> Image {
-    let bundle = NablaMessagingUI.resourcesBundle
+    let bundle = NablaMessagingUIPackage.resourcesBundle
     guard let result = Image(named: name, in: bundle, compatibleWith: traitCollection) else {
       fatalError("Unable to load image asset named \(name).")
     }
@@ -132,7 +133,7 @@ public extension CoreImageAsset.Image {
     message: "This initializer is unsafe on macOS, please use the CoreImageAsset.image property")
   convenience init?(asset: CoreImageAsset) {
     #if os(iOS) || os(tvOS)
-    let bundle = NablaMessagingUI.resourcesBundle
+    let bundle = NablaMessagingUIPackage.resourcesBundle
     self.init(named: asset.name, in: bundle, compatibleWith: nil)
     #elseif os(macOS)
     self.init(named: NSImage.Name(asset.name))

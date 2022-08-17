@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 final class ConversationActivityCell: UICollectionViewCell, Reusable {
@@ -34,11 +35,11 @@ final class ConversationActivityCell: UICollectionViewCell, Reusable {
 
     private func setUp() {
         contentView.addSubview(label)
-        label.pinToSuperView(insets: .init(top: 12, leading: 20, bottom: 4, trailing: 20))
+        label.nabla.pinToSuperView(insets: .init(top: 12, leading: 20, bottom: 4, trailing: 20))
     }
 
     private func makeLabel() -> UILabel {
-        let label = UILabel().prepareForAutoLayout()
+        let label = UILabel()
         label.textAlignment = .center
         label.font = NablaTheme.Conversation.conversationActivityFont
         label.textColor = NablaTheme.Conversation.conversationActivityColor

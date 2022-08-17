@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 final class DeletedMessageContentView: UIView, MessageContentView {
@@ -8,10 +9,10 @@ final class DeletedMessageContentView: UIView, MessageContentView {
         super.init(frame: .zero)
         
         addSubview(borderedContainer)
-        borderedContainer.pinToSuperView()
+        borderedContainer.nabla.pinToSuperView()
         
         borderedContainer.addSubview(label)
-        label.pinToSuperView(insets: .init(horizontal: 16, vertical: 8))
+        label.nabla.pinToSuperView(insets: .nabla.make(horizontal: 16, vertical: 8))
     }
     
     @available(*, unavailable)
@@ -21,9 +22,11 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     
     // MARK: - MessageContentView
     
-    func configure(with viewModel: DeletedMessageContentViewModel, sender _: ConversationMessageSender) {
+    func configure(with viewModel: DeletedMessageContentViewModel) {
         label.text = viewModel.text
     }
+    
+    func configure(sender: ConversationMessageSender) {}
     
     func prepareForReuse() {
         label.text = nil
@@ -32,7 +35,7 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     // MARK: - Private
     
     private lazy var label: UILabel = {
-        let label = UILabel().prepareForAutoLayout()
+        let label = UILabel()
         label.numberOfLines = 0
         label.backgroundColor = .clear
         label.textColor = NablaTheme.Conversation.deletedMessagetextColor
@@ -41,7 +44,7 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     }()
     
     private lazy var borderedContainer: UIView = {
-        let view = UIView().prepareForAutoLayout()
+        let view = UIView()
         view.backgroundColor = NablaTheme.Conversation.deletedMessagebackgroundColor
         view.layer.borderColor = NablaTheme.Conversation.deletedMessageBorderColor.cgColor
         view.layer.borderWidth = 0.5

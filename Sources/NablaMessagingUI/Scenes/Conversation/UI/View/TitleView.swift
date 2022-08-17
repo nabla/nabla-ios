@@ -42,7 +42,7 @@ final class TitleView: UIView {
     
     private let avatarView: AvatarView = {
         let view = AvatarView()
-        view.constraintToSize(Constants.avatarSize)
+        view.nabla.constraintToSize(Constants.avatarSize)
         return view
     }()
     
@@ -82,6 +82,6 @@ final class TitleView: UIView {
         hstack.distribution = .fill
         hstack.spacing = 8
         addSubview(hstack)
-        hstack.pinToSuperView()
+        hstack.nabla.pinToSuperView()
     }
 }

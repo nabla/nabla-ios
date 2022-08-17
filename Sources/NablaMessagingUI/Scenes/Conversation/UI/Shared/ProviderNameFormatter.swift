@@ -1,8 +1,6 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
-#if canImport(NablaUtils)
-    import NablaUtils
-#endif
 
 extension MaybeProvider {
     var fullNameWithPrefix: String {
@@ -47,6 +45,6 @@ extension Provider {
     }
     
     var initials: String? {
-        String([firstName, lastName].compactMap(\.first)).nilIfEmpty
+        String([firstName, lastName].compactMap(\.first)).nabla.nilIfEmpty
     }
 }

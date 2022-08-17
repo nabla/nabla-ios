@@ -9,4 +9,5 @@ protocol ConversationCellPresenterDelegate: AnyObject {
     func didTap(document: DocumentFile)
     func didTapTextItem(withId id: UUID)
     func didTapMessagePreview(withId id: UUID)
+    func didTapJoinVideoCall(url: String, token: String)
 }

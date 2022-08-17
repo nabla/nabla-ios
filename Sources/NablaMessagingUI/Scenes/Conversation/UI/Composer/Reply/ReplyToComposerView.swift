@@ -50,16 +50,16 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
         addSubview(hStack)
         addSubview(closeButton)
 
-        border.pinToSuperView(edges: [.leading, .trailing, .top])
-        hStack.pinToSuperView(edges: [.leading, .top, .bottom], insets: .init(top: 12, leading: 12, bottom: 0, trailing: 12))
+        border.nabla.pinToSuperView(edges: [.leading, .trailing, .top])
+        hStack.nabla.pinToSuperView(edges: [.leading, .top, .bottom], insets: .init(top: 12, leading: 12, bottom: 0, trailing: 12))
         hStack.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor).isActive = true
 
-        closeButton.pinToSuperView(edges: [.trailing, .bottom], insets: .init(horizontal: 12, vertical: 8))
+        closeButton.nabla.pinToSuperView(edges: [.trailing, .bottom], insets: .nabla.make(horizontal: 12, vertical: 8))
     }
 
     private func makeBorder() -> UIView {
         let view = UIView()
-        view.constraintHeight(1)
+        view.nabla.constraintHeight(1)
         view.backgroundColor = NablaTheme.accessoryColor
         return view
     }
@@ -80,7 +80,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
 
     private func makePreviewImageView() -> UIURLImageView {
         let imageView = UIURLImageView()
-        imageView.constraintToSize(.init(width: 40, height: 40))
+        imageView.nabla.constraintToSize(.init(width: 40, height: 40))
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -92,7 +92,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
         button.setImage(NablaTheme.Conversation.composerReplyToCloseButtonImage, for: .normal)
         button.tintColor = NablaTheme.Conversation.composerReplyToCloseButtonColor
         button.setContentHuggingPriority(.required, for: .horizontal)
-        button.constraintToSize(.init(width: 24, height: 24))
+        button.nabla.constraintToSize(.init(width: 24, height: 24))
         button.addTarget(self, action: #selector(closeButtonTapped), for: .primaryActionTriggered)
         return button
     }

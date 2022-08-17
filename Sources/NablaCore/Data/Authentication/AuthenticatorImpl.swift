@@ -86,7 +86,7 @@ class AuthenticatorImpl: Authenticator {
         do {
             let jwt = try decode(jwt: token)
             guard let expiresAt = jwt.expiresAt else { return false }
-            return expiresAt.isPast
+            return expiresAt.nabla.isPast
         } catch {
             return true
         }
