@@ -23,6 +23,7 @@ NablaClient.initialize(
     ]
 )
 ```
+- The `NablaViewFactory` has been removed. You can now create the views from `NablaMessagingUI` SDK from `NablaClient.shared.messaging.views` instead.
 
 ### Fixed
 
