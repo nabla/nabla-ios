@@ -19,7 +19,7 @@ protocol VideoCallRoomViewContract: AnyObject {
     
     func close()
     func startPictureInPicture()
-    func stopPictureInPicture()
+    func stopPictureInPicture(completion: (() -> Void)?)
     
     func openSettings()
 }
@@ -82,10 +82,12 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
     }
     
     func close() {
-        if let navigationController = navigationController {
-            navigationController.popViewController(animated: true)
+        if let pip = pip {
+            pip.close(animated: false) { [weak self] in
+                self?.performClose(animated: false)
+            }
         } else {
-            dismiss(animated: true)
+            performClose(animated: true)
         }
     }
     
@@ -97,8 +99,8 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         self.pip = pip
     }
     
-    func stopPictureInPicture() {
-        pip?.close(animated: true)
+    func stopPictureInPicture(completion: (() -> Void)?) {
+        pip?.close(animated: true, completion: completion)
     }
     
     func openSettings() {
@@ -277,6 +279,14 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
     
     @objc private func hangButtonHandler() {
         presenter.userDidTapHangButton()
+    }
+    
+    private func performClose(animated: Bool) {
+        if let navigationController = navigationController {
+            navigationController.popViewController(animated: animated)
+        } else {
+            dismiss(animated: animated)
+        }
     }
 }
 

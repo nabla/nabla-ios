@@ -4,7 +4,7 @@ import UIKit
 final class PictureInPictureViewController: OverlayViewController {
     // MARK: - Internal
     
-    func close(animated: Bool) {
+    func close(animated: Bool, completion: (() -> Void)?) {
         guard let context = context else { return }
         
         source.pictureInPictureViewController(self, willRestore: context.contentView)
@@ -21,6 +21,7 @@ final class PictureInPictureViewController: OverlayViewController {
                     self.window?.dismiss()
                     context.contentView.window?.makeKey()
                     self.source.pictureInPictureViewController(self, didRestore: context.contentView)
+                    completion?()
                 }
             }
         )
@@ -178,7 +179,7 @@ final class PictureInPictureViewController: OverlayViewController {
     }
     
     @objc private func tapRecognizerHandler() {
-        close(animated: true)
+        close(animated: true, completion: nil)
     }
     
     private var initialPanPosition: CGPoint?

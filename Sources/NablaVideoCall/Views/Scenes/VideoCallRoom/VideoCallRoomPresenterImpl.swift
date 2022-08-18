@@ -17,7 +17,7 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     
     func start() {
         dependencies.currentVideoCallInteractor.becomeCurrentVideoCall(token: token, reopen: { [weak self] in
-            self?.view?.stopPictureInPicture()
+            self?.view?.stopPictureInPicture(completion: nil)
         })
         
         updateParticipants()
@@ -191,6 +191,12 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
             }
         )
     }
+    
+    private func closeRoomRemotely() {
+        DispatchQueue.main.async {
+            self.close()
+        }
+    }
 }
 
 extension VideoCallRoomPresenterImpl: RoomDelegate {
@@ -224,13 +230,26 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
         DispatchQueue.main.async { self.remoteUser = remoteUser }
     }
     
-    func room(_: Room, didDisconnect _: Error?) {
-        displayFailedToConnectError()
+    func room(_: Room, didDisconnect error: Error?) {
+        if error == nil {
+            closeRoomRemotely()
+        } else {
+            displayFailedToConnectError()
+        }
     }
     
     func room(_: Room, participantDidLeave _: RemoteParticipant) {
         DispatchQueue.main.async {
             self.remoteUser = nil
+        }
+    }
+    
+    func room(_: Room, didUpdate connectionState: ConnectionState, oldValue: ConnectionState) {
+        switch (oldValue, connectionState) {
+        case (.connected, .disconnected):
+            closeRoomRemotely()
+        default:
+            break
         }
     }
     
