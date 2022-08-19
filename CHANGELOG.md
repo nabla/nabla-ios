@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha15] - 2022-08-19
+
+### Added
+
 - Introduced `NablaVideoCall` SDK and video call requests from `NablaMessagingCore`.
 
 ### Changed
