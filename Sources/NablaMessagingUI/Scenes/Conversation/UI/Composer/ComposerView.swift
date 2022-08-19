@@ -127,7 +127,7 @@ final class ComposerView: UIView {
         let container = UIView()
         let stackView = UIStackView(
             arrangedSubviews: [
-                addMedia,
+                addMediaButton,
                 deleteAudioRecordingButton,
                 recordAudioButton,
                 borderedContainerView,
@@ -185,7 +185,7 @@ final class ComposerView: UIView {
         return sendButton
     }()
     
-    private lazy var addMedia: UIButton = {
+    private lazy var addMediaButton: UIButton = {
         let button = UIButton()
         button.setImage(NablaTheme.Conversation.addMediaIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
@@ -254,9 +254,9 @@ final class ComposerView: UIView {
         if isRecording {
             setVisibleViews([deleteAudioRecordingButton, audioRecorderComposerView])
         } else if showRecordAudioButton {
-            setVisibleViews([recordAudioButton, addMedia, textView, placeHolderLabel])
+            setVisibleViews([recordAudioButton, addMediaButton, textView, placeHolderLabel])
         } else {
-            setVisibleViews([addMedia, textView, placeHolderLabel])
+            setVisibleViews([addMediaButton, textView, placeHolderLabel])
         }
     }
 
@@ -268,7 +268,7 @@ final class ComposerView: UIView {
         // Only add views whose visibility might change.
         [
             deleteAudioRecordingButton,
-            addMedia,
+            addMediaButton,
             recordAudioButton,
             textView,
             placeHolderLabel,
@@ -278,8 +278,8 @@ final class ComposerView: UIView {
     }
     
     @objc private func didTapOnButton(_ sender: UIButton) {
-        if sender == addMedia {
-            delegate?.composerViewDidTapOnAddMedia(self)
+        if sender == addMediaButton {
+            delegate?.composerView(self, didTapOnAddMediaFrom: sender)
         } else if sender == sendButton {
             // TODO: @tgy fix view to view data flow
             if isRecording {

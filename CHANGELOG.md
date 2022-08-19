@@ -27,6 +27,8 @@ NablaClient.initialize(
 
 ### Fixed
 
+- Fixed a crash when opening the "add media" action sheet on iPad.
+
 
 ## [1.0.0-alpha14] - 2022-08-08
 

@@ -300,7 +300,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    private func displayMediaSelectionSheet() {
+    private func displayMediaSelectionSheet(sourceView: UIView) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         alert.addAction(
@@ -322,6 +322,9 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         }
         alert.addAction(UIAlertAction(title: L10n.conversationAddMediaCancel, style: .cancel, handler: nil))
         
+        alert.popoverPresentationController?.sourceView = sourceView
+        alert.popoverPresentationController?.sourceRect = sourceView.frame
+        alert.popoverPresentationController?.permittedArrowDirections = [.down]
         present(alert, animated: true, completion: nil)
     }
 }
@@ -377,8 +380,8 @@ extension ConversationViewController: ComposerViewDelegate {
         presenter.didUpdateDraftText(composerView.text ?? "")
     }
     
-    func composerViewDidTapOnAddMedia(_: ComposerView) {
-        displayMediaSelectionSheet()
+    func composerView(_: ComposerView, didTapOnAddMediaFrom sender: UIView) {
+        displayMediaSelectionSheet(sourceView: sender)
     }
 
     func composerView(_: ComposerView, didFinishRecordingAudioFile file: AudioFile) {
