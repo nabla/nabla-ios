@@ -124,10 +124,10 @@ class ConversationItemsMerger: PaginatedWatcher {
                 return transformer.transform(remoteItem)
             }
             if let localItem = localItemsByClientId[clientId] {
-                localItemsByClientId.removeValue(forKey: clientId)
+                localItemsByClientId.removeValue(forKey: localItem.clientId)
                 // Always use the remote item as source of truth.
                 // Come change this when we support editing messages locally.
-                transformer.transform(remoteItem)
+                return transformer.transform(remoteItem)
             }
             return transformer.transform(remoteItem)
         }
