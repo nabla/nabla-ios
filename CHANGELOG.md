@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- On simulator: disabled using the camera to send a new photo/video.
+- On simulator: disabled joining video calls.
+
 ### Fixed
 
 

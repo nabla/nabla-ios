@@ -3,3 +3,7 @@
 
 "failed_to_connect_error_message" = "Failed to connect to your call. Please try again later.";
 "failed_to_connect_error_action" = "Retry";
+
+"not_available_on_simulator_error_title" = "Unavailable";
+"not_available_on_simulator_error_message" = "The camera can not be used from the simulator. Please use a real device instead.";
+"not_available_on_simulator_error_action" = "Ok";

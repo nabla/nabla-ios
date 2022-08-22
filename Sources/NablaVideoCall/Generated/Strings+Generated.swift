@@ -14,6 +14,12 @@ internal enum L10n {
   internal static let failedToConnectErrorAction = L10n.tr("Localizable", "failed_to_connect_error_action")
   /// Failed to connect to your call. Please try again later.
   internal static let failedToConnectErrorMessage = L10n.tr("Localizable", "failed_to_connect_error_message")
+  /// Ok
+  internal static let notAvailableOnSimulatorErrorAction = L10n.tr("Localizable", "not_available_on_simulator_error_action")
+  /// The camera can not be used from the simulator. Please use a real device instead.
+  internal static let notAvailableOnSimulatorErrorMessage = L10n.tr("Localizable", "not_available_on_simulator_error_message")
+  /// Unavailable
+  internal static let notAvailableOnSimulatorErrorTitle = L10n.tr("Localizable", "not_available_on_simulator_error_title")
   /// Go to Settings
   internal static let permissionsDeniedErrorAction = L10n.tr("Localizable", "permissions_denied_error_action")
   /// Permissions to access microphone and camera are needed for remote consultations.

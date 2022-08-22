@@ -3,3 +3,8 @@
 
 "failed_to_connect_error_message" = "Impossible de rejoinder l'appel. Réessayez plus tard.";
 "failed_to_connect_error_action" = "Réessayer";
+
+"not_available_on_simulator_error_title" = "Indisponible";
+"not_available_on_simulator_error_message" = "Le simulateur ne supporte pas l'utilisation de la camera. Veuillez utiliser un appareil physique.";
+"not_available_on_simulator_error_action" = "Ok";
+
