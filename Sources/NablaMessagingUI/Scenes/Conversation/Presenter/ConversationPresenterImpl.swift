@@ -231,7 +231,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private let localTypingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
     
     private var canRecordAudio: Bool {
-        Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String != nil
+        Bundle.main.nabla.hasMicrophoneUsageDescription
     }
 
     private func watchItems() {

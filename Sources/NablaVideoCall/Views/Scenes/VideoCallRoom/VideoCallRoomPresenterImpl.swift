@@ -146,8 +146,8 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     
     private func requestPermissions(completion: @escaping (Bool) -> Void) {
         guard
-            Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String != nil,
-            Bundle.main.object(forInfoDictionaryKey: "NSCameraUsageDescription") as? String != nil
+            Bundle.main.nabla.hasMicrophoneUsageDescription,
+            Bundle.main.nabla.hasCameraUsageDescription
         else {
             let message = "You must set `NSMicrophoneUsageDescription` and `NSCameraUsageDescription` in your plist before asking for the user's permissions"
             dependencies.logger.error(message: message)

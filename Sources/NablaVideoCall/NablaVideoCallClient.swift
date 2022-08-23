@@ -36,12 +36,10 @@ public final class NablaVideoCallClient: VideoCallClient {
     // MARK: - Private
     
     private func checkPermissions() {
-        let microphoneUsageDescription = Bundle.main.object(forInfoDictionaryKey: "NSMicrophoneUsageDescription")
-        if microphoneUsageDescription == nil {
+        if Bundle.main.nabla.hasMicrophoneUsageDescription {
             container.logger.error(message: "Missing `NSMicrophoneUsageDescription` key in Info.plist")
         }
-        let cameraUsageDescription = Bundle.main.object(forInfoDictionaryKey: "NSCameraUsageDescription")
-        if cameraUsageDescription == nil {
+        if Bundle.main.nabla.hasCameraUsageDescription {
             container.logger.error(message: "Missing `NSCameraUsageDescription` key in Info.plist")
         }
     }

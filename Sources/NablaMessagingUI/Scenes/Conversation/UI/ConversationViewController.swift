@@ -303,19 +303,17 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private func displayMediaSelectionSheet(sourceView: UIView) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let cameraAction = UIAlertAction(
-            title: L10n.conversationAddMediaCamera,
-            style: .default,
-            handler: { [weak self] _ in
-                self?.presenter?.didTapCameraButton()
-            }
-        )
-        #if targetEnvironment(simulator)
-            cameraAction.isEnabled = false
-        #else
-            cameraAction.isEnabled = true
-        #endif
-        alert.addAction(cameraAction)
+        if Bundle.main.nabla.hasCameraUsageDescription {
+            let cameraAction = UIAlertAction(
+                title: L10n.conversationAddMediaCamera,
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.presenter?.didTapCameraButton()
+                }
+            )
+            cameraAction.isEnabled = !UIDevice.current.nabla.isSimulator
+            alert.addAction(cameraAction)
+        }
         
         alert.addAction(
             UIAlertAction(title: L10n.conversationAddMediaLibrary, style: .default, handler: { [weak self] _ in
