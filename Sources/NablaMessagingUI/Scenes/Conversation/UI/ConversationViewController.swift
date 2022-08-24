@@ -18,7 +18,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         self.providers = providers
         self.videoCallClient = videoCallClient
         super.init(nibName: nil, bundle: nil)
-        navigationItem.titleView = titleView
+        navigationItem.titleView = navigationItem.titleView ?? titleView
     }
 
     @available(*, unavailable)

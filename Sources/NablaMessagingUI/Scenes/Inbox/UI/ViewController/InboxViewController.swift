@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
 import UIKit
 
@@ -42,9 +43,8 @@ final class InboxViewController: UIViewController, InboxViewContract {
     }()
 
     private func setUp() {
-        title = L10n.inboxTitle
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: createConversationButton)
+        title = title ?? L10n.inboxTitle
+        navigationItem.nabla.addRightBarButtonItem(UIBarButtonItem(customView: createConversationButton))
     }
 
     // MARK: Handlers

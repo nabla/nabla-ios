@@ -8,10 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- It is now possible to change the `title` and `titleView` of `NablaMessagingUI` view controllers.
+
 ### Changed
 
 - On simulator: disabled using the camera to send a new photo/video.
 - On simulator: disabled joining video calls.
+- View controllers no longer enforce `preferLargeTitles` on their `UINavigationController`.
 
 ### Fixed
 
