@@ -5,9 +5,9 @@ import UIKit
 
 final class InboxViewController: UIViewController, InboxViewContract {
     // MARK: Lifecycle
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setUp()
     }
 

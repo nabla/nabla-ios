@@ -2,7 +2,8 @@ import UIKit
 
 public extension NablaExtension where Base == UINavigationItem {
     func addRightBarButtonItem(_ button: UIBarButtonItem) {
-        if base.rightBarButtonItems != nil {
+        if let rightBarButtonItems = base.rightBarButtonItems {
+            guard !rightBarButtonItems.contains(button) else { return }
             base.rightBarButtonItems?.append(button)
         } else {
             base.rightBarButtonItems = [button]
@@ -10,7 +11,8 @@ public extension NablaExtension where Base == UINavigationItem {
     }
 
     func addLeftBarButtonItem(_ button: UIBarButtonItem) {
-        if base.leftBarButtonItems != nil {
+        if let leftBarButtonItems = base.leftBarButtonItems {
+            guard !leftBarButtonItems.contains(button) else { return }
             base.leftBarButtonItems?.append(button)
         } else {
             base.leftBarButtonItems = [button]

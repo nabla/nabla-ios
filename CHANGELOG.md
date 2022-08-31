@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Prevents a crash on iOS 15.6
 
 ## [1.0.0-alpha15] - 2022-08-19
 
