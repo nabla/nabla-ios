@@ -1,10 +1,18 @@
 import NablaCore
 import UIKit
 
-public class NablaVideoCallViewFactory: VideoCallViewFactory {
+public protocol NablaVideoCallViewFactory: VideoCallViewFactory {}
+
+protocol InternalNablaVideoCallViewFactory: NablaVideoCallViewFactory {
+    func createVideoCallRoomViewController(url: String, token: String) -> UIViewController
+}
+
+public class NablaVideoCallViewFactoryImpl: InternalNablaVideoCallViewFactory {
     // MARK: - Public
     
-    public func createVideoCallRoomViewController(url: String, token: String) -> UIViewController {
+    // MARK: - Internal
+    
+    func createVideoCallRoomViewController(url: String, token: String) -> UIViewController {
         #if targetEnvironment(simulator)
             let alert = UIAlertController(
                 title: L10n.notAvailableOnSimulatorErrorTitle,

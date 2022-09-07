@@ -1,5 +1,6 @@
 import Foundation
 import NablaCore
+import UIKit
 
 public final class NablaVideoCallClient: VideoCallClient {
     // MARK: - Public
@@ -12,8 +13,15 @@ public final class NablaVideoCallClient: VideoCallClient {
         container.currentVideoCallInteractor.watchCurrentVideoCall(callback: callback)
     }
     
-    public func openCurrentVideoCall() {
-        container.currentVideoCallInteractor.openCurrentVideoCall()
+    public func openVideoCallRoom(url: String, token: String, from viewController: UIViewController) {
+        if currentVideoCallToken == token {
+            container.currentVideoCallInteractor.openCurrentVideoCall()
+        } else if currentVideoCallToken == nil {
+            let modal = NablaVideoCallViewFactoryImpl(client: self).createVideoCallRoomViewController(url: url, token: token)
+            viewController.present(modal, animated: true)
+        } else {
+            container.logger.warning(message: "Can not join a video call while another is in progress.")
+        }
     }
     
     // MARK: Initializer

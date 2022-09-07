@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - On simulator: disabled using the camera to send a new photo/video.
 - On simulator: disabled joining video calls.
 - View controllers no longer enforce `preferLargeTitles` on their `UINavigationController`.
+- `NablaVideoCallClient.views.createVideoCallRoomViewController(url:token:)` was removed in favor of `NablaVideoCallClient.openVideoCallRoom(url:token:from:)`. You no longer need to check for the `currentVideoCall` before using this method.
 
 ### Fixed
 

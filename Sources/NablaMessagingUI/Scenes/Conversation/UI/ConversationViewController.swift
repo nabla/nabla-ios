@@ -95,17 +95,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             logger.error(message: "Trying to open some video call but the NablaVideoCallModule is missing.")
             return
         }
-        
-        if let currentVideoCallToken = client.currentVideoCallToken {
-            if currentVideoCallToken == token {
-                client.openCurrentVideoCall()
-            } else {
-                logger.warning(message: "Can not join a video call while another is in progress.")
-            }
-        } else {
-            let modal = client.views.createVideoCallRoomViewController(url: url, token: token)
-            present(modal, animated: true)
-        }
+        client.openVideoCallRoom(url: url, token: token, from: self)
     }
 
     func showErrorAlert(viewModel: AlertViewModel) {
