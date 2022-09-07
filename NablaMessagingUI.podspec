@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name               = "NablaMessagingUI"
-  spec.version            = "1.0.0-alpha15"
+  spec.version            = "1.0.0-alpha16"
   spec.summary            = "#{spec.name} iOS SDK"
 
   spec.description        = <<-DESC

@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha16] - 2022-09-07
+
+### Added
+
 - It is now possible to change the `title` and `titleView` of `NablaMessagingUI` view controllers.
 
 ### Changed
