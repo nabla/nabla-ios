@@ -1,6 +1,10 @@
 import AVFoundation
 import Foundation
-import LiveKit
+#if canImport(LiveKitClient)
+    import LiveKitClient
+#else
+    import LiveKit
+#endif
 import NablaCore
 
 final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {

@@ -1,4 +1,8 @@
-import LiveKit
+#if canImport(LiveKitClient)
+    import LiveKitClient
+#else
+    import LiveKit
+#endif
 import UIKit
 
 class VideoTrackView: UIView {

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated `LiveKit` pod dependency in `NablaVideoCall` podspec.
+
 ### Fixed
 
 
