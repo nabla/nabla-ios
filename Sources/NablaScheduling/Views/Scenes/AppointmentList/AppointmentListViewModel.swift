@@ -39,7 +39,6 @@ protocol AppointmentListViewModel: ViewModel, AppointmentCellViewModelDelegate {
     var isLoading: Bool { get }
     var modal: AppointmentsViewModal? { get set }
     
-    func userDidPullToRefresh()
     func userDidReachEndOfList()
     func userDidTapCreateAppointmentButton()
 }
@@ -64,11 +63,6 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
         case .upcoming: return upcomingAppointments.data
         case .finalized: return finalizedAppointments.data
         }
-    }
-    
-    func userDidPullToRefresh() {
-        watchUpcomingAppointments()
-        watchFinalizedAppointments()
     }
     
     func userDidReachEndOfList() {
@@ -121,7 +115,6 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     private var finalizedAppointmentsWatcher: AnyCancellable?
     
     private func watchUpcomingAppointments() {
-        guard !isLoadingUpcomingAppointments else { return }
         isLoadingUpcomingAppointments = true
         
         upcomingAppointmentsWatcher = client.watchAppointments(state: .upcoming)
@@ -142,7 +135,6 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     }
     
     private func watchFinalizedAppointments() {
-        guard !isLoadingFinalizedAppointments else { return }
         isLoadingFinalizedAppointments = true
         
         finalizedAppointmentsWatcher = client.watchAppointments(state: .finalized)

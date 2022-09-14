@@ -10,9 +10,9 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
-  /// Book an appointment
+  /// Schedule an appointment
   internal static let appointmentsScreenActionButtonLabel = L10n.tr("Localizable", "appointments_screen_action_button_label")
-  /// Failed to cancel the appointment. Please try again later.
+  /// Failed to cancel the appointment. Please try again.
   internal static let appointmentsScreenCancelAppointmentErrorMessage = L10n.tr("Localizable", "appointments_screen_cancel_appointment_error_message")
   /// Something went wrong
   internal static let appointmentsScreenCancelAppointmentErrorTitle = L10n.tr("Localizable", "appointments_screen_cancel_appointment_error_title")
@@ -20,7 +20,7 @@ internal enum L10n {
   internal static let appointmentsScreenCancelAppointmentModalCloseButton = L10n.tr("Localizable", "appointments_screen_cancel_appointment_modal_close_button")
   /// Confirm cancellation
   internal static let appointmentsScreenCancelAppointmentModalConfirmButton = L10n.tr("Localizable", "appointments_screen_cancel_appointment_modal_confirm_button")
-  /// Appointment will permanently be canceled.
+  /// The appointment will be canceled.
   internal static let appointmentsScreenCancelAppointmentModalMessage = L10n.tr("Localizable", "appointments_screen_cancel_appointment_modal_message")
   /// Cancel appointment
   internal static let appointmentsScreenCancelAppointmentModalTitle = L10n.tr("Localizable", "appointments_screen_cancel_appointment_modal_title")
@@ -30,7 +30,7 @@ internal enum L10n {
   internal static let appointmentsScreenCellJoinInprogressButtonLabel = L10n.tr("Localizable", "appointments_screen_cell_join_inprogress_button_label")
   /// No past appointments
   internal static let appointmentsScreenFinalizedEmptyLabel = L10n.tr("Localizable", "appointments_screen_finalized_empty_label")
-  /// Failed to load appointments. Please try again later.
+  /// Failed to load the appointments. Please try again.
   internal static let appointmentsScreenLoadListErrorMessage = L10n.tr("Localizable", "appointments_screen_load_list_error_message")
   /// Something went wrong
   internal static let appointmentsScreenLoadListErrorTitle = L10n.tr("Localizable", "appointments_screen_load_list_error_title")
@@ -44,11 +44,11 @@ internal enum L10n {
   internal static let appointmentsScreenSelectorUpcomingLabel = L10n.tr("Localizable", "appointments_screen_selector_upcoming_label")
   /// Appointments
   internal static let appointmentsScreenTitle = L10n.tr("Localizable", "appointments_screen_title")
-  /// No appointments booked
+  /// No appointments scheduled
   internal static let appointmentsScreenUpcomingEmptyLabel = L10n.tr("Localizable", "appointments_screen_upcoming_empty_label")
   /// No categories available
   internal static let categoryPickerScreenEmptyLabel = L10n.tr("Localizable", "category_picker_screen_empty_label")
-  /// Failed to display the categories. Please try again later.
+  /// Failed to display the categories. Please try again.
   internal static let categoryPickerScreenErrorMessage = L10n.tr("Localizable", "category_picker_screen_error_message")
   /// Something went wrong
   internal static let categoryPickerScreenErrorTitle = L10n.tr("Localizable", "category_picker_screen_error_title")
@@ -62,9 +62,9 @@ internal enum L10n {
   }
   /// I consent to do a video consultation.
   internal static let confirmationScreenConsultationDisclaimer = L10n.tr("Localizable", "confirmation_screen_consultation_disclaimer")
-  /// I consent to the data processing policy
+  /// I consent to the data processing policy.
   internal static let confirmationScreenDataDisclaimer = L10n.tr("Localizable", "confirmation_screen_data_disclaimer")
-  /// Failed to schedule appointment. Please try again later.
+  /// Failed to schedule appointment. Please try again.
   internal static let confirmationScreenErrorMessage = L10n.tr("Localizable", "confirmation_screen_error_message")
   /// Something went wrong
   internal static let confirmationScreenErrorTitle = L10n.tr("Localizable", "confirmation_screen_error_title")
@@ -72,7 +72,7 @@ internal enum L10n {
   internal static let confirmationScreenTitle = L10n.tr("Localizable", "confirmation_screen_title")
   /// No availabilities
   internal static let timeSlotsPickerScreenEmptyLabel = L10n.tr("Localizable", "time_slots_picker_screen_empty_label")
-  /// Failed to display the availabilities. Please try again later.
+  /// Failed to display the availabilities. Please try again.
   internal static let timeSlotsPickerScreenErrorMessage = L10n.tr("Localizable", "time_slots_picker_screen_error_message")
   /// Something went wrong
   internal static let timeSlotsPickerScreenErrorTitle = L10n.tr("Localizable", "time_slots_picker_screen_error_title")

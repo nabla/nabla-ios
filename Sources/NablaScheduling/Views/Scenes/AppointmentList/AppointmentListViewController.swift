@@ -94,14 +94,7 @@ final class AppointmentListViewController: UIViewController {
         view.allowsSelection = false
         view.backgroundColor = .clear
         view.estimatedRowHeight = 78
-        view.refreshControl = refreshControl
         view.rowHeight = UITableView.automaticDimension
-        return view
-    }()
-    
-    private lazy var refreshControl: UIRefreshControl = {
-        let view = UIRefreshControl()
-        view.addTarget(self, action: #selector(refreshControlHandler), for: .valueChanged)
         return view
     }()
     
@@ -130,6 +123,12 @@ final class AppointmentListViewController: UIViewController {
         return view
     }()
     
+    private lazy var loadingView: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        view.startAnimating()
+        return view
+    }()
+    
     private func setUp() {
         view.backgroundColor = NablaTheme.AppointmentListViewTheme.backgroundColor
         
@@ -147,6 +146,9 @@ final class AppointmentListViewController: UIViewController {
         
         view.addSubview(emptyView)
         emptyView.nabla.pin(to: view.safeAreaLayoutGuide, insets: .nabla.all(32))
+        
+        view.addSubview(loadingView)
+        loadingView.nabla.constraintToCenterInSuperView()
         
         view.addSubview(bottomContainer)
         bottomContainer.nabla.pin(to: view.safeAreaLayoutGuide, edges: [.leading, .bottom, .trailing])
@@ -207,12 +209,7 @@ final class AppointmentListViewController: UIViewController {
     }
     
     private func updateIsLoading() {
-        if viewModel.isLoading, !refreshControl.isRefreshing {
-            refreshControl.beginRefreshing()
-        }
-        if !viewModel.isLoading, refreshControl.isRefreshing {
-            refreshControl.endRefreshing()
-        }
+        loadingView.isHidden = !viewModel.isLoading
     }
     
     private func updateModal() {
@@ -236,14 +233,7 @@ final class AppointmentListViewController: UIViewController {
             }
         }
     }
-    
-    // MARK: Handlers
-    
-    @objc private func refreshControlHandler() {
-        guard refreshControl.isRefreshing else { return }
-        viewModel.userDidPullToRefresh()
-    }
-    
+
     // MARK: Navigation
     
     private func presentNavigation(root viewController: UIViewController, animated: Bool) {
