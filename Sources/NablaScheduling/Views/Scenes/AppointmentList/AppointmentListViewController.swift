@@ -246,19 +246,16 @@ final class AppointmentListViewController: UIViewController {
     
     // MARK: Navigation
     
-    private func navigate(to viewController: UIViewController, animated: Bool) {
-        if let navigationController = navigationController {
-            navigationController.pushViewController(viewController, animated: animated)
-        } else {
-            let navigationController = NavigationController(rootViewController: viewController)
-            present(navigationController, animated: animated)
-        }
+    private func presentNavigation(root viewController: UIViewController, animated: Bool) {
+        let navigationController = NavigationController(rootViewController: viewController)
+        present(navigationController, animated: animated)
+    }
+    
+    private func pushOnPresentedNavigation(viewController: UIViewController, animated: Bool) {
+        (presentedViewController as? UINavigationController)?.pushViewController(viewController, animated: animated)
     }
     
     private func navigateBackToAppointmentList(animated: Bool) {
-        if let navigationController = navigationController {
-            navigationController.popToViewController(self, animated: animated)
-        }
         if presentedViewController is NavigationController {
             dismiss(animated: animated)
         }
@@ -294,7 +291,7 @@ extension AppointmentListViewController: AppointmentListViewModelDelegate {
 
     func appointmentListViewModelDidSelecNewAppointment(_: AppointmentListViewModel) {
         let destination = factory.createCategoryPickerViewController(delegate: self)
-        navigate(to: destination, animated: true)
+        presentNavigation(root: destination, animated: true)
     }
 }
 
@@ -302,7 +299,7 @@ extension AppointmentListViewController: CategoryPickerViewModelDelegate {
     func categoryPickerViewModel(_: CategoryPickerViewModel, didSelect category: Category) {
         selectedCategory = category
         let destination = factory.createTimeSlotPickerViewController(category: category, delegate: self)
-        navigate(to: destination, animated: true)
+        pushOnPresentedNavigation(viewController: destination, animated: true)
     }
 }
 
@@ -314,7 +311,7 @@ extension AppointmentListViewController: TimeSlotPickerViewModelDelegate {
             timeSlot: timeSlot,
             delegate: self
         )
-        navigate(to: destination, animated: true)
+        pushOnPresentedNavigation(viewController: destination, animated: true)
     }
 }
 
