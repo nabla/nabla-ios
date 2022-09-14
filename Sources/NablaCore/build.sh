@@ -24,3 +24,11 @@ run_cached apollo-codegen "${input_output_files[*]}" \
   /usr/bin/xcrun --sdk macosx swift run ApolloCodegen generate NablaCore
 cd "$DIRNAME"
 sed -i "" "s/public//" Data/GQL/Generated/*.swift
+
+# -- Swiftgen --
+GENERATED_FOLDER="$DIRNAME"/Generated
+echo "Create Generated folder in $GENERATED_FOLDER if not existing"
+mkdir -p "$GENERATED_FOLDER"
+
+echo "Execute swiftgen"
+mint run -m ../../Mintfile swiftgen config run --config "$DIRNAME"/swiftgen.yml

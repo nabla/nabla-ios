@@ -139,28 +139,28 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
     
     private lazy var closeButton: ImageButton = {
         let view = makeButton(selector: #selector(closeButtonHandler))
-        view.image = SFSymbols.chevronDown.image
+        view.image = .nabla.symbol(.chevronDown)
         view.color = .clear
         return view
     }()
     
     private lazy var microphoneButton: UIControl = {
         let view = makeButton(selector: #selector(microphoneButtonHandler))
-        view.image = SFSymbols.microphoneSlash.image
-        view.selectedImage = SFSymbols.microphone.image
+        view.image = .nabla.symbol(.microphoneSlash)
+        view.selectedImage = .nabla.symbol(.microphone)
         return view
     }()
     
     private lazy var cameraButton: UIControl = {
         let view = makeButton(selector: #selector(cameraButtonHandler))
-        view.image = SFSymbols.videoSlash.image
-        view.selectedImage = SFSymbols.video.image
+        view.image = .nabla.symbol(.videoSlash)
+        view.selectedImage = .nabla.symbol(.video)
         return view
     }()
     
     private lazy var cameraPositionButton: UIControl = {
         let view = makeButton(selector: #selector(cameraPositionButtonHandler))
-        view.image = SFSymbols.rotateCamera.image
+        view.image = .nabla.symbol(.rotateCamera)
         view.imageColor = .darkText
         view.color = .white
         return view
@@ -168,7 +168,7 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
     
     private lazy var hangButton: UIControl = {
         let view = makeButton(selector: #selector(hangButtonHandler))
-        view.image = SFSymbols.phoneDownFill.image
+        view.image = .nabla.symbol(.phoneDownFill)
         view.imageColor = .white
         view.color = .systemRed
         return view

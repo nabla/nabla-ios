@@ -1,0 +1,9 @@
+query GetUpcomingAppointments($page: OpaqueCursorPage!) {
+    upcomingAppointments(page: $page) {
+        hasMore
+        nextCursor
+        data {
+            ...AppointmentFragment
+        }
+    }
+}

@@ -5,6 +5,7 @@ public protocol VideoCallModule: Module {
     func makeClient(container: CoreContainer) -> VideoCallClient
 }
 
+// sourcery: AutoMockable
 public protocol VideoCallClient {
     var crossModuleViews: VideoCallViewFactory { get }
     

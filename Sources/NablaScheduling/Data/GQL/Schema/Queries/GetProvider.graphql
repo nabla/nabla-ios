@@ -1,0 +1,7 @@
+query GetProvider($providerId: UUID!) {
+    provider(id: $providerId) {
+        provider {
+            ...ProviderFragment
+        }
+    }
+}

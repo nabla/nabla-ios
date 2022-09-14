@@ -1,0 +1,22 @@
+subscription AppointmentsEvents {
+    appointments {
+        event {
+            ... on SubscriptionReadinessEvent {
+                isReady
+            }
+            ... on AppointmentCreatedEvent {
+                appointment {
+                    ...AppointmentFragment
+                }
+            }
+            ... on AppointmentUpdatedEvent {
+                appointment {
+                    ...AppointmentFragment
+                }
+            }
+            ... on AppointmentCancelledEvent {
+                appointmentId
+            }
+        }
+    }
+}

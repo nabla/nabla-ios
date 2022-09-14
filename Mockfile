@@ -52,3 +52,22 @@ NablaMessagingUI:
         - NablaMessagingCore
     prototype: false
     sourcery: []
+
+
+NablaScheduling:
+    sources:
+        include:
+            - ./Sources/NablaScheduling
+        exclude:
+            - ./Sources/**/Generated
+    output:
+        ./Tests/NablaSchedulingTests/Generated/Mock.generated.swift
+    targets:
+        - NablaSchedulingTests
+    testable:
+        - NablaScheduling
+    import:
+        - NablaCore
+        - Combine
+    prototype: false
+    sourcery: []

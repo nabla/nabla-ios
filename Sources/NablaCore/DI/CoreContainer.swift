@@ -39,7 +39,7 @@ public class CoreContainer {
         authenticator: authenticator
     )
     
-    public private(set) lazy var gqlClient: GQLClient = {
+    public private(set) lazy var gqlClient: GQLClient & AsyncGQLClient = {
         let client = GQLClientImpl(
             transport: combinedTransport,
             store: gqlStore,
@@ -50,13 +50,15 @@ public class CoreContainer {
         return client
     }()
 
-    public private(set) lazy var gqlStore: GQLStore = GQLStoreImpl(apolloStore: apolloStore)
+    public private(set) lazy var gqlStore: GQLStore & AsyncGQLStore = GQLStoreImpl(apolloStore: apolloStore)
     
     public let modules: [Module]
     
     public private(set) lazy var messagingClient: MessagingClient? = messagingModule?.makeClient(container: self)
     
     public private(set) lazy var videoCallClient: VideoCallClient? = videoCallModule?.makeClient(container: self)
+    
+    public private(set) lazy var schedulingClient: SchedulingClient? = schedulingModule?.makeClient(container: self)
     
     // MARK: - Internal
     
@@ -88,6 +90,7 @@ public class CoreContainer {
         self.modules = modules
         messagingModule = modules.first(as: MessagingModule.self)
         videoCallModule = modules.first(as: VideoCallModule.self)
+        schedulingModule = modules.first(as: SchedulingModule.self)
     }
 
     // MARK: - Private
@@ -96,6 +99,7 @@ public class CoreContainer {
     private let networkConfiguration: NetworkConfiguration
     private let messagingModule: MessagingModule?
     private let videoCallModule: VideoCallModule?
+    private let schedulingModule: SchedulingModule?
     
     private lazy var reachabilityRefetchTrigger: ReachabilityRefetchTrigger = .init(environment: environment)
 

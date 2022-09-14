@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 class ImageDetailViewController: UIViewController, ImageDetailViewContract {
@@ -24,7 +25,7 @@ class ImageDetailViewController: UIViewController, ImageDetailViewContract {
     
     // MARK: - Private
 
-    private lazy var imageView: UIURLImageView = makeImageView()
+    private lazy var imageView: NablaViews.URLImageView = makeImageView()
     
     private func setUp() {
         view.backgroundColor = NablaTheme.ImageDetail.backgroundColor
@@ -32,8 +33,8 @@ class ImageDetailViewController: UIViewController, ImageDetailViewContract {
         imageView.nabla.pinToSuperView()
     }
     
-    private func makeImageView() -> UIURLImageView {
-        let imageView = UIURLImageView(frame: .zero)
+    private func makeImageView() -> NablaViews.URLImageView {
+        let imageView = NablaViews.URLImageView(frame: .zero)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

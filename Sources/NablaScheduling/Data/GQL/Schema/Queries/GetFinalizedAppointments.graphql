@@ -1,0 +1,9 @@
+query GetFinalizedAppointments($page: OpaqueCursorPage!) {
+    pastAppointments(page: $page) {
+        hasMore
+        nextCursor
+        data {
+            ...AppointmentFragment
+        }
+    }
+}

@@ -1,0 +1,14 @@
+query GetAvailableSlots($categoryId: UUID!, $page: OpaqueCursorPage!) {
+    appointmentCategory(id: $categoryId) {
+        category {
+            id
+            availableSlots(page: $page) {
+                hasMore
+                nextCursor
+                slots {
+                    ...AvailabilitySlotFragment
+                }
+            }
+        }
+    }
+}

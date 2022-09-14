@@ -16,6 +16,7 @@ public class GQLWatcher<Query: GQLQuery>: Watcher {
     
     init(_ apollo: GraphQLQueryWatcher<Query>) {
         self.apollo = apollo
+        observeRefetchNotification()
     }
     
     deinit {

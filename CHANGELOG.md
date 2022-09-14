@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Introduced `NablaScheduling` SDK to schedule video call appointments using `NablaVideoCall`.
+
 ### Changed
 
 - Updated `LiveKit` pod dependency in `NablaVideoCall` podspec.

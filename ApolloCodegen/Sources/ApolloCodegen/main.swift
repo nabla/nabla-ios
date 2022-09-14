@@ -25,7 +25,7 @@ struct SwiftScript: ParsableCommand {
         mutating func run() throws {
             CodegenLogger.level = .error
             
-            let supportedPackageNames = ["NablaCore", "NablaMessagingCore"]
+            let supportedPackageNames = ["NablaCore", "NablaMessagingCore", "NablaScheduling"]
             guard supportedPackageNames.contains(packageName) else {
                 throw CommandError(message: "Unknown package name \"\(packageName)\". Supported package names are: \(supportedPackageNames)")
             }

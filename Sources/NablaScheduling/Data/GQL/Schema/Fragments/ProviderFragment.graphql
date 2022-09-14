@@ -1,0 +1,10 @@
+fragment ProviderFragment on Provider {
+    id
+    prefix
+    firstName
+    lastName
+    title
+    avatarUrl {
+        url
+    }
+}

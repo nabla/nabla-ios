@@ -53,7 +53,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     
     // MARK: - Private
     
-    private lazy var imageView: UIURLImageView = makeImageView()
+    private lazy var imageView: NablaViews.URLImageView = makeImageView()
     private lazy var playerView: UIPlayerView = makePlayerView()
     private lazy var deleteButton: UIButton = makeDeleteButton()
     private lazy var deleteButtonContainerView: UIView = makeDeleteButtonContainerView()
@@ -76,8 +76,8 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         clipsToBounds = true
     }
     
-    private func makeImageView() -> UIURLImageView {
-        let view = UIURLImageView()
+    private func makeImageView() -> NablaViews.URLImageView {
+        let view = NablaViews.URLImageView()
         view.tintColor = NablaTheme.Conversation.mediaComposerDocumentTintColor
         view.contentMode = .scaleAspectFill
         view.isUserInteractionEnabled = true

@@ -1,0 +1,25 @@
+fragment UpcomingAppointmentFragment on UpcomingAppointment {
+    livekitRoom {
+        ...LivekitRoomFragment
+    }
+}
+
+fragment FinalizedAppointmentFragment on FinalizedAppointment {
+    _
+}
+
+fragment AppointmentFragment on Appointment {
+    id
+    scheduledAt
+    provider {
+        ...ProviderFragment
+    }
+    state {
+        ... on UpcomingAppointment {
+            ...UpcomingAppointmentFragment
+        }
+        ... on FinalizedAppointment {
+            ...FinalizedAppointmentFragment
+        }
+    }
+}

@@ -2,7 +2,6 @@ import Foundation
 
 public enum GQLError: Error {
     case unknownError
-    case internalError
     case emptyServerResponse
     case entityNotFound(message: String?)
     case permissionRequired(message: String?)

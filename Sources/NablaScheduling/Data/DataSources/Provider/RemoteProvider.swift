@@ -1,0 +1,1 @@
+typealias RemoteProvider = GQL.ProviderFragment

@@ -12,6 +12,7 @@ assert_is_installed "mint"
 
 echo "--- NablaMessagingUI - Build ---"
 
+# -- Swiftgen --
 GENERATED_FOLDER="$DIRNAME"/Generated
 echo "Create Generated folder in $GENERATED_FOLDER if not existing"
 mkdir -p "$GENERATED_FOLDER"

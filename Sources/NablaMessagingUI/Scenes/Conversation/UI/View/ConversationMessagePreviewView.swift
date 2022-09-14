@@ -1,3 +1,4 @@
+import NablaCore
 import UIKit
 
 class ConversationMessagePreviewView: UIView {
@@ -41,7 +42,7 @@ class ConversationMessagePreviewView: UIView {
     private lazy var iconImageViewContainer: UIView = makeIconImageViewContainer()
     private lazy var authorLabel: UILabel = makeAuthorLabel()
     private lazy var previewLabel: UILabel = makePreviewLabel()
-    private lazy var previewImageView: UIURLImageView = makePreviewImageView()
+    private lazy var previewImageView: NablaViews.URLImageView = makePreviewImageView()
 
     private func setUp() {
         let hStack = UIStackView(arrangedSubviews: [iconImageViewContainer, previewLabel])
@@ -95,8 +96,8 @@ class ConversationMessagePreviewView: UIView {
         return label
     }
 
-    private func makePreviewImageView() -> UIURLImageView {
-        let imageView = UIURLImageView()
+    private func makePreviewImageView() -> NablaViews.URLImageView {
+        let imageView = NablaViews.URLImageView()
         imageView.nabla.constraintToSize(.init(width: 32, height: 32))
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 8

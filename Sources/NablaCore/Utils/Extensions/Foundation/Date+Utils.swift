@@ -3,8 +3,15 @@ import Foundation
 extension Date: NablaExtendable {}
 
 public extension NablaExtension where Base == Date {
+    /// For mocking purposes
+    internal(set) static var now: () -> Date = { Date() }
+    
+    var timeIntervalSinceNow: TimeInterval {
+        base.timeIntervalSince(Self.now())
+    }
+    
     var isPast: Bool {
-        base.timeIntervalSinceNow < 0
+        timeIntervalSinceNow < 0
     }
     
     var isFuture: Bool {

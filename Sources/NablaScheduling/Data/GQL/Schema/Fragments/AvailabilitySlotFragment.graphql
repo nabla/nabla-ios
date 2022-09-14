@@ -1,0 +1,7 @@
+fragment AvailabilitySlotFragment on AvailabilitySlot {
+    startAt
+    endAt
+    provider {
+        id
+    }
+}

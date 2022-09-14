@@ -1,0 +1,20 @@
+fragment LivekitRoomOpenStatusFragment on LivekitRoomOpenStatus {
+    url
+    token
+}
+
+fragment LivekitRoomClosedStatusFragment on LivekitRoomClosedStatus {
+    _
+}
+
+fragment LivekitRoomFragment on LivekitRoom {
+    uuid
+    status {
+        ... on LivekitRoomOpenStatus {
+            ...LivekitRoomOpenStatusFragment
+        }
+        ... on LivekitRoomClosedStatus {
+            ...LivekitRoomClosedStatusFragment
+        }
+    }
+}

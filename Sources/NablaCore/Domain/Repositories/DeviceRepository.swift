@@ -52,6 +52,9 @@ final class DeviceRepositoryImpl: DeviceRepository {
         if module is VideoCallModule {
             return .videoCall
         }
+        if module is SchedulingModule {
+            return .videoCallScheduling
+        }
         return .__unknown(String(reflecting: module))
     }
 }

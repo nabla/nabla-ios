@@ -3,8 +3,6 @@ import Foundation
 public enum GQLErrorTransformer {
     public static func transform(gqlError: GQLError) -> NablaError {
         switch gqlError {
-        case .internalError:
-            return InternalError(underlyingError: gqlError)
         case .emptyServerResponse:
             return ServerError(message: "Empty server response")
         case .unknownError:

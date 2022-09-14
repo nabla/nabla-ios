@@ -11,6 +11,388 @@ import XCTest
 @testable import NablaCore
 
 
+// MARK: - AsyncGQLStore
+
+open class AsyncGQLStoreMock: AsyncGQLStore, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+    public typealias Cancellable = NablaCore.Cancellable
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func createCache<Query: GQLQuery>(for query: Query, data: Query.Data) throws {
+        addInvocation(.m_createCache__for_querydata_data(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Query.Data>.value(`data`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_createCache__for_querydata_data(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Query.Data>.value(`data`).wrapAsGeneric())) as? (Query, Query.Data) -> Void
+		perform?(`query`, `data`)
+		do {
+		    _ = try methodReturnValue(.m_createCache__for_querydata_data(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Query.Data>.value(`data`).wrapAsGeneric())).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func updateCache<Query: GQLQuery>(for query: Query, onlyIfExists: Bool, body: @escaping (inout Query.Data) throws -> Void) throws {
+        addInvocation(.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Query.Data) throws -> Void>.value(`body`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Query.Data) throws -> Void>.value(`body`).wrapAsGeneric())) as? (Query, Bool, @escaping (inout Query.Data) throws -> Void) -> Void
+		perform?(`query`, `onlyIfExists`, `body`)
+		do {
+		    _ = try methodReturnValue(.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Query.Data) throws -> Void>.value(`body`).wrapAsGeneric())).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func updateCache<Fragment: GQLFragment>(of fragment: Fragment, onlyIfExists: Bool, body: @escaping (inout Fragment) throws -> Void) throws {
+        addInvocation(.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<Fragment>.value(`fragment`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Fragment) throws -> Void>.value(`body`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<Fragment>.value(`fragment`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Fragment) throws -> Void>.value(`body`).wrapAsGeneric())) as? (Fragment, Bool, @escaping (inout Fragment) throws -> Void) -> Void
+		perform?(`fragment`, `onlyIfExists`, `body`)
+		do {
+		    _ = try methodReturnValue(.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<Fragment>.value(`fragment`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Fragment) throws -> Void>.value(`body`).wrapAsGeneric())).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func cacheExists<Query: GQLQuery>(for query: Query) throws -> Bool {
+        addInvocation(.m_cacheExists__for_query(Parameter<Query>.value(`query`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_cacheExists__for_query(Parameter<Query>.value(`query`).wrapAsGeneric())) as? (Query) -> Void
+		perform?(`query`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_cacheExists__for_query(Parameter<Query>.value(`query`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for cacheExists<Query: GQLQuery>(for query: Query). Use given")
+			Failure("Stub return value not specified for cacheExists<Query: GQLQuery>(for query: Query). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func cacheExists<Fragment: GQLFragment>(of fragment: Fragment) throws -> Bool {
+        addInvocation(.m_cacheExists__of_fragment(Parameter<Fragment>.value(`fragment`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_cacheExists__of_fragment(Parameter<Fragment>.value(`fragment`).wrapAsGeneric())) as? (Fragment) -> Void
+		perform?(`fragment`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_cacheExists__of_fragment(Parameter<Fragment>.value(`fragment`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for cacheExists<Fragment: GQLFragment>(of fragment: Fragment). Use given")
+			Failure("Stub return value not specified for cacheExists<Fragment: GQLFragment>(of fragment: Fragment). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func clearCache() throws {
+        addInvocation(.m_clearCache)
+		let perform = methodPerformValue(.m_clearCache) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_clearCache).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+
+    fileprivate enum MethodType {
+        case m_createCache__for_querydata_data(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
+        case m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<GenericAttribute>, Parameter<Bool>, Parameter<GenericAttribute>)
+        case m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<GenericAttribute>, Parameter<Bool>, Parameter<GenericAttribute>)
+        case m_cacheExists__for_query(Parameter<GenericAttribute>)
+        case m_cacheExists__of_fragment(Parameter<GenericAttribute>)
+        case m_clearCache
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_createCache__for_querydata_data(let lhsQuery, let lhsData), .m_createCache__for_querydata_data(let rhsQuery, let rhsData)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "for query"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsData, rhs: rhsData, with: matcher), lhsData, rhsData, "data"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(let lhsQuery, let lhsOnlyifexists, let lhsBody), .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(let rhsQuery, let rhsOnlyifexists, let rhsBody)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "for query"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsOnlyifexists, rhs: rhsOnlyifexists, with: matcher), lhsOnlyifexists, rhsOnlyifexists, "onlyIfExists"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsBody, rhs: rhsBody, with: matcher), lhsBody, rhsBody, "body"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(let lhsFragment, let lhsOnlyifexists, let lhsBody), .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(let rhsFragment, let rhsOnlyifexists, let rhsBody)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsFragment, rhs: rhsFragment, with: matcher), lhsFragment, rhsFragment, "of fragment"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsOnlyifexists, rhs: rhsOnlyifexists, with: matcher), lhsOnlyifexists, rhsOnlyifexists, "onlyIfExists"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsBody, rhs: rhsBody, with: matcher), lhsBody, rhsBody, "body"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_cacheExists__for_query(let lhsQuery), .m_cacheExists__for_query(let rhsQuery)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "for query"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_cacheExists__of_fragment(let lhsFragment), .m_cacheExists__of_fragment(let rhsFragment)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsFragment, rhs: rhsFragment, with: matcher), lhsFragment, rhsFragment, "of fragment"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_clearCache, .m_clearCache): return .match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_createCache__for_querydata_data(p0, p1): return p0.intValue + p1.intValue
+            case let .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_cacheExists__for_query(p0): return p0.intValue
+            case let .m_cacheExists__of_fragment(p0): return p0.intValue
+            case .m_clearCache: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_createCache__for_querydata_data: return ".createCache(for:data:)"
+            case .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body: return ".updateCache(for:onlyIfExists:body:)"
+            case .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body: return ".updateCache(of:onlyIfExists:body:)"
+            case .m_cacheExists__for_query: return ".cacheExists(for:)"
+            case .m_cacheExists__of_fragment: return ".cacheExists(of:)"
+            case .m_clearCache: return ".clearCache()"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func cacheExists<Query: GQLQuery>(for query: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func cacheExists<Fragment: GQLFragment>(of fragment: Parameter<Fragment>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createCache<Query:GQLQuery>(for query: Parameter<Query>, data: Parameter<Query.Data>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createCache<Query: GQLQuery>(for query: Parameter<Query>, data: Parameter<Query.Data>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func updateCache<Query:GQLQuery>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func updateCache<Query: GQLQuery>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func updateCache<Fragment:GQLFragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func updateCache<Fragment: GQLFragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func cacheExists<Query:GQLQuery>(for query: Parameter<Query>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func cacheExists<Query: GQLQuery>(for query: Parameter<Query>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func cacheExists<Fragment:GQLFragment>(of fragment: Parameter<Fragment>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func cacheExists<Fragment: GQLFragment>(of fragment: Parameter<Fragment>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func clearCache(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_clearCache, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func clearCache(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_clearCache, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func createCache<Query>(for query: Parameter<Query>, data: Parameter<Query.Data>) -> Verify where Query:GQLQuery { return Verify(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()))}
+        public static func updateCache<Query>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>) -> Verify where Query:GQLQuery { return Verify(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()))}
+        public static func updateCache<Fragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>) -> Verify where Fragment:GQLFragment { return Verify(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()))}
+        public static func cacheExists<Query>(for query: Parameter<Query>) -> Verify where Query:GQLQuery { return Verify(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()))}
+        public static func cacheExists<Fragment>(of fragment: Parameter<Fragment>) -> Verify where Fragment:GQLFragment { return Verify(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()))}
+        public static func clearCache() -> Verify { return Verify(method: .m_clearCache)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func createCache<Query>(for query: Parameter<Query>, data: Parameter<Query.Data>, perform: @escaping (Query, Query.Data) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()), performs: perform)
+        }
+        public static func updateCache<Query>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>, perform: @escaping (Query, Bool, @escaping (inout Query.Data) throws -> Void) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), performs: perform)
+        }
+        public static func updateCache<Fragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>, perform: @escaping (Fragment, Bool, @escaping (inout Fragment) throws -> Void) -> Void) -> Perform where Fragment:GQLFragment {
+            return Perform(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), performs: perform)
+        }
+        public static func cacheExists<Query>(for query: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), performs: perform)
+        }
+        public static func cacheExists<Fragment>(of fragment: Parameter<Fragment>, perform: @escaping (Fragment) -> Void) -> Perform where Fragment:GQLFragment {
+            return Perform(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), performs: perform)
+        }
+        public static func clearCache(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_clearCache, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
 // MARK: - Cancellable
 
 open class CancellableMock: Cancellable, Mock {
@@ -1701,6 +2083,391 @@ open class PaginatedWatcherMock: PaginatedWatcher, Mock {
         public static func refetch(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_refetch, performs: perform)
         }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - VideoCallClient
+
+open class VideoCallClientMock: VideoCallClient, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+    public var crossModuleViews: VideoCallViewFactory {
+		get {	invocations.append(.p_crossModuleViews_get); return __p_crossModuleViews ?? givenGetterValue(.p_crossModuleViews_get, "VideoCallClientMock - stub value for crossModuleViews was not defined") }
+	}
+	private var __p_crossModuleViews: (VideoCallViewFactory)?
+
+    public var currentVideoCallToken: String? {
+		get {	invocations.append(.p_currentVideoCallToken_get); return __p_currentVideoCallToken ?? optionalGivenGetterValue(.p_currentVideoCallToken_get, "VideoCallClientMock - stub value for currentVideoCallToken was not defined") }
+	}
+	private var __p_currentVideoCallToken: (String)?
+
+
+
+
+
+    open func watchCurrentVideoCall(callback: @escaping (_ token: String?) -> Void) -> Cancellable {
+        addInvocation(.m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>.value(`callback`))) as? (@escaping (_ token: String?) -> Void) -> Void
+		perform?(`callback`)
+		var __value: Cancellable
+		do {
+		    __value = try methodReturnValue(.m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>.value(`callback`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchCurrentVideoCall(callback: @escaping (_ token: String?) -> Void). Use given")
+			Failure("Stub return value not specified for watchCurrentVideoCall(callback: @escaping (_ token: String?) -> Void). Use given")
+		}
+		return __value
+    }
+
+    open func openVideoCallRoom(url: String, token: String, from viewController: UIViewController) {
+        addInvocation(.m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(Parameter<String>.value(`url`), Parameter<String>.value(`token`), Parameter<UIViewController>.value(`viewController`)))
+		let perform = methodPerformValue(.m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(Parameter<String>.value(`url`), Parameter<String>.value(`token`), Parameter<UIViewController>.value(`viewController`))) as? (String, String, UIViewController) -> Void
+		perform?(`url`, `token`, `viewController`)
+    }
+
+
+    fileprivate enum MethodType {
+        case m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>)
+        case m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(Parameter<String>, Parameter<String>, Parameter<UIViewController>)
+        case p_crossModuleViews_get
+        case p_currentVideoCallToken_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_watchCurrentVideoCall__callback_callback(let lhsCallback), .m_watchCurrentVideoCall__callback_callback(let rhsCallback)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher), lhsCallback, rhsCallback, "callback"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(let lhsUrl, let lhsToken, let lhsViewcontroller), .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(let rhsUrl, let rhsToken, let rhsViewcontroller)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher), lhsUrl, rhsUrl, "url"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsToken, rhs: rhsToken, with: matcher), lhsToken, rhsToken, "token"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsViewcontroller, rhs: rhsViewcontroller, with: matcher), lhsViewcontroller, rhsViewcontroller, "from viewController"))
+				return Matcher.ComparisonResult(results)
+            case (.p_crossModuleViews_get,.p_crossModuleViews_get): return Matcher.ComparisonResult.match
+            case (.p_currentVideoCallToken_get,.p_currentVideoCallToken_get): return Matcher.ComparisonResult.match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_watchCurrentVideoCall__callback_callback(p0): return p0.intValue
+            case let .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case .p_crossModuleViews_get: return 0
+            case .p_currentVideoCallToken_get: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_watchCurrentVideoCall__callback_callback: return ".watchCurrentVideoCall(callback:)"
+            case .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController: return ".openVideoCallRoom(url:token:from:)"
+            case .p_crossModuleViews_get: return "[get] .crossModuleViews"
+            case .p_currentVideoCallToken_get: return "[get] .currentVideoCallToken"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func crossModuleViews(getter defaultValue: VideoCallViewFactory...) -> PropertyStub {
+            return Given(method: .p_crossModuleViews_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func currentVideoCallToken(getter defaultValue: String?...) -> PropertyStub {
+            return Given(method: .p_currentVideoCallToken_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>, willReturn: Cancellable...) -> MethodStub {
+            return Given(method: .m_watchCurrentVideoCall__callback_callback(`callback`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
+            let willReturn: [Cancellable] = []
+			let given: Given = { return Given(method: .m_watchCurrentVideoCall__callback_callback(`callback`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Cancellable).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>) -> Verify { return Verify(method: .m_watchCurrentVideoCall__callback_callback(`callback`))}
+        public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>) -> Verify { return Verify(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(`url`, `token`, `viewController`))}
+        public static var crossModuleViews: Verify { return Verify(method: .p_crossModuleViews_get) }
+        public static var currentVideoCallToken: Verify { return Verify(method: .p_currentVideoCallToken_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>, perform: @escaping (@escaping (_ token: String?) -> Void) -> Void) -> Perform {
+            return Perform(method: .m_watchCurrentVideoCall__callback_callback(`callback`), performs: perform)
+        }
+        public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>, perform: @escaping (String, String, UIViewController) -> Void) -> Perform {
+            return Perform(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(`url`, `token`, `viewController`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - VideoCallViewFactory
+
+open class VideoCallViewFactoryMock: VideoCallViewFactory, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+
+    fileprivate struct MethodType {
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult { return .match }
+        func intValue() -> Int { return 0 }
+        func assertionName() -> String { return "" }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
     }
 
     public func given(_ method: Given) {

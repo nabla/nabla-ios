@@ -1,3 +1,4 @@
+import NablaCore
 import UIKit
 
 final class TitleView: UIView {
@@ -16,8 +17,9 @@ final class TitleView: UIView {
         }
     }
     
-    var avatar: AvatarViewModel = .init(url: nil, text: nil) {
-        didSet { avatarView.configure(with: avatar) }
+    var avatar: AvatarViewModel {
+        get { avatarView.avatar }
+        set { avatarView.avatar = newValue }
     }
     
     override init(frame _: CGRect) {
@@ -40,8 +42,8 @@ final class TitleView: UIView {
         static let avatarSize = CGSize(width: 36, height: 36)
     }
     
-    private let avatarView: AvatarView = {
-        let view = AvatarView()
+    private let avatarView: NablaViews.AvatarView = {
+        let view = NablaViews.AvatarView()
         view.nabla.constraintToSize(Constants.avatarSize)
         return view
     }()

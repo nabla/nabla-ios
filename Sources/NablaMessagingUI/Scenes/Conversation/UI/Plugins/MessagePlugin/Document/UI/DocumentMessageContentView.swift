@@ -29,7 +29,6 @@ class DocumentMessageContentView: UIView, MessageContentView {
         label.text = viewModel.filename
     }
     
-    
     func configure(sender: ConversationMessageSender) {
         switch sender {
         case .me:
@@ -48,7 +47,7 @@ class DocumentMessageContentView: UIView, MessageContentView {
     
     // MARK: - Private
     
-    private lazy var imageView: UIURLImageView = createImageView()
+    private lazy var imageView: NablaViews.URLImageView = createImageView()
     private lazy var label: UILabel = createLabel()
     private lazy var iconImageView: UIImageView = createIconImageView()
     private lazy var bottomView: UIView = createBottomView()
@@ -66,8 +65,8 @@ class DocumentMessageContentView: UIView, MessageContentView {
         hstack.nabla.pinToSuperView()
     }
     
-    private func createImageView() -> UIURLImageView {
-        let imageView = UIURLImageView(frame: .zero)
+    private func createImageView() -> NablaViews.URLImageView {
+        let imageView = NablaViews.URLImageView(frame: .zero)
         imageView.nabla.constraintToSize(Constants.imageSize)
         imageView.image = CoreAssets.Assets.documentPlaceholder.image
         imageView.contentMode = .scaleAspectFill

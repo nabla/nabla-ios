@@ -1,3 +1,4 @@
+import NablaCore
 import NablaMessagingCore
 import UIKit
 
@@ -34,7 +35,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
     private lazy var border: UIView = makeBorder()
     private lazy var authorLabel: UILabel = makeAuthorLabel()
     private lazy var previewLabel: UILabel = makePreviewLabel()
-    private lazy var previewImageView: UIURLImageView = makePreviewImageView()
+    private lazy var previewImageView: NablaViews.URLImageView = makePreviewImageView()
     private lazy var closeButton: UIButton = makeCloseButton()
 
     private func setUp() {
@@ -78,8 +79,8 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
         return label
     }
 
-    private func makePreviewImageView() -> UIURLImageView {
-        let imageView = UIURLImageView()
+    private func makePreviewImageView() -> NablaViews.URLImageView {
+        let imageView = NablaViews.URLImageView()
         imageView.nabla.constraintToSize(.init(width: 40, height: 40))
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true

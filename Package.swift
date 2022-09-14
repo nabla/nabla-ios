@@ -26,6 +26,10 @@ let package = Package(
             name: "NablaVideoCall",
             targets: ["NablaVideoCall"]
         ),
+        .library(
+            name: "NablaScheduling",
+            targets: ["NablaScheduling"]
+        ),
     ],
     dependencies: [
         // SDK
@@ -46,6 +50,7 @@ let package = Package(
             ],
             exclude: [
                 "build.sh",
+                "swiftgen.yml",
                 "Data/GQL/Schema",
             ],
             resources: [
@@ -65,6 +70,10 @@ let package = Package(
             dependencies: [
                 .target(name: "NablaCore"),
                 .target(name: "NablaCoreTestsUtils"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+            ],
+            resources: [
+                .process("SnapshotTests/PrimaryButton/__Snapshots__"),
             ]
         ),
         .target(
@@ -149,6 +158,35 @@ let package = Package(
             ],
             resources: [
                 .process("Resources"),
+            ]
+        ),
+        .target(
+            name: "NablaScheduling",
+            dependencies: [
+                .target(name: "NablaCore"),
+            ],
+            exclude: [
+                "build.sh",
+                "swiftgen.yml",
+                "Data/GQL/Schema",
+            ],
+            resources: [
+                .process("Resources"),
+            ]
+        ),
+        .testTarget(
+            name: "NablaSchedulingTests",
+            dependencies: [
+                .target(name: "NablaScheduling"),
+                .target(name: "NablaCoreTestsUtils"),
+                .product(name: "SwiftyMocky", package: "SwiftyMocky"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+            ],
+            resources: [
+                .process("SnapshotTests/AppointmentList/__Snapshots__"),
+                .process("SnapshotTests/CategoryPicker/__Snapshots__"),
+                .process("SnapshotTests/TimeSlotPicker/__Snapshots__"),
+                .process("SnapshotTests/AppointmentConfirmation/__Snapshots__"),
             ]
         ),
     ]

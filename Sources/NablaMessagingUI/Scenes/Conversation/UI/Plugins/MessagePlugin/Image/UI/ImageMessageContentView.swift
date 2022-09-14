@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 private enum Constants {
@@ -29,7 +30,7 @@ final class ImageMessageContentView: UIView, MessageContentView {
         nabla.constraintToSize(idealSize(contentSize: viewModel.originalImageSize))
     }
     
-    func configure(sender: ConversationMessageSender) {}
+    func configure(sender _: ConversationMessageSender) {}
     
     func prepareForReuse() {
         imageView.url = nil
@@ -37,8 +38,8 @@ final class ImageMessageContentView: UIView, MessageContentView {
     
     // MARK: - Private
     
-    private lazy var imageView: UIURLImageView = {
-        let imageView = UIURLImageView()
+    private lazy var imageView: NablaViews.URLImageView = {
+        let imageView = NablaViews.URLImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()

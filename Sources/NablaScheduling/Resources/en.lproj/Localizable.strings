@@ -1,0 +1,58 @@
+// ----- Appointment list screen
+
+"appointments_screen_title" = "Appointments";
+"appointments_screen_action_button_label" = "Schedule an appointment";
+"appointments_screen_selector_upcoming_label" = "Scheduled";
+"appointments_screen_selector_finalized_label" = "Past";
+
+"appointments_screen_upcoming_empty_label" = "No appointments scheduled";
+"appointments_screen_finalized_empty_label" = "No past appointments";
+
+"appointments_screen_cell_join_button_label" = "Join";
+"appointments_screen_cell_join_inprogress_button_label" = "Return to call";
+
+"appointments_screen_load_list_error_title" = "Something went wrong";
+"appointments_screen_load_list_error_message" = "Failed to load the appointments. Please try again.";
+
+"appointments_screen_secondary_actions_sheet_close_button" = "Cancel";
+"appointments_screen_secondary_actions_sheet_cancel_appointment_button" = "Cancel appointment";
+
+"appointments_screen_cancel_appointment_modal_title" = "Cancel appointment";
+"appointments_screen_cancel_appointment_modal_message" = "The appointment will be canceled.";
+"appointments_screen_cancel_appointment_modal_confirm_button" = "Confirm cancellation";
+"appointments_screen_cancel_appointment_modal_close_button" = "Keep appointment";
+
+"appointments_screen_cancel_appointment_error_title" = "Something went wrong";
+"appointments_screen_cancel_appointment_error_message" = "Failed to cancel the appointment. Please try again.";
+
+// ----- Category picker screen
+
+"category_picker_screen_title" = "Select a category";
+
+"category_picker_screen_empty_label" = "No categories available";
+
+"category_picker_screen_error_title" = "Something went wrong";
+"category_picker_screen_error_message" = "Failed to display the categories. Please try again.";
+
+// ----- Time slots screen
+
+"time_slots_screen_title" = "Select a date";
+"time_slots_screen_action_button_label" = "Confirm";
+
+"time_slots_picker_screen_group_subtitle_format" = "%d available slots";
+
+"time_slots_picker_screen_empty_label" = "No availabilities";
+
+"time_slots_picker_screen_error_title" = "Something went wrong";
+"time_slots_picker_screen_error_message" = "Failed to display the availabilities. Please try again.";
+
+// ----- Confirmation screen
+
+"confirmation_screen_title" = "Confirm your appointment";
+"confirmation_screen_caption_format" = "Consultation planned on %s";
+"confirmation_screen_consultation_disclaimer" = "I consent to do a video consultation.";
+"confirmation_screen_data_disclaimer" = "I consent to the data processing policy.";
+"confirmation_screen_action_button_label" = "Confirm the appointment";
+
+"confirmation_screen_error_title" = "Something went wrong";
+"confirmation_screen_error_message" = "Failed to schedule appointment. Please try again.";

@@ -1,20 +1,28 @@
 import Apollo
+import Combine
 import Foundation
 #if canImport(ApolloWebSocket)
     import ApolloWebSocket
 #endif
 
-class GQLClientImpl: GQLClient {
+class GQLClientImpl: GQLClient, AsyncGQLClient {
     // MARK: - Public
+    
+    public func addRefetchTriggers(_ triggers: [RefetchTrigger]) {
+        for trigger in triggers {
+            refetchTrigers[trigger.identifier] = trigger
+        }
+    }
+    
+    // MARK: GQLClient
     
     public func fetch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
     ) -> NablaCore.Cancellable {
-        apollo.fetch(query: query, cachePolicy: cachePolicy) { [weak self] response in
-            guard let self = self else { return handler(.failure(.internalError)) }
-            let result = self.parseApolloResponse(response)
+        apollo.fetch(query: query, cachePolicy: cachePolicy) { [logger] response in
+            let result = Self.parseApolloResponse(response, logger: logger)
             handler(result)
         }
         .toNablaCancellable()
@@ -24,9 +32,8 @@ class GQLClientImpl: GQLClient {
         mutation: Mutation,
         handler: ResultHandler<Mutation.Data, GQLError>
     ) -> NablaCore.Cancellable {
-        apollo.perform(mutation: mutation) { [weak self] response in
-            guard let self = self else { return handler(.failure(.internalError)) }
-            let result = self.parseApolloResponse(response)
+        apollo.perform(mutation: mutation) { [logger] response in
+            let result = Self.parseApolloResponse(response, logger: logger)
             handler(result)
         }
         .toNablaCancellable()
@@ -37,9 +44,8 @@ class GQLClientImpl: GQLClient {
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
     ) -> Watcher {
-        let apolloWatcher = apollo.watch(query: query, cachePolicy: cachePolicy) { [weak self] response in
-            guard let self = self else { return handler(.failure(.internalError)) }
-            let result = self.parseApolloResponse(response)
+        let apolloWatcher = apollo.watch(query: query, cachePolicy: cachePolicy) { [logger] response in
+            let result = Self.parseApolloResponse(response, logger: logger)
             handler(result)
         }
         return GQLWatcher(apolloWatcher)
@@ -49,24 +55,92 @@ class GQLClientImpl: GQLClient {
         subscription: Subscription,
         handler: ResultHandler<Subscription.Data, GQLError>
     ) -> NablaCore.Cancellable {
-        apollo.subscribe(subscription: subscription) { [weak self] response in
-            guard let self = self else { return handler(.failure(.internalError)) }
-            let result = self.parseApolloResponse(response)
+        apollo.subscribe(subscription: subscription) { [logger] response in
+            let result = Self.parseApolloResponse(response, logger: logger)
             handler(result)
         }
         .toNablaCancellable()
     }
     
-    public func addRefetchTriggers(_ triggers: [RefetchTrigger]) {
-        for trigger in triggers {
-            refetchTrigers[trigger.identifier] = trigger
+    // MARK: AsyncGQLClient
+    
+    public func fetch<Query: GQLQuery>(query: Query, cachePolicy: GQLFetchPolicy) async throws -> Query.Data {
+        try await withCheckedThrowingContinuation { [apollo, logger] continuation in
+            apollo.fetch(
+                query: query,
+                cachePolicy: cachePolicy.apollo,
+                queue: DispatchQueue.global(qos: .userInitiated)
+            ) { response in
+                let result = Self.parseApolloResponse(response, logger: logger)
+                continuation.resume(with: result)
+            }
         }
+    }
+    
+    public func perform<Mutation: GQLMutation>(mutation: Mutation) async throws -> Mutation.Data {
+        try await withCheckedThrowingContinuation { [apollo, logger] continuation in
+            apollo.perform(
+                mutation: mutation,
+                queue: DispatchQueue.global(qos: .userInitiated)
+            ) { response in
+                let result = Self.parseApolloResponse(response, logger: logger)
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    public func watch<Query: GQLQuery>(query: Query) -> AnyPublisher<Query.Data, GQLError> {
+        let subject = CurrentValueSubject<Query.Data?, GQLError>(nil)
+        
+        let apolloWatcher = apollo.watch(
+            query: query,
+            cachePolicy: .returnCacheDataAndFetch,
+            callbackQueue: DispatchQueue.global(qos: .userInitiated),
+            resultHandler: { [logger] response in
+                let result = Self.parseApolloResponse(response, logger: logger)
+                switch result {
+                case let .failure(error):
+                    subject.send(completion: .failure(error))
+                case let .success(data):
+                    subject.send(data)
+                }
+            }
+        )
+        
+        let nablaWatcher = GQLWatcher(apolloWatcher)
+        
+        return subject
+            .compactMap { $0 }
+            .handleEvents(receiveCancel: nablaWatcher.cancel)
+            .eraseToAnyPublisher()
+    }
+    
+    public func subscribe<Subscription: GQLSubscription>(subscription: Subscription) -> AnyPublisher<Subscription.Data, GQLError> {
+        let subject = PassthroughSubject<Subscription.Data, GQLError>()
+        
+        let cancellable = apollo.subscribe(
+            subscription: subscription,
+            queue: DispatchQueue.global(qos: .userInitiated)
+        ) { [logger] response in
+            let result = Self.parseApolloResponse(response, logger: logger)
+            switch result {
+            case let .failure(error):
+                subject.send(completion: .failure(error))
+            case let .success(data):
+                subject.send(data)
+            }
+        }
+        
+        return subject
+            .compactMap { $0 }
+            .handleEvents(receiveCancel: cancellable.cancel)
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Internal
     
     // MARK: Initializer
-
+    
     init(
         transport: CombinedTransport,
         store: GQLStore,
@@ -80,7 +154,7 @@ class GQLClientImpl: GQLClient {
     }
     
     // MARK: - Private
-
+    
     private let transport: CombinedTransport
     private let store: GQLStore
     private let apolloStore: ApolloStore
@@ -99,14 +173,14 @@ class GQLClientImpl: GQLClient {
         return apollo
     }
     
-    private func parseApolloResponse<Data>(_ response: Result<GraphQLResult<Data>, Error>) -> Result<Data, GQLError> {
+    private static func parseApolloResponse<Data>(_ response: Result<GraphQLResult<Data>, Error>, logger: Logger) -> Result<Data, GQLError> {
         switch response {
         case let .failure(error):
-            let parsed = parseApolloError(error)
+            let parsed = parseApolloError(error, logger: logger)
             return .failure(parsed)
         case let .success(result):
             if let error = result.errors?.first {
-                let parsed = parseApolloError(error)
+                let parsed = parseApolloError(error, logger: logger)
                 return .failure(parsed)
             }
             if let data = result.data {
@@ -116,7 +190,7 @@ class GQLClientImpl: GQLClient {
         }
     }
     
-    private func parseApolloError(_ error: Error) -> GQLError {
+    private static func parseApolloError(_ error: Error, logger: Logger) -> GQLError {
         if let graphqlError = error as? Apollo.GraphQLError {
             switch graphqlError.errorName {
             case "ENTITY_NOT_FOUND":
@@ -179,5 +253,16 @@ private extension Apollo.GraphQLError {
     
     var classification: String? {
         extensions?["classification"] as? String
+    }
+}
+
+private extension GQLFetchPolicy {
+    var apollo: CachePolicy {
+        switch self {
+        case .returnCacheDataElseFetch: return .returnCacheDataElseFetch
+        case .fetchIgnoringCacheData: return .fetchIgnoringCacheData
+        case .fetchIgnoringCacheCompletely: return .fetchIgnoringCacheCompletely
+        case .returnCacheDataDontFetch: return .returnCacheDataDontFetch
+        }
     }
 }

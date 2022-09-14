@@ -1,0 +1,17 @@
+mutation scheduleAppointment(
+    $categoryId: UUID!,
+    $providerId: UUID!,
+    $timeSlot: DateTime!,
+    $timeZone: TimeZone!
+) {
+    scheduleAppointment(
+        categoryId: $categoryId,
+        providerId: $providerId,
+        slot: $timeSlot,
+        timeZone: $timeZone
+    ) {
+        appointment {
+            ...AppointmentFragment
+        }
+    }
+}

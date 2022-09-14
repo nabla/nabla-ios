@@ -14,4 +14,12 @@ public extension NablaExtension where Base == UIEdgeInsets {
     static func make(horizontal: CGFloat = 0, vertical: CGFloat = 0) -> Base {
         Base(top: vertical, left: horizontal, bottom: vertical, right: horizontal)
     }
+    
+    var horizontal: CGFloat {
+        base.left + base.right
+    }
+    
+    var vertical: CGFloat {
+        base.top + base.bottom
+    }
 }

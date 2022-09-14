@@ -1,0 +1,58 @@
+// ----- Appointment list screen
+
+"appointments_screen_title" = "Rendez-vous";
+"appointments_screen_action_button_label" = "Prendre rendez-vous";
+"appointments_screen_selector_upcoming_label" = "Prévus";
+"appointments_screen_selector_finalized_label" = "Passés";
+
+"appointments_screen_upcoming_empty_label" = "Pas de rendez-vous prévu";
+"appointments_screen_finalized_empty_label" = "Pas de rendez-vous passé";
+
+"appointments_screen_cell_join_button_label" = "Rejoindre l'appel";
+"appointments_screen_cell_join_inprogress_button_label" = "Revenir à l'appel";
+
+"appointments_screen_load_list_error_title" = "Une erreur est survenue";
+"appointments_screen_load_list_error_message" = "Impossible d'afficher vos rendez-vous. Réessayez.";
+
+"appointments_screen_secondary_actions_sheet_close_button" = "Revenir";
+"appointments_screen_secondary_actions_sheet_cancel_appointment_button" = "Annuler le rendez-vous";
+
+"appointments_screen_cancel_appointment_modal_title" = "Annuler le rendez-vous";
+"appointments_screen_cancel_appointment_modal_message" = "Ceci annulera le rendez-vous que vous avez prévu.";
+"appointments_screen_cancel_appointment_modal_confirm_button" = "Confirmer l’annulation";
+"appointments_screen_cancel_appointment_modal_close_button" = "Conserver le rendez-vous";
+
+"appointments_screen_cancel_appointment_error_title" = "Une erreur est survenue";
+"appointments_screen_cancel_appointment_error_message" = "Impossible d'annuler le rendez-vous. Réessayez.";
+
+// ----- Category picker screen
+
+"category_picker_screen_title" = "Choisissez la catégorie";
+
+"category_picker_screen_empty_label" = "Pas de catégories disponibles";
+
+"category_picker_screen_error_title" = "Une erreur est survenue";
+"category_picker_screen_error_message" = "Impossible d'afficher la liste des catégories. Réessayez.";
+
+// ----- Time slots screen
+
+"time_slots_screen_title" = "Choisissez la date de rendez-vous";
+"time_slots_screen_action_button_label" = "Confirmer";
+
+"time_slots_picker_screen_group_subtitle_format" = "%d disponibilités";
+
+"time_slots_picker_screen_empty_label" = "Pas de créneaux disponibles";
+
+"time_slots_picker_screen_error_title" = "Une erreur est survenue";
+"time_slots_picker_screen_error_message" = "Impossible d'afficher la liste des créneaux. Réessayez.";
+
+// ----- Confirmation screen
+
+"confirmation_screen_title" = "Confirmez votre rendez-vous";
+"confirmation_screen_caption_format" = "Rendez-vous prévu le %s";
+"confirmation_screen_consultation_disclaimer" = "Je consens à réaliser un appel vidéo.";
+"confirmation_screen_data_disclaimer" = "Je consens au traitement de mes données personnelles.";
+"confirmation_screen_action_button_label" = "Confirmer le rendez-vous";
+
+"confirmation_screen_error_title" = "Une erreur est survenue";
+"confirmation_screen_error_message" = "Impossible de confirmer le rendez-vous. Réessayez.";

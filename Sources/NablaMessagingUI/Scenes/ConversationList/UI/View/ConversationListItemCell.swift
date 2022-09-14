@@ -27,12 +27,12 @@ class ConversationListItemCell: UITableViewCell, Reusable {
         subtitleLabel.text = viewModel.subtitle
         timeLabel.text = viewModel.lastUpdatedTime
         unreadIndicatorView.isHidden = !viewModel.isUnread
-        avatarView.configure(with: viewModel.avatar)
+        avatarView.avatar = viewModel.avatar
     }
     
     // MARK: - Private
     
-    private lazy var avatarView: AvatarView = createAvatarView()
+    private lazy var avatarView: NablaViews.AvatarView = createAvatarView()
     private lazy var titleLabel: UILabel = createTitleLabel()
     private lazy var subtitleLabel: UILabel = createSubtitleLabel()
     private lazy var timeLabel: UILabel = createTimeLabel()
@@ -68,8 +68,8 @@ class ConversationListItemCell: UITableViewCell, Reusable {
         unreadIndicatorView.centerYAnchor.constraint(equalTo: subtitleLabel.centerYAnchor).isActive = true
     }
     
-    private func createAvatarView() -> AvatarView {
-        let avatarView = AvatarView()
+    private func createAvatarView() -> NablaViews.AvatarView {
+        let avatarView = NablaViews.AvatarView()
         avatarView.nabla.constraintToSize(CGSize(width: Constants.avatarSize, height: Constants.avatarSize))
         return avatarView
     }

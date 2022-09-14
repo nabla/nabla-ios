@@ -10,8 +10,6 @@
 #endif
 
 // Deprecated typealiases
-@available(*, deprecated, renamed: "ColorAsset.Color", message: "This typealias will be removed in SwiftGen 7.0")
-public typealias AssetColorTypeAlias = ColorAsset.Color
 @available(*, deprecated, renamed: "CoreImageAsset.Image", message: "This typealias will be removed in SwiftGen 7.0")
 public typealias CoreImageAssetAlias = CoreImageAsset.Image
 
@@ -27,67 +25,11 @@ public enum CoreAssets {
     public static let videoCallActionRequestIcon = CoreImageAsset(name: "videoCallActionRequestIcon")
   }
   public enum Colors {
-    public static let accessory = ColorAsset(name: "accessory")
-    public static let alternateText = ColorAsset(name: "alternateText")
-    public static let background = ColorAsset(name: "background")
-    public static let darkAlternateTextColor = ColorAsset(name: "darkAlternateTextColor")
-    public static let lightAlternateTextColor = ColorAsset(name: "lightAlternateTextColor")
-    public static let primary = ColorAsset(name: "primary")
-    public static let primaryText = ColorAsset(name: "primaryText")
-    public static let secondaryBackground = ColorAsset(name: "secondaryBackground")
-    public static let secondaryText = ColorAsset(name: "secondaryText")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
 // MARK: - Implementation Details
-
-public final class ColorAsset {
-  public fileprivate(set) var name: String
-
-  #if os(macOS)
-  public typealias Color = NSColor
-  #elseif os(iOS) || os(tvOS) || os(watchOS)
-  public typealias Color = UIColor
-  #endif
-
-  @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
-  public private(set) lazy var color: Color = {
-    guard let color = Color(asset: self) else {
-      fatalError("Unable to load color asset named \(name).")
-    }
-    return color
-  }()
-
-  #if os(iOS) || os(tvOS)
-  @available(iOS 11.0, tvOS 11.0, *)
-  public func color(compatibleWith traitCollection: UITraitCollection) -> Color {
-    let bundle = NablaMessagingUIPackage.resourcesBundle
-    guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
-      fatalError("Unable to load color asset named \(name).")
-    }
-    return color
-  }
-  #endif
-
-  fileprivate init(name: String) {
-    self.name = name
-  }
-}
-
-public extension ColorAsset.Color {
-  @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
-  convenience init?(asset: ColorAsset) {
-    let bundle = NablaMessagingUIPackage.resourcesBundle
-    #if os(iOS) || os(tvOS)
-    self.init(named: asset.name, in: bundle, compatibleWith: nil)
-    #elseif os(macOS)
-    self.init(named: NSColor.Name(asset.name), bundle: bundle)
-    #elseif os(watchOS)
-    self.init(named: asset.name)
-    #endif
-  }
-}
 
 public struct CoreImageAsset {
   public fileprivate(set) var name: String

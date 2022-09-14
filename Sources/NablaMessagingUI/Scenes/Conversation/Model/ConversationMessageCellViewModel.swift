@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 struct ConversationMessageThemViewModel {

@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 struct ConversationListItemViewModel {
     let avatar: AvatarViewModel

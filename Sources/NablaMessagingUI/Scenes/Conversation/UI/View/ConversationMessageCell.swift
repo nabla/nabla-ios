@@ -1,6 +1,5 @@
 import NablaCore
 import NablaMessagingCore
-import NablaCore
 import UIKit
 
 private enum Constants {
@@ -69,7 +68,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private lazy var authorLabel: UILabel = makeAuthorLabel()
     private lazy var header: UIView = makeHeader()
     private lazy var avatarContainerView: UIView = makeAvatarContainerView()
-    private lazy var avatarView: AvatarView = makeAvatarView()
+    private lazy var avatarView: NablaViews.AvatarView = makeAvatarView()
     private lazy var container: UIView = makeContainer()
     private lazy var messagePreviewView: ConversationMessagePreviewView = makeMessagePreviewView()
     private lazy var contentStackView: UIView = makeContentStackView()
@@ -111,7 +110,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
             }
         case let .them(themViewModel):
             footerLabel.textAlignment = .left
-            avatarView.configure(with: themViewModel.avatar)
+            avatarView.avatar = themViewModel.avatar
             authorLabel.text = themViewModel.author
             container.backgroundColor = NablaTheme.Conversation.messageProviderBackgroundColor
 
@@ -204,8 +203,8 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         return label
     }
     
-    private func makeAvatarView() -> AvatarView {
-        let avatarView = AvatarView()
+    private func makeAvatarView() -> NablaViews.AvatarView {
+        let avatarView = NablaViews.AvatarView()
         return avatarView
     }
     

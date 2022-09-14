@@ -230,6 +230,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "NablaCoreTests"
+               BuildableName = "NablaCoreTests"
+               BlueprintName = "NablaCoreTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "NablaMessagingCoreTests"
                BuildableName = "NablaMessagingCoreTests"
                BlueprintName = "NablaMessagingCoreTests"
@@ -251,9 +261,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "NablaUtilsTests"
-               BuildableName = "NablaUtilsTests"
-               BlueprintName = "NablaUtilsTests"
+               BlueprintIdentifier = "NablaMessagingCoreIntegrationTests"
+               BuildableName = "NablaMessagingCoreIntegrationTests"
+               BlueprintName = "NablaMessagingCoreIntegrationTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -261,9 +271,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "NablaMessagingCoreIntegrationTests"
-               BuildableName = "NablaMessagingCoreIntegrationTests"
-               BlueprintName = "NablaMessagingCoreIntegrationTests"
+               BlueprintIdentifier = "NablaSchedulingTests"
+               BuildableName = "NablaSchedulingTests"
+               BlueprintName = "NablaSchedulingTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

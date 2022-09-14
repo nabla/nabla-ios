@@ -1,0 +1,4 @@
+fragment CategoryFragment on AppointmentCategory {
+    id
+    name
+}

@@ -1,0 +1,5 @@
+mutation cancelAppointment($appointmentId: UUID!) {
+    cancelAppointment(id: $appointmentId) {
+        appointmentUuid
+    }
+}
