@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha17] - 2022-09-14
+
+### Added
+
 - Introduced `NablaScheduling` SDK to schedule video call appointments using `NablaVideoCall`.
 
 ### Changed
