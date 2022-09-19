@@ -130,7 +130,7 @@ final class RemoteConversationItemTransformer {
                 )
             )
         } else if let livekitRoomContent = message.content.fragments.messageContentFragment.asLivekitRoomMessageContent {
-            return VideoCallActionRequest(
+            return VideoCallRoomInteractiveMessage(
                 id: message.id,
                 date: message.createdAt,
                 sender: transform(message.author.fragments.messageAuthorFragment),
@@ -276,7 +276,7 @@ final class RemoteConversationItemTransformer {
 
     // MARK: Livekit
     
-    private func transform(_ livekitRoomStatus: GQL.LivekitRoomFragment.Status) -> VideoCallActionRequest.Status {
+    private func transform(_ livekitRoomStatus: GQL.LivekitRoomFragment.Status) -> VideoCallRoomInteractiveMessage.Status {
         if livekitRoomStatus.asLivekitRoomClosedStatus != nil {
             return .closed
         }

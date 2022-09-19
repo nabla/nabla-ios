@@ -763,12 +763,6 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 
 
 
-    open func userDidPullToRefresh() {
-        addInvocation(.m_userDidPullToRefresh)
-		let perform = methodPerformValue(.m_userDidPullToRefresh) as? () -> Void
-		perform?()
-    }
-
     open func userDidReachEndOfList() {
         addInvocation(.m_userDidReachEndOfList)
 		let perform = methodPerformValue(.m_userDidReachEndOfList) as? () -> Void
@@ -823,7 +817,6 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 
 
     fileprivate enum MethodType {
-        case m_userDidPullToRefresh
         case m_userDidReachEndOfList
         case m_userDidTapCreateAppointmentButton
         case m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>, Parameter<Appointment.VideoCallRoom>)
@@ -839,8 +832,6 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_userDidPullToRefresh, .m_userDidPullToRefresh): return .match
-
             case (.m_userDidReachEndOfList, .m_userDidReachEndOfList): return .match
 
             case (.m_userDidTapCreateAppointmentButton, .m_userDidTapCreateAppointmentButton): return .match
@@ -875,7 +866,6 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 
         func intValue() -> Int {
             switch self {
-            case .m_userDidPullToRefresh: return 0
             case .m_userDidReachEndOfList: return 0
             case .m_userDidTapCreateAppointmentButton: return 0
             case let .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(p0, p1): return p0.intValue + p1.intValue
@@ -892,7 +882,6 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         }
         func assertionName() -> String {
             switch self {
-            case .m_userDidPullToRefresh: return ".userDidPullToRefresh()"
             case .m_userDidReachEndOfList: return ".userDidReachEndOfList()"
             case .m_userDidTapCreateAppointmentButton: return ".userDidTapCreateAppointmentButton()"
             case .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room: return ".appointmentCellViewModel(_:didTapJoinVideoCall:)"
@@ -955,7 +944,6 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
         public static func userDidReachEndOfList() -> Verify { return Verify(method: .m_userDidReachEndOfList)}
         public static func userDidTapCreateAppointmentButton() -> Verify { return Verify(method: .m_userDidTapCreateAppointmentButton)}
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Appointment.VideoCallRoom>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(`viewModel`, `room`))}
@@ -974,9 +962,6 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_userDidPullToRefresh, performs: perform)
-        }
         public static func userDidReachEndOfList(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidReachEndOfList, performs: perform)
         }

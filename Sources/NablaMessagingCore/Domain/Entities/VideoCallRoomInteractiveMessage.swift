@@ -1,6 +1,6 @@
 import Foundation
 
-public struct VideoCallActionRequest: ConversationActionRequest {
+public struct VideoCallRoomInteractiveMessage: ConversationInteractiveMessage {
     public let id: UUID
     public let date: Date
     public let sender: ConversationMessageSender

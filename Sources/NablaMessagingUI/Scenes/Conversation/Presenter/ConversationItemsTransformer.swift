@@ -45,8 +45,8 @@ enum ConversationItemsTransformer {
             return transform(audioMessage)
         } else if let videoMessage = item as? VideoMessageItem {
             return transform(videoMessage)
-        } else if let videoCallActionRequest = item as? VideoCallActionRequest {
-            return transform(videoCallActionRequest)
+        } else if let videoCallRoomInteractiveMessage = item as? VideoCallRoomInteractiveMessage {
+            return transform(videoCallRoomInteractiveMessage)
         }
         return nil
     }
@@ -124,18 +124,18 @@ enum ConversationItemsTransformer {
         )
     }
     
-    static func transform(_ videoCallActionRequest: VideoCallActionRequest) -> ConversationViewItem {
+    static func transform(_ videoCallRoomInteractiveMessage: VideoCallRoomInteractiveMessage) -> ConversationViewItem {
         let room: VideoCallActionRequestViewItem.Room? = {
-            switch videoCallActionRequest.status {
+            switch videoCallRoomInteractiveMessage.status {
             case .closed: return nil
             case let .open(room): return .init(url: room.url, token: room.token)
             }
         }()
         
         return VideoCallActionRequestViewItem(
-            id: videoCallActionRequest.id,
-            date: videoCallActionRequest.date,
-            sender: videoCallActionRequest.sender,
+            id: videoCallRoomInteractiveMessage.id,
+            date: videoCallRoomInteractiveMessage.date,
+            sender: videoCallRoomInteractiveMessage.sender,
             sendingState: .sent,
             room: room
         )

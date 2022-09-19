@@ -1,5 +1,5 @@
 import Foundation
 
-public protocol ConversationActionRequest: ConversationItem {
+public protocol ConversationInteractiveMessage: ConversationItem {
     var sender: ConversationMessageSender { get }
 }
