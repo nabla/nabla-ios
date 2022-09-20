@@ -15,7 +15,13 @@ class NavigationController: UINavigationController {
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    override func setViewControllers(_ viewControllers: [UIViewController], animated: Bool) {
+        super.setViewControllers(viewControllers, animated: animated)
+
+        viewControllers.first?.navigationItem.nabla.addLeftBarButtonItem(closeButton)
+    }
+
     // MARK: - Private
     
     private lazy var closeButton: UIBarButtonItem = {

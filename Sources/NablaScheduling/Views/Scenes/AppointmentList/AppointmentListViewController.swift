@@ -8,7 +8,7 @@ final class AppointmentListViewController: UIViewController {
     
     init(
         viewModel: AppointmentListViewModel,
-        factory: InternalSchedulingViewFactory,
+        factory: NablaSchedulingViewFactory & InternalSchedulingViewFactory,
         logger: Logger,
         videoCallClient: VideoCallClient?
     ) {
@@ -27,7 +27,7 @@ final class AppointmentListViewController: UIViewController {
     
     // MARK: - Private
     
-    private let factory: InternalSchedulingViewFactory
+    private let factory: NablaSchedulingViewFactory & InternalSchedulingViewFactory
     private let logger: Logger
     private let videoCallClient: VideoCallClient?
     
@@ -233,23 +233,6 @@ final class AppointmentListViewController: UIViewController {
             }
         }
     }
-
-    // MARK: Navigation
-    
-    private func presentNavigation(root viewController: UIViewController, animated: Bool) {
-        let navigationController = NavigationController(rootViewController: viewController)
-        present(navigationController, animated: animated)
-    }
-    
-    private func pushOnPresentedNavigation(viewController: UIViewController, animated: Bool) {
-        (presentedViewController as? UINavigationController)?.pushViewController(viewController, animated: animated)
-    }
-    
-    private func navigateBackToAppointmentList(animated: Bool) {
-        if presentedViewController is NavigationController {
-            dismiss(animated: animated)
-        }
-    }
 }
 
 extension AppointmentListViewController: UITableViewDelegate {
@@ -279,34 +262,7 @@ extension AppointmentListViewController: AppointmentListViewModelDelegate {
         videoCallClient.openVideoCallRoom(url: room.url, token: room.token, from: self)
     }
 
-    func appointmentListViewModelDidSelecNewAppointment(_: AppointmentListViewModel) {
-        let destination = factory.createCategoryPickerViewController(delegate: self)
-        presentNavigation(root: destination, animated: true)
-    }
-}
-
-extension AppointmentListViewController: CategoryPickerViewModelDelegate {
-    func categoryPickerViewModel(_: CategoryPickerViewModel, didSelect category: Category) {
-        selectedCategory = category
-        let destination = factory.createTimeSlotPickerViewController(category: category, delegate: self)
-        pushOnPresentedNavigation(viewController: destination, animated: true)
-    }
-}
-
-extension AppointmentListViewController: TimeSlotPickerViewModelDelegate {
-    func timeSlotPickerViewModel(_: TimeSlotPickerViewModel, didSelect timeSlot: AvailabilitySlot) {
-        guard let category = selectedCategory else { return }
-        let destination = factory.createAppointmentConfirmationViewController(
-            category: category,
-            timeSlot: timeSlot,
-            delegate: self
-        )
-        pushOnPresentedNavigation(viewController: destination, animated: true)
-    }
-}
-
-extension AppointmentListViewController: AppointmentConfirmationViewModelDelegate {
-    func appointmentConfirmationViewModel(_: AppointmentConfirmationViewModel, didConfirm _: Appointment) {
-        navigateBackToAppointmentList(animated: true)
+    func appointmentListViewModelDidSelectNewAppointment(_: AppointmentListViewModel) {
+        factory.presentScheduleAppointmentViewController(from: self)
     }
 }

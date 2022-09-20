@@ -3,6 +3,7 @@ import UIKit
 
 public protocol NablaSchedulingViewFactory: SchedulingViewFactory {
     func createAppointmentListViewController() -> UIViewController
+    func presentScheduleAppointmentViewController(from presentingViewController: UIViewController)
 }
 
 // sourcery: AutoMockable
@@ -33,7 +34,12 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
         viewModel.delegate = viewController // The navigation is currently handled by the root view controller him self
         return viewController
     }
-    
+
+    public func presentScheduleAppointmentViewController(from presentingViewController: UIViewController) {
+        let viewController = ScheduleAppointmentViewController(factory: self)
+        presentingViewController.present(viewController, animated: true)
+    }
+
     // MARK: - Internal
     
     func createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate) -> UIViewController {

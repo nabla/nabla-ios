@@ -97,3 +97,13 @@ private class MockFactory: InternalSchedulingViewFactoryMock {
         AppointmentCellViewModelImpl(appointment: appointment, videoCallClient: nil, delegate: delegate)
     }
 }
+
+extension MockFactory: NablaSchedulingViewFactory {
+    func createAppointmentListViewController() -> UIViewController {
+        fatalError()
+    }
+    
+    func presentScheduleAppointmentViewController(from _: UIViewController) {
+        fatalError()
+    }
+}

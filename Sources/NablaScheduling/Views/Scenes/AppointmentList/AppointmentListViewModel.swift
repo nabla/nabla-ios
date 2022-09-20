@@ -4,7 +4,7 @@ import NablaCore
 
 protocol AppointmentListViewModelDelegate: AnyObject {
     func appointmentListViewModel(_ viewModel: AppointmentListViewModel, didJoinVideoCall room: Appointment.VideoCallRoom)
-    func appointmentListViewModelDidSelecNewAppointment(_ viewModel: AppointmentListViewModel)
+    func appointmentListViewModelDidSelectNewAppointment(_ viewModel: AppointmentListViewModel)
 }
 
 enum AppointmentsSelector: Int {
@@ -72,7 +72,7 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     }
     
     func userDidTapCreateAppointmentButton() {
-        delegate?.appointmentListViewModelDidSelecNewAppointment(self)
+        delegate?.appointmentListViewModelDidSelectNewAppointment(self)
     }
     
     func userDidTapCancelAppointment(_ appointment: Appointment) {
