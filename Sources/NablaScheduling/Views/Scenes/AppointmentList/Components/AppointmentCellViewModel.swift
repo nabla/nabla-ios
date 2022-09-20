@@ -51,7 +51,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     }
     
     var showSecondaryActionsButton: Bool {
-        appointment.start.nabla.isFuture && !isPreAppointmentPeriod
+        appointment.start.nabla.isFuture && !isAppointmentAboutToStart
     }
     
     func userDidTapPrimaryActionButton() {
@@ -85,8 +85,12 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     @Published private var currentVideoCallToken: String?
     @Published private var joinableVideoCallRoom: Appointment.VideoCallRoom?
     
-    private var isPreAppointmentPeriod: Bool {
+    private var isAppointmentAboutToStart: Bool {
         appointment.start.nabla.isFuture && appointment.start.nabla.timeIntervalSinceNow < 10 * 60
+    }
+    
+    private var hasAppointmentStartedRecently: Bool {
+        appointment.start.nabla.isPast && abs(appointment.start.nabla.timeIntervalSinceNow) < 10 * 60
     }
     
     private func observeTime() {
@@ -102,11 +106,11 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     
     private func updateTimeConstraintedProperties() {
         subtitle = format(appointment.start)
-        joinableVideoCallRoom = isPreAppointmentPeriod || appointment.start.nabla.isPast ? appointment.videoCallRoom : nil
+        joinableVideoCallRoom = (isAppointmentAboutToStart || appointment.start.nabla.isPast) ? appointment.videoCallRoom : nil
     }
     
     private func format(_ date: Date) -> String {
-        if isPreAppointmentPeriod {
+        if isAppointmentAboutToStart || hasAppointmentStartedRecently {
             let formatter = RelativeDateTimeFormatter()
             formatter.dateTimeStyle = .numeric
             formatter.unitsStyle = .full
@@ -116,7 +120,6 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
             let formatter = DateFormatter()
             formatter.dateStyle = .long
             formatter.timeStyle = .short
-            formatter.doesRelativeDateFormatting = true
             return formatter.string(from: date)
         }
     }

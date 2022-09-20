@@ -3,8 +3,7 @@ import Foundation
 extension Date: NablaExtendable {}
 
 public extension NablaExtension where Base == Date {
-    /// For mocking purposes
-    internal(set) static var now: () -> Date = { Date() }
+    static func now() -> Date { Date() }
     
     var timeIntervalSinceNow: TimeInterval {
         base.timeIntervalSince(Self.now())
@@ -16,6 +15,10 @@ public extension NablaExtension where Base == Date {
     
     var isFuture: Bool {
         !isPast
+    }
+    
+    var isToday: Bool {
+        Calendar.current.isDateInToday(base)
     }
     
     /// Formats a date as an ISO 8601 string.

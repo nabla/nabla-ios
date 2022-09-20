@@ -114,7 +114,13 @@ final class AppointmentConfirmationViewController: UIViewController {
         _viewModel.onChange { [weak self] viewModel in
             guard let self = self else { return }
             self.updateProvider()
-            self.headerView.caption = L10n.confirmationScreenCaptionFormat(self.format(date: viewModel.appointmentDate))
+            
+            if viewModel.appointmentDate.nabla.isToday {
+                self.headerView.caption = L10n.confirmationScreenCaptionFormatToday(self.formatTime(date: viewModel.appointmentDate))
+            } else {
+                self.headerView.caption = L10n.confirmationScreenCaptionFormat(self.formatTimeAndDate(date: viewModel.appointmentDate))
+            }
+            
             self.consultationDisclaimerCheckboxField.isChecked = viewModel.agreesWithConsultationDisclaimer
             self.dataDisclaimerCheckBoxField.isChecked = viewModel.agreesWithPersonalDataDisclaimer
             self.actionButton.isEnabled = viewModel.canConfirm
@@ -142,18 +148,17 @@ final class AppointmentConfirmationViewController: UIViewController {
         }
     }
     
-    private func format(date: Date) -> String {
+    private func formatTime(date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateStyle = .short
+        formatter.dateStyle = .none
         formatter.timeStyle = .short
-        
-        // Remove year but keep the automatic formatting based on Locale and Calendar
-        if let dateFormat = formatter.dateFormat {
-            var dateFormatWithoutYears = dateFormat.replacingOccurrences(of: "/yy", with: "")
-            dateFormatWithoutYears = dateFormatWithoutYears.replacingOccurrences(of: "/y", with: "")
-            formatter.dateFormat = dateFormatWithoutYears
-        }
-        
+        return formatter.string(from: date)
+    }
+    
+    private func formatTimeAndDate(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .short
         return formatter.string(from: date)
     }
 }

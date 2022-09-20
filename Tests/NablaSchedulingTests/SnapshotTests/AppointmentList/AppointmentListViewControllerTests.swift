@@ -30,20 +30,29 @@ class AppointmentlistViewControllerTests: XCTestCase {
         viewModel.given(.onChange(willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.onChange(throttle: .any, willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.modal(getter: nil))
-        
-        Date.nabla.now = { Date(timeIntervalSince1970: 0) }
     }
 
-    func testAppointmentlistViewControllerUpcomingTab() {
+    func testAppointmentlistViewControllerUpcomingTabWithImminentAppointments() {
         // GIVEN
         viewModel.given(.selectedSelector(getter: .upcoming))
         viewModel.given(.isLoading(getter: false))
         viewModel.given(.appointments(getter: [
             makeAppointment(state: .upcoming, date: .nabla.now()),
             makeAppointment(state: .upcoming, date: .nabla.now().adding(minutes: 9)),
-            makeAppointment(state: .upcoming, date: .today.at(hour: 7, minute: 30)),
-            makeAppointment(state: .upcoming, date: .tomorrow.at(hour: 14, minute: 0)),
-            makeAppointment(state: .upcoming, date: .yesterday.at(hour: 18, minute: 50)),
+            makeAppointment(state: .upcoming, date: .nabla.now().adding(minutes: -9)),
+        ]))
+        // WHEN
+        // THEN
+        assertSnapshot(matching: navigationController, as: .almostSameImage)
+    }
+    
+    func testAppointmentlistViewControllerUpcomingTabWithFarAppointments() {
+        // GIVEN
+        viewModel.given(.selectedSelector(getter: .upcoming))
+        viewModel.given(.isLoading(getter: false))
+        viewModel.given(.appointments(getter: [
+            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 1979286455)), // 2032
+            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 906285296)), // 1998
         ]))
         // WHEN
         // THEN

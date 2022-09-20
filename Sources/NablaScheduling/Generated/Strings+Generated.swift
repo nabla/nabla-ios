@@ -56,9 +56,13 @@ internal enum L10n {
   internal static let categoryPickerScreenTitle = L10n.tr("Localizable", "category_picker_screen_title")
   /// Confirm the appointment
   internal static let confirmationScreenActionButtonLabel = L10n.tr("Localizable", "confirmation_screen_action_button_label")
-  /// Consultation planned on %s
-  internal static func confirmationScreenCaptionFormat(_ p1: UnsafePointer<CChar>) -> String {
-    return L10n.tr("Localizable", "confirmation_screen_caption_format", p1)
+  /// Consultation planned on %@
+  internal static func confirmationScreenCaptionFormat(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "confirmation_screen_caption_format", String(describing: p1))
+  }
+  /// Consultation planned today at %@
+  internal static func confirmationScreenCaptionFormatToday(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "confirmation_screen_caption_format_today", String(describing: p1))
   }
   /// I consent to do a video consultation.
   internal static let confirmationScreenConsultationDisclaimer = L10n.tr("Localizable", "confirmation_screen_consultation_disclaimer")

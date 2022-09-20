@@ -49,7 +49,8 @@
 // ----- Confirmation screen
 
 "confirmation_screen_title" = "Confirm your appointment";
-"confirmation_screen_caption_format" = "Consultation planned on %s";
+"confirmation_screen_caption_format_today" = "Consultation planned today at %@";
+"confirmation_screen_caption_format" = "Consultation planned on %@";
 "confirmation_screen_consultation_disclaimer" = "I consent to do a video consultation.";
 "confirmation_screen_data_disclaimer" = "I consent to the data processing policy.";
 "confirmation_screen_action_button_label" = "Confirm the appointment";

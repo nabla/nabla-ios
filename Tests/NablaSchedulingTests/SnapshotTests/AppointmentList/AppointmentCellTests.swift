@@ -18,7 +18,6 @@ class AppointmentCellTests: XCTestCase {
         
         viewModel.given(.onChange(willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.onChange(throttle: .any, willReturn: Just(()).eraseToAnyPublisher()))
-        Date.nabla.now = { Date(timeIntervalSince1970: 0) }
         
         viewModel.given(.avatar(getter: .init(url: nil, text: "TD")))
         viewModel.given(.title(getter: "Title"))
