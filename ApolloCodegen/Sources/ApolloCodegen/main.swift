@@ -64,7 +64,7 @@ struct SwiftScript: ParsableCommand {
                 namespace: "GQL",
                 outputFormat: authenticatedOutputFormat,
                 customScalarFormat: .passthroughWithPrefix("GQL."),
-                urlToSchemaFile: fileStructure.xplatformSchemaFolderUrl.appendingPathComponent("patient.graphql")
+                urlToSchemaFile: fileStructure.xplatformSchemaFolderUrl.appendingPathComponent("patient-sdk.graphql")
             )
 
             try ApolloCodegen.run(from: fileStructure.codegenFolderUrl,

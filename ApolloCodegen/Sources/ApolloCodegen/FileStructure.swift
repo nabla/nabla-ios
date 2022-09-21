@@ -32,7 +32,7 @@ struct FileStructure {
             .apollo.parentFolderURL() // sdk folder
             .apollo.parentFolderURL() // health folder
             .apollo.childFolderURL(folderName: "graphql")
-            .apollo.childFolderURL(folderName: "sdk")
+            .apollo.childFolderURL(folderName: "patient")
     }
 }
 
