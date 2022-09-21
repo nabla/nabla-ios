@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha18] - 2022-09-21
+
+### Added
+
 - Added `presentScheduleAppointmentViewController` to `NablaScheduling` views.
 
 ### Changed
