@@ -16,7 +16,7 @@ echo "--- NablaCore - Build ---"
 # This should be kept in sync with the files in ApolloCodegen/Sources/ApolloCodegen/main.swift
 input_output_files=(
   "$DIRNAME/Data/GQL/Schema"
-  "$DIRNAME/../../../../graphql/sdk"
+  "$DIRNAME/../../../../graphql/patient/patient-sdk.graphql"
 )
 
 cd ../../ApolloCodegen
