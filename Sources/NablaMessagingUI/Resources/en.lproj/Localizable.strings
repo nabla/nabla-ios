@@ -52,6 +52,6 @@
 
 // Video Call Action Request
 "video_call_action_request_title" = "Remote consultation";
-"video_call_action_request_button_default" = "Join";
+"video_call_action_request_button_default" = "Join the call";
 "video_call_action_request_button_in_progress" = "Return to call";
 "video_call_action_request_button_closed" = "Ended";

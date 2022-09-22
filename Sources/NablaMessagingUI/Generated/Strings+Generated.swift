@@ -108,7 +108,7 @@ internal enum L10n {
   internal static let providerDeletedName = L10n.tr("Localizable", "provider_deleted_name")
   /// Ended
   internal static let videoCallActionRequestButtonClosed = L10n.tr("Localizable", "video_call_action_request_button_closed")
-  /// Join
+  /// Join the call
   internal static let videoCallActionRequestButtonDefault = L10n.tr("Localizable", "video_call_action_request_button_default")
   /// Return to call
   internal static let videoCallActionRequestButtonInProgress = L10n.tr("Localizable", "video_call_action_request_button_in_progress")

@@ -24,7 +24,7 @@ internal enum L10n {
   internal static let appointmentsScreenCancelAppointmentModalMessage = L10n.tr("Localizable", "appointments_screen_cancel_appointment_modal_message")
   /// Cancel appointment
   internal static let appointmentsScreenCancelAppointmentModalTitle = L10n.tr("Localizable", "appointments_screen_cancel_appointment_modal_title")
-  /// Join
+  /// Join the call
   internal static let appointmentsScreenCellJoinButtonLabel = L10n.tr("Localizable", "appointments_screen_cell_join_button_label")
   /// Return to call
   internal static let appointmentsScreenCellJoinInprogressButtonLabel = L10n.tr("Localizable", "appointments_screen_cell_join_inprogress_button_label")

@@ -52,6 +52,6 @@
 
 // Video Call Action Request
 "video_call_action_request_title" = "Consultation vidéo";
-"video_call_action_request_button_default" = "Rejoindre";
+"video_call_action_request_button_default" = "Rejoindre l’appel";
 "video_call_action_request_button_in_progress" = "Revenir à l’appel";
 "video_call_action_request_button_closed" = "Terminée";
