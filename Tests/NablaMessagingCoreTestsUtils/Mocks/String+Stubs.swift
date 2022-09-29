@@ -6,7 +6,7 @@ public extension String {
     }
 
     static var urlStubVideo: Self {
-        "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4"
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
 
     static var filenameStub: Self {
