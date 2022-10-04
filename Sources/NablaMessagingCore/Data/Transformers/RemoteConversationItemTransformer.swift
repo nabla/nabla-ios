@@ -265,13 +265,17 @@ final class RemoteConversationItemTransformer {
     
     // MARK: Conversation Activity
 
-    private func transform(_ activity: GQL.ConversationActivityFragment) -> ConversationItem {
-        let provider = activity.content.provider.fragments.maybeProviderFragment
-        return ConversationActivity(
-            id: activity.id,
-            date: activity.activityTime,
-            activity: .providerJoined(RemoteConversationProviderTransformer.transform(maybeProvider: provider))
-        )
+    private func transform(_ activity: GQL.ConversationActivityFragment) -> ConversationItem? {
+        if let providerJoinedActivity = activity.content.asProviderJoinedConversation {
+            let provider = providerJoinedActivity.provider.fragments.maybeProviderFragment
+            return ConversationActivity(
+                id: activity.id,
+                date: activity.activityTime,
+                activity: .providerJoined(RemoteConversationProviderTransformer.transform(maybeProvider: provider))
+            )
+        }
+        
+        return nil
     }
 
     // MARK: Livekit

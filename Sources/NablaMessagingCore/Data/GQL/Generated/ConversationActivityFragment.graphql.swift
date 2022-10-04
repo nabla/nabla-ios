@@ -85,13 +85,16 @@ import Foundation
     }
 
      struct Content: GraphQLSelectionSet {
-       static let possibleTypes: [String] = ["ProviderJoinedConversation"]
+       static let possibleTypes: [String] = ["ProviderJoinedConversation", "ConversationClosed", "ConversationReopened"]
 
        static var selections: [GraphQLSelection] {
         return [
-          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("provider", type: .nonNull(.object(Provider.selections))),
+          GraphQLTypeCase(
+            variants: ["ProviderJoinedConversation": AsProviderJoinedConversation.selections],
+            default: [
+              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            ]
+          )
         ]
       }
 
@@ -101,8 +104,16 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
-       init(provider: Provider) {
-        self.init(unsafeResultMap: ["__typename": "ProviderJoinedConversation", "provider": provider.resultMap])
+       static func makeConversationClosed() -> Content {
+        return Content(unsafeResultMap: ["__typename": "ConversationClosed"])
+      }
+
+       static func makeConversationReopened() -> Content {
+        return Content(unsafeResultMap: ["__typename": "ConversationReopened"])
+      }
+
+       static func makeProviderJoinedConversation(provider: AsProviderJoinedConversation.Provider) -> Content {
+        return Content(unsafeResultMap: ["__typename": "ProviderJoinedConversation", "provider": provider.resultMap])
       }
 
        var __typename: String {
@@ -114,22 +125,25 @@ import Foundation
         }
       }
 
-       var provider: Provider {
+       var asProviderJoinedConversation: AsProviderJoinedConversation? {
         get {
-          return Provider(unsafeResultMap: resultMap["provider"]! as! ResultMap)
+          if !AsProviderJoinedConversation.possibleTypes.contains(__typename) { return nil }
+          return AsProviderJoinedConversation(unsafeResultMap: resultMap)
         }
         set {
-          resultMap.updateValue(newValue.resultMap, forKey: "provider")
+          guard let newValue = newValue else { return }
+          resultMap = newValue.resultMap
         }
       }
 
-       struct Provider: GraphQLSelectionSet {
-         static let possibleTypes: [String] = ["Provider", "DeletedProvider"]
+       struct AsProviderJoinedConversation: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["ProviderJoinedConversation"]
 
          static var selections: [GraphQLSelection] {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-            GraphQLFragmentSpread(MaybeProviderFragment.self),
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("provider", type: .nonNull(.object(Provider.selections))),
           ]
         }
 
@@ -139,8 +153,8 @@ import Foundation
           self.resultMap = unsafeResultMap
         }
 
-         static func makeDeletedProvider(`_`: EmptyObject) -> Provider {
-          return Provider(unsafeResultMap: ["__typename": "DeletedProvider", "_": `_`])
+         init(provider: Provider) {
+          self.init(unsafeResultMap: ["__typename": "ProviderJoinedConversation", "provider": provider.resultMap])
         }
 
          var __typename: String {
@@ -152,28 +166,67 @@ import Foundation
           }
         }
 
-         var fragments: Fragments {
+         var provider: Provider {
           get {
-            return Fragments(unsafeResultMap: resultMap)
+            return Provider(unsafeResultMap: resultMap["provider"]! as! ResultMap)
           }
           set {
-            resultMap += newValue.resultMap
+            resultMap.updateValue(newValue.resultMap, forKey: "provider")
           }
         }
 
-         struct Fragments {
+         struct Provider: GraphQLSelectionSet {
+           static let possibleTypes: [String] = ["Provider", "DeletedProvider"]
+
+           static var selections: [GraphQLSelection] {
+            return [
+              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+              GraphQLFragmentSpread(MaybeProviderFragment.self),
+            ]
+          }
+
            private(set) var resultMap: ResultMap
 
            init(unsafeResultMap: ResultMap) {
             self.resultMap = unsafeResultMap
           }
 
-           var maybeProviderFragment: MaybeProviderFragment {
+           static func makeDeletedProvider(`_`: EmptyObject) -> Provider {
+            return Provider(unsafeResultMap: ["__typename": "DeletedProvider", "_": `_`])
+          }
+
+           var __typename: String {
             get {
-              return MaybeProviderFragment(unsafeResultMap: resultMap)
+              return resultMap["__typename"]! as! String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "__typename")
+            }
+          }
+
+           var fragments: Fragments {
+            get {
+              return Fragments(unsafeResultMap: resultMap)
             }
             set {
               resultMap += newValue.resultMap
+            }
+          }
+
+           struct Fragments {
+             private(set) var resultMap: ResultMap
+
+             init(unsafeResultMap: ResultMap) {
+              self.resultMap = unsafeResultMap
+            }
+
+             var maybeProviderFragment: MaybeProviderFragment {
+              get {
+                return MaybeProviderFragment(unsafeResultMap: resultMap)
+              }
+              set {
+                resultMap += newValue.resultMap
+              }
             }
           }
         }
