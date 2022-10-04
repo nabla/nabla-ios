@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the original message preview layout in messaging cells. 
+
 
 ## [1.0.0-alpha18] - 2022-09-21
 

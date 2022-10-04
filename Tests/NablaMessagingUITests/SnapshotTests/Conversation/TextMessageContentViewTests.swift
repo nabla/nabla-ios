@@ -130,7 +130,13 @@ final class TextMessageContentViewTests: XCTestCase {
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .them(
+                    .init(
+                        author: .authorStub,
+                        avatar: .init(url: nil, text: .initialsStub),
+                        isContiguous: false
+                    )
+                ),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: .textWithPhoneNumbersStub),
@@ -139,5 +145,47 @@ final class TextMessageContentViewTests: XCTestCase {
         )
         // THEN
         assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+    }
+    
+    func testTextConfigureMeInResponseToMessageWithLongerOriginal() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .me(isContiguous: false),
+                footer: nil,
+                replyTo: .init(
+                    icon: nil,
+                    author: .authorStub,
+                    preview: "Text much longer than the response",
+                    previewImageURL: nil
+                ),
+                content: .init(text: "Sure"),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: size))
+    }
+    
+    func testTextConfigureMeInResponseToMessageWithLongerMessage() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .me(isContiguous: false),
+                footer: nil,
+                replyTo: .init(
+                    icon: nil,
+                    author: .authorStub,
+                    preview: "What?",
+                    previewImageURL: nil
+                ),
+                content: .init(text: "Text much longer than the original message and ignoring the question"),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: size))
     }
 }

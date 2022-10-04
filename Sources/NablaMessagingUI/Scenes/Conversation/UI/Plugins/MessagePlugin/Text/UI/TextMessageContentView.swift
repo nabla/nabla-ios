@@ -57,11 +57,6 @@ final class TextMessageContentView: UIView, MessageContentView {
         view.dataDetectorTypes = [.link, .phoneNumber]
         view.font = NablaTheme.Conversation.textMessageFont
         
-        view.setContentHuggingPriority(.required, for: .horizontal)
-        view.setContentHuggingPriority(.required, for: .vertical)
-        view.setContentCompressionResistancePriority(.required, for: .horizontal)
-        view.setContentCompressionResistancePriority(.required, for: .vertical)
-        
         return view
     }()
     
