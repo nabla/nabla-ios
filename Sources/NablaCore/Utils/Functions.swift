@@ -1,4 +1,4 @@
-public func identity<A>(_ a: A) -> A {
+func identity<A>(_ a: A) -> A {
     a
 }
 

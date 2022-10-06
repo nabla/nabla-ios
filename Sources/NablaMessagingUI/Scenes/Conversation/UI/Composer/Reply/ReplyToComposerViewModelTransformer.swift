@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 struct ReplyToComposerViewModelTransformer {
@@ -18,7 +19,7 @@ private extension ConversationViewMessageItem {
         let name: String
         switch sender {
         case let .provider(provider):
-            name = provider.abbreviatedNameWithPrefix
+            name = ProviderNameComponentsFormatter(style: .abbreviatedNameWithPrefix).string(from: .init(provider))
         case let .system(system):
             name = system.name
         case .patient:

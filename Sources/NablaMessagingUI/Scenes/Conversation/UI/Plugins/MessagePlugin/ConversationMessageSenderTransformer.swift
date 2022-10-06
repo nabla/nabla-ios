@@ -1,14 +1,17 @@
 import Foundation
+import NablaCore
 
 struct ConversationMessageSenderTransformer {
     // MARK: - Public
 
     static func transform(item: ConversationViewMessageItem) -> ConversationMessageSender {
-        switch item.sender {
-        case let .provider(provider):
+        switch item.sender { case let .provider(provider):
             return .them(.init(
-                author: provider.abbreviatedNameWithPrefix,
-                avatar: .init(url: provider.avatarURL, text: provider.initials),
+                author: ProviderNameComponentsFormatter(style: .abbreviatedNameWithPrefix).string(from: .init(provider)),
+                avatar: .init(
+                    url: provider.avatarURL,
+                    text: ProviderNameComponentsFormatter(style: .initials).string(from: .init(provider)).nabla.nilIfEmpty
+                ),
                 isContiguous: item.isContiguous
             ))
         case let .system(system):

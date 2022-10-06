@@ -6,9 +6,15 @@ struct ConversationListViewModelTransformer {
     // MARK: - Public
     
     func transform(conversations: [Conversation]) -> ConversationListViewModel {
-        let items = conversations.map { conversation in
-            ConversationListItemViewModel(
-                avatar: AvatarViewModel(url: conversation.providers.first?.provider.avatarURL, text: conversation.providers.first?.provider.initials),
+        let items = conversations.map { conversation -> ConversationListItemViewModel in
+            let provider = conversation.providers.first?.provider
+            return ConversationListItemViewModel(
+                avatar: AvatarViewModel(
+                    url: provider?.avatarURL,
+                    text: provider.flatMap {
+                        ProviderNameComponentsFormatter(style: .initials).string(from: .init($0)).nabla.nilIfEmpty
+                    }
+                ),
                 title: conversation.inboxPreviewTitle,
                 subtitle: conversation.lastMessagePreview ?? conversation.subtitle,
                 lastUpdatedTime: lastUpdatedTime(from: conversation),

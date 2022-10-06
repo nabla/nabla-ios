@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
 
 final class ConversationActivityPresenter: Presenter {
@@ -33,7 +34,9 @@ final class ConversationActivityPresenter: Presenter {
     private static func transform(item: ConversationActivityViewItem) -> String {
         switch item.activity {
         case let .providerJoined(provider):
-            return L10n.conversationProviderJoined(provider.fullNameWithPrefix)
+            return L10n.conversationProviderJoined(
+                ProviderNameComponentsFormatter(style: .fullNameWithPrefix).string(from: .init(provider))
+            )
         }
     }
 }

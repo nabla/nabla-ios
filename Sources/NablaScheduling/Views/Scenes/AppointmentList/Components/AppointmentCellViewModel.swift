@@ -29,12 +29,12 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     var avatar: AvatarViewModel {
         AvatarViewModel(
             url: appointment.provider.avatarUrl?.absoluteString,
-            text: appointment.provider.formatName(style: .abbreviated)
+            text: ProviderNameComponentsFormatter(style: .initials).string(from: .init(appointment.provider))
         )
     }
     
     var title: String {
-        appointment.provider.formatName(style: .long)
+        ProviderNameComponentsFormatter(style: .fullNameWithPrefix).string(from: .init(appointment.provider))
     }
     
     var enabled: Bool {

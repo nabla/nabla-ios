@@ -133,10 +133,10 @@ final class AppointmentConfirmationViewController: UIViewController {
         guard let provider = viewModel.provider else { return }
         headerView.avatar = .init(
             url: provider.avatarUrl?.absoluteString,
-            text: provider.formatName(style: .abbreviated)
+            text: ProviderNameComponentsFormatter(style: .initials).string(from: .init(provider))
         )
                    
-        headerView.title = provider.formatName(style: .long)
+        headerView.title = ProviderNameComponentsFormatter(style: .fullNameWithPrefix).string(from: .init(provider))
         headerView.subtitle = provider.title
     }
     
