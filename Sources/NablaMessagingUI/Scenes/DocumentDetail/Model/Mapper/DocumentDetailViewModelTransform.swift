@@ -5,6 +5,9 @@ struct DocumentDetailViewModelTransformer {
     // MARK: - Public
     
     func transform(document: DocumentFile) -> DocumentDetailViewModel {
-        DocumentDetailViewModel(url: document.fileUrl)
+        DocumentDetailViewModel(
+            fileName: document.fileName,
+            url: document.fileUrl
+        )
     }
 }

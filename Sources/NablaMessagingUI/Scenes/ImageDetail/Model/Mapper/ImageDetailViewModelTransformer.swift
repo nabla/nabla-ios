@@ -5,6 +5,9 @@ struct ImageDetailViewModelTransformer {
     // MARK: - Public
 
     func transform(image: ImageFile) -> ImageDetailViewModel {
-        ImageDetailViewModel(url: image.fileUrl)
+        ImageDetailViewModel(
+            fileName: image.fileName,
+            url: image.fileUrl
+        )
     }
 }
