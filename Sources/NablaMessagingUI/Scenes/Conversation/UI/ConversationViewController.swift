@@ -369,12 +369,11 @@ extension ConversationViewController: ComposerViewDelegate {
     // MARK: - ComposerViewDelegate
     
     func composerViewDidTapOnSend(_ composerView: ComposerView) {
-        guard let text = composerView.text else { return }
-        presenter.didTapOnSend(text: text, medias: composerView.medias, replyingToMessageUUID: composerView.replyToMessage?.id)
+        presenter.didTapOnSend(text: composerView.text, medias: composerView.medias, replyingToMessageUUID: composerView.replyToMessage?.id)
     }
     
     func composerViewDidUpdateTextDraft(_ composerView: ComposerView) {
-        presenter.didUpdateDraftText(composerView.text ?? "")
+        presenter.didUpdateDraftText(composerView.text)
     }
     
     func composerView(_: ComposerView, didTapOnAddMediaFrom sender: UIView) {

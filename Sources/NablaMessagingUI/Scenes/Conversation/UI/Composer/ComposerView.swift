@@ -13,7 +13,7 @@ final class ComposerView: UIView {
     
     weak var delegate: ComposerViewDelegate?
     
-    var text: String? {
+    var text: String {
         get { textView.text }
         set {
             textView.isScrollEnabled = false
@@ -24,12 +24,8 @@ final class ComposerView: UIView {
     }
     
     var placeHolder: String? {
-        get {
-            placeHolderLabel.text
-        }
-        set {
-            placeHolderLabel.text = newValue
-        }
+        get { textView.placeholder }
+        set { textView.placeholder = newValue }
     }
     
     var showRecordAudioButton = true {
@@ -61,13 +57,6 @@ final class ComposerView: UIView {
         addSubview(vStack)
         vStack.nabla.pinToSuperView()
         
-        addSubview(placeHolderLabel)
-        placeHolderLabel.nabla.prepareForAutoLayout()
-        NSLayoutConstraint.activate([
-            placeHolderLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: Constants.controlsSize / 4 + 4),
-            placeHolderLabel.centerYAnchor.constraint(equalTo: textView.centerYAnchor),
-        ])
-        
         updateMediaComposerVisibility()
         updateAudioRecordingVisibility()
         updateReplyToComposerVisibility()
@@ -83,7 +72,7 @@ final class ComposerView: UIView {
     // MARK: - Public
 
     func emptyComposer() {
-        text = nil
+        text = ""
         mediaComposerView.emptyMedias()
         replyToMessage = nil
     }
@@ -98,7 +87,7 @@ final class ComposerView: UIView {
     private let logger: Logger
     
     private var enableSendButton: Bool {
-        !text.isBlank || !medias.isEmpty || isRecording
+        !text.isEmpty || !medias.isEmpty || isRecording
     }
     
     private enum Constants {
@@ -153,24 +142,21 @@ final class ComposerView: UIView {
         return stackView
     }()
     
-    private lazy var placeHolderLabel: UILabel = {
-        let label = UILabel()
-        label.font = NablaTheme.Conversation.composerFont
-        label.textColor = NablaTheme.Conversation.composerTextColor.withAlphaComponent(0.5)
-        return label
-    }()
-    
-    private lazy var textView: UITextView = {
-        let textView = UITextView().nabla.withInteractiveDismiss()
+    private lazy var textView: TextView = {
+        let textView = TextView()
         textView.font = NablaTheme.Conversation.composerFont
-        textView.nabla.constraintHeight(Constants.textViewMinHeight, relation: .greaterThanOrEqual)
-        textView.nabla.constraintHeight(Constants.maximumHeight, relation: .lessThanOrEqual)
         textView.textColor = NablaTheme.Conversation.composerTextColor
-        textView.textContainerInset = .nabla.all(Constants.textViewMinHeight / 4)
-        textView.scrollIndicatorInsets = .nabla.all(Constants.textViewMinHeight / 4)
+        textView.placeholderTextColor = NablaTheme.Conversation.composerTextColor.withAlphaComponent(0.5)
+        textView.textContainerInset = .nabla.make(
+            horizontal: Constants.textViewMinHeight / 4,
+            vertical: (Constants.textViewMinHeight - (textView.font?.lineHeight ?? 0)) / 2
+        )
+        textView.verticalScrollIndicatorInsets = .nabla.all(Constants.textViewMinHeight / 4)
         textView.delegate = self
         textView.backgroundColor = NablaTheme.Conversation.composerBackgroundColor
         textView.accessibilityIdentifier = "composerInputTextView"
+        textView.nabla.constraintHeight(Constants.textViewMinHeight, relation: .greaterThanOrEqual)
+        textView.nabla.constraintHeight(Constants.maximumHeight, relation: .lessThanOrEqual)
         return textView
     }()
     
@@ -254,9 +240,9 @@ final class ComposerView: UIView {
         if isRecording {
             setVisibleViews([deleteAudioRecordingButton, audioRecorderComposerView])
         } else if showRecordAudioButton {
-            setVisibleViews([recordAudioButton, addMediaButton, textView, placeHolderLabel])
+            setVisibleViews([recordAudioButton, addMediaButton, textView])
         } else {
-            setVisibleViews([addMediaButton, textView, placeHolderLabel])
+            setVisibleViews([addMediaButton, textView])
         }
     }
 
@@ -271,7 +257,6 @@ final class ComposerView: UIView {
             addMediaButton,
             recordAudioButton,
             textView,
-            placeHolderLabel,
             audioRecorderComposerView,
         ]
         .forEach { $0.isHidden = !visibleViews.contains($0) }
@@ -295,9 +280,8 @@ final class ComposerView: UIView {
     }
 }
 
-extension ComposerView: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        placeHolderLabel.isHidden = !textView.text.isEmpty
+extension ComposerView: TextViewDelegate {
+    func textViewDidChange(_ textView: TextView) {
         sendButton.isEnabled = enableSendButton
         delegate?.composerViewDidUpdateTextDraft(self)
     }
@@ -341,4 +325,8 @@ extension ComposerView: ReplyToComposerPresenterDelegate {
     func replyToComposerPresenterDidTapCloseButton(_: ReplyToComposerPresenter) {
         replyToMessage = nil
     }
+}
+
+protocol TextViewDelegate: AnyObject {
+    func textViewDidChange(_ textView: TextView)
 }

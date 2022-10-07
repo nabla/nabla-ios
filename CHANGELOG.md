@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the original message preview layout in messaging cells. 
+- Fixed the composer text alignment in the conversation screen.
 
 
 ## [1.0.0-alpha18] - 2022-09-21
