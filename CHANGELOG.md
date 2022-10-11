@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Example app has been renamed to `Messaging Sample App` to better reflect what it showcases.
+
 ### Fixed
 
 

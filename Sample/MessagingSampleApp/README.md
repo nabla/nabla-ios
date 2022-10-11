@@ -1,4 +1,4 @@
-#  Nabla iOS SDK demo app
+#  Nabla iOS SDK Messaging sample app
 
 This app contains a basic setup of the iOS Nabla SDK so that you can quickly 
 test the features using our setup guide in the console.
@@ -18,15 +18,15 @@ You'll also need a working installation of Xcode to build the app.
 
 > At this stage, you should have a mobile SDK API key and 2 tokens
 
-4. Paste your API key in place of the `<yourapikey>` placeholder in the [AppDelegate](https://github.com/nabla/nabla-ios/blob/main/Example/NablaExampleApp/NablaExampleApp/AppDelegate.swift)
-5. Paste your `access_token` and `refresh_token` in place of `<youraccesstoken>` and `<yourrefreshtoken>` placeholders in the [`FakeAuthenticator` class](https://github.com/nabla/nabla-ios/blob/main/Example/NablaExampleApp/NablaExampleApp/FakeAuthenticator.swift)
+4. Paste your API key in place of the `<yourapikey>` placeholder in the [AppDelegate](https://github.com/nabla/nabla-ios/blob/main/Sample/MessagingSampleApp/MessagingSampleApp/AppDelegate.swift)
+5. Paste your `access_token` and `refresh_token` in place of `<youraccesstoken>` and `<yourrefreshtoken>` placeholders in the [`FakeAuthenticator` class](https://github.com/nabla/nabla-ios/blob/main/Sample/MessagingSampleApp/MessagingSampleApp/FakeAuthenticator.swift)
 6. Build and run
 
-You should now be able to use the demo app to create a new conversation and send messages.
+You should now be able to use the sample app to create a new conversation and send messages.
 
 ## Next step: integrate the SDK in your app
 
-To integrate the SDK into your app, follow our [README](https://github.com/nabla/nabla-ios) and get all the details in our [developer documentation](https://docs.nabla.com/docs/setup-1). 
+To integrate the SDK into your app, follow our [README](https://github.com/nabla/nabla-ios) and get all the details in our [developer documentation](https://docs.nabla.com/docs/concepts-ios). 
 
 ## Need more help?
 
