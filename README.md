@@ -1,4 +1,4 @@
-#  Nabla iOS SDK
+# Nabla iOS SDK
 
 The [Nabla](https://www.nabla.com/) iOS SDK makes it quick and easy to build an excellent healthcare communication experience in your iOS app. We provide powerful and customizable UI elements that can be used out-of-the-box to create a full healthcare communication experience. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences.
 
