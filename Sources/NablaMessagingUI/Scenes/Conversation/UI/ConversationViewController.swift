@@ -19,6 +19,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         self.videoCallClient = videoCallClient
         super.init(nibName: nil, bundle: nil)
         navigationItem.titleView = navigationItem.titleView ?? titleView
+        navigationItem.largeTitleDisplayMode = .never
+        hidesBottomBarWhenPushed = true
     }
 
     @available(*, unavailable)

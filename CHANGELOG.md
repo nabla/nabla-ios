@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The `Conversation` screen's navigation does not use large titles anymore (`navigationItem.largeTitleDisplayMode` defaults to `.never`).
+- The `Conversation` screen's `hidesBottomBarWhenPushed` defaults to `true`.
+
 ### Fixed
 
 - Fixed the original message preview layout in messaging cells. 
