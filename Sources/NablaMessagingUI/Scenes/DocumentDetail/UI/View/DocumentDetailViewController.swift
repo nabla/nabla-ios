@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 import WebKit
 
@@ -18,7 +19,18 @@ final class DocumentDetailViewController: UIViewController, DocumentDetailViewCo
     // MARK: - DocumentDetailViewContract
     
     func configure(with viewModel: DocumentDetailViewModel) {
-        pdfView.load(URLRequest(url: viewModel.url))
+        switch viewModel.documentSource {
+        case let .url(url):
+            pdfView.load(URLRequest(url: url))
+        case let .data(data):
+            pdfView.load(
+                data,
+                mimeType: MimeType.Document.pdf.rawValue,
+                characterEncodingName: "",
+                baseURL: FileManager.default.temporaryDirectory
+            )
+        }
+
         fileName = viewModel.fileName
     }
     

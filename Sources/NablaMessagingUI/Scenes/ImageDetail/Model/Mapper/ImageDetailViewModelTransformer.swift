@@ -7,7 +7,7 @@ struct ImageDetailViewModelTransformer {
     func transform(image: ImageFile) -> ImageDetailViewModel {
         ImageDetailViewModel(
             fileName: image.fileName,
-            url: image.fileUrl
+            imageSource: MediaContentTransformer.transform(image.content)
         )
     }
 }

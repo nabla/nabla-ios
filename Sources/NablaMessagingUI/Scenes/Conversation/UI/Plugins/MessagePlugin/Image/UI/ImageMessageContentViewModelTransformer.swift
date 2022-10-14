@@ -6,8 +6,8 @@ struct ImageMessageContentViewModelTransformer {
 
     static func transform(item: ImageMessageViewItem) -> ImageMessageContentView.ContentViewModel {
         .init(
-            url: item.image.fileUrl,
-            originalImageSize: originalImageSize(from: item)
+            originalImageSize: originalImageSize(from: item),
+            imageSource: MediaContentTransformer.transform(item.image.content)
         )
     }
 

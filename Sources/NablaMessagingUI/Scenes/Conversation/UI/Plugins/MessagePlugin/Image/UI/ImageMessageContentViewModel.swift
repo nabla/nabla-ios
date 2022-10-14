@@ -1,8 +1,8 @@
 import Foundation
-import NablaMessagingCore
+import NablaCore
 import UIKit
 
 struct ImageMessageContentViewModel {
-    let url: URL
     let originalImageSize: CGSize?
+    let imageSource: MediaSource
 }

@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 
 struct MediaComposerItemViewModel {
     enum MediaType {
@@ -7,6 +8,6 @@ struct MediaComposerItemViewModel {
         case pdf
     }
 
-    let url: URL
+    let mediaSource: MediaSource
     let type: MediaType
 }

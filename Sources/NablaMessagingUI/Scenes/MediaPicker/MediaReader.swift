@@ -69,7 +69,7 @@ final class MediaReader {
         }
         let media = ImageFile(
             fileName: fileUrl.lastPathComponent,
-            fileUrl: fileUrl,
+            content: .url(fileUrl),
             size: fileUrl.imageSize,
             mimeType: .from(rawValue: MediaReader.mimeType(for: fileUrl.path))
         )
@@ -93,7 +93,7 @@ final class MediaReader {
 
                 let media = ImageFile(
                     fileName: fileName,
-                    fileUrl: temporaryFileUrl,
+                    content: .url(temporaryFileUrl),
                     size: temporaryFileUrl.imageSize,
                     mimeType: .jpg
                 )
@@ -111,7 +111,7 @@ final class MediaReader {
         }
         let media = VideoFile(
             fileName: fileUrl.lastPathComponent,
-            fileUrl: fileUrl,
+            content: .url(fileUrl),
             size: fileUrl.videoSize,
             mimeType: .mov // The videos are always compressed as .mov files by UIImagePickerController when selected
         )
@@ -132,7 +132,7 @@ final class MediaReader {
 
             let media = VideoFile(
                 fileName: copiedURL.lastPathComponent,
-                fileUrl: copiedURL,
+                content: .url(copiedURL),
                 size: copiedURL.videoSize,
                 mimeType: .from(rawValue: MediaReader.mimeType(for: copiedURL.path))
             )

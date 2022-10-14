@@ -553,7 +553,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private func transform(_ media: Media) -> RemoteFileUpload {
         .init(
             fileName: media.fileName,
-            fileUrl: media.fileUrl,
+            content: media.content,
             mimeType: media.mimeType,
             purpose: .message
         )

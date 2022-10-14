@@ -7,7 +7,10 @@ struct MediaComposerItemViewModelTransformer {
     func transform(medias: [Media]) -> [MediaComposerItemViewModel] {
         medias.compactMap { media in
             guard let type = media.viewModelType else { return nil }
-            return MediaComposerItemViewModel(url: media.fileUrl, type: type)
+            return MediaComposerItemViewModel(
+                mediaSource: MediaContentTransformer.transform(media.content),
+                type: type
+            )
         }
     }
 }

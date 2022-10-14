@@ -1,5 +1,6 @@
 import Foundation
 import NablaCore
+import NablaMessagingCore
 import UIKit
 
 struct ReplyToComposerViewModelTransformer {
@@ -9,7 +10,7 @@ struct ReplyToComposerViewModelTransformer {
         ReplyToComposerViewModel(
             sender: message.replySender,
             preview: message.preview,
-            imagePreviewURL: message.imagePreviewURL
+            imagePreview: message.imagePreview
         )
     }
 }
@@ -47,9 +48,9 @@ private extension ConversationViewMessageItem {
         return L10n.conversationReplyToPreviewUnknown
     }
 
-    var imagePreviewURL: URL? {
+    var imagePreview: MediaSource? {
         if let imageMessage = self as? ImageMessageViewItem {
-            return imageMessage.image.fileUrl
+            return MediaContentTransformer.transform(imageMessage.image.content)
         }
         return nil
     }

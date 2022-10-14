@@ -140,7 +140,7 @@ extension AudioRecorder: AVAudioRecorderDelegate {
         guard successfully else { return }
         let audioFile = AudioFile(
             fileName: Constants.filename,
-            fileUrl: recorder.url,
+            content: .url(recorder.url),
             durationMs: Int(currentRecordingTime),
             mimeType: .mpeg
         )

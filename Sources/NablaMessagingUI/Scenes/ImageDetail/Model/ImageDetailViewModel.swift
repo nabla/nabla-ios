@@ -1,6 +1,7 @@
 import Foundation
+import NablaCore
 
 struct ImageDetailViewModel {
     let fileName: String
-    let url: URL
+    let imageSource: MediaSource
 }

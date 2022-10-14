@@ -1,6 +1,7 @@
 import Foundation
+import NablaCore
 
 struct DocumentDetailViewModel {
     let fileName: String
-    let url: URL
+    let documentSource: MediaSource
 }

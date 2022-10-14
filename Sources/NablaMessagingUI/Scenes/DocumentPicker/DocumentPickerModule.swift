@@ -37,7 +37,7 @@ class DocumentPickerViewController: UIDocumentPickerViewController, UIDocumentPi
         }
         let media = DocumentFile(
             fileName: url.lastPathComponent,
-            fileUrl: url,
+            content: .url(url),
             thumbnailUrl: nil,
             mimeType: .pdf
         )

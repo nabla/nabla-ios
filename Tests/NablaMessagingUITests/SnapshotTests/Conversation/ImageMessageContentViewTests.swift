@@ -20,7 +20,7 @@ final class ImageMessageContentViewTests: XCTestCase {
                 sender: .me(isContiguous: false),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stubImage, originalImageSize: .init(width: 200, height: 200)),
+                content: .init(originalImageSize: .init(width: 200, height: 200), imageSource: .url(.stubImage)),
                 menuElements: []
             )
         )
@@ -36,7 +36,7 @@ final class ImageMessageContentViewTests: XCTestCase {
                 sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stubImage, originalImageSize: .init(width: 200, height: 200)),
+                content: .init(originalImageSize: .init(width: 200, height: 200), imageSource: .url(.stubImage)),
                 menuElements: []
             )
         )

@@ -1,3 +1,0 @@
-import NablaMessagingCore
-
-import UIKit

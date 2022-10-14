@@ -158,7 +158,7 @@ final class TextMessageContentViewTests: XCTestCase {
                     icon: nil,
                     author: .authorStub,
                     preview: "Text much longer than the response",
-                    previewImageURL: nil
+                    previewImage: nil
                 ),
                 content: .init(text: "Sure"),
                 menuElements: []
@@ -179,7 +179,7 @@ final class TextMessageContentViewTests: XCTestCase {
                     icon: nil,
                     author: .authorStub,
                     preview: "What?",
-                    previewImageURL: nil
+                    previewImage: nil
                 ),
                 content: .init(text: "Text much longer than the original message and ignoring the question"),
                 menuElements: []

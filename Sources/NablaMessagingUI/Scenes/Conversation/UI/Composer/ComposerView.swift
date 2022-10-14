@@ -199,7 +199,7 @@ final class ComposerView: UIView {
     }()
     
     private lazy var mediaComposerView: MediaComposerView = {
-        let view = MediaComposerView()
+        let view = MediaComposerView(dependencies: .init(logger: logger))
         let presenter = MediaComposerPresenterImplementation(viewContract: view, delegate: self)
         view.presenter = presenter
         
@@ -281,7 +281,7 @@ final class ComposerView: UIView {
 }
 
 extension ComposerView: TextViewDelegate {
-    func textViewDidChange(_ textView: TextView) {
+    func textViewDidChange(_: TextView) {
         sendButton.isEnabled = enableSendButton
         delegate?.composerViewDidUpdateTextDraft(self)
     }

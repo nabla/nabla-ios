@@ -1,19 +1,10 @@
 import AVFoundation
+import NablaCore
+import NablaMessagingCore
 import UIKit
 
 class UIPlayerView: UIView {
     // MARK: - Public
-
-    var url: URL? {
-        didSet {
-            guard let url = url else {
-                player.replaceCurrentItem(with: nil)
-                return
-            }
-
-            player.replaceCurrentItem(with: AVPlayerItem(url: url))
-        }
-    }
 
     var playerLayer: AVPlayerLayer {
         // swiftlint:disable:next force_cast
@@ -22,6 +13,10 @@ class UIPlayerView: UIView {
 
     override static var layerClass: AnyClass {
         AVPlayerLayer.self
+    }
+
+    func setMediaSource(mediaSource: MediaSource) throws {
+        player.replaceCurrentItem(with: AVPlayerItem(asset: try DataAVAsset(source: mediaSource)))
     }
 
     // MARK: - Lifecycle
@@ -33,15 +28,10 @@ class UIPlayerView: UIView {
 
     // MARK: Private
 
-    private lazy var player = makePlayer()
+    private lazy var player = AVPlayer()
 
     private func setUp() {
         playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
-    }
-
-    private func makePlayer() -> AVPlayer {
-        let player = AVPlayer()
-        return player
     }
 }

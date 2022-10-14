@@ -1,8 +1,8 @@
 import Foundation
-import NablaMessagingCore
+import NablaCore
 import UIKit
 
 struct VideoMessageContentViewModel {
-    let url: URL
     let originalVideoSize: CGSize?
+    let videoSource: MediaSource
 }

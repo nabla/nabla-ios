@@ -68,7 +68,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: transform(replyToFragment),
                 content: ImageFile(
                     fileName: imageContent.imageFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     size: size,
                     mimeType: .from(rawValue: imageContent.imageFileUpload.mimeType)
                 )
@@ -84,7 +84,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: transform(replyToFragment),
                 content: DocumentFile(
                     fileName: documentContent.documentFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
                     mimeType: .from(rawValue: documentContent.documentFileUpload.mimeType)
                 )
@@ -100,7 +100,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: transform(replyToFragment),
                 content: AudioFile(
                     fileName: audioContent.audioFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     durationMs: audioContent.audioFileUpload.durationMs ?? 0,
                     mimeType: .from(rawValue: audioContent.audioFileUpload.mimeType)
                 )
@@ -124,7 +124,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: transform(replyToFragment),
                 content: VideoFile(
                     fileName: videoContent.videoFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     size: size,
                     mimeType: .from(rawValue: videoContent.videoFileUpload.mimeType)
                 )
@@ -181,7 +181,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: nil,
                 content: ImageFile(
                     fileName: imageContent.imageFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     size: size,
                     mimeType: .from(rawValue: imageContent.imageFileUpload.mimeType)
                 )
@@ -197,7 +197,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: nil,
                 content: DocumentFile(
                     fileName: documentContent.documentFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
                     mimeType: .from(rawValue: documentContent.documentFileUpload.mimeType)
                 )
@@ -213,7 +213,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: nil,
                 content: AudioFile(
                     fileName: audioContent.audioFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     durationMs: audioContent.audioFileUpload.durationMs ?? 0,
                     mimeType: .from(rawValue: audioContent.audioFileUpload.mimeType)
                 )
@@ -237,7 +237,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: nil,
                 content: VideoFile(
                     fileName: videoContent.videoFileUpload.fileName,
-                    fileUrl: url,
+                    content: .url(url),
                     size: size,
                     mimeType: .from(rawValue: videoContent.videoFileUpload.mimeType)
                 )

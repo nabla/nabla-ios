@@ -16,10 +16,11 @@ class ConversationMessagePreviewView: UIView {
         iconImageView.image = viewModel.icon
         authorLabel.text = viewModel.author
         previewLabel.text = viewModel.preview
-        previewImageView.url = viewModel.previewImageURL
+        // Here
+        previewImageView.imageSource = viewModel.previewImage
 
         iconImageViewContainer.isHidden = viewModel.icon == nil
-        previewImageView.isHidden = viewModel.previewImageURL == nil
+        previewImageView.isHidden = viewModel.previewImage == nil
 
         switch sender {
         case .me:
@@ -42,7 +43,7 @@ class ConversationMessagePreviewView: UIView {
     private lazy var iconImageViewContainer: UIView = makeIconImageViewContainer()
     private lazy var authorLabel: UILabel = makeAuthorLabel()
     private lazy var previewLabel: UILabel = makePreviewLabel()
-    private lazy var previewImageView: NablaViews.URLImageView = makePreviewImageView()
+    private lazy var previewImageView: NablaViews.ImageView = makePreviewImageView()
 
     private func setUp() {
         let hStack = UIStackView(arrangedSubviews: [iconImageViewContainer, previewLabel])
@@ -96,8 +97,8 @@ class ConversationMessagePreviewView: UIView {
         return label
     }
 
-    private func makePreviewImageView() -> NablaViews.URLImageView {
-        let imageView = NablaViews.URLImageView()
+    private func makePreviewImageView() -> NablaViews.ImageView {
+        let imageView = NablaViews.ImageView()
         imageView.nabla.constraintToSize(.init(width: 32, height: 32))
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 8

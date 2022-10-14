@@ -24,16 +24,17 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     
     // MARK: Public
     
-    func configure(with viewModel: MediaComposerItemViewModel) {
+    func configure(with viewModel: MediaComposerItemViewModel) throws {
         switch viewModel.type {
         case .image:
-            imageView.url = viewModel.url
+            // Here
+            imageView.imageSource = viewModel.mediaSource
             setVisibleView(imageView)
         case .pdf:
             imageView.image = NablaTheme.Conversation.mediaComposerDocumentIcon
             setVisibleView(imageView)
         case .video:
-            playerView.url = viewModel.url
+            try playerView.setMediaSource(mediaSource: viewModel.mediaSource)
             setVisibleView(playerView)
         }
     }
@@ -48,12 +49,12 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
-        imageView.url = nil
+        imageView.imageSource = nil
     }
     
     // MARK: - Private
     
-    private lazy var imageView: NablaViews.URLImageView = makeImageView()
+    private lazy var imageView: NablaViews.ImageView = makeImageView()
     private lazy var playerView: UIPlayerView = makePlayerView()
     private lazy var deleteButton: UIButton = makeDeleteButton()
     private lazy var deleteButtonContainerView: UIView = makeDeleteButtonContainerView()
@@ -76,8 +77,8 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
         clipsToBounds = true
     }
     
-    private func makeImageView() -> NablaViews.URLImageView {
-        let view = NablaViews.URLImageView()
+    private func makeImageView() -> NablaViews.ImageView {
+        let view = NablaViews.ImageView()
         view.tintColor = NablaTheme.Conversation.mediaComposerDocumentTintColor
         view.contentMode = .scaleAspectFill
         view.isUserInteractionEnabled = true

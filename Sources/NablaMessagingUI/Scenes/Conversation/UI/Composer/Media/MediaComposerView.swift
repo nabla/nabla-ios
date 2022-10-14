@@ -1,11 +1,27 @@
+import NablaCore
 import NablaMessagingCore
 import UIKit
 
 class MediaComposerView: UIView, MediaComposerViewContract {
+    struct Dependencies {
+        let logger: Logger
+    }
+
+    let logger: Logger
     var presenter: MediaComposerPresenter?
     
     // MARK: Lifecycle
-    
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    init(dependencies: Dependencies) {
+        logger = dependencies.logger
+        super.init(frame: .zero)
+    }
+
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         setUp()
@@ -65,7 +81,15 @@ extension MediaComposerView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.nabla.dequeueReusableCell(ofClass: MediaComposerCollectionViewCell.self, for: indexPath)
-        cell.configure(with: viewModels[indexPath.item])
+        let viewModel = viewModels[indexPath.item]
+        do {
+            try cell.configure(with: viewModel)
+        } catch {
+            logger.error(
+                message: "Could not configure the media in the composer (indexPath: \(indexPath.item), type: \(viewModel.type)",
+                extra: ["reason": InternalError(underlyingError: error)]
+            )
+        }
         cell.delegate = self
         return cell
     }

@@ -10,12 +10,12 @@ public extension NablaViews {
         
         // MARK: - Private
         
-        private lazy var imageAvatarView: URLImageView = createImageAvatarView()
+        private lazy var imageAvatarView: ImageView = createImageAvatarView()
         private lazy var initialsAvatarView: UILabel = createInitialsAvatarView()
         private lazy var deletedAvatarView: UIView = createDeletedAvatarView()
         
-        private func createImageAvatarView() -> URLImageView {
-            let view = URLImageView()
+        private func createImageAvatarView() -> ImageView {
+            let view = ImageView()
             view.backgroundColor = .clear
             view.contentMode = .scaleAspectFill
             return view
@@ -72,7 +72,7 @@ public extension NablaViews {
         
         private func configure(with viewModel: AvatarViewModel) {
             if let url = URL(string: viewModel.url) {
-                imageAvatarView.url = url
+                imageAvatarView.imageSource = .url(url)
                 setVisible(subview: imageAvatarView)
             } else if let text = viewModel.text {
                 initialsAvatarView.text = text

@@ -1,20 +1,35 @@
 import UIKit
 
 public extension NablaViews {
-    class URLImageView: UIImageView {
+    class ImageView: UIImageView {
         // MARK: - Public
+
+        public var imageSource: MediaSource? {
+            didSet {
+                switch imageSource {
+                case .none:
+                    image = nil
+                    url = nil
+                case let .some(.data(data)):
+                    url = nil
+                    image = UIImage(data: data)
+                case let .url(url):
+                    self.url = url
+                }
+            }
+        }
         
-        public var url: URL? {
+        // MARK: - Private
+
+        private static var cache: URLCache = URLCacheImplementation()
+
+        private var url: URL? {
             didSet {
                 guard url != oldValue else { return }
                 update(url: url)
             }
         }
-        
-        public static var cache: URLCache = URLCacheImplementation()
-        
-        // MARK: - Private
-        
+
         private func update(url: URL?) {
             image = nil
             

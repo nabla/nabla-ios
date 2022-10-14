@@ -17,9 +17,10 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
     func configure(with viewModel: ReplyToComposerViewModel) {
         authorLabel.text = viewModel.sender
         previewLabel.text = viewModel.preview
-        previewImageView.url = viewModel.imagePreviewURL
+        // Here
+        previewImageView.imageSource = viewModel.imagePreview
 
-        previewImageView.isHidden = viewModel.imagePreviewURL == nil
+        previewImageView.isHidden = viewModel.imagePreview == nil
     }
 
     // MARK: - Public
@@ -35,7 +36,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
     private lazy var border: UIView = makeBorder()
     private lazy var authorLabel: UILabel = makeAuthorLabel()
     private lazy var previewLabel: UILabel = makePreviewLabel()
-    private lazy var previewImageView: NablaViews.URLImageView = makePreviewImageView()
+    private lazy var previewImageView: NablaViews.ImageView = makePreviewImageView()
     private lazy var closeButton: UIButton = makeCloseButton()
 
     private func setUp() {
@@ -79,8 +80,8 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
         return label
     }
 
-    private func makePreviewImageView() -> NablaViews.URLImageView {
-        let imageView = NablaViews.URLImageView()
+    private func makePreviewImageView() -> NablaViews.ImageView {
+        let imageView = NablaViews.ImageView()
         imageView.nabla.constraintToSize(.init(width: 40, height: 40))
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true

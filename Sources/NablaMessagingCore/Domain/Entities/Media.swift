@@ -14,8 +14,13 @@ public struct MediaSize: Hashable {
     }
 }
 
+public enum MediaContent: Hashable {
+    case url(URL)
+    case data(Data)
+}
+
 public protocol Media {
     var fileName: String { get }
-    var fileUrl: URL { get }
+    var content: MediaContent { get }
     var mimeType: MimeType { get }
 }

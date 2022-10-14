@@ -21,7 +21,8 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
     // MARK: - ImageDetailViewContract
     
     func configure(with viewModel: ImageDetailViewModel) {
-        imageView.url = viewModel.url
+        // Here
+        imageView.imageSource = viewModel.imageSource
         fileName = viewModel.fileName
     }
     
@@ -29,7 +30,7 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
     
     private var fileName: String?
     
-    private lazy var imageView: NablaViews.URLImageView = makeImageView()
+    private lazy var imageView: NablaViews.ImageView = makeImageView()
     
     private func setUp() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -42,8 +43,8 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
         imageView.nabla.pinToSuperView()
     }
     
-    private func makeImageView() -> NablaViews.URLImageView {
-        let imageView = NablaViews.URLImageView(frame: .zero)
+    private func makeImageView() -> NablaViews.ImageView {
+        let imageView = NablaViews.ImageView(frame: .zero)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

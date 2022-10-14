@@ -66,6 +66,13 @@ class MessagePresenter<
         delegate?.didTapMessagePreview(withId: id)
     }
 
+    func didFailContentConfig(underlyingError: Error) {
+        logger.error(
+            message: "Cell content configuration failed (itemType: \(type(of: item)))",
+            extra: ["reason": InternalError(underlyingError: underlyingError)]
+        )
+    }
+
     // MARK: - Internal
     
     func attachView(_ view: MessageCellContract) {

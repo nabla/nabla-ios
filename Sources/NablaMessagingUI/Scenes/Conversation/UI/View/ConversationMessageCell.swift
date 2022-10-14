@@ -18,6 +18,7 @@ protocol ConversationMessagePresenter: Presenter {
     func userDidTapContent()
     func userDidSwipeSuccessfully()
     func userDidTapMessagePreview()
+    func didFailContentConfig(underlyingError: Error)
 }
 
 final class ConversationMessageCell<ContentView: MessageContentView>: UICollectionViewCell, ConversationMessageCellContract, Reusable, UIGestureRecognizerDelegate {
@@ -38,7 +39,11 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         configure(with: viewModel.sender)
         configure(with: viewModel.footer)
         configure(with: viewModel.replyTo, sender: viewModel.sender)
-        content.configure(with: viewModel.content)
+        do {
+            try content.configure(with: viewModel.content)
+        } catch {
+            presenter?.didFailContentConfig(underlyingError: error)
+        }
         content.configure(sender: viewModel.sender)
         menuElements = viewModel.menuElements
     }

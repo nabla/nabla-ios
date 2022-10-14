@@ -25,7 +25,8 @@ final class ImageMessageContentView: UIView, MessageContentView {
     // MARK: - MessageContentView
     
     func configure(with viewModel: ImageMessageContentViewModel) {
-        imageView.url = viewModel.url
+        // Here
+        imageView.imageSource = viewModel.imageSource
 
         nabla.constraintToSize(idealSize(contentSize: viewModel.originalImageSize))
     }
@@ -33,13 +34,13 @@ final class ImageMessageContentView: UIView, MessageContentView {
     func configure(sender _: ConversationMessageSender) {}
     
     func prepareForReuse() {
-        imageView.url = nil
+        imageView.imageSource = nil
     }
     
     // MARK: - Private
     
-    private lazy var imageView: NablaViews.URLImageView = {
-        let imageView = NablaViews.URLImageView()
+    private lazy var imageView: NablaViews.ImageView = {
+        let imageView = NablaViews.ImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()

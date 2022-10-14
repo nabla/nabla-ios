@@ -25,7 +25,7 @@ class DocumentMessageContentView: UIView, MessageContentView {
     // MARK: - MessageContentView
     
     func configure(with viewModel: DocumentMessageContentViewModel) {
-        imageView.url = viewModel.url
+        imageView.imageSource = viewModel.url.map(MediaSource.url)
         label.text = viewModel.filename
     }
     
@@ -41,13 +41,13 @@ class DocumentMessageContentView: UIView, MessageContentView {
     }
     
     func prepareForReuse() {
-        imageView.url = nil
+        imageView.imageSource = nil
         label.text = nil
     }
     
     // MARK: - Private
     
-    private lazy var imageView: NablaViews.URLImageView = createImageView()
+    private lazy var imageView: NablaViews.ImageView = createImageView()
     private lazy var label: UILabel = createLabel()
     private lazy var iconImageView: UIImageView = createIconImageView()
     private lazy var bottomView: UIView = createBottomView()
@@ -65,8 +65,8 @@ class DocumentMessageContentView: UIView, MessageContentView {
         hstack.nabla.pinToSuperView()
     }
     
-    private func createImageView() -> NablaViews.URLImageView {
-        let imageView = NablaViews.URLImageView(frame: .zero)
+    private func createImageView() -> NablaViews.ImageView {
+        let imageView = NablaViews.ImageView(frame: .zero)
         imageView.nabla.constraintToSize(Constants.imageSize)
         imageView.image = CoreAssets.Assets.documentPlaceholder.image
         imageView.contentMode = .scaleAspectFill

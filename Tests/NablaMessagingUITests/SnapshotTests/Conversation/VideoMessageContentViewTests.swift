@@ -20,7 +20,7 @@ final class VideoMessageContentViewTests: XCTestCase {
                 sender: .me(isContiguous: false),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stubVideo, originalVideoSize: .init(width: 700, height: 394)),
+                content: .init(originalVideoSize: .init(width: 700, height: 394), videoSource: .url(.stubVideo)),
                 menuElements: []
             )
         )
@@ -36,7 +36,7 @@ final class VideoMessageContentViewTests: XCTestCase {
                 sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stubVideo, originalVideoSize: .init(width: 700, height: 394)),
+                content: .init(originalVideoSize: .init(width: 700, height: 394), videoSource: .url(.stubVideo)),
                 menuElements: []
             )
         )
