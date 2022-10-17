@@ -25,7 +25,11 @@ class DocumentMessageContentView: UIView, MessageContentView {
     // MARK: - MessageContentView
     
     func configure(with viewModel: DocumentMessageContentViewModel) {
-        imageView.imageSource = viewModel.url.map(MediaSource.url)
+        if let mediaSource = viewModel.url.map(MediaSource.url) {
+            imageView.imageSource = mediaSource
+        } else {
+            imageView.image = CoreAssets.Assets.documentPlaceholder.image
+        }
         label.text = viewModel.filename
     }
     
@@ -68,7 +72,6 @@ class DocumentMessageContentView: UIView, MessageContentView {
     private func createImageView() -> NablaViews.ImageView {
         let imageView = NablaViews.ImageView(frame: .zero)
         imageView.nabla.constraintToSize(Constants.imageSize)
-        imageView.image = CoreAssets.Assets.documentPlaceholder.image
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
