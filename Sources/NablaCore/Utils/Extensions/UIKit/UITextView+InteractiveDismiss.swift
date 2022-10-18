@@ -22,6 +22,8 @@ public extension NablaExtension where Base: UITextView {
         
         override func willMove(toSuperview newSuperview: UIView?) {
             super.willMove(toSuperview: newSuperview)
+            
+            observer?.invalidate()
             observer = newSuperview?.observe(\.center) { [weak self] superview, _ in
                 self?.frameChangeHandler(container: superview)
             }
@@ -30,10 +32,10 @@ public extension NablaExtension where Base: UITextView {
         private func frameChangeHandler(container: UIView) {
             let userInfo: [AnyHashable: Any] = [
                 UIResponder.keyboardFrameEndUserInfoKey: NSValue(cgRect: container.frame),
-                UIResponder.keyboardAnimationDurationUserInfoKey: CGFloat(0),
+                UIResponder.keyboardAnimationDurationUserInfoKey: NSNumber(floatLiteral: 0),
             ]
             NotificationCenter.default.post(
-                name: UIResponder.keyboardWillChangeFrameNotification,
+                name: UIResponder.nabla.keyboardWillChangeFrameNotification,
                 object: nil,
                 userInfo: userInfo
             )

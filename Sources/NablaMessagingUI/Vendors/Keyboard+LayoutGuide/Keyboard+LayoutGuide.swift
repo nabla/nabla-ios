@@ -1,11 +1,3 @@
-//
-//  Keyboard+LayoutGuide.swift
-//  KeyboardLayoutGuide
-//
-//  Created by Sacha DSO on 14/11/2017.
-//  Copyright © 2017 freshos. All rights reserved.
-//
-
 import UIKit
 
 internal class Keyboard {
@@ -54,7 +46,7 @@ open class KeyboardLayoutGuide: UILayoutGuide {
     private var bottomConstraint: NSLayoutConstraint?
 
     @available(*, unavailable)
-    public required init?(coder aDecoder: NSCoder) {
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -65,6 +57,13 @@ open class KeyboardLayoutGuide: UILayoutGuide {
             self,
             selector: #selector(adjustKeyboard(_:)),
             name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
+        // Observe nabla.keyboardWillChangeFrame notifications
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(adjustKeyboard(_:)),
+            name: UIResponder.nabla.keyboardWillChangeFrameNotification,
             object: nil
         )
         // Observe keyboardWillHide notifications
@@ -120,11 +119,10 @@ open class KeyboardLayoutGuide: UILayoutGuide {
         }
     }
 
-    private func animate(_ note: Notification) {
+    private func animate(_: Notification) {
         if
-            let owningView = self.owningView,
-            isVisible(view: owningView)
-        {
+            let owningView = owningView,
+            isVisible(view: owningView) {
             self.owningView?.layoutIfNeeded()
         } else {
             UIView.performWithoutAnimation {
@@ -137,8 +135,8 @@ open class KeyboardLayoutGuide: UILayoutGuide {
 // MARK: - Helpers
 
 extension UILayoutGuide {
-    internal var heightConstraint: NSLayoutConstraint? {
-        return owningView?.constraints.first {
+    var heightConstraint: NSLayoutConstraint? {
+        owningView?.constraints.first {
             $0.firstItem as? UILayoutGuide == self && $0.firstAttribute == .height
         }
     }
@@ -160,8 +158,8 @@ extension Notification {
         }
     }
 
-    var animationDuration: CGFloat? {
-        return self.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? CGFloat
+    var animationDuration: TimeInterval? {
+        (userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
     }
 }
 
