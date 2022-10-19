@@ -346,6 +346,12 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?(`url`, `token`)
     }
 
+    open func didTapScanDocumentButton() {
+        addInvocation(.m_didTapScanDocumentButton)
+		let perform = methodPerformValue(.m_didTapScanDocumentButton) as? () -> Void
+		perform?()
+    }
+
     @available(iOS 14, *)
 	open func didTapDocumentLibraryButton() {
         addInvocation(.m_didTapDocumentLibraryButton)
@@ -385,6 +391,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         case m_didTapCameraButton
         case m_didTapPhotoLibraryButton
         case m_didTapJoinVideoCall__url_urltoken_token(Parameter<String>, Parameter<String>)
+        case m_didTapScanDocumentButton
         case m_didTapDocumentLibraryButton
         case m_didReachEndOfConversation
         case m_retry
@@ -450,6 +457,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsToken, rhs: rhsToken, with: matcher), lhsToken, rhsToken, "token"))
 				return Matcher.ComparisonResult(results)
 
+            case (.m_didTapScanDocumentButton, .m_didTapScanDocumentButton): return .match
+
             case (.m_didTapDocumentLibraryButton, .m_didTapDocumentLibraryButton): return .match
 
             case (.m_didReachEndOfConversation, .m_didReachEndOfConversation): return .match
@@ -475,6 +484,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case .m_didTapCameraButton: return 0
             case .m_didTapPhotoLibraryButton: return 0
             case let .m_didTapJoinVideoCall__url_urltoken_token(p0, p1): return p0.intValue + p1.intValue
+            case .m_didTapScanDocumentButton: return 0
             case .m_didTapDocumentLibraryButton: return 0
             case .m_didReachEndOfConversation: return 0
             case .m_retry: return 0
@@ -495,6 +505,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
             case .m_didTapCameraButton: return ".didTapCameraButton()"
             case .m_didTapPhotoLibraryButton: return ".didTapPhotoLibraryButton()"
             case .m_didTapJoinVideoCall__url_urltoken_token: return ".didTapJoinVideoCall(url:token:)"
+            case .m_didTapScanDocumentButton: return ".didTapScanDocumentButton()"
             case .m_didTapDocumentLibraryButton: return ".didTapDocumentLibraryButton()"
             case .m_didReachEndOfConversation: return ".didReachEndOfConversation()"
             case .m_retry: return ".retry()"
@@ -529,6 +540,7 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         public static func didTapCameraButton() -> Verify { return Verify(method: .m_didTapCameraButton)}
         public static func didTapPhotoLibraryButton() -> Verify { return Verify(method: .m_didTapPhotoLibraryButton)}
         public static func didTapJoinVideoCall(url: Parameter<String>, token: Parameter<String>) -> Verify { return Verify(method: .m_didTapJoinVideoCall__url_urltoken_token(`url`, `token`))}
+        public static func didTapScanDocumentButton() -> Verify { return Verify(method: .m_didTapScanDocumentButton)}
         @available(iOS 14, *)
 		public static func didTapDocumentLibraryButton() -> Verify { return Verify(method: .m_didTapDocumentLibraryButton)}
         public static func didReachEndOfConversation() -> Verify { return Verify(method: .m_didReachEndOfConversation)}
@@ -575,6 +587,9 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         }
         public static func didTapJoinVideoCall(url: Parameter<String>, token: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
             return Perform(method: .m_didTapJoinVideoCall__url_urltoken_token(`url`, `token`), performs: perform)
+        }
+        public static func didTapScanDocumentButton(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_didTapScanDocumentButton, performs: perform)
         }
         @available(iOS 14, *)
 		public static func didTapDocumentLibraryButton(perform: @escaping () -> Void) -> Perform {

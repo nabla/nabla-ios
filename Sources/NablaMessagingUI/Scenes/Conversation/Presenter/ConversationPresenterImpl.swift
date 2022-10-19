@@ -79,6 +79,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
         view?.scrollToItem(withId: id)
     }
     
+    func didTapScanDocumentButton() {
+        view?.displayDocumentScanner()
+    }
+    
     @available(iOS 14, *)
     func didTapDocumentLibraryButton() {
         view?.displayDocumentPicker()

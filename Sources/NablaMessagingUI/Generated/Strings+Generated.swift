@@ -24,6 +24,12 @@ internal enum L10n {
   internal static let conversationAddMediaDocument = L10n.tr("Localizable", "conversation_add_media_document")
   /// Photo & video Library
   internal static let conversationAddMediaLibrary = L10n.tr("Localizable", "conversation_add_media_library")
+  /// Scan document
+  internal static let conversationAddMediaScanDocument = L10n.tr("Localizable", "conversation_add_media_scan_document")
+  /// %@ scan.pdf
+  internal static func conversationAddMediaScanDocumentFilename(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "conversation_add_media_scan_document_filename", String(describing: p1))
+  }
   /// Type your message
   internal static let conversationComposerPlaceholder = L10n.tr("Localizable", "conversation_composer_placeholder")
   /// %@ at %@

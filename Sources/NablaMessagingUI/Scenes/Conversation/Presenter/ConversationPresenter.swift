@@ -15,6 +15,7 @@ protocol ConversationPresenter: Presenter {
     func didTapCameraButton()
     func didTapPhotoLibraryButton()
     func didTapJoinVideoCall(url: String, token: String)
+    func didTapScanDocumentButton()
     @available(iOS 14, *) func didTapDocumentLibraryButton()
     func didReachEndOfConversation()
     func retry()

@@ -123,6 +123,7 @@ let package = Package(
             name: "NablaMessagingUI",
             dependencies: [
                 .target(name: "NablaMessagingCore"),
+                .target(name: "NablaDocumentScanner"),
             ],
             exclude: [
                 "build.sh",
@@ -189,5 +190,6 @@ let package = Package(
                 .process("SnapshotTests/AppointmentConfirmation/__Snapshots__"),
             ]
         ),
+        .target(name: "NablaDocumentScanner"),
     ]
 )

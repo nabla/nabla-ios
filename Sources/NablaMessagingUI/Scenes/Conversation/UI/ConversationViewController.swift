@@ -1,6 +1,8 @@
 import Foundation
 import NablaCore
+import NablaDocumentScanner
 import NablaMessagingCore
+import PDFKit
 
 import UIKit
 
@@ -84,6 +86,10 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let presenter = DocumentDetailPresenterImpl(viewContract: viewController, document: document)
         viewController.presenter = presenter
         show(viewController, sender: nil)
+    }
+    
+    func displayDocumentScanner() {
+        present(DocumentScannerModule.makeViewController(delegate: self), animated: true)
     }
 
     @available(iOS 14, *)
@@ -306,12 +312,18 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             cameraAction.isEnabled = !UIDevice.current.nabla.isSimulator
             alert.addAction(cameraAction)
         }
-        
         alert.addAction(
             UIAlertAction(title: L10n.conversationAddMediaLibrary, style: .default, handler: { [weak self] _ in
                 self?.presenter?.didTapPhotoLibraryButton()
             })
         )
+        if Bundle.main.nabla.hasCameraUsageDescription {
+            let scanDosumentAction = UIAlertAction(title: L10n.conversationAddMediaScanDocument, style: .default, handler: { [weak self] _ in
+                self?.presenter?.didTapScanDocumentButton()
+            })
+            scanDosumentAction.isEnabled = !UIDevice.current.nabla.isSimulator
+            alert.addAction(scanDosumentAction)
+        }
         if #available(iOS 14, *) {
             alert.addAction(
                 UIAlertAction(title: L10n.conversationAddMediaDocument, style: .default, handler: { [weak self] _ in
@@ -410,6 +422,19 @@ extension ConversationViewController: DocumentPickerDelegate {
     func documentPicker(_ pickerViewController: UIViewController, didSelect media: Media) {
         composerView.add([media])
         pickerViewController.dismiss(animated: true)
+    }
+}
+
+extension ConversationViewController: DocumentScannerDelegate {
+    func documentScanner(_ scannerViewController: UIViewController, didScan pdfDocument: PDFDocument) {
+        defer {
+            scannerViewController.dismiss(animated: true)
+        }
+        guard let documentFile = ScannedPDFDocumentTransformer.transform(pdfDocument) else {
+            logger.error(message: "Could not transform the scanned pdf document.")
+            return
+        }
+        composerView.add([documentFile])
     }
 }
 

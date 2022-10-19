@@ -21,6 +21,8 @@
 "conversation_message_unknown_sender" = "Utilisateur inconnu";
 "conversation_add_media_camera" = "Appareil photo";
 "conversation_add_media_library" = "Bibliothèque photo & vidéo";
+"conversation_add_media_scan_document" = "Scanner un document";
+"conversation_add_media_scan_document_filename" = "Scan du %@.pdf";
 "conversation_add_media_document" = "Document";
 "conversation_add_media_cancel" = "Annuler";
 "conversation_load_error_label" = "Une erreur est survenue lors du chargement des messages, veuillez réessayer.";

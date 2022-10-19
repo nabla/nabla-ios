@@ -39,14 +39,14 @@ public struct ContentDisposition {
         var parameters: [Parameter] = [
             Parameter(
                 attribute: "name",
-                value: name.percentEncodedString
+                value: name.value
             ),
         ]
 
         if let filename = filename {
             parameters.append(Parameter(
                 attribute: "filename",
-                value: filename.percentEncodedString
+                value: filename.value
             ))
         }
 

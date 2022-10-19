@@ -28,6 +28,7 @@ protocol ConversationViewContract: AnyObject {
     func configure(withState state: ConversationViewState)
     func emptyComposer()
     func displayMediaPicker(source: ImagePickerSource)
+    func displayDocumentScanner()
     @available(iOS 14, *) func displayDocumentPicker()
     func displayImageDetail(for media: ImageFile)
     func displayDocumentDetail(for media: DocumentFile)

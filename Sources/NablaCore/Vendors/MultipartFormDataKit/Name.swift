@@ -1,21 +1,15 @@
 import Foundation
 
 public struct Name {
-    public let percentEncodedString: String
+    public let value: String
 
-    public init(asPercentEncoded percentEncodedString: String) {
-        self.percentEncodedString = percentEncodedString
+    public init(value: String) {
+        self.value = value
     }
 
     public static func create(by filename: String) -> ValidationResult<Name, FailureReason> {
-        guard let percentEncodedString = filename.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-            return .invalid(because: .cannotPercentEncode(debugInfo: filename))
-        }
-
-        return .valid(Name(asPercentEncoded: percentEncodedString))
+        .valid(Name(value: filename))
     }
 
-    public enum FailureReason: Error {
-        case cannotPercentEncode(debugInfo: String)
-    }
+    public enum FailureReason {}
 }
