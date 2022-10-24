@@ -80,6 +80,7 @@ class TextView: UIView {
     
     private lazy var textView: UITextView = {
         let view = UITextView().nabla.withInteractiveDismiss()
+        view.backgroundColor = .clear
         view.delegate = self
         return view
     }()

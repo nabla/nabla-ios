@@ -31,6 +31,7 @@ public enum NablaTheme {
     public static var title3 = UIFont.nabla.regular(19)
     public static var headline = UIFont.nabla.semiBold(18)
     public static var body = UIFont.nabla.regular(16)
+    public static var bodyMedium = UIFont.nabla.medium(16)
     public static var bodyItalic = UIFont.nabla.italic(16)
     public static var callout = UIFont.nabla.regular(15)
     public static var subhead = UIFont.nabla.regular(14)
@@ -107,11 +108,11 @@ public enum NablaTheme {
         /// Color used for the borders of a deleted message. Default set to NablaTheme.secondaryTextColor
         public static var deletedMessageBorderColor = NablaTheme.secondaryTextColor
         /// Background color of a deleted message. Default set to NablaTheme.backgroundColor
-        public static var deletedMessagebackgroundColor = NablaTheme.backgroundColor
+        public static var deletedMessageBackgroundColor = NablaTheme.backgroundColor
         /// Color used to display the "Deleted message" text. Default set to NablaTheme.secondaryTextColor
-        public static var deletedMessagetextColor = NablaTheme.secondaryTextColor
+        public static var deletedMessageTextColor = NablaTheme.secondaryTextColor
         /// Font used to display the "Deleted message" text. Default set to NablaTheme.bodyItalic
-        public static var deletedMessagefont = NablaTheme.bodyItalic
+        public static var deletedMessageFont = NablaTheme.bodyItalic
 
         /// UIImage used as the document symbol for a document message in the conversation screen. Default set to UIImage(systemName: "doc")
         public static var documentMessageIcon = UIImage(systemName: "doc")
@@ -131,6 +132,11 @@ public enum NablaTheme {
         public static var audioMessagePatientTitleColor = NablaTheme.alternateTextColor
         /// Color used to display the duration of a voice message sent by a provider in the conversation screen. Default set to NablaTheme.primaryTextColor
         public static var audioMessageProviderTitleColor = NablaTheme.primaryTextColor
+
+        /// Corner radius used for video call action requests in the conversation screen. Default set to CGFloat = 16
+        public static var videoCallActionRequestCornerRadius: CGFloat = 16
+        /// Color used for video call action requests action button background in the conversation screen. Default set to NablaTheme.backgroundColor
+        public static var videoCallActionRequestActionButtonBackgroundColor = NablaTheme.backgroundColor
 
         /// Color used to display the separator on the left of a replied message, sent by a patient. Default set to NablaTheme.lightAlternateTextColor
         public static var replyToPatientSeparatorColor = NablaTheme.lightAlternateTextColor
@@ -191,7 +197,7 @@ public enum NablaTheme {
         /// Color of the background of the media composer in the conversation screen. Default set to NablaTheme.secondaryBackgroundColor
         public static var mediaComposerBackgroundColor = NablaTheme.secondaryBackgroundColor
         /// Color used to tint the delete button for a media to send in the composer in the conversation screen. Default set to NablaTheme.primaryTextColor
-        public static var mediaCompsoerDeleteButtonTintColor = NablaTheme.primaryTextColor
+        public static var mediaComposerDeleteButtonTintColor = NablaTheme.primaryTextColor
         /// Background color of the delete button for a media to send in the composer in the conversation screen. Default set to NablaTheme.backgroundColor
         public static var mediaComposerDeleteButtonBackgroundColor = NablaTheme.backgroundColor
 

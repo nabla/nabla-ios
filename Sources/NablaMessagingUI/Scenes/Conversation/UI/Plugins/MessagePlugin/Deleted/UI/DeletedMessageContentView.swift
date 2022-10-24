@@ -26,7 +26,7 @@ final class DeletedMessageContentView: UIView, MessageContentView {
         label.text = viewModel.text
     }
     
-    func configure(sender: ConversationMessageSender) {}
+    func configure(sender _: ConversationMessageSender) {}
     
     func prepareForReuse() {
         label.text = nil
@@ -38,14 +38,14 @@ final class DeletedMessageContentView: UIView, MessageContentView {
         let label = UILabel()
         label.numberOfLines = 0
         label.backgroundColor = .clear
-        label.textColor = NablaTheme.Conversation.deletedMessagetextColor
-        label.font = NablaTheme.Conversation.deletedMessagefont
+        label.textColor = NablaTheme.Conversation.deletedMessageTextColor
+        label.font = NablaTheme.Conversation.deletedMessageFont
         return label
     }()
     
     private lazy var borderedContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = NablaTheme.Conversation.deletedMessagebackgroundColor
+        view.backgroundColor = NablaTheme.Conversation.deletedMessageBackgroundColor
         view.layer.borderColor = NablaTheme.Conversation.deletedMessageBorderColor.cgColor
         view.layer.borderWidth = 0.5
         view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius

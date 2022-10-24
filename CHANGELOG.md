@@ -8,7 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added missing NablaTheme properties to customize the video calls action requests in MessagingUI.
+
 ### Changed
+ 
+- Updated the cell layout for ended video calls action requests in MessagingUI.
 
 ### Fixed
 

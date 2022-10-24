@@ -93,7 +93,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     private func makeDeleteButton() -> UIButton {
         let button = UIButton()
         button.setImage(NablaTheme.Conversation.mediaComposerDeleteButtonIcon, for: .normal)
-        button.tintColor = NablaTheme.Conversation.mediaCompsoerDeleteButtonTintColor
+        button.tintColor = NablaTheme.Conversation.mediaComposerDeleteButtonTintColor
         button.addTarget(self, action: #selector(deleteButtonSelected), for: .touchUpInside)
         return button
     }
