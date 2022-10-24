@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the option to scan a document in conversation screen.
 - Added missing NablaTheme properties to customize the video calls action requests in MessagingUI.
 
 ### Changed
