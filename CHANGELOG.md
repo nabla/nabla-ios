@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
 - Updated the cell layout for ended video calls action requests in MessagingUI.
 
+- Improved the appearance of the "send message" button.
+
 ### Fixed
 
 

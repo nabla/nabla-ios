@@ -2,7 +2,7 @@ import XCTest
 
 extension XCUIApplication {
     var sendButton: XCUIElement {
-        buttons["send"]
+        buttons["composerSendButton"]
     }
 
     func createAndNavigateToTheNewConversation() {

@@ -161,14 +161,19 @@ final class ComposerView: UIView {
     }()
     
     private lazy var sendButton: UIButton = {
-        let sendButton = UIButton()
-        sendButton.setImage(NablaTheme.Conversation.sendIcon, for: .normal)
-        sendButton.setImage(NablaTheme.Conversation.sendIconDisabled, for: .disabled)
-        sendButton.nabla.constraintWidth(Constants.controlsSize)
-        sendButton.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
-        sendButton.isEnabled = false
-        sendButton.tintColor = NablaTheme.Conversation.composerButtonTintColor
-        return sendButton
+        let view = SendButton()
+        view.setImage(NablaTheme.Conversation.sendIcon, for: .normal)
+        view.setImage(NablaTheme.Conversation.sendIconDisabled, for: .disabled)
+        view.setTintColor(NablaTheme.Conversation.composerButtonHighlightedTintColor, for: .normal)
+        view.setTintColor(NablaTheme.Conversation.composerButtonTintColor, for: .disabled)
+        view.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        view.isEnabled = false
+        view.nabla.constraintWidth(36)
+        NSLayoutConstraint.activate([
+            view.heightAnchor.constraint(equalTo: view.widthAnchor).nabla.with(priority: .fittingSizeLevel),
+        ])
+        view.accessibilityIdentifier = "composerSendButton"
+        return view
     }()
     
     private lazy var addMediaButton: UIButton = {

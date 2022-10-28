@@ -132,14 +132,16 @@ public extension NablaTheme {
         public static var composerBackgroundColor = NablaTheme.backgroundColor
         /// Color used to tint buttons in the composer in the conversation screen. Default set to NablaTheme.accessoryColor
         public static var composerButtonTintColor = NablaTheme.accessoryColor
+        /// Color used to tint highlighted buttons in the composer in the conversation screen. Default set to NablaTheme.primaryColor
+        public static var composerButtonHighlightedTintColor = NablaTheme.primaryColor
         /// Color used to display the text entered by the user in the composer in the conversation screen. Default set to NablaTheme.primaryTextColor
         public static var composerTextColor = NablaTheme.primaryTextColor
         /// Font used for the text entered by the user in the composer in the conversation screen. Default set to NablaTheme.body
         public static var composerFont = NablaTheme.body
-        /// UIImage used for the send button in the composer in the conversation screen. Default set to UIImage(systemName: "paperplane.fill")
-        public static var sendIcon = UIImage(systemName: "paperplane.fill")
-        /// UIImage used for the send button disabled state in the composer in the conversation screen. Default set to UIImage(systemName: "paperplane")
-        public static var sendIconDisabled = UIImage(systemName: "paperplane")
+        /// UIImage used for the send button in the composer in the conversation screen. Default set to UIImage(systemName: "arrow.up.circle.fill")
+        public static var sendIcon = UIImage(systemName: "arrow.up.circle.fill")
+        /// UIImage used for the send button disabled state in the composer in the conversation screen. Default set to UIImage(systemName: "arrow.up.circle.fill")
+        public static var sendIconDisabled = UIImage(systemName: "arrow.up.circle.fill")
         /// UIImage used for the add media button in the composer in the conversation screen. Default set to UIImage(systemName: "plus")
         public static var addMediaIcon = UIImage(systemName: "plus")
         /// UIImage used for the record audio button in the composer in the conversation screen. Default set to UIImage(systemName: "mic")
