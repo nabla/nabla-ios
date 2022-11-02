@@ -38,9 +38,12 @@ class DocumentMessageContentView: UIView, MessageContentView {
         case .me:
             label.textColor = NablaTheme.Conversation.documentMessagePatientTitleColor
             iconImageView.tintColor = NablaTheme.Conversation.documentMessagePatientTitleColor
-        case .them:
+        case .provider:
             label.textColor = NablaTheme.Conversation.documentMessageProviderTitleColor
             iconImageView.tintColor = NablaTheme.Conversation.documentMessageProviderTitleColor
+        case .other:
+            label.textColor = NablaTheme.Conversation.documentMessageOtherTitleColor
+            iconImageView.tintColor = NablaTheme.Conversation.documentMessageOtherTitleColor
         }
     }
     

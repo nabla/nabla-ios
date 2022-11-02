@@ -16,9 +16,17 @@ public extension String {
     static var initialsStub: Self {
         "JD"
     }
+    
+    static var otherInitialsStub: Self {
+        "PB"
+    }
 
     static var authorStub: Self {
         "Dr John Doe"
+    }
+    
+    static var otherAuthorStub: Self {
+        "Patient B"
     }
 
     static var loremStub: Self {

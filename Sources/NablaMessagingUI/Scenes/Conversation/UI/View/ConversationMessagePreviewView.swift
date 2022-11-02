@@ -28,11 +28,16 @@ class ConversationMessagePreviewView: UIView {
             iconImageView.tintColor = NablaTheme.Conversation.replyToPatientPreviewColor
             authorLabel.textColor = NablaTheme.Conversation.replyToPatientPreviewColor
             previewLabel.textColor = NablaTheme.Conversation.replyToPatientPreviewColor
-        case .them:
+        case .provider:
             separatorView.backgroundColor = NablaTheme.Conversation.replyToProviderSeparatorColor
             iconImageView.tintColor = NablaTheme.Conversation.replyToProviderPreviewColor
             authorLabel.textColor = NablaTheme.Conversation.replyToProviderPreviewColor
             previewLabel.textColor = NablaTheme.Conversation.replyToProviderPreviewColor
+        case .other:
+            separatorView.backgroundColor = NablaTheme.Conversation.replyToOtherSeparatorColor
+            iconImageView.tintColor = NablaTheme.Conversation.replyToOtherSeparatorColor
+            authorLabel.textColor = NablaTheme.Conversation.replyToOtherSeparatorColor
+            previewLabel.textColor = NablaTheme.Conversation.replyToOtherSeparatorColor
         }
     }
 

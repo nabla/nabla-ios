@@ -7,7 +7,7 @@ struct ConversationMessageSenderTransformer {
     static func transform(item: ConversationViewMessageItem) -> ConversationMessageSender {
         switch item.sender {
         case let .provider(provider):
-            return .them(.init(
+            return .provider(.init(
                 author: ProviderNameComponentsFormatter(style: .abbreviatedNameWithPrefix).string(from: .init(provider)),
                 avatar: .init(
                     url: provider.avatarURL,
@@ -16,25 +16,25 @@ struct ConversationMessageSenderTransformer {
                 isContiguous: item.isContiguous
             ))
         case let .system(system):
-            return .them(.init(
+            return .other(.init(
                 author: system.name,
                 avatar: .init(url: system.avatarURL, text: system.initials),
                 isContiguous: item.isContiguous
             ))
         case .deleted:
-            return .them(.init(
+            return .other(.init(
                 author: L10n.conversationMessageDeletedSender,
                 avatar: .init(url: nil, text: nil),
                 isContiguous: item.isContiguous
             ))
         case .unknown:
-            return .them(.init(
+            return .other(.init(
                 author: L10n.conversationMessageUnknownSender,
                 avatar: .init(url: nil, text: nil),
                 isContiguous: item.isContiguous
             ))
         case let .patient(patient):
-            return .them(.init(
+            return .other(.init(
                 author: PatientNameComponentsFormatter(style: .fullName).string(from: .init(patient)),
                 avatar: .init(
                     url: nil,

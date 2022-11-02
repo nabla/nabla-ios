@@ -28,12 +28,28 @@ final class DocumentMessageContentViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
     }
 
-    func testDocumentConfigureThem() {
+    func testDocumentConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(url: .stubImage, filename: .filenameStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+    }
+    
+    func testDocumentConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(url: .stubImage, filename: .filenameStub),

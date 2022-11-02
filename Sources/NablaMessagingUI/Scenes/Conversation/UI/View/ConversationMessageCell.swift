@@ -113,13 +113,24 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
             } else {
                 setVisibleViews([topSpacer, leftSpacer])
             }
-        case let .them(themViewModel):
+        case let .provider(providerViewModel):
             footerLabel.textAlignment = .left
-            avatarView.avatar = themViewModel.avatar
-            authorLabel.text = themViewModel.author
+            avatarView.avatar = providerViewModel.avatar
+            authorLabel.text = providerViewModel.author
             container.backgroundColor = NablaTheme.Conversation.messageProviderBackgroundColor
 
-            if themViewModel.isContiguous {
+            if providerViewModel.isContiguous {
+                setVisibleViews([rightSpacer])
+            } else {
+                setVisibleViews([topSpacer, header, avatarView, rightSpacer])
+            }
+        case let .other(otherViewModel):
+            footerLabel.textAlignment = .left
+            avatarView.avatar = otherViewModel.avatar
+            authorLabel.text = otherViewModel.author
+            container.backgroundColor = NablaTheme.Conversation.messageOtherBackgroundColor
+
+            if otherViewModel.isContiguous {
                 setVisibleViews([rightSpacer])
             } else {
                 setVisibleViews([topSpacer, header, avatarView, rightSpacer])

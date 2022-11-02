@@ -49,6 +49,8 @@ public extension NablaTheme {
         public static var messagePatientBackgroundColor = NablaTheme.primaryColor
         /// Background color used for all provider messages in the conversation screen. Default set to NablaTheme.secondaryBackgroundColor
         public static var messageProviderBackgroundColor = NablaTheme.secondaryBackgroundColor
+        /// Background color used for all other user messages in the conversation screen (may be system or another user). Default set to NablaTheme.secondaryBackgroundColor
+        public static var messageOtherBackgroundColor = NablaTheme.secondaryBackgroundColor
         /// Color used to display the author for all provider messages in the conversation screen. Default set to NablaTheme.secondaryTextColor
         public static var messageAuthorLabelColor = NablaTheme.secondaryTextColor
 
@@ -61,6 +63,8 @@ public extension NablaTheme {
         public static var textMessagePatientTextColor = NablaTheme.alternateTextColor
         /// Color used for text messages send by a provider. Default set to NablaTheme.primaryTextColor
         public static var textMessageProviderTextColor = NablaTheme.primaryTextColor
+        /// Color used for text messages send by another user (may be system or another patient). Default set to NablaTheme.primaryTextColor
+        public static var textMessageOtherTextColor = NablaTheme.primaryTextColor
         /// Font used for text messages. Default set to NablaTheme.body
         public static var textMessageFont = NablaTheme.body
 
@@ -81,6 +85,8 @@ public extension NablaTheme {
         public static var documentMessagePatientTitleColor = NablaTheme.alternateTextColor
         /// Color used to display the name of the document for a document message sent by a provider in the conversation screen. Default set to NablaTheme.primaryTextColor
         public static var documentMessageProviderTitleColor = NablaTheme.primaryTextColor
+        /// Color used to display the name of the document for a document message sent by another user in the conversation screen (may be system or another patient). Default set to NablaTheme.primaryTextColor
+        public static var documentMessageOtherTitleColor = NablaTheme.primaryTextColor
 
         /// Color used to display the dots of the typing indicator when a provider is typing a message in the conversation screen. Default set to NablaTheme.primaryColor
         public static var typingIndicatorDotColor = NablaTheme.primaryColor
@@ -91,6 +97,8 @@ public extension NablaTheme {
         public static var audioMessagePatientTitleColor = NablaTheme.alternateTextColor
         /// Color used to display the duration of a voice message sent by a provider in the conversation screen. Default set to NablaTheme.primaryTextColor
         public static var audioMessageProviderTitleColor = NablaTheme.primaryTextColor
+        /// Color used to display the duration of a voice message sent by another user  in the conversation screen (might be system or another patient). Default set to NablaTheme.primaryTextColor
+        public static var audioMessageOtherTitleColor = NablaTheme.primaryTextColor
 
         /// Corner radius used for video call action requests in the conversation screen. Default set to CGFloat = 16
         public static var videoCallActionRequestCornerRadius: CGFloat = 16
@@ -105,6 +113,8 @@ public extension NablaTheme {
         public static var replyToProviderSeparatorColor = NablaTheme.darkAlternateTextColor
         /// Color used to display the preview of the message replied to by a provider. Default set to NablaTheme.lightAlternateTextColor
         public static var replyToProviderPreviewColor = NablaTheme.darkAlternateTextColor
+        /// Color used to display the preview of the message replied to by another user (may be system or another patient). Default set to NablaTheme.lightAlternateTextColor
+        public static var replyToOtherSeparatorColor = NablaTheme.darkAlternateTextColor
         /// Font used to display the author of the message replied to. Default set to subhead.body
         public static var replyToAuthorFont = NablaTheme.subhead
         /// Font used to display the preview of the message replied to. Default set to subhead.body

@@ -28,12 +28,28 @@ final class VideoMessageContentViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
     }
 
-    func testVideoConfigureThem() {
+    func testVideoConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(originalVideoSize: .init(width: 700, height: 394), videoSource: .url(.stubVideo)),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+    }
+    
+    func testVideoConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(originalVideoSize: .init(width: 700, height: 394), videoSource: .url(.stubVideo)),

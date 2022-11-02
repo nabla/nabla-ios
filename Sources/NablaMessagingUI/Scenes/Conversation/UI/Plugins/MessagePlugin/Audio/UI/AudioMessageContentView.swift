@@ -46,9 +46,12 @@ final class AudioMessageContentView: UIView, MessageContentView {
         case .me:
             durationLabel.textColor = NablaTheme.Conversation.audioMessagePatientTitleColor
             playPauseButton.tintColor = NablaTheme.Conversation.audioMessagePatientTitleColor
-        case .them:
+        case .provider:
             durationLabel.textColor = NablaTheme.Conversation.audioMessageProviderTitleColor
             playPauseButton.tintColor = NablaTheme.Conversation.audioMessageProviderTitleColor
+        case .other:
+            durationLabel.textColor = NablaTheme.Conversation.audioMessageOtherTitleColor
+            playPauseButton.tintColor = NablaTheme.Conversation.audioMessageOtherTitleColor
         }
     }
     

@@ -2,7 +2,13 @@ import Foundation
 import NablaCore
 import UIKit
 
-struct ConversationMessageThemViewModel {
+struct ConversationMessageProviderViewModel {
+    let author: String
+    let avatar: AvatarViewModel
+    let isContiguous: Bool
+}
+
+struct ConversationMessageOtherViewModel {
     let author: String
     let avatar: AvatarViewModel
     let isContiguous: Bool
@@ -15,7 +21,8 @@ struct ConversationMessageFooterViewModel {
 
 enum ConversationMessageSender {
     case me(isContiguous: Bool)
-    case them(ConversationMessageThemViewModel)
+    case provider(ConversationMessageProviderViewModel)
+    case other(ConversationMessageOtherViewModel)
 }
 
 struct ConversationMessageViewModel<ContentViewModel> {

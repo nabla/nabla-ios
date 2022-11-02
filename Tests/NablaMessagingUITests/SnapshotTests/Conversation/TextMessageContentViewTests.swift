@@ -45,12 +45,12 @@ final class TextMessageContentViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: size))
     }
 
-    func testTextConfigureThemContiguous() {
+    func testTextConfigureProviderContiguous() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: .loremStub),
@@ -61,12 +61,44 @@ final class TextMessageContentViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: size))
     }
 
-    func testTextConfigureThem() {
+    func testTextConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: true)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: true)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .loremStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: size))
+    }
+    
+    func testTextConfigureOtherContiguous() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .loremStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: size))
+    }
+
+    func testTextConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: true)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: .loremStub),
@@ -93,12 +125,28 @@ final class TextMessageContentViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
     }
     
-    func testTextConfigureThemWithLink() {
+    func testTextConfigureProviderWithLink() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithLinksStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+    }
+    
+    func testTextConfigureOtherWithLink() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: .textWithLinksStub),
@@ -125,15 +173,37 @@ final class TextMessageContentViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
     }
     
-    func testTextConfigureThemWithPhoneNumber() {
+    func testTextConfigureProviderWithPhoneNumber() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(
+                sender: .provider(
                     .init(
                         author: .authorStub,
                         avatar: .init(url: nil, text: .initialsStub),
+                        isContiguous: false
+                    )
+                ),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithPhoneNumbersStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+    }
+    
+    func testTextConfigureOtherWithPhoneNumber() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(
+                    .init(
+                        author: .otherAuthorStub,
+                        avatar: .init(url: nil, text: .otherInitialsStub),
                         isContiguous: false
                     )
                 ),

@@ -13,12 +13,28 @@ final class TypingIndicatorContentViewTests: XCTestCase {
         sut = .init(frame: .zero)
     }
 
-    func testTypingIndicatorConfigureThem() {
+    func testTypingIndicatorConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: (),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: size))
+    }
+    
+    func testTypingIndicatorConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: (),
@@ -29,12 +45,28 @@ final class TypingIndicatorContentViewTests: XCTestCase {
         assertSnapshot(matching: sut, as: .image(size: size))
     }
 
-    func testTypingIndicatorConfigureThemContiguous() {
+    func testTypingIndicatorConfigureProviderContiguous() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: true)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: true)),
+                footer: nil,
+                replyTo: nil,
+                content: (),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshot(matching: sut, as: .image(size: size))
+    }
+    
+    func testTypingIndicatorConfigureOtherContiguous() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: true)),
                 footer: nil,
                 replyTo: nil,
                 content: (),

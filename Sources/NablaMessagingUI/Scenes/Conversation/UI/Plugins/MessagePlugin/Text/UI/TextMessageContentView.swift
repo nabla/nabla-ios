@@ -31,11 +31,18 @@ final class TextMessageContentView: UIView, MessageContentView {
                 .underlineColor: NablaTheme.Conversation.textMessagePatientTextColor,
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
             ]
-        case .them:
+        case .provider:
             textView.textColor = NablaTheme.Conversation.textMessageProviderTextColor
             textView.linkTextAttributes = [
                 .foregroundColor: NablaTheme.Conversation.textMessageProviderTextColor,
                 .underlineColor: NablaTheme.Conversation.textMessageProviderTextColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ]
+        case .other:
+            textView.textColor = NablaTheme.Conversation.textMessageOtherTextColor
+            textView.linkTextAttributes = [
+                .foregroundColor: NablaTheme.Conversation.textMessageOtherTextColor,
+                .underlineColor: NablaTheme.Conversation.textMessageOtherTextColor,
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
             ]
         }
