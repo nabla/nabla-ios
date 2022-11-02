@@ -5,12 +5,13 @@ public extension Provider {
     static func mock(
         prefix: String? = nil,
         firstName: String? = nil,
-        lastName: String? = nil
+        lastName: String? = nil,
+        avatarUrl: String? = nil
     ) -> Provider {
         providerCount += 1
         return Provider(
             id: .init(),
-            avatarURL: nil,
+            avatarURL: avatarUrl,
             prefix: prefix ?? "Prefix \(providerCount)",
             firstName: firstName ?? "FirstName \(providerCount)",
             lastName: lastName ?? "LastName \(providerCount)"

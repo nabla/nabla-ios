@@ -18,6 +18,7 @@ extension NablaMessagingClientProtocolMock {
                     lastMessagePreview: conversation.lastMessagePreview,
                     lastModified: conversation.lastModified,
                     patientUnreadMessageCount: conversation.patientUnreadMessageCount,
+                    pictureUrl: nil,
                     providers: [
                         .init(
                             provider: .init(id: .init(), avatarURL: nil, prefix: "Dr", firstName: "John", lastName: "Doe"),

@@ -26,9 +26,9 @@ import Foundation
      var queryDocument: String {
       var document: String = operationDefinition
       document.append("\n" + ConversationFragment.fragmentDefinition)
+      document.append("\n" + EphemeralUrlFragment.fragmentDefinition)
       document.append("\n" + ProviderInConversationFragment.fragmentDefinition)
       document.append("\n" + ProviderFragment.fragmentDefinition)
-      document.append("\n" + EphemeralUrlFragment.fragmentDefinition)
       return document
     }
 

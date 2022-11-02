@@ -14,7 +14,7 @@ struct LocalConversationItemTransformer {
             return TextMessageItem(
                 id: textMessageItem.clientId,
                 date: textMessageItem.date,
-                sender: .patient,
+                sender: .me,
                 sendingState: textMessageItem.sendingState,
                 replyTo: textMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage },
                 content: textMessageItem.content
@@ -23,7 +23,7 @@ struct LocalConversationItemTransformer {
             return DeletedMessageItem(
                 id: deletedMessageItem.clientId,
                 date: deletedMessageItem.date,
-                sender: .patient,
+                sender: .me,
                 sendingState: deletedMessageItem.sendingState,
                 replyTo: deletedMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage }
             )
@@ -32,7 +32,7 @@ struct LocalConversationItemTransformer {
             return ImageMessageItem(
                 id: imageMessageItem.clientId,
                 date: imageMessageItem.date,
-                sender: .patient,
+                sender: .me,
                 sendingState: imageMessageItem.sendingState,
                 replyTo: imageMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage },
                 content: imageMessageItem.content.media
@@ -42,7 +42,7 @@ struct LocalConversationItemTransformer {
             return DocumentMessageItem(
                 id: documentMessageItem.clientId,
                 date: documentMessageItem.date,
-                sender: .patient,
+                sender: .me,
                 sendingState: documentMessageItem.sendingState,
                 replyTo: documentMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage },
                 content: documentMessageItem.content.media
@@ -53,7 +53,7 @@ struct LocalConversationItemTransformer {
             return AudioMessageItem(
                 id: audioMessageItem.clientId,
                 date: audioMessageItem.date,
-                sender: .patient,
+                sender: .me,
                 sendingState: audioMessageItem.sendingState,
                 replyTo: audioMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage },
                 content: audioMessageItem.content.media
@@ -64,7 +64,7 @@ struct LocalConversationItemTransformer {
             return VideoMessageItem(
                 id: videoMessageItem.clientId,
                 date: videoMessageItem.date,
-                sender: .patient,
+                sender: .me,
                 sendingState: videoMessageItem.sendingState,
                 replyTo: videoMessageItem.replyToUuid.flatMap { existingItems[$0] as? ConversationMessage },
                 content: videoMessageItem.content.media

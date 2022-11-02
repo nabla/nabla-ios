@@ -18,7 +18,7 @@ struct TestEnvironment {
     let session: DVR.Session
     
     static func make(filePath: String = #filePath, function: String = #function) -> TestEnvironment {
-        let userId = "64cffe69-0746-46ea-979b-13f933958087"
+        let userId = "e84db0e2-6a7c-4ff3-b1cb-72afb6a4bc78"
         let session = makeMockSession(filePath: filePath, function: function)
         let networkConfiguration = NetworkConfiguration(session: session)
         
@@ -70,10 +70,10 @@ extension TestEnvironment: SessionTokenProvider {
     func provideTokens(forUserId _: String, completion: (AuthTokens?) -> Void) {
         completion(
             .init(
-                // Expires 19/03/2054
-                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY2MDY1NDE4MSwic2Vzc2lvbl91dWlkIjoiYTQzZWI4YjgtMzMyMS00NTk3LWIyNmUtYzVjZDZmODQ2YmQ4Iiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.8TPWc93epthhHRY7aUTzaaV0O6ynACx3O_zuIceeCQM",
-                // Expires 19/03/2054
-                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NGNmZmU2OS0wNzQ2LTQ2ZWEtOTc5Yi0xM2Y5MzM5NTgwODciLCJpc3MiOiJkZXYtcGF0aWVudCIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2Njg0Mjk4ODEsInNlc3Npb25fdXVpZCI6ImE0M2ViOGI4LTMzMjEtNDU5Ny1iMjZlLWM1Y2Q2Zjg0NmJkOCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.dpaqFygTHBKthnPJEFECHUChUZ9i8A3X0XzDOh_WJm8"
+                // Expires 04/08/2054
+                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjI2NjY3OTk0NDQsInNlc3Npb25fdXVpZCI6ImQyNDU0YWRkLTUzYmEtNGQ4OC1hNGI2LWU2MmNiYzQ1ZjMyNSIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.c95itI_iJNMHWputGyeH_LX5pjD7XUjkpOU7dgjHkwo",
+                // Expires 04/08/2054
+                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJSZWZyZXNoIiwiZXhwIjoyNjc0NTc1MTQ0LCJzZXNzaW9uX3V1aWQiOiJkMjQ1NGFkZC01M2JhLTRkODgtYTRiNi1lNjJjYmM0NWYzMjUiLCJvcmdhbml6YXRpb25TdHJpbmdJZCI6Im5hYmxhIn0.eGNP0iCR9n6gcltl-SLZdzb3fBq-hVPmNVt3V-CX7lY"
             )
         )
     }

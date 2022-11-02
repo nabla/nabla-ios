@@ -1,3 +1,5 @@
 fragment PatientFragment on Patient {
     id
+    isMe
+    displayName
 }

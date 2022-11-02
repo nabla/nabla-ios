@@ -1,7 +1,7 @@
 import NablaCore
 import UIKit
 
-final class TitleView: UIView {
+final class TitleView: UIControl {
     // MARK: - Internal
     
     var title: String? {
@@ -21,6 +21,8 @@ final class TitleView: UIView {
         get { avatarView.avatar }
         set { avatarView.avatar = newValue }
     }
+    
+    var onTap: (() -> Void)?
     
     override init(frame _: CGRect) {
         super.init(frame: .zero)
@@ -85,5 +87,24 @@ final class TitleView: UIView {
         hstack.spacing = 8
         addSubview(hstack)
         hstack.nabla.pinToSuperView()
+        hstack.isUserInteractionEnabled = false
+        
+        addTarget(self, action: #selector(tapHandler), for: .touchUpInside)
+    }
+    
+    // MARK: UIControl
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        alpha = 0.7
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        alpha = 1
+    }
+    
+    @objc private func tapHandler() {
+        onTap?()
     }
 }

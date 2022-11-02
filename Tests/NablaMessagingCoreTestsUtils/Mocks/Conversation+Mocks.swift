@@ -1,7 +1,11 @@
+import Foundation
 @testable import NablaMessagingCore
 
 public extension Conversation {
-    static func mock() -> Conversation {
+    static func mock(
+        pictureUrl: URL? = nil,
+        providers: [ProviderInConversation] = []
+    ) -> Conversation {
         conversationCount += 1
         return Conversation(
             id: .init(),
@@ -11,7 +15,8 @@ public extension Conversation {
             lastMessagePreview: "MessagePreview \(conversationCount)",
             lastModified: .init(timeIntervalSinceReferenceDate: 0),
             patientUnreadMessageCount: 0,
-            providers: []
+            pictureUrl: pictureUrl,
+            providers: providers
         )
     }
     

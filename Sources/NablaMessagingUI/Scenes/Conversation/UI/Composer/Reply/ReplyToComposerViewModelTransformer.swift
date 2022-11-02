@@ -23,7 +23,9 @@ private extension ConversationViewMessageItem {
             name = ProviderNameComponentsFormatter(style: .abbreviatedNameWithPrefix).string(from: .init(provider))
         case let .system(system):
             name = system.name
-        case .patient:
+        case let .patient(patient):
+            name = patient.displayName
+        case .me:
             name = L10n.conversationReplyToAuthorYou
         case .deleted:
             name = L10n.conversationReplyToAuthorDeletedProvider

@@ -251,8 +251,8 @@ final class RemoteConversationItemTransformer {
     private func transform(_ author: GQL.MessageAuthorFragment) -> ConversationMessageSender {
         if let provider = author.asProvider?.fragments.providerFragment {
             return .provider(RemoteConversationProviderTransformer.transform(provider: provider))
-        } else if author.asPatient != nil {
-            return .patient
+        } else if let patient = author.asPatient?.fragments.patientFragment {
+            return patient.isMe ? .me : .patient(RemotePatientTransformer.transform(patient))
         } else if let system = author.asSystem?.fragments.systemMessageFragment {
             return .system(RemoteConversationProviderTransformer.transform(system))
         } else if author.asDeletedProvider != nil {

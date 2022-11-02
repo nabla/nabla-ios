@@ -20,6 +20,7 @@ enum ConversationTransformer {
             lastMessagePreview: fragment.lastMessagePreview,
             lastModified: fragment.updatedAt,
             patientUnreadMessageCount: fragment.unreadMessageCount,
+            pictureUrl: URL(string: fragment.pictureUrl?.fragments.ephemeralUrlFragment.url),
             providers: transform(providers: fragment.providers)
         )
     }
@@ -33,6 +34,7 @@ enum ConversationTransformer {
             lastMessagePreview: nil,
             lastModified: conversation.creationDate,
             patientUnreadMessageCount: 0,
+            pictureUrl: nil,
             providers: []
         )
     }

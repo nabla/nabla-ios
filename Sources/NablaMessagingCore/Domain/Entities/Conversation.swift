@@ -8,5 +8,6 @@ public struct Conversation {
     public let lastMessagePreview: String?
     public let lastModified: Date
     public let patientUnreadMessageCount: Int
+    public let pictureUrl: URL?
     public let providers: [ProviderInConversation]
 }

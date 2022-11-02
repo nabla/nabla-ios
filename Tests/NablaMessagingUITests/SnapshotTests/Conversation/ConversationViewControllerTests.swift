@@ -16,7 +16,8 @@ final class ConversationViewControllerTests: XCTestCase {
             showComposer: true,
             client: NablaMessagingClientProtocolMock(),
             logger: LoggerMock(),
-            videoCallClient: nil
+            videoCallClient: nil,
+            delegate: nil
         )
         sut.presenter = ConversationPresenterMock()
     }
@@ -44,7 +45,8 @@ final class ConversationViewControllerTests: XCTestCase {
             showComposer: false,
             client: NablaMessagingClientProtocolMock(),
             logger: LoggerMock(),
-            videoCallClient: nil
+            videoCallClient: nil,
+            delegate: nil
         )
         sut.presenter = ConversationPresenterMock()
         // WHEN
@@ -77,7 +79,7 @@ final class ConversationViewControllerTests: XCTestCase {
             HasMoreIndicatorViewItem(),
             AudioMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, audio: .mock),
             TypingIndicatorViewItem(sender: .provider(provider)),
-            TextMessageViewItem(id: UUID(), date: Date(), sender: .patient, sendingState: .failed, replyTo: nil, text: .loremStub),
+            TextMessageViewItem(id: UUID(), date: Date(), sender: .me, sendingState: .failed, replyTo: nil, text: .loremStub),
             DateSeparatorViewItem(id: UUID(), date: Date(timeIntervalSince1970: 0)),
             DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mock),
             DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .sent, replyTo: nil),

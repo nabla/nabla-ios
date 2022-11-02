@@ -5,7 +5,8 @@ struct ConversationMessageSenderTransformer {
     // MARK: - Public
 
     static func transform(item: ConversationViewMessageItem) -> ConversationMessageSender {
-        switch item.sender { case let .provider(provider):
+        switch item.sender {
+        case let .provider(provider):
             return .them(.init(
                 author: ProviderNameComponentsFormatter(style: .abbreviatedNameWithPrefix).string(from: .init(provider)),
                 avatar: .init(
@@ -32,7 +33,16 @@ struct ConversationMessageSenderTransformer {
                 avatar: .init(url: nil, text: nil),
                 isContiguous: item.isContiguous
             ))
-        case .patient:
+        case let .patient(patient):
+            return .them(.init(
+                author: PatientNameComponentsFormatter(style: .fullName).string(from: .init(patient)),
+                avatar: .init(
+                    url: nil,
+                    text: PatientNameComponentsFormatter(style: .initials).string(from: .init(patient)).nabla.nilIfEmpty
+                ),
+                isContiguous: item.isContiguous
+            ))
+        case .me:
             return .me(isContiguous: item.isContiguous)
         }
     }

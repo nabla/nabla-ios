@@ -346,6 +346,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     ) -> Cancellable {
         if let localTextItem = localConversationItem as? LocalTextMessageItem {
             handler(.success(.text(localTextItem.content)))
+            return Success()
         } else if let localImageItem = localConversationItem as? LocalImageMessageItem {
             let media = localImageItem.content.media
             return fileUploadRemoteDataSource.upload(

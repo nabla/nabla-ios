@@ -32,7 +32,7 @@ extension NablaMessagingClientProtocolMock {
                         TextMessageItem(
                             id: textMessageId,
                             date: Date(),
-                            sender: .patient,
+                            sender: .me,
                             sendingState: .failed,
                             replyTo: nil,
                             content: textContent
@@ -51,7 +51,7 @@ extension NablaMessagingClientProtocolMock {
                         TextMessageItem(
                             id: textMessageId,
                             date: .init(),
-                            sender: .patient,
+                            sender: .me,
                             sendingState: .sent,
                             replyTo: nil,
                             content: textContent

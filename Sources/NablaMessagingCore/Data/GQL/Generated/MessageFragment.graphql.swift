@@ -133,8 +133,8 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
-       static func makePatient(id: GQL.UUID) -> Author {
-        return Author(unsafeResultMap: ["__typename": "Patient", "id": id])
+       static func makePatient(id: GQL.UUID, isMe: Bool, displayName: String) -> Author {
+        return Author(unsafeResultMap: ["__typename": "Patient", "id": id, "isMe": isMe, "displayName": displayName])
       }
 
        static func makeDeletedProvider(empty: EmptyObject) -> Author {

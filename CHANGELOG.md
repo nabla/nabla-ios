@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the option to scan a document in conversation screen.
 - Added missing NablaTheme properties to customize the video calls action requests in MessagingUI.
+- Introduced `ConversationViewControllerDelegate` to control taps on the conversation screen's title view.
 
 ### Changed
  
 - Updated the cell layout for ended video calls action requests in MessagingUI.
+- `ConversationMessageSender.patient` was renamed to `ConversationMessageSender.me`.
+- A new `ConversationMessageSender.patient(Patient)` was introduced for conversations with multiple patients.
 
 - Improved the appearance of the "send message" button.
 

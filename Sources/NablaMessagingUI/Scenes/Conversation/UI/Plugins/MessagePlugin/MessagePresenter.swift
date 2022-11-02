@@ -89,7 +89,7 @@ class MessagePresenter<
             )
             actions.append(replyAction)
         }
-        if item.sender == .patient, item.sendingState == .sent {
+        if item.sender == .me, item.sendingState == .sent {
             let deleteAction = UIAction(
                 title: L10n.conversationActionDeleteMessage,
                 image: UIImage(systemName: "trash"),

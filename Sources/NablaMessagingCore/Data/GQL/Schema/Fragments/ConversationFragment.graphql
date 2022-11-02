@@ -6,6 +6,9 @@ fragment ConversationFragment on Conversation {
     unreadMessageCount
     inboxPreviewTitle
     updatedAt
+    pictureUrl {
+        ...EphemeralUrlFragment
+    }
     providers {
         ...ProviderInConversationFragment
     }

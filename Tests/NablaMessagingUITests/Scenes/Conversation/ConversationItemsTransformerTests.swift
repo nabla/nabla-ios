@@ -54,8 +54,8 @@ final class ConversationItemsTransformerTests: XCTestCase {
         // GIVEN
         // WHEN
         let transformed = transform(items: [
-            TextMessageItem.mock(sender: .patient),
-            TextMessageItem.mock(sender: .patient),
+            TextMessageItem.mock(sender: .me),
+            TextMessageItem.mock(sender: .me),
         ])
         // THEN
         XCTRequireEqual(transformed.count, 3)
@@ -300,7 +300,7 @@ final class ConversationItemsTransformerTests: XCTestCase {
 
     func testSingleFocusedMessageDoesNotAddDateSeparator() throws {
         // GIVEN
-        let item1 = TextMessageItem.mock(dateOffset: 0, sender: .patient)
+        let item1 = TextMessageItem.mock(dateOffset: 0, sender: .me)
         // WHEN
         let transformed = transform(items: [item1], focusedTextItemId: item1.id)
         // THEN
@@ -312,8 +312,8 @@ final class ConversationItemsTransformerTests: XCTestCase {
     
     func testFocusedTextMessageNotContiguousAddsDateSeparator() throws {
         // GIVEN
-        let item1 = TextMessageItem.mock(dateOffset: 0, sender: .patient)
-        let item2 = TextMessageItem.mock(dateOffset: 1, sender: .patient)
+        let item1 = TextMessageItem.mock(dateOffset: 0, sender: .me)
+        let item2 = TextMessageItem.mock(dateOffset: 1, sender: .me)
         // WHEN
         let transformed = transform(items: [item1, item2], focusedTextItemId: item1.id)
         // THEN

@@ -8,6 +8,18 @@ public extension NablaViews {
             didSet { configure(with: avatar) }
         }
         
+        // MARK: Init
+        
+        override public init(frame: CGRect) {
+            super.init(frame: frame)
+            setUp()
+        }
+        
+        public required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            setUp()
+        }
+        
         // MARK: - Private
         
         private lazy var imageAvatarView: ImageView = createImageAvatarView()
@@ -23,7 +35,7 @@ public extension NablaViews {
         
         private func createInitialsAvatarView() -> UILabel {
             let view = UILabel()
-            view.backgroundColor = NablaTheme.Shared.avatarViewBackgroundColor
+            view.backgroundColor = .clear
             view.textAlignment = .center
             view.textColor = .white
             return view
@@ -31,7 +43,7 @@ public extension NablaViews {
         
         private func createDeletedAvatarView() -> UIView {
             let view = UIView()
-            view.backgroundColor = NablaTheme.Shared.avatarViewBackgroundColor
+            view.backgroundColor = .clear
             return view
         }
         
@@ -47,6 +59,8 @@ public extension NablaViews {
         }
         
         private func setUp() {
+            backgroundColor = NablaTheme.Shared.avatarViewBackgroundColor
+            
             addSubview(imageAvatarView)
             imageAvatarView.nabla.pinToSuperView()
             
@@ -59,14 +73,8 @@ public extension NablaViews {
 
         // MARK: Lifecycle
         
-        override public func didMoveToSuperview() {
-            super.didMoveToSuperview()
-            setUp()
-        }
-        
         override public func layoutSubviews() {
             super.layoutSubviews()
-            
             update()
         }
         

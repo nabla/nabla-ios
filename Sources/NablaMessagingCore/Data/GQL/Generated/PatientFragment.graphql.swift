@@ -13,6 +13,8 @@ import Foundation
       fragment PatientFragment on Patient {
         __typename
         id
+        isMe
+        displayName
       }
       """
 
@@ -22,6 +24,8 @@ import Foundation
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
         GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
+        GraphQLField("isMe", type: .nonNull(.scalar(Bool.self))),
+        GraphQLField("displayName", type: .nonNull(.scalar(String.self))),
       ]
     }
 
@@ -31,8 +35,8 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(id: GQL.UUID) {
-      self.init(unsafeResultMap: ["__typename": "Patient", "id": id])
+     init(id: GQL.UUID, isMe: Bool, displayName: String) {
+      self.init(unsafeResultMap: ["__typename": "Patient", "id": id, "isMe": isMe, "displayName": displayName])
     }
 
      var __typename: String {
@@ -50,6 +54,24 @@ import Foundation
       }
       set {
         resultMap.updateValue(newValue, forKey: "id")
+      }
+    }
+
+     var isMe: Bool {
+      get {
+        return resultMap["isMe"]! as! Bool
+      }
+      set {
+        resultMap.updateValue(newValue, forKey: "isMe")
+      }
+    }
+
+     var displayName: String {
+      get {
+        return resultMap["displayName"]! as! String
+      }
+      set {
+        resultMap.updateValue(newValue, forKey: "displayName")
       }
     }
   }

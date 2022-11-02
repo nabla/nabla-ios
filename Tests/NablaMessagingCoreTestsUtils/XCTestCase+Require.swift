@@ -1,7 +1,7 @@
 import XCTest
 
 public extension XCTestCase {
-    func XCTRequire<T>(_ value: Any, toBe expectedType: T.Type, file: StaticString = #filePath, line: UInt = #line) -> T {
+    func XCTRequire<T>(_ value: Any?, toBe expectedType: T.Type, file: StaticString = #filePath, line: UInt = #line) -> T {
         let backup = continueAfterFailure
         continueAfterFailure = false
         defer { continueAfterFailure = backup }

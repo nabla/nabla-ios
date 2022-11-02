@@ -19,6 +19,10 @@ import Foundation
         unreadMessageCount
         inboxPreviewTitle
         updatedAt
+        pictureUrl {
+          __typename
+          ...EphemeralUrlFragment
+        }
         providers {
           __typename
           ...ProviderInConversationFragment
@@ -38,6 +42,7 @@ import Foundation
         GraphQLField("unreadMessageCount", type: .nonNull(.scalar(Int.self))),
         GraphQLField("inboxPreviewTitle", type: .nonNull(.scalar(String.self))),
         GraphQLField("updatedAt", type: .nonNull(.scalar(GQL.DateTime.self))),
+        GraphQLField("pictureUrl", type: .object(PictureUrl.selections)),
         GraphQLField("providers", type: .nonNull(.list(.nonNull(.object(Provider.selections))))),
       ]
     }
@@ -48,8 +53,8 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(id: GQL.UUID, title: String? = nil, subtitle: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, providers: [Provider]) {
-      self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "subtitle": subtitle, "lastMessagePreview": lastMessagePreview, "unreadMessageCount": unreadMessageCount, "inboxPreviewTitle": inboxPreviewTitle, "updatedAt": updatedAt, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }])
+     init(id: GQL.UUID, title: String? = nil, subtitle: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, pictureUrl: PictureUrl? = nil, providers: [Provider]) {
+      self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "subtitle": subtitle, "lastMessagePreview": lastMessagePreview, "unreadMessageCount": unreadMessageCount, "inboxPreviewTitle": inboxPreviewTitle, "updatedAt": updatedAt, "pictureUrl": pictureUrl.flatMap { (value: PictureUrl) -> ResultMap in value.resultMap }, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }])
     }
 
      var __typename: String {
@@ -124,12 +129,77 @@ import Foundation
       }
     }
 
+     var pictureUrl: PictureUrl? {
+      get {
+        return (resultMap["pictureUrl"] as? ResultMap).flatMap { PictureUrl(unsafeResultMap: $0) }
+      }
+      set {
+        resultMap.updateValue(newValue?.resultMap, forKey: "pictureUrl")
+      }
+    }
+
      var providers: [Provider] {
       get {
         return (resultMap["providers"] as! [ResultMap]).map { (value: ResultMap) -> Provider in Provider(unsafeResultMap: value) }
       }
       set {
         resultMap.updateValue(newValue.map { (value: Provider) -> ResultMap in value.resultMap }, forKey: "providers")
+      }
+    }
+
+     struct PictureUrl: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["EphemeralUrl"]
+
+       static var selections: [GraphQLSelection] {
+        return [
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLFragmentSpread(EphemeralUrlFragment.self),
+        ]
+      }
+
+       private(set) var resultMap: ResultMap
+
+       init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
+      }
+
+       init(expiresAt: GQL.DateTime, url: String) {
+        self.init(unsafeResultMap: ["__typename": "EphemeralUrl", "expiresAt": expiresAt, "url": url])
+      }
+
+       var __typename: String {
+        get {
+          return resultMap["__typename"]! as! String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+       var fragments: Fragments {
+        get {
+          return Fragments(unsafeResultMap: resultMap)
+        }
+        set {
+          resultMap += newValue.resultMap
+        }
+      }
+
+       struct Fragments {
+         private(set) var resultMap: ResultMap
+
+         init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+         var ephemeralUrlFragment: EphemeralUrlFragment {
+          get {
+            return EphemeralUrlFragment(unsafeResultMap: resultMap)
+          }
+          set {
+            resultMap += newValue.resultMap
+          }
+        }
       }
     }
 

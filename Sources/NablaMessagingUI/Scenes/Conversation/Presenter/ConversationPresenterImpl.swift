@@ -153,7 +153,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     func didTapTextItem(withId id: UUID) {
-        guard case .patient = (conversationItems?.items.first(where: { $0.id == id }) as? TextMessageItem)?.sender else {
+        guard case .me = (conversationItems?.items.first(where: { $0.id == id }) as? TextMessageItem)?.sender else {
             return
         }
         if id == focusedPatientTextItemId {

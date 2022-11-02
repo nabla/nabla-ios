@@ -38,14 +38,16 @@ public class NablaMessagingViewFactory {
   
     public func createConversationViewController(
         _ conversation: Conversation,
-        showComposer: Bool = true
+        showComposer: Bool = true,
+        delegate: ConversationViewControllerDelegate? = nil
     ) -> UIViewController {
         let viewController = ConversationViewController.create(
             conversationId: conversation.id,
             showComposer: showComposer,
             client: client,
             logger: logger,
-            videoCallClient: videoCallClient
+            videoCallClient: videoCallClient,
+            delegate: delegate
         )
         viewController.presenter = ConversationPresenterImpl(
             logger: logger,
@@ -58,14 +60,16 @@ public class NablaMessagingViewFactory {
     
     public func createConversationViewController(
         _ conversationId: UUID,
-        showComposer: Bool = true
+        showComposer: Bool = true,
+        delegate: ConversationViewControllerDelegate? = nil
     ) -> UIViewController {
         let viewController = ConversationViewController.create(
             conversationId: conversationId,
             showComposer: showComposer,
             client: client,
             logger: logger,
-            videoCallClient: videoCallClient
+            videoCallClient: videoCallClient,
+            delegate: delegate
         )
         viewController.presenter = ConversationPresenterImpl(
             logger: logger,

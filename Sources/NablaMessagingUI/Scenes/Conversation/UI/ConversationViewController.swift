@@ -3,22 +3,25 @@ import NablaCore
 import NablaDocumentScanner
 import NablaMessagingCore
 import PDFKit
-
 import UIKit
 
 final class ConversationViewController: UIViewController, ConversationViewContract {
     // MARK: - Init
+    
+    weak var delegate: ConversationViewControllerDelegate?
 
     init(
         showComposer: Bool,
         logger: Logger,
         videoCallClient: VideoCallClient?,
-        providers: [ConversationCellProvider]
+        providers: [ConversationCellProvider],
+        delegate: ConversationViewControllerDelegate?
     ) {
         self.showComposer = showComposer
         self.logger = logger
         self.providers = providers
         self.videoCallClient = videoCallClient
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         navigationItem.titleView = navigationItem.titleView ?? titleView
         navigationItem.largeTitleDisplayMode = .never
@@ -165,7 +168,13 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private lazy var imagePickerModule = ImagePickerModule(delegate: self)
     
     private func makeTitleView() -> TitleView {
-        TitleView(frame: .zero)
+        let view = TitleView(frame: .zero)
+        view.isEnabled = delegate?.conversationViewControllerShouldEnableTapOnTitleView(self) ?? false
+        view.onTap = { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.conversationViewControllerDidTapTitleView(self)
+        }
+        return view
     }
     
     private func makeComposerView() -> ComposerView {

@@ -13,7 +13,9 @@ struct ConversationMessagePreviewViewModelTransformer {
 
         let author: String
         switch item.sender {
-        case .patient:
+        case let .patient(patient):
+            author = patient.displayName
+        case .me:
             author = L10n.conversationReplyToAuthorYou
         case let .provider(provider):
             author = ProviderNameComponentsFormatter(style: .abbreviatedNameWithPrefix).string(from: .init(provider))

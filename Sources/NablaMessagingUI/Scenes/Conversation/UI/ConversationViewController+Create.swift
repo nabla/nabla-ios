@@ -8,7 +8,8 @@ extension ConversationViewController {
         showComposer: Bool,
         client: NablaMessagingClientProtocol,
         logger: Logger,
-        videoCallClient: VideoCallClient?
+        videoCallClient: VideoCallClient?,
+        delegate: ConversationViewControllerDelegate?
     ) -> Self {
         var providers: [ConversationCellProvider] = [
             DateSeparatorCellProvider(),
@@ -36,7 +37,8 @@ extension ConversationViewController {
             showComposer: showComposer,
             logger: logger,
             videoCallClient: videoCallClient,
-            providers: providers
+            providers: providers,
+            delegate: delegate
         )
     }
 }

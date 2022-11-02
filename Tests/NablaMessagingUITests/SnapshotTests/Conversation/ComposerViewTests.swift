@@ -65,7 +65,7 @@ final class ComposerViewTests: XCTestCase {
         sut.replyToMessage = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: nil,
             text: .loremStub
@@ -81,7 +81,7 @@ final class ComposerViewTests: XCTestCase {
         sut.replyToMessage = ImageMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: nil,
             image: .mock
@@ -97,7 +97,7 @@ final class ComposerViewTests: XCTestCase {
         sut.replyToMessage = DocumentMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: nil,
             document: .mock
@@ -113,7 +113,7 @@ final class ComposerViewTests: XCTestCase {
         sut.replyToMessage = AudioMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: nil,
             audio: .mock
@@ -129,7 +129,7 @@ final class ComposerViewTests: XCTestCase {
         sut.replyToMessage = VideoMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: nil,
             video: .mock

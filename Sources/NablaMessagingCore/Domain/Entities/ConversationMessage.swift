@@ -7,7 +7,8 @@ public protocol ConversationMessage: ConversationItem {
 }
 
 public enum ConversationMessageSender: Hashable {
-    case patient
+    case me
+    case patient(Patient)
     case provider(Provider)
     case system(SystemProvider)
     case deleted

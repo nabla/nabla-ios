@@ -50,8 +50,8 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     static func makePatient(id: GQL.UUID) -> MessageAuthorFragment {
-      return MessageAuthorFragment(unsafeResultMap: ["__typename": "Patient", "id": id])
+     static func makePatient(id: GQL.UUID, isMe: Bool, displayName: String) -> MessageAuthorFragment {
+      return MessageAuthorFragment(unsafeResultMap: ["__typename": "Patient", "id": id, "isMe": isMe, "displayName": displayName])
     }
 
      static func makeDeletedProvider(empty: EmptyObject) -> MessageAuthorFragment {
@@ -159,8 +159,8 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
-       init(id: GQL.UUID) {
-        self.init(unsafeResultMap: ["__typename": "Patient", "id": id])
+       init(id: GQL.UUID, isMe: Bool, displayName: String) {
+        self.init(unsafeResultMap: ["__typename": "Patient", "id": id, "isMe": isMe, "displayName": displayName])
       }
 
        var __typename: String {

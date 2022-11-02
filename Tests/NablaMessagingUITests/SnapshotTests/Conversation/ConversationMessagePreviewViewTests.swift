@@ -21,12 +21,12 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: TextMessageViewItem(
                 id: UUID(),
                 date: Date(),
-                sender: .patient,
+                sender: .me,
                 sendingState: .sent,
                 replyTo: nil,
                 text: .loremStub
@@ -43,12 +43,12 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: ImageMessageViewItem(
                 id: UUID(),
                 date: Date(),
-                sender: .patient,
+                sender: .me,
                 sendingState: .sent,
                 replyTo: nil,
                 image: .mock
@@ -65,12 +65,12 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: VideoMessageViewItem(
                 id: UUID(),
                 date: Date(),
-                sender: .patient,
+                sender: .me,
                 sendingState: .sent,
                 replyTo: nil,
                 video: .mock
@@ -87,12 +87,12 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: DocumentMessageViewItem(
                 id: UUID(),
                 date: Date(),
-                sender: .patient,
+                sender: .me,
                 sendingState: .sent,
                 replyTo: nil,
                 document: .mock
@@ -109,12 +109,12 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: AudioMessageViewItem(
                 id: UUID(),
                 date: Date(),
-                sender: .patient,
+                sender: .me,
                 sendingState: .sent,
                 replyTo: nil,
                 audio: .mock
@@ -131,12 +131,12 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: DeletedMessageViewItem(
                 id: UUID(),
                 date: Date(),
-                sender: .patient,
+                sender: .me,
                 sendingState: .sent,
                 replyTo: nil
             ),
@@ -152,7 +152,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: TextMessageViewItem(
                 id: UUID(),
@@ -177,7 +177,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: ImageMessageViewItem(
                 id: UUID(),
@@ -202,7 +202,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: DocumentMessageViewItem(
                 id: UUID(),
@@ -227,7 +227,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: AudioMessageViewItem(
                 id: UUID(),
@@ -252,7 +252,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: DeletedMessageViewItem(
                 id: UUID(),
@@ -276,7 +276,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         let item = TextMessageViewItem(
             id: UUID(),
             date: Date(),
-            sender: .patient,
+            sender: .me,
             sendingState: .sent,
             replyTo: VideoMessageViewItem(
                 id: UUID(),

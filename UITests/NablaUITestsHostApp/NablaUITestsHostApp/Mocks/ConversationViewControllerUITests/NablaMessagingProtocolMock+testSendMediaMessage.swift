@@ -27,7 +27,7 @@ extension NablaMessagingClientProtocolMock {
                         ImageMessageItem(
                             id: .init(),
                             date: .init(),
-                            sender: .patient,
+                            sender: .me,
                             sendingState: .sent,
                             replyTo: nil,
                             content: ImageFile(
