@@ -9,10 +9,6 @@ enum ConversationItemsTransformer {
     ) -> [ConversationViewItem] {
         var viewItems = [ConversationViewItem]()
 
-        if conversationItems.hasMore {
-            viewItems.append(HasMoreIndicatorViewItem())
-        }
-
         let contentItems = conversationItems.items.compactMap(transform)
         viewItems.append(contentsOf: contentItems)
         
@@ -25,6 +21,9 @@ enum ConversationItemsTransformer {
 
         groupByDateAndSender(&viewItems)
         focusOnTextItemIfNeeded(&viewItems, focusedTextItemId: focusedTextItemId)
+        if conversationItems.hasMore {
+            viewItems.append(HasMoreIndicatorViewItem())
+        }
         return viewItems
     }
 

@@ -283,16 +283,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
     
     private static func transform(conversation: Conversation) -> ConversationViewModel {
-        let provider = conversation.providers.first?.provider
-        return ConversationViewModel(
+        ConversationViewModel(
             title: conversation.title ?? conversation.inboxPreviewTitle,
             subtitle: conversation.subtitle,
-            avatar: AvatarViewModel(
-                url: provider?.avatarURL,
-                text: provider.flatMap {
-                    ProviderNameComponentsFormatter(style: .initials).string(from: .init($0)).nabla.nilIfEmpty
-                }
-            )
+            avatar: AvatarViewModelTransformer.avatar(for: conversation)
         )
     }
     

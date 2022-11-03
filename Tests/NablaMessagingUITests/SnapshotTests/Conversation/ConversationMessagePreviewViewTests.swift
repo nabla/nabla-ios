@@ -7,13 +7,14 @@ import XCTest
 // swiftlint:disable force_unwrapping
 
 final class ConversationMessagePreviewViewTests: XCTestCase {
-    private let size = CGSize(width: 320, height: 70)
+    private let size = CGSize(width: 200, height: 42)
     private let provider = Provider.mock(prefix: "Dr", firstName: "John", lastName: "Doe")
     private var sut: ConversationMessagePreviewView!
 
     override func setUp() {
         super.setUp()
-        sut = .init(frame: .zero)
+        sut = ConversationMessagePreviewView()
+        sut.nabla.constraintToSize(size)
     }
 
     func testConfigureReplyToTextMe() {

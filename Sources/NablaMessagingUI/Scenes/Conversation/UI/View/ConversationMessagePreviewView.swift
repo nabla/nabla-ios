@@ -4,9 +4,14 @@ import UIKit
 class ConversationMessagePreviewView: UIView {
     // MARK: - Lifecycle
 
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    init() {
+        super.init(frame: .zero)
         setUp()
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - Public

@@ -101,30 +101,33 @@ public extension NablaExtension where Base: UIView {
         guard let superview = base.superview else { return }
         constraintToCenter(in: superview, insets: insets)
     }
-    
-    func constraintToSize(_ size: CGSize) {
-        constraintHeight(size.height)
-        constraintWidth(size.width)
+
+    @discardableResult
+    func constraintToSize(_ size: CGSize)
+        -> (widthConstraint: NSLayoutConstraint, heightConstraint: NSLayoutConstraint) {
+        (constraintWidth(size.width), constraintHeight(size.height))
     }
     
     func constraintToSize(_ size: CGFloat) {
         constraintToSize(CGSize(width: size, height: size))
     }
-    
-    func constraintHeight(_ height: CGFloat, relation: Relation = .equal) {
+
+    @discardableResult
+    func constraintHeight(_ height: CGFloat, relation: Relation = .equal) -> NSLayoutConstraint {
         prepareForAutoLayout()
         
-        NSLayoutConstraint.activate([
-            base.heightAnchor.nabla.constraint(toConstant: height, relation: relation),
-        ])
+        let constraint = base.heightAnchor.nabla.constraint(toConstant: height, relation: relation)
+        constraint.isActive = true
+        return constraint
     }
-    
-    func constraintWidth(_ width: CGFloat, relation: Relation = .equal) {
+
+    @discardableResult
+    func constraintWidth(_ width: CGFloat, relation: Relation = .equal) -> NSLayoutConstraint {
         prepareForAutoLayout()
-        
-        NSLayoutConstraint.activate([
-            base.widthAnchor.nabla.constraint(toConstant: width, relation: relation),
-        ])
+
+        let constraint = base.widthAnchor.nabla.constraint(toConstant: width, relation: relation)
+        constraint.isActive = true
+        return constraint
     }
 }
 

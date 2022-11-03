@@ -23,7 +23,7 @@ protocol ConversationMessagePresenter: Presenter {
 
 final class ConversationMessageCell<ContentView: MessageContentView>: UICollectionViewCell, ConversationMessageCellContract, Reusable, UIGestureRecognizerDelegate {
     // MARK: Lifecycle
-    
+
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         setUp()
@@ -69,7 +69,8 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private let rightSpacer = UISpacerView(axis: .horizontal)
     private let topSpacer = UISpacerView(axis: .vertical, size: .fixed(value: 8), color: .clear)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-    
+
+    private var containerStackView: UIStackView?
     private lazy var authorLabel: UILabel = makeAuthorLabel()
     private lazy var header: UIView = makeHeader()
     private lazy var avatarContainerView: UIView = makeAvatarContainerView()
@@ -157,11 +158,14 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
     private func configure(with replyTo: ConversationMessagePreviewViewModel?, sender: ConversationMessageSender) {
         guard let replyTo = replyTo else {
-            messagePreviewView.isHidden = true
+            messagePreviewView.removeFromSuperview()
             return
         }
 
-        messagePreviewView.isHidden = false
+        if let contains = containerStackView?.arrangedSubviews.contains(messagePreviewView), !contains {
+            containerStackView?.insertArrangedSubview(messagePreviewView, at: 0)
+        }
+
         messagePreviewView.configure(with: replyTo, sender: sender)
     }
     
@@ -170,11 +174,13 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius
         view.clipsToBounds = true
 
-        let stackView = UIStackView(arrangedSubviews: [messagePreviewView, content])
-        stackView.axis = .vertical
-
-        view.addSubview(stackView)
-        stackView.nabla.pinToSuperView()
+        containerStackView = {
+            let stackView = UIStackView(arrangedSubviews: [content])
+            stackView.axis = .vertical
+            view.addSubview(stackView)
+            stackView.nabla.pinToSuperView()
+            return stackView
+        }()
         content.addGestureRecognizer(contentTapGestureRecognizer)
         content.nabla.constraintWidth(Constants.bodyMaxWidth, relation: .lessThanOrEqual)
         return view

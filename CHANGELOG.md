@@ -18,12 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
 - Updated the cell layout for ended video calls action requests in MessagingUI.
 - `ConversationMessageSender.patient` was renamed to `ConversationMessageSender.me`.
-
-
 - Improved the appearance of the "send message" button.
 
 ### Fixed
 
+- Fix an issue that could lead to messages having the wrong size in the conversation screen of the Messaging UI module
+- Fix an issue where the spinner when loading more messages in the conversation screen of the Messagging UI module would not be at the correct position
+- Remove any color under the avatar picture of a Provider in case the picture has transparency
 
 ## [1.0.0-alpha20] - 2022-10-18
 
