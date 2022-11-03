@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha21] - 2022-11-03
+
+### Added
+
 - Added the option to scan a document in conversation screen.
 - Added missing NablaTheme properties to customize the video calls action requests in MessagingUI.
 - Introduced `ConversationViewControllerDelegate` to control taps on the conversation screen's title view.
