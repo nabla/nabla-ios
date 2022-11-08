@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- The `NablaClient.initialize` method now takes a `Configuration` struct instead of multiple params..
+⚠️ This change is breaking and you will need to update all `NablaClient` `initialize` and `init` calls.
 
 ### Fixed
 

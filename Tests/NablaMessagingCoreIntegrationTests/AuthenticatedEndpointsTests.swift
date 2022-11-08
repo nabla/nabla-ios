@@ -8,7 +8,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        nablaClient = NablaClient(apiKey: "", name: "", modules: [])
+        nablaClient = NablaClient(modules: [], configuration: .init(apiKey: ""), name: "")
         messagingClient = NablaMessagingClient(container: nablaClient.container)
     }
     

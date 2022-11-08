@@ -8,11 +8,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         NablaClient.initialize(
-            apiKey: "<yourapikey>",
             modules: [
                 NablaMessagingModule(),
                 NablaVideoCallModule(),
-            ]
+            ],
+            configuration: .init(apiKey: "<yourapikey>")
         )
         
         return true

@@ -12,25 +12,24 @@ public class NablaClient {
 
     /// Create an instance of NablaClient to use.
     /// - Parameters:
-    ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
+    ///   - modules: list of modules to be used by the SDK.
+    ///   - configuration: ``Configuration`` containing the APIKey and some defaults you can override.
+    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app.
     ///   - name: Namespace for your the stored objects.
-    ///   - logger: Instance receiving all logs emitted by the SDK. Defaults to `ConsoleLogger` based on `os_log`.
-    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app
     public convenience init(
-        apiKey: String,
-        name: String,
-        logger: Logger = ConsoleLogger(),
+        modules: [Module],
+        configuration: Configuration,
         networkConfiguration: NetworkConfiguration? = nil,
-        modules: [Module]
+        name: String
     ) {
-        let configuration = networkConfiguration ?? DefaultNetworkConfiguration()
+        let networkConfiguration = networkConfiguration ?? DefaultNetworkConfiguration()
         let container = CoreContainer(
             name: name,
-            networkConfiguration: configuration,
-            logger: logger,
+            networkConfiguration: networkConfiguration,
+            logger: configuration.logger,
             modules: modules
         )
-        self.init(apiKey: apiKey, container: container)
+        self.init(apiKey: configuration.apiKey, container: container)
     }
     
     /// Internal use only
@@ -42,10 +41,10 @@ public class NablaClient {
     // MARK: - Public
 
     /// Shared instance of NablaClient client to use.
-    /// Always call ``NablaClient.initialize(apiKey:)`` before accessing it.
+    /// Always call ``NablaClient.initialize`` before accessing it.
     public static var shared: NablaClient {
         guard let shared = _shared else {
-            fatalError("NablaClient.initialize(configuration:) must be called before accessing NablaClient.shared")
+            fatalError("NablaClient.initialize() must be called before accessing NablaClient.shared")
         }
         return shared
     }
@@ -53,32 +52,25 @@ public class NablaClient {
     /// Shared instance initializer, you must call this method before accessing `NablaClient.shared`.
     /// You must call this method only once.
     /// - Parameters:
-    ///   - apiKey: Your organisation's API key (created online on Nabla dashboard).
-    ///   - logger: Instance receiving all logs emitted by the SDK. Defaults to `ConsoleLogger` based on `os_log`.
-    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app
+    ///   - modules: list of modules to be used by the SDK.
+    ///   - configuration: ``Configuration`` containing the APIKey and some defaults you can override.
+    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app.
     public static func initialize(
-        apiKey: String,
-        logger: Logger = ConsoleLogger(),
-        networkConfiguration: NetworkConfiguration? = nil,
-        modules: [Module]
+        modules: [Module],
+        configuration: Configuration,
+        networkConfiguration: NetworkConfiguration? = nil
     ) {
         guard _shared == nil else {
-            logger.warning(message: "NablaClient.initialize(configuration:) should only be called once. Ignoring this call and using the previously created shared instance.")
+            configuration.logger.warning(message: "NablaClient.initialize() should only be called once. Ignoring this call and using the previously created shared instance.")
             return
         }
-        _shared = NablaClient(
-            apiKey: apiKey,
-            name: Constants.defaultName,
-            logger: logger,
-            networkConfiguration: networkConfiguration,
-            modules: modules
-        )
+        _shared = NablaClient(modules: modules, configuration: configuration, networkConfiguration: networkConfiguration, name: Constants.defaultName)
     }
 
     /// Authenticate the current user.
     /// - Parameters:
     ///   - userId: Identifies the user between sessions, will be passed when calling the ``SessionTokenProvider``.
-    ///   - provider: ``Tokens`` provider
+    ///   - provider: ``Tokens`` provider.
     public func authenticate(
         userId: String,
         provider: SessionTokenProvider
