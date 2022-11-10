@@ -42,7 +42,6 @@ final class TimeSlotView: UIControl {
     
     private func setUp() {
         layer.borderWidth = 1
-        layer.borderColor = Theme.primaryColor.cgColor
         layer.cornerRadius = 8
         
         addSubview(label)
@@ -62,8 +61,9 @@ final class TimeSlotView: UIControl {
     
     private func update() {
         label.text = Self.formatter.string(from: date)
-        label.textColor = isSelected ? Theme.secondaryColor : Theme.primaryColor
-        backgroundColor = isSelected ? Theme.primaryColor : Theme.secondaryColor
+        label.textColor = isSelected ? Theme.selectedTextColor : Theme.textColor
+        backgroundColor = isSelected ? Theme.selectedBackgroundColor : Theme.backgroundColor
+        layer.borderColor = (isSelected ? Theme.selectedBorderColor : Theme.borderColor).cgColor
     }
     
     // MARK: Handlers

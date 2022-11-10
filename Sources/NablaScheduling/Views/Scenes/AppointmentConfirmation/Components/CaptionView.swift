@@ -36,22 +36,25 @@ extension AppointmentConfirmationViewController {
         private lazy var backgroundView: UIView = {
             let view = UIView()
             view.layer.borderWidth = 1
-            view.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionTintColor.cgColor
+            view.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionBorderColor.cgColor
             view.backgroundColor = NablaTheme.AppointmentConfirmationTheme.captionBackgroundColor
             return view
         }()
         
         private lazy var imageView: UIImageView = {
             let view = UIImageView(image: .nabla.symbol(.video))
-            view.tintColor = NablaTheme.AppointmentConfirmationTheme.captionTintColor
+            view.tintColor = NablaTheme.AppointmentConfirmationTheme.captionTextColor
+            view.contentMode = .scaleAspectFit
+            view.nabla.constraintToSize(16)
             return view
         }()
         
         private lazy var label: UILabel = {
             let view = UILabel()
             view.numberOfLines = 0
-            view.textColor = NablaTheme.AppointmentConfirmationTheme.captionTintColor
+            view.textColor = NablaTheme.AppointmentConfirmationTheme.captionTextColor
             view.font = NablaTheme.AppointmentConfirmationTheme.captionFont
+            view.textAlignment = .center
             return view
         }()
         

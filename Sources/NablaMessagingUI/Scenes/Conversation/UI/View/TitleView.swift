@@ -78,7 +78,7 @@ final class TitleView: UIControl {
         titleSubtitleVStack.axis = .vertical
         titleSubtitleVStack.alignment = .leading
         titleSubtitleVStack.distribution = .fill
-        titleSubtitleVStack.spacing = 3
+        titleSubtitleVStack.spacing = 0
         
         let hstack = UIStackView(arrangedSubviews: [avatarView, titleSubtitleVStack, spacer])
         hstack.axis = .horizontal

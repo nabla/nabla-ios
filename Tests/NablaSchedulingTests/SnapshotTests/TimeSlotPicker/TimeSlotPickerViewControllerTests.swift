@@ -1,4 +1,5 @@
 import Combine
+import NablaCoreTestsUtils
 @testable import NablaScheduling
 import SnapshotTesting
 import XCTest
@@ -28,7 +29,7 @@ class TimeSlotPickerViewControllerTests: XCTestCase {
         viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testTimeSlotPickerViewControllerEmptyView() {
@@ -38,7 +39,7 @@ class TimeSlotPickerViewControllerTests: XCTestCase {
         viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testTimeSlotPickerViewControllerLoading() {
@@ -48,7 +49,7 @@ class TimeSlotPickerViewControllerTests: XCTestCase {
         viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testTimeSlotPickerViewControllerLoadingWithIems() {
@@ -59,7 +60,7 @@ class TimeSlotPickerViewControllerTests: XCTestCase {
         viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testTimeSlotPickerViewControllerOneGroupOpened() {
@@ -70,7 +71,7 @@ class TimeSlotPickerViewControllerTests: XCTestCase {
         viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testTimeSlotPickerViewControllerTwoGroupsOpened() {
@@ -81,7 +82,7 @@ class TimeSlotPickerViewControllerTests: XCTestCase {
         viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testTimeSlotPickerViewControllerSelected() {
@@ -92,7 +93,7 @@ class TimeSlotPickerViewControllerTests: XCTestCase {
         viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     private func makeGroups(openedGroups: Set<Int>, selectedSlot: IndexPath?) -> [TimeSlotGroupViewItem] {

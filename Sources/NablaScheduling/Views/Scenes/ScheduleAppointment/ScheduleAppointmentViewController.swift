@@ -9,11 +9,6 @@ final class ScheduleAppointmentViewController: NavigationController {
     ) {
         self.factory = factory
         super.init(rootViewController: UIViewController())
-        if let foregroundColor = navigationBar.standardAppearance.titleTextAttributes[.foregroundColor] as? UIColor {
-            navigationBar
-                .standardAppearance
-                .titleTextAttributes[.foregroundColor] = foregroundColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
-        }
         setViewControllers([factory.createCategoryPickerViewController(delegate: self)], animated: false)
     }
 

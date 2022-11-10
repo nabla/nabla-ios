@@ -116,7 +116,7 @@ final class AppointmentListViewController: UIViewController {
     private lazy var actionButton: UIControl = {
         let view = NablaViews.PrimaryButton()
         view.theme = NablaTheme.AppointmentListViewTheme.button
-        view.title = L10n.appointmentsScreenActionButtonLabel
+        view.setTitle(L10n.appointmentsScreenActionButtonLabel, for: .normal)
         view.onTap = { [weak self] in
             self?.viewModel.userDidTapCreateAppointmentButton()
         }

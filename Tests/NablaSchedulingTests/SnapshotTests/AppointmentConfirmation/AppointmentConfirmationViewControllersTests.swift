@@ -1,4 +1,5 @@
 import Combine
+import NablaCoreTestsUtils
 @testable import NablaScheduling
 import SnapshotTesting
 import XCTest
@@ -41,7 +42,7 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
         viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testAppointmentConfirmationViewControllerPartialyChecked() {
@@ -53,7 +54,7 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
         viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testAppointmentConfirmationViewControllerChecked() {
@@ -65,7 +66,7 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
         viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testAppointmentConfirmationViewControllerLoading() {
@@ -77,7 +78,7 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
         viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testAppointmentConfirmationViewControllerWithoutProviderDescription() {
@@ -99,6 +100,6 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
         viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 }

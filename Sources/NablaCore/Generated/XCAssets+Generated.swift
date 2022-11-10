@@ -22,16 +22,23 @@ internal enum Assets {
   internal enum Assets {
   }
   internal enum Colors {
-    internal static let accessory = ColorAsset(name: "accessory")
-    internal static let alternateText = ColorAsset(name: "alternateText")
-    internal static let background = ColorAsset(name: "background")
-    internal static let darkAlternateTextColor = ColorAsset(name: "darkAlternateTextColor")
-    internal static let lightAlternateTextColor = ColorAsset(name: "lightAlternateTextColor")
-    internal static let lightPrimary = ColorAsset(name: "lightPrimary")
-    internal static let primary = ColorAsset(name: "primary")
-    internal static let primaryText = ColorAsset(name: "primaryText")
-    internal static let secondaryBackground = ColorAsset(name: "secondaryBackground")
-    internal static let secondaryText = ColorAsset(name: "secondaryText")
+    internal static let black = ColorAsset(name: "black")
+    internal static let blue100 = ColorAsset(name: "blue100")
+    internal static let blue200 = ColorAsset(name: "blue200")
+    internal static let blue300 = ColorAsset(name: "blue300")
+    internal static let blue400 = ColorAsset(name: "blue400")
+    internal static let blue500 = ColorAsset(name: "blue500")
+    internal static let blue600 = ColorAsset(name: "blue600")
+    internal static let grey100 = ColorAsset(name: "grey100")
+    internal static let grey200 = ColorAsset(name: "grey200")
+    internal static let grey300 = ColorAsset(name: "grey300")
+    internal static let grey400 = ColorAsset(name: "grey400")
+    internal static let grey500 = ColorAsset(name: "grey500")
+    internal static let grey600 = ColorAsset(name: "grey600")
+    internal static let grey700 = ColorAsset(name: "grey700")
+    internal static let grey800 = ColorAsset(name: "grey800")
+    internal static let red100 = ColorAsset(name: "red100")
+    internal static let white = ColorAsset(name: "white")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name

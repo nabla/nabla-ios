@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -37,7 +38,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToImageMe() {
@@ -59,7 +60,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToVideoMe() {
@@ -81,7 +82,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToDocumentMe() {
@@ -103,7 +104,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToAudioMe() {
@@ -125,7 +126,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToDeletedMe() {
@@ -146,7 +147,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToTextThem() {
@@ -171,7 +172,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToImageThem() {
@@ -196,7 +197,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToDocumentThem() {
@@ -221,7 +222,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToAudioThem() {
@@ -246,7 +247,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToDeletedThem() {
@@ -270,7 +271,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToVideoThem() {
@@ -295,6 +296,6 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 }

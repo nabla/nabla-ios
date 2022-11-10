@@ -23,9 +23,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         self.videoCallClient = videoCallClient
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        navigationItem.titleView = navigationItem.titleView ?? titleView
-        navigationItem.largeTitleDisplayMode = .never
-        hidesBottomBarWhenPushed = true
+        initialize()
     }
 
     @available(*, unavailable)
@@ -37,12 +35,32 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = NablaTheme.Conversation.backgroundColor
-        collectionView.backgroundColor = NablaTheme.Conversation.backgroundColor
-        collectionView.delegate = self
-        providers.forEach { $0.prepare(collectionView: collectionView) }
-        errorView.delegate = self
+        setUp()
         presenter.start()
+    }
+    
+    private func initialize() {
+        hidesBottomBarWhenPushed = true
+        
+        navigationItem.titleView = navigationItem.titleView ?? titleView
+        navigationItem.largeTitleDisplayMode = .never
+        
+        // Use the default appearance background
+        // But enforce using `configureWithOpaqueBackground` because the navbar is not able to detect the correct scroll position of `FlippedCollectionView`
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        let backgroundEffect = appearance.backgroundEffect
+        let backgroundColor = appearance.backgroundColor
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundEffect = backgroundEffect
+        appearance.backgroundColor = backgroundColor
+        navigationItem.compactAppearance = appearance
+        navigationItem.standardAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
+    }
+    
+    private func setUp() {
+        view.backgroundColor = NablaTheme.Conversation.backgroundColor
     }
 
     // MARK: - Internal
@@ -157,7 +175,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private let loadingView: LoadingView = .init()
     
-    private let errorView: ErrorView = .init()
+    private lazy var errorView: ErrorView = {
+        let view = ErrorView()
+        view.delegate = self
+        return view
+    }()
     
     private let loadedView: UIView = .init()
 
@@ -193,6 +215,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let collectionView = FlippedCollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.keyboardDismissMode = .interactive
         collectionView.delegate = self
+        collectionView.backgroundColor = NablaTheme.Conversation.backgroundColor
+        providers.forEach { $0.prepare(collectionView: collectionView) }
         return collectionView
     }
     

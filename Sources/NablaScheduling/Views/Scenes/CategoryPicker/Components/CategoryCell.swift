@@ -25,9 +25,8 @@ final class CategoryCell: UITableViewCell, Reusable {
     
     private lazy var containerView: UIView = {
         let view = UIView()
+        view.backgroundColor = NablaTheme.CategoryPickerViewTheme.CellTheme.backgroundColor
         view.layer.cornerRadius = 12
-        view.layer.borderColor = NablaTheme.CategoryPickerViewTheme.CellTheme.borderColor.cgColor
-        view.layer.borderWidth = 1
         return view
     }()
     

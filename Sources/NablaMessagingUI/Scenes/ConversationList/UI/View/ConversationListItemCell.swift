@@ -28,6 +28,8 @@ class ConversationListItemCell: UITableViewCell, Reusable {
         timeLabel.text = viewModel.lastUpdatedTime
         unreadIndicatorView.isHidden = !viewModel.isUnread
         avatarView.avatar = viewModel.avatar
+        titleLabel.font = viewModel.isUnread ? NablaTheme.ConversationPreview.previewUnreadTitleFont : NablaTheme.ConversationPreview.previewTitleFont
+        subtitleLabel.font = viewModel.isUnread ? NablaTheme.ConversationPreview.previewUnreadSubtitleFont : NablaTheme.ConversationPreview.previewSubtitleFont
     }
     
     // MARK: - Private
@@ -77,14 +79,12 @@ class ConversationListItemCell: UITableViewCell, Reusable {
     private func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.textColor = NablaTheme.ConversationPreview.previewTitleColor
-        label.font = NablaTheme.ConversationPreview.previewTitleFont
         return label
     }
     
     private func createSubtitleLabel() -> UILabel {
         let label = UILabel()
         label.textColor = NablaTheme.ConversationPreview.previewSubtitleColor
-        label.font = NablaTheme.ConversationPreview.previewSubtitleFont
         return label
     }
     

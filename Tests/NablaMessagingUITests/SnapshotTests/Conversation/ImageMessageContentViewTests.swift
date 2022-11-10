@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -25,7 +26,7 @@ final class ImageMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testImageConfigureProvider() {
@@ -41,7 +42,7 @@ final class ImageMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
     
     func testImageConfigureOther() {
@@ -57,6 +58,6 @@ final class ImageMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 }

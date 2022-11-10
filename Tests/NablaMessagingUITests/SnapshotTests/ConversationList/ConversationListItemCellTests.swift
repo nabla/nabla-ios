@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -26,7 +27,7 @@ final class ConversationListItemCellTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testConfigureWithFullItem() {
@@ -42,7 +43,7 @@ final class ConversationListItemCellTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testConfigureWithLongTitle() {
@@ -58,6 +59,6 @@ final class ConversationListItemCellTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

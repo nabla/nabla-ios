@@ -74,7 +74,7 @@ final class TimeSlotPickerViewController: UIViewController {
     private lazy var actionButton: NablaViews.PrimaryButton = {
         let view = NablaViews.PrimaryButton()
         view.theme = NablaTheme.TimeSlotPickerViewTheme.button
-        view.title = L10n.timeSlotsScreenActionButtonLabel
+        view.setTitle(L10n.timeSlotsScreenActionButtonLabel, for: .normal)
         view.onTap = { [viewModel] in
             viewModel.userDidTapConfirmButton()
         }
@@ -130,9 +130,6 @@ final class TimeSlotPickerViewController: UIViewController {
     private func updateLoadingIndicator() {
         if refreshControl.isRefreshing, !viewModel.isLoading {
             refreshControl.endRefreshing()
-        }
-        if !refreshControl.isRefreshing, viewModel.isLoading {
-            refreshControl.beginRefreshing()
         }
     }
     

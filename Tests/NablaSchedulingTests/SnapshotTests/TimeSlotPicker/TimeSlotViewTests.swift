@@ -1,9 +1,12 @@
+import NablaCoreTestsUtils
 @testable import NablaScheduling
 import SnapshotTesting
 import XCTest
 
 class TimeSlotViewTests: XCTestCase {
     private var sut: TimeSlotView!
+    
+    private let size = CGSize(width: 103, height: 31)
     
     override func setUp() {
         super.setUp()
@@ -16,7 +19,7 @@ class TimeSlotViewTests: XCTestCase {
         // WHEN
         sut.date = Date(timeIntervalSince1970: 0)
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 103, height: 31)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTimeSlotViewDefaultTheme1970And30Min() {
@@ -24,7 +27,7 @@ class TimeSlotViewTests: XCTestCase {
         // WHEN
         sut.date = Date(timeIntervalSince1970: 30 * 60)
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 103, height: 31)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTimeSlotViewDefaultTheme1970Selected() {
@@ -33,7 +36,7 @@ class TimeSlotViewTests: XCTestCase {
         sut.date = Date(timeIntervalSince1970: 0)
         sut.isSelected = true
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 103, height: 31)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTimeSlotViewDefaultTheme1970And30MinSelected() {
@@ -42,6 +45,6 @@ class TimeSlotViewTests: XCTestCase {
         sut.date = Date(timeIntervalSince1970: 30 * 60)
         sut.isSelected = true
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 103, height: 31)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

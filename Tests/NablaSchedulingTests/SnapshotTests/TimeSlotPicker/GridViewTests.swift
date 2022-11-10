@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 @testable import NablaScheduling
 import SnapshotTesting
 import XCTest

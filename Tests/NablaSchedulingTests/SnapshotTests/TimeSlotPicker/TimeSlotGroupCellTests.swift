@@ -1,4 +1,5 @@
 import NablaCore
+import NablaCoreTestsUtils
 @testable import NablaScheduling
 import SnapshotTesting
 import XCTest
@@ -25,7 +26,7 @@ class TimeSlotGroupCellTests: XCTestCase {
             .init(date: Date(timeIntervalSince1970: 90 * 60), selected: false),
         ]
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 80)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 80)))
     }
     
     func testTimeSlotGroupCellDefaultThemeOpened() {
@@ -41,7 +42,7 @@ class TimeSlotGroupCellTests: XCTestCase {
             .init(date: Date(timeIntervalSince1970: 90 * 60), selected: false),
         ]
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 146)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 146)))
     }
     
     func testTimeSlotGroupCellDefaultThemeSelected() {
@@ -57,7 +58,7 @@ class TimeSlotGroupCellTests: XCTestCase {
             .init(date: Date(timeIntervalSince1970: 90 * 60), selected: false),
         ]
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 146)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 146)))
     }
     
     func testTimeSlotGroupCellDefaultThemeClosedLongTexts() {
@@ -73,7 +74,7 @@ class TimeSlotGroupCellTests: XCTestCase {
             .init(date: Date(timeIntervalSince1970: 90 * 60), selected: false),
         ]
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 80)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 80)))
     }
     
     func testTimeSlotGroupCellDefaultThemeOpenedLongTexts() {
@@ -89,6 +90,6 @@ class TimeSlotGroupCellTests: XCTestCase {
             .init(date: Date(timeIntervalSince1970: 90 * 60), selected: false),
         ]
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 146)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 146)))
     }
 }

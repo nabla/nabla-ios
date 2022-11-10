@@ -7,9 +7,10 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     
     init() {
         super.init(frame: .zero)
+        backgroundColor = NablaTheme.Conversation.deletedMessageBackgroundColor
         
         addSubview(borderedContainer)
-        borderedContainer.nabla.pinToSuperView()
+        borderedContainer.nabla.pinToSuperView(insets: .nabla.all(1))
         
         borderedContainer.addSubview(label)
         label.nabla.pinToSuperView(insets: .nabla.make(horizontal: 16, vertical: 8))
@@ -45,7 +46,6 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     
     private lazy var borderedContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = NablaTheme.Conversation.deletedMessageBackgroundColor
         view.layer.borderColor = NablaTheme.Conversation.deletedMessageBorderColor.cgColor
         view.layer.borderWidth = 0.5
         view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius

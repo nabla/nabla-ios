@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -26,7 +27,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureMeContiguous() {
@@ -42,7 +43,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureProviderContiguous() {
@@ -58,7 +59,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureProvider() {
@@ -74,7 +75,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTextConfigureOtherContiguous() {
@@ -90,7 +91,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureOther() {
@@ -106,7 +107,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTextConfigureMeWithLink() {
@@ -122,7 +123,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureProviderWithLink() {
@@ -138,7 +139,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureOtherWithLink() {
@@ -154,7 +155,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureMeWithPhoneNumber() {
@@ -170,7 +171,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureProviderWithPhoneNumber() {
@@ -192,7 +193,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureOtherWithPhoneNumber() {
@@ -214,7 +215,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureMeInResponseToMessageWithLongerOriginal() {
@@ -235,7 +236,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTextConfigureMeInResponseToMessageWithLongerMessage() {
@@ -256,6 +257,6 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

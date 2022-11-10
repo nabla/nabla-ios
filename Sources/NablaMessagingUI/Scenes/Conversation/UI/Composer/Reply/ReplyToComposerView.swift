@@ -62,7 +62,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
     private func makeBorder() -> UIView {
         let view = UIView()
         view.nabla.constraintHeight(1)
-        view.backgroundColor = NablaTheme.accessoryColor
+        view.backgroundColor = NablaTheme.Conversation.composerReplyToBorderColor
         return view
     }
 

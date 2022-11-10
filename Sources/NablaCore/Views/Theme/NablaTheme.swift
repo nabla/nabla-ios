@@ -10,45 +10,74 @@ import UIKit
 /// - Then you have the sub structs. Those rely on the top level values but offer a fine tune configuration for each element of
 /// the SDK.
 public enum NablaTheme {
-    // MARK: - Colors
-    
-    public static var primaryColor: UIColor = Assets.Colors.primary.color
-    public static var lightPrimaryColor: UIColor = Assets.Colors.lightPrimary.color
-    public static var backgroundColor: UIColor = Assets.Colors.background.color
-    public static var primaryTextColor: UIColor = Assets.Colors.primaryText.color
-    public static var secondaryTextColor: UIColor = Assets.Colors.secondaryText.color
-    public static var alternateTextColor: UIColor = Assets.Colors.alternateText.color
-    public static var lightAlternateTextColor: UIColor = Assets.Colors.lightAlternateTextColor.color
-    public static var darkAlternateTextColor: UIColor = Assets.Colors.darkAlternateTextColor.color
-    public static var secondaryBackgroundColor: UIColor = Assets.Colors.secondaryBackground.color
-    public static var accessoryColor: UIColor = Assets.Colors.accessory.color
-    
     // MARK: - Fonts
     
-    public static var largeTitle = UIFont.nabla.regular(33)
-    public static var title1 = UIFont.nabla.regular(27)
-    public static var title2 = UIFont.nabla.regular(21)
-    public static var title3 = UIFont.nabla.regular(19)
-    public static var headline = UIFont.nabla.semiBold(18)
-    public static var body = UIFont.nabla.regular(16)
-    public static var bodyMedium = UIFont.nabla.medium(16)
-    public static var bodyItalic = UIFont.nabla.italic(16)
-    public static var callout = UIFont.nabla.regular(15)
-    public static var subhead = UIFont.nabla.regular(14)
-    public static var footnote = UIFont.nabla.regular(12)
-    public static var caption1 = UIFont.nabla.regular(11)
-    public static var caption2 = UIFont.nabla.regular(10)
+    public enum Fonts {
+        public static var title = UIFont.nabla.bold(30)
+        public static var subtitleBold = UIFont.nabla.bold(16)
+        public static var subtitleMedium = UIFont.nabla.medium(16)
+        public static var caption = UIFont.nabla.regular(16)
+        public static var bodyBold = UIFont.nabla.bold(14)
+        public static var bodyMedium = UIFont.nabla.medium(14)
+        public static var bodyItalic = UIFont.nabla.italic(14)
+        public static var body = UIFont.nabla.regular(14)
+        public static var smallMedium = UIFont.nabla.medium(12)
+        public static var smallText = UIFont.nabla.regular(12)
+    }
     
     // MARK: - Components
     
-    public static var primaryButton = NablaViews.PrimaryButton.Theme()
-    public static var checkbox = NablaViews.CheckboxView.Theme()
+    public enum Button {
+        public static var base = NablaViews.PrimaryButton.Theme(
+            backgroundColor: Colors.ButtonBackground.base,
+            highlightedBackgroundColor: Colors.ButtonBackground.baseHighlighted,
+            disabledBackgroundColor: Colors.ButtonBackground.baseDisabled,
+            textColor: Colors.ButtonText.onBase,
+            highlightedTextColor: Colors.ButtonText.onBaseHighlighted,
+            disabledTextColor: Colors.ButtonText.onBaseDisabled,
+            font: Fonts.subtitleMedium
+        )
+        
+        public static var accent = NablaViews.PrimaryButton.Theme(
+            backgroundColor: Colors.ButtonBackground.accent,
+            highlightedBackgroundColor: Colors.ButtonBackground.accentHighlighted,
+            disabledBackgroundColor: Colors.ButtonBackground.accentDisabled,
+            textColor: Colors.ButtonText.onAccent,
+            highlightedTextColor: Colors.ButtonText.onAccentHighlighted,
+            disabledTextColor: Colors.ButtonText.onAccentDisabled,
+            font: Fonts.subtitleMedium
+        )
+        
+        public static var accentSubdued = NablaViews.PrimaryButton.Theme(
+            backgroundColor: Colors.ButtonBackground.accentSubdued,
+            highlightedBackgroundColor: Colors.ButtonBackground.accentSubduedHighlighted,
+            disabledBackgroundColor: Colors.ButtonBackground.accentSubduedDisabled,
+            textColor: Colors.ButtonText.onAccentSubdued,
+            highlightedTextColor: Colors.ButtonText.onAccentSubduedHighlighted,
+            disabledTextColor: Colors.ButtonText.onAccentSubduedDisabled,
+            font: Fonts.subtitleMedium
+        )
+    }
+    
+    public enum Checkbox {
+        public static var base = NablaViews.CheckboxView.Theme(
+            tintColor: Colors.Text.onAccent,
+            checked: .init(
+                borderColor: Colors.Fill.accent,
+                fillColor: Colors.Stroke.accent
+            ),
+            unchecked: .init(
+                borderColor: Colors.Stroke.subdued,
+                fillColor: .clear
+            )
+        )
+    }
 
     public enum Shared {
-        /// Tint color used for the loading indicator. Default set to NablaTheme.primaryColor
-        public static var loadingViewIndicatorTintColor = NablaTheme.primaryColor
+        /// Tint color used for the loading indicator.
+        public static var loadingViewIndicatorTintColor = Colors.Stroke.accent
 
-        /// Background color used to display the avatar of someone who doesn't have a profile picture. Default set to NablaTheme.primaryColor
-        public static var avatarViewBackgroundColor = NablaTheme.primaryColor
+        /// Background color used to display the avatar of someone who doesn't have a profile picture.
+        public static var avatarViewBackgroundColor = Colors.Fill.accent
     }
 }

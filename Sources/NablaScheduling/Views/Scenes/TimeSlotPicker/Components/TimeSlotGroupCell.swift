@@ -60,8 +60,7 @@ final class TimeSlotGroupCell: UITableViewCell, Reusable {
     
     private lazy var containerView: UIView = {
         let view = UIView()
-        view.layer.borderWidth = 1
-        view.layer.borderColor = NablaTheme.TimeSlotPickerViewTheme.CellTheme.borderColor.cgColor
+        view.backgroundColor = NablaTheme.TimeSlotPickerViewTheme.CellTheme.backgroundColor
         view.layer.cornerRadius = 8
         return view
     }()
@@ -87,6 +86,7 @@ final class TimeSlotGroupCell: UITableViewCell, Reusable {
             image: .nabla.symbol(.chevronDown),
             highlightedImage: .nabla.symbol(.chevronUp)
         )
+        view.contentMode = .scaleAspectFit
         view.tintColor = NablaTheme.TimeSlotPickerViewTheme.CellTheme.indicatorColor
         view.nabla.constraintToSize(18)
         return view

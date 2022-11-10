@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `NablaClient.initialize` method now takes a `Configuration` struct instead of multiple params..
 ⚠️ This change is breaking and you will need to update all `NablaClient` `initialize` and `init` calls.
 
+- `NablaTheme` colors have been reworked to better support dark mode. The new colors can be found in `NablaTheme.Colors`.
+- `NablaTheme` fonts have been reworked for better consistency. The new fonts can be found in `NablaTheme.Fonts`.
+
+To know more about `NablaTheme`, please visit our documentation: https://docs.nabla.com/docs/theming-ios
+
 ### Fixed
 
 

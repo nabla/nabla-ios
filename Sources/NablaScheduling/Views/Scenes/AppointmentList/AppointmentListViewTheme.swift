@@ -3,43 +3,37 @@ import UIKit
 
 public extension NablaTheme {
     struct AppointmentListViewTheme {
-        /// Color used for the background of the appointment list view. Default set to NablaTheme.secondaryBackgroundColor
-        public static var backgroundColor = NablaTheme.secondaryBackgroundColor
+        /// Color used for the background of the appointment list view.
+        public static var backgroundColor = Colors.Background.underCard
         
-        /// Color used for the text of the empty state where no appointments are scheduled. Default set to NablaTheme.primaryTextColor
-        public static var emptyViewTextColor: UIColor = NablaTheme.primaryTextColor
-        /// Font used for the text of the empty state where no appointments are scheduled. Default set to Medium(16)
-        public static var emptyViewFont: UIFont = UIFont.nabla.medium(16)
+        /// Color used for the text of the empty state where no appointments are scheduled.
+        public static var emptyViewTextColor: UIColor = Colors.Text.base
+        /// Font used for the text of the empty state where no appointments are scheduled.
+        public static var emptyViewFont: UIFont = Fonts.caption
         
-        /// Style of the button used to schedule a new appointment. Default set to NablaTheme.primaryButton
-        public static var button = NablaTheme.primaryButton
+        /// Style of the button used to schedule a new appointment.
+        public static var button = Button.accent
         
         public enum CellTheme {
-            /// Color used for the background of an appointment cell. Default set to NablaTheme.backgroundColor
-            public static var backgroundColor = NablaTheme.backgroundColor
-            /// Color used for the name of the doctor of an upcoming appointment. Default set to NablaTheme.primaryTextColor
-            public static var titleColor = NablaTheme.primaryTextColor
-            /// Color used for the name of the doctor of a past appointment. Default set to NablaTheme.secondaryTextColor
-            public static var titleDisabledColor = NablaTheme.secondaryTextColor
-            /// Font used for the name of the doctor of an appointment. Default set to NablaTheme.body
-            public static var titleFont = NablaTheme.body
-            /// Color used for the time of an upcoming appointment. Default set to NablaTheme.secondaryTextColor
-            public static var subtitleColor = NablaTheme.secondaryTextColor
-            /// Color used for the time of a past appointment. Default set to NablaTheme.secondaryTextColor
-            public static var subtitleDisabledColor = NablaTheme.secondaryTextColor
-            /// Font used for the time of an appointment. Default set to NablaTheme.subhead
-            public static var subtitleFont = NablaTheme.subhead
-            /// Color of the button to edit an upcoming appointment. Default set to NablaTheme.secondaryTextColor
-            public static var moreButtonColor = NablaTheme.secondaryTextColor
+            /// Color used for the background of an appointment cell.
+            public static var backgroundColor = Colors.Fill.card
+            /// Color used for the name of the doctor of an upcoming appointment.
+            public static var titleColor = Colors.Text.base
+            /// Color used for the name of the doctor of a past appointment.
+            public static var titleDisabledColor = Colors.Text.subdued
+            /// Font used for the name of the doctor of an appointment.
+            public static var titleFont = Fonts.subtitleBold
+            /// Color used for the time of an upcoming appointment.
+            public static var subtitleColor = Colors.Text.subdued
+            /// Color used for the time of a past appointment.
+            public static var subtitleDisabledColor = Colors.Text.subdued
+            /// Font used for the time of an appointment.
+            public static var subtitleFont = Fonts.body
+            /// Color of the button to edit an upcoming appointment.
+            public static var moreButtonColor = Colors.Text.subdued
             
             /// Style of the button to join an appointment via video call.
-            public static var button = NablaViews.PrimaryButton.Theme(
-                backgroundColor: Assets.Colors.lightBlue.color,
-                highlightedBackgroundColor: Assets.Colors.backgroundGrey.color,
-                disabledBackgroundColor: Assets.Colors.backgroundGrey.color,
-                textColor: NablaTheme.primaryColor,
-                font: NablaTheme.body
-            )
+            public static var button = Button.accentSubdued
         }
         
         private init() {}

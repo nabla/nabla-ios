@@ -63,7 +63,7 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
         let view = UILabel()
         view.text = L10n.videoCallActionRequestTitle
         view.textColor = NablaTheme.Conversation.textMessageProviderTextColor
-        view.font = NablaTheme.bodyMedium
+        view.font = NablaTheme.Fonts.bodyMedium
         view.numberOfLines = 1
         view.nabla.constraintHeight(24)
         return view
@@ -73,19 +73,15 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
         let view = UILabel()
         view.text = L10n.videoCallActionRequestButtonClosed
         view.textColor = NablaTheme.Conversation.textMessageProviderTextColor
-        view.font = NablaTheme.body
+        view.font = NablaTheme.Fonts.body
         view.nabla.constraintHeight(24)
         view.numberOfLines = 1
         return view
     }()
     
-    private lazy var button: UIButton = {
-        let view = UIButton(type: .custom)
-        view.backgroundColor = NablaTheme.Conversation.videoCallActionRequestActionButtonBackgroundColor
-        view.layer.cornerRadius = NablaTheme.Conversation.videoCallActionRequestCornerRadius
-        view.layer.masksToBounds = true
-        view.setTitleColor(NablaTheme.primaryTextColor, for: .normal)
-        view.titleLabel?.font = NablaTheme.body
+    private lazy var button: NablaViews.PrimaryButton = {
+        let view = NablaViews.PrimaryButton()
+        view.theme = NablaTheme.Conversation.videoCallActionRequestButton
         view.nabla.constraintHeight(44)
         view.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
         return view

@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -17,7 +18,7 @@ final class ConversationActivityCellTests: XCTestCase {
         // WHEN
         sut.configure(with: .init(text: "Dr John Doe a rejoint la conversation"))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testConfigureWithTextOnTwoLines() {
@@ -25,7 +26,7 @@ final class ConversationActivityCellTests: XCTestCase {
         // WHEN
         sut.configure(with: .init(text: "Dr John Doe a rejoint la conversation en retard comme d'habitude"))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testConfigureWithLongText() {
@@ -33,6 +34,6 @@ final class ConversationActivityCellTests: XCTestCase {
         // WHEN
         sut.configure(with: .init(text: "Dr John Doe a rejoint la conversation en retard comme d'habitude et on a dû l'attendre 30 minutes"))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

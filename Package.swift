@@ -62,6 +62,7 @@ let package = Package(
             dependencies: [
                 .target(name: "NablaCore"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
             path: "Tests/NablaCoreTestsUtils"
         ),
@@ -70,7 +71,6 @@ let package = Package(
             dependencies: [
                 .target(name: "NablaCore"),
                 .target(name: "NablaCoreTestsUtils"),
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
             resources: [
                 .process("SnapshotTests/PrimaryButton/__Snapshots__"),
@@ -140,7 +140,6 @@ let package = Package(
                 .target(name: "NablaCoreTestsUtils"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
             resources: [
                 .process("SnapshotTests/Conversation/__Snapshots__"),
@@ -181,7 +180,6 @@ let package = Package(
                 .target(name: "NablaScheduling"),
                 .target(name: "NablaCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
             resources: [
                 .process("SnapshotTests/AppointmentList/__Snapshots__"),

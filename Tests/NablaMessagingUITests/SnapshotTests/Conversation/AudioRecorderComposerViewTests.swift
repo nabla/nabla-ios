@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 @testable import NablaMessagingUI
 import SnapshotTesting
 import XCTest
@@ -16,6 +17,6 @@ class AudioRecorderComposerViewTests: XCTestCase {
         // WHEN
         sut.configure(with: .init(duration: "00:30"))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 3, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 3, size: size))
     }
 }

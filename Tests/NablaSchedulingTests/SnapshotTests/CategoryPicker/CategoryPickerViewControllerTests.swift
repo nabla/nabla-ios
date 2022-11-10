@@ -1,5 +1,6 @@
 import Combine
 import NablaCore
+import NablaCoreTestsUtils
 @testable import NablaScheduling
 import SnapshotTesting
 import XCTest
@@ -29,7 +30,7 @@ class CategoryPickerViewControllerTests: XCTestCase {
         }))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testCategoryPickerViewControllerEmptyView() {
@@ -38,7 +39,7 @@ class CategoryPickerViewControllerTests: XCTestCase {
         viewModel.given(.items(getter: []))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testCategoryPickerViewControllerLoading() {
@@ -47,7 +48,7 @@ class CategoryPickerViewControllerTests: XCTestCase {
         viewModel.given(.items(getter: []))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testCategoryPickerViewControllerWithBigItems() {
@@ -58,6 +59,6 @@ class CategoryPickerViewControllerTests: XCTestCase {
         }))
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image)
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 }

@@ -26,7 +26,6 @@ class NavigationController: UINavigationController {
     
     private lazy var closeButton: UIBarButtonItem = {
         let view = UIBarButtonItem(image: .nabla.symbol(.chevronDown), style: .plain, target: self, action: #selector(closeButtonHandler))
-        view.tintColor = NablaTheme.primaryColor
         return view
     }()
     

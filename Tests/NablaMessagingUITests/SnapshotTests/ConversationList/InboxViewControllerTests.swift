@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 import NablaMessagingCoreTestsUtils
 @testable import NablaMessagingUI
@@ -21,7 +22,7 @@ final class InboxViewControllerTests: XCTestCase {
         // GIVEN
         // WHEN
         // THEN
-        assertSnapshot(matching: navigationController, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 
     func testInboxViewControllerWithErrorMessage() {
@@ -29,7 +30,7 @@ final class InboxViewControllerTests: XCTestCase {
         // WHEN
         sut.display(error: "Error message")
         // THEN
-        assertSnapshot(matching: navigationController, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 
     func testInboxViewControllerLoading() {
@@ -37,6 +38,6 @@ final class InboxViewControllerTests: XCTestCase {
         // WHEN
         sut.set(loading: true)
         // THEN
-        assertSnapshot(matching: navigationController, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 }

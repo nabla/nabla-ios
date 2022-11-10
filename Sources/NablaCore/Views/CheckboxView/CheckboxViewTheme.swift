@@ -8,27 +8,21 @@ public extension NablaViews.CheckboxView {
         
         public struct StateTheme {
             public var borderColor: UIColor
-            public var fillcolor: UIColor
+            public var fillColor: UIColor
             
             public init(
                 borderColor: UIColor,
-                fillcolor: UIColor
+                fillColor: UIColor
             ) {
                 self.borderColor = borderColor
-                self.fillcolor = fillcolor
+                self.fillColor = fillColor
             }
         }
         
         public init(
-            tintColor: UIColor = NablaTheme.alternateTextColor,
-            checked: StateTheme = StateTheme(
-                borderColor: NablaTheme.primaryColor,
-                fillcolor: NablaTheme.primaryColor
-            ),
-            unchecked: StateTheme = StateTheme(
-                borderColor: NablaTheme.darkAlternateTextColor,
-                fillcolor: .clear
-            )
+            tintColor: UIColor,
+            checked: StateTheme,
+            unchecked: StateTheme
         ) {
             self.tintColor = tintColor
             self.checked = checked

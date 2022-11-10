@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -17,7 +18,7 @@ final class ConversationDateSeparatorCellTests: XCTestCase {
         // WHEN
         sut.configure(with: .init(text: "Le 03/03/2033 à 03:03"))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testConfigureWithSuperLongDate() {
@@ -25,6 +26,6 @@ final class ConversationDateSeparatorCellTests: XCTestCase {
         // WHEN
         sut.configure(with: .init(text: "Hier en fin de matinée vers 19h30 après le retour des enfants de l'école."))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

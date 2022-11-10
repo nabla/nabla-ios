@@ -32,7 +32,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 84)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 84)))
     }
     
     func testAppointmentCellDefaultThemeLongTextsWithoutAction() {
@@ -42,7 +42,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 200)))
     }
     
     func testAppointmentCellDefaultThemeDisabledWithoutAction() {
@@ -51,7 +51,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 84)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 84)))
     }
     
     func testAppointmentCellDefaultThemeWithPrimaryAction() {
@@ -60,7 +60,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 152)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 152)))
     }
     
     func testAppointmentCellDefaultThemeWithSecondaryActions() {
@@ -69,7 +69,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 84)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 84)))
     }
     
     func testAppointmentCellDefaultThemeWithPrimaryAndSecondaryActions() {
@@ -79,7 +79,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 152)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 152)))
     }
     
     func testAppointmentCellDefaultThemeLongTextsWithAction() {
@@ -91,7 +91,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 200)))
     }
     
     func testAppointmentCellDefaultThemeDisabledWithAction() {
@@ -101,7 +101,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 152)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 152)))
     }
     
     func skip_testAppointmentCellCustomThemeEnabled() {
@@ -120,7 +120,7 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 200)))
     }
     
     func skip_testAppointmentCellCustomThemeDisabled() {
@@ -139,6 +139,6 @@ class AppointmentCellTests: XCTestCase {
         // WHEN
         sut.viewModel = viewModel
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 200)))
     }
 }

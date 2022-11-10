@@ -70,7 +70,7 @@ final class AppointmentConfirmationViewController: UIViewController {
     
     private lazy var actionButton: NablaViews.PrimaryButton = {
         let view = NablaViews.PrimaryButton()
-        view.title = L10n.confirmationScreenActionButtonLabel
+        view.setTitle(L10n.confirmationScreenActionButtonLabel, for: .normal)
         view.theme = NablaTheme.AppointmentConfirmationTheme.button
         view.onTap = { [viewModel] in
             viewModel.userDidTapConfirmButton()

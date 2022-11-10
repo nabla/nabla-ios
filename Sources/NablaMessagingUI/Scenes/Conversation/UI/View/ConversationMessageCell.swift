@@ -270,7 +270,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
     private func makeReplyView() -> UIView {
         let view = UIView()
-        view.backgroundColor = NablaTheme.secondaryBackgroundColor
+        view.backgroundColor = NablaTheme.Conversation.messageProviderBackgroundColor
         view.nabla.constraintToSize(.init(width: 32, height: 32))
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
@@ -279,7 +279,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "arrowshape.turn.up.left.fill")
         imageView.nabla.constraintToSize(.init(width: 17, height: 14))
-        imageView.tintColor = NablaTheme.primaryTextColor
+        imageView.tintColor = NablaTheme.Conversation.textMessageProviderTextColor
         view.addSubview(imageView)
         imageView.nabla.constraintToCenterInSuperView()
 

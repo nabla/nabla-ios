@@ -19,7 +19,7 @@ final class ComposerViewTests: XCTestCase {
         // WHEN
         /* Init in the setup */
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testComposerViewPlaceholder() {
@@ -27,7 +27,7 @@ final class ComposerViewTests: XCTestCase {
         // WHEN
         sut.placeHolder = .placeholderStub
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testComposerViewText() {
@@ -36,7 +36,7 @@ final class ComposerViewTests: XCTestCase {
         // WHEN
         sut.text = "Text"
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     // TODO: (@ams) Check why the image is not loading even though we wait
@@ -44,9 +44,9 @@ final class ComposerViewTests: XCTestCase {
         // GIVEN
         sut.placeHolder = .placeholderStub
         // WHEN
-        sut.add([ImageFile.mock])
+        sut.add([ImageFile.mockWithInvalidUrl])
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: CGSize(width: 320, height: 200)))
     }
 
     func testComposerViewRecordAudio() {
@@ -55,7 +55,7 @@ final class ComposerViewTests: XCTestCase {
         // WHEN
         sut.audioRecorderComposerPresenterDidStartRecording(AudioRecorderComposerPresenterMock())
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testComposerViewReplyToText() {
@@ -71,7 +71,7 @@ final class ComposerViewTests: XCTestCase {
             text: .loremStub
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 200)))
     }
 
     func testComposerViewReplyToImage() {
@@ -87,7 +87,7 @@ final class ComposerViewTests: XCTestCase {
             image: .mock
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: CGSize(width: 320, height: 200)))
     }
 
     func testComposerViewReplyToDocument() {
@@ -103,7 +103,7 @@ final class ComposerViewTests: XCTestCase {
             document: .mock
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: CGSize(width: 320, height: 200))))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: CGSize(width: 320, height: 200)))
     }
 
     func testComposerViewReplyToAudio() {
@@ -119,7 +119,7 @@ final class ComposerViewTests: XCTestCase {
             audio: .mock
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: CGSize(width: 320, height: 200)))
     }
 
     func testComposerViewReplyToVideo() {
@@ -135,6 +135,6 @@ final class ComposerViewTests: XCTestCase {
             video: .mock
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: CGSize(width: 320, height: 200)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: CGSize(width: 320, height: 200)))
     }
 }

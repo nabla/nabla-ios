@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -23,7 +24,7 @@ final class ConversationListViewTests: XCTestCase {
         // WHEN
         sut.configure(with: .loading)
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
     
     func testConversationLVConfigureWithErrorMessage() {
@@ -31,7 +32,7 @@ final class ConversationListViewTests: XCTestCase {
         // WHEN
         sut.configure(with: .error(.init(message: "Error Message 🤷‍♂️", buttonTitle: nil)))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
     
     func testConversationLVConfigureWithErrorMessageAndRetryTitle() {
@@ -39,7 +40,7 @@ final class ConversationListViewTests: XCTestCase {
         // WHEN
         sut.configure(with: .error(.init(message: "Error Message 🤷‍♂️", buttonTitle: "Retry")))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
     
     func testConversationLVConfigureWithLoadedNoItems() {
@@ -47,7 +48,7 @@ final class ConversationListViewTests: XCTestCase {
         // WHEN
         sut.configure(with: .loaded(viewModel: .init(items: [])))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
     
     func testConversationLVConfigureWithLoadedItems() {
@@ -55,7 +56,7 @@ final class ConversationListViewTests: XCTestCase {
         // WHEN
         sut.configure(with: .loaded(viewModel: .init(items: [item])))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
 
     func testConversationLVDisplayLoadingMore() {
@@ -64,6 +65,6 @@ final class ConversationListViewTests: XCTestCase {
         // WHEN
         sut.displayLoadingMore()
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: ViewImageConfig.iPhoneSe.size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
 }

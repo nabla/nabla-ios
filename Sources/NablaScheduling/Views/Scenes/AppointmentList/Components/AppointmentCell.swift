@@ -121,7 +121,7 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
         
         if let primaryActionTitle = viewModel.primaryActionTitle {
             setPrimaryButtonHidden(false)
-            primaryActionButton.title = primaryActionTitle
+            primaryActionButton.setTitle(primaryActionTitle, for: .normal)
         } else {
             setPrimaryButtonHidden(true)
         }

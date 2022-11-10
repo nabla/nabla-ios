@@ -1,16 +1,11 @@
 import UIKit
 
 public extension NablaViews {
-    final class PrimaryButton: UIControl {
+    final class PrimaryButton: UIButton {
         // MARK: - Public
         
-        public var theme: Theme = NablaTheme.primaryButton {
+        public var theme: Theme = NablaTheme.Button.accent {
             didSet { updateAppearance() }
-        }
-        
-        public var title: String? {
-            get { titleLabel.text }
-            set { titleLabel.text = newValue }
         }
         
         public var onTap: (() -> Void)?
@@ -45,13 +40,6 @@ public extension NablaViews {
         
         // MARK: Subviews
         
-        private lazy var titleLabel: UILabel = {
-            let view = UILabel()
-            view.numberOfLines = 1
-            view.textAlignment = .center
-            return view
-        }()
-        
         private lazy var loadingIndicator: UIActivityIndicatorView = {
             let view = UIActivityIndicatorView()
             view.hidesWhenStopped = true
@@ -60,11 +48,8 @@ public extension NablaViews {
         
         private func setUp() {
             layer.cornerRadius = 8
-            nabla.constraintHeight(52)
             
-            addSubview(titleLabel)
-            titleLabel.nabla.constraintToCenterInSuperView()
-            titleLabel.nabla.pinToSuperView(edges: .nabla.horizontal, insets: .nabla.horizontal(16))
+            contentEdgeInsets = .nabla.all(16)
             
             addSubview(loadingIndicator)
             loadingIndicator.nabla.constraintToCenterInSuperView()
@@ -73,17 +58,18 @@ public extension NablaViews {
         }
         
         private func updateAppearance() {
-            backgroundColor = theme.backgroundColor
-            titleLabel.textColor = theme.textColor
-            titleLabel.font = theme.font
+            titleLabel?.font = theme.font
             loadingIndicator.color = theme.textColor
+            setTitleColor(theme.textColor, for: .normal)
+            setTitleColor(theme.highlightedTextColor, for: .highlighted)
+            setTitleColor(theme.disabledTextColor, for: .disabled)
             
             if isLoading {
                 loadingIndicator.startAnimating()
-                titleLabel.isHidden = true
+                titleLabel?.alpha = 0
             } else {
                 loadingIndicator.stopAnimating()
-                titleLabel.isHidden = false
+                titleLabel?.alpha = 1
             }
             
             UIView.animate(withDuration: 0.2) { [self] in
@@ -91,7 +77,6 @@ public extension NablaViews {
                     backgroundColor = theme.disabledBackgroundColor
                 } else if state.contains(.highlighted) {
                     backgroundColor = theme.highlightedBackgroundColor
-                
                 } else {
                     backgroundColor = theme.backgroundColor
                 }
