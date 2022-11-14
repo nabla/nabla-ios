@@ -43,7 +43,7 @@ class AppointmentlistViewControllerTests: XCTestCase {
         ]))
         // WHEN
         // THEN
-        assertSnapshots(matching: navigationController, as: .lightAndDarkImages(tolerant: true))
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testAppointmentlistViewControllerUpcomingTabWithFarAppointments() {
@@ -56,7 +56,7 @@ class AppointmentlistViewControllerTests: XCTestCase {
         ]))
         // WHEN
         // THEN
-        assertSnapshots(matching: navigationController, as: .lightAndDarkImages(tolerant: true))
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     func testAppointmentlistViewControllerFinalizedTab() {
@@ -68,7 +68,7 @@ class AppointmentlistViewControllerTests: XCTestCase {
         }))
         // WHEN
         // THEN
-        assertSnapshots(matching: navigationController, as: .lightAndDarkImages(tolerant: true))
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
     private func makeAppointment(state: Appointment.State, date: Date) -> Appointment {

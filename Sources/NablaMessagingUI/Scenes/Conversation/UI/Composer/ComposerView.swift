@@ -68,6 +68,11 @@ final class ComposerView: UIView {
         super.layoutSubviews()
         textView.isScrollEnabled = hasReachedMaximumHeight
     }
+    
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateAppearance()
+    }
 
     // MARK: - Public
 
@@ -138,7 +143,7 @@ final class ComposerView: UIView {
         stackView.axis = .vertical
         stackView.layer.cornerRadius = Constants.textViewMinHeight / 2
         stackView.layer.borderWidth = 1
-        stackView.layer.borderColor = NablaTheme.Conversation.composerBorderColor.cgColor
+        // borderColor managed in `updateAppearance`
         return stackView
     }()
     
@@ -235,6 +240,10 @@ final class ComposerView: UIView {
             updateAudioRecordingVisibility()
             sendButton.isEnabled = enableSendButton
         }
+    }
+    
+    private func updateAppearance() {
+        borderedContainerView.layer.borderColor = NablaTheme.Conversation.composerBorderColor.cgColor
     }
     
     private func updateMediaComposerVisibility() {

@@ -12,6 +12,10 @@ public extension String {
     static var urlStubVideo: Self {
         "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
+    
+    static var urlStubInvalidVideo: Self {
+        "http://this.video.does.not.exist/video.mp4"
+    }
 
     static var filenameStub: Self {
         "Document.pdf"

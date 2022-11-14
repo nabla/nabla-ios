@@ -35,6 +35,11 @@ public extension NablaViews {
             backgroundView.layer.cornerRadius = min(frame.height, frame.width) / 2
         }
         
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            updateAppearance()
+        }
+        
         // MARK: Subviews
         
         private lazy var imageView: UIImageView = {

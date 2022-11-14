@@ -31,12 +31,17 @@ extension AppointmentConfirmationViewController {
             backgroundView.layer.cornerRadius = min(frame.height, frame.width) / 2
         }
         
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            updateAppearance()
+        }
+        
         // MARK: Subviews
         
         private lazy var backgroundView: UIView = {
             let view = UIView()
+            // `borderColor` managed in `updateAppearance()`
             view.layer.borderWidth = 1
-            view.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionBorderColor.cgColor
             view.backgroundColor = NablaTheme.AppointmentConfirmationTheme.captionBackgroundColor
             return view
         }()
@@ -70,6 +75,10 @@ extension AppointmentConfirmationViewController {
             
             addSubview(backgroundView)
             backgroundView.nabla.pinToSuperView()
+        }
+        
+        private func updateAppearance() {
+            backgroundView.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionBorderColor.cgColor
         }
     }
 }

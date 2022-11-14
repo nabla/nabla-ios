@@ -26,6 +26,13 @@ final class TimeSlotView: UIControl {
         setUp()
     }
     
+    // MARK: Life cycle
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        update()
+    }
+    
     // MARK: - Private
     
     private typealias Theme = NablaTheme.TimeSlotPickerViewTheme.CellTheme.ButtonTheme
