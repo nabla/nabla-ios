@@ -1,0 +1,6 @@
+version: 1
+external_links:
+  documentation: "https://docs.nabla.com/docs/concepts-ios"
+builder:
+  configs:
+    - platform: ios
