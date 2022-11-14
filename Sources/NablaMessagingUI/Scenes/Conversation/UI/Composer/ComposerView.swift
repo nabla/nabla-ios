@@ -52,7 +52,7 @@ final class ComposerView: UIView {
         logger = dependencies.logger
 
         super.init(frame: .zero)
-
+        updateAppearance()
         backgroundColor = NablaTheme.Conversation.composerBackgroundColor
         addSubview(vStack)
         vStack.nabla.pinToSuperView()

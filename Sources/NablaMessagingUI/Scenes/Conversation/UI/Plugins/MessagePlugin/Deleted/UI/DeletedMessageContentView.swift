@@ -8,6 +8,7 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     init() {
         super.init(frame: .zero)
         backgroundColor = NablaTheme.Conversation.deletedMessageBackgroundColor
+        updateAppearance()
         
         addSubview(borderedContainer)
         borderedContainer.nabla.pinToSuperView(insets: .nabla.all(1))

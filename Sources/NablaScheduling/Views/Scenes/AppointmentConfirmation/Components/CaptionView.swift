@@ -15,11 +15,13 @@ extension AppointmentConfirmationViewController {
         override init(frame: CGRect) {
             super.init(frame: frame)
             setUp()
+            updateAppearance()
         }
         
         required init?(coder: NSCoder) {
             super.init(coder: coder)
             setUp()
+            updateAppearance()
         }
         
         // MARK: - Private

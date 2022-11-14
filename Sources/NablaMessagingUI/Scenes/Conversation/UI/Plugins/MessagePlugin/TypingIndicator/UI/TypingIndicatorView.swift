@@ -9,7 +9,7 @@ final class TypingIndicatorView: UIView {
     init() {
         super.init(frame: .zero)
         setUp()
-        updateApperance()
+        updateAppearance()
     }
     
     @available(*, unavailable)
@@ -29,7 +29,7 @@ final class TypingIndicatorView: UIView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        updateApperance()
+        updateAppearance()
     }
     
     // MARK: - Private
@@ -65,7 +65,7 @@ final class TypingIndicatorView: UIView {
         replicatorLayer?.instanceDelay = 0.2
     }
     
-    private func updateApperance() {
+    private func updateAppearance() {
         replicatorLayer?.sublayers?.forEach { $0.removeFromSuperlayer() }
         replicatorLayer?.addSublayer(makeCircleLayer())
     }

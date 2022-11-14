@@ -19,11 +19,13 @@ final class TimeSlotView: UIControl {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUp()
+        update()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setUp()
+        update()
     }
     
     // MARK: Life cycle
