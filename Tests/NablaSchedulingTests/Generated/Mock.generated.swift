@@ -397,17 +397,17 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 	}
 	private var __p_appointmentDate: (Date)?
 
-    public var agreesWithConsultationDisclaimer: Bool {
-		get {	invocations.append(.p_agreesWithConsultationDisclaimer_get); return __p_agreesWithConsultationDisclaimer ?? givenGetterValue(.p_agreesWithConsultationDisclaimer_get, "AppointmentConfirmationViewModelMock - stub value for agreesWithConsultationDisclaimer was not defined") }
-		set {	invocations.append(.p_agreesWithConsultationDisclaimer_set(.value(newValue))); __p_agreesWithConsultationDisclaimer = newValue }
+    public var agreesWithFirstConsent: Bool {
+		get {	invocations.append(.p_agreesWithFirstConsent_get); return __p_agreesWithFirstConsent ?? givenGetterValue(.p_agreesWithFirstConsent_get, "AppointmentConfirmationViewModelMock - stub value for agreesWithFirstConsent was not defined") }
+		set {	invocations.append(.p_agreesWithFirstConsent_set(.value(newValue))); __p_agreesWithFirstConsent = newValue }
 	}
-	private var __p_agreesWithConsultationDisclaimer: (Bool)?
+	private var __p_agreesWithFirstConsent: (Bool)?
 
-    public var agreesWithPersonalDataDisclaimer: Bool {
-		get {	invocations.append(.p_agreesWithPersonalDataDisclaimer_get); return __p_agreesWithPersonalDataDisclaimer ?? givenGetterValue(.p_agreesWithPersonalDataDisclaimer_get, "AppointmentConfirmationViewModelMock - stub value for agreesWithPersonalDataDisclaimer was not defined") }
-		set {	invocations.append(.p_agreesWithPersonalDataDisclaimer_set(.value(newValue))); __p_agreesWithPersonalDataDisclaimer = newValue }
+    public var agreesWithSecondConsent: Bool {
+		get {	invocations.append(.p_agreesWithSecondConsent_get); return __p_agreesWithSecondConsent ?? givenGetterValue(.p_agreesWithSecondConsent_get, "AppointmentConfirmationViewModelMock - stub value for agreesWithSecondConsent was not defined") }
+		set {	invocations.append(.p_agreesWithSecondConsent_set(.value(newValue))); __p_agreesWithSecondConsent = newValue }
 	}
-	private var __p_agreesWithPersonalDataDisclaimer: (Bool)?
+	private var __p_agreesWithSecondConsent: (Bool)?
 
     public var canConfirm: Bool {
 		get {	invocations.append(.p_canConfirm_get); return __p_canConfirm ?? givenGetterValue(.p_canConfirm_get, "AppointmentConfirmationViewModelMock - stub value for canConfirm was not defined") }
@@ -418,6 +418,21 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 		get {	invocations.append(.p_isConfirming_get); return __p_isConfirming ?? givenGetterValue(.p_isConfirming_get, "AppointmentConfirmationViewModelMock - stub value for isConfirming was not defined") }
 	}
 	private var __p_isConfirming: (Bool)?
+
+    public var isLoadingConsents: Bool {
+		get {	invocations.append(.p_isLoadingConsents_get); return __p_isLoadingConsents ?? givenGetterValue(.p_isLoadingConsents_get, "AppointmentConfirmationViewModelMock - stub value for isLoadingConsents was not defined") }
+	}
+	private var __p_isLoadingConsents: (Bool)?
+
+    public var consents: ConsentsViewModel? {
+		get {	invocations.append(.p_consents_get); return __p_consents ?? optionalGivenGetterValue(.p_consents_get, "AppointmentConfirmationViewModelMock - stub value for consents was not defined") }
+	}
+	private var __p_consents: (ConsentsViewModel)?
+
+    public var consentsLoadingError: ConsentsErrorViewModel? {
+		get {	invocations.append(.p_consentsLoadingError_get); return __p_consentsLoadingError ?? optionalGivenGetterValue(.p_consentsLoadingError_get, "AppointmentConfirmationViewModelMock - stub value for consentsLoadingError was not defined") }
+	}
+	private var __p_consentsLoadingError: (ConsentsErrorViewModel)?
 
     public var error: AlertViewModel? {
 		get {	invocations.append(.p_error_get); return __p_error ?? optionalGivenGetterValue(.p_error_get, "AppointmentConfirmationViewModelMock - stub value for error was not defined") }
@@ -470,12 +485,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
         case p_provider_get
         case p_appointmentDate_get
-        case p_agreesWithConsultationDisclaimer_get
-		case p_agreesWithConsultationDisclaimer_set(Parameter<Bool>)
-        case p_agreesWithPersonalDataDisclaimer_get
-		case p_agreesWithPersonalDataDisclaimer_set(Parameter<Bool>)
+        case p_agreesWithFirstConsent_get
+		case p_agreesWithFirstConsent_set(Parameter<Bool>)
+        case p_agreesWithSecondConsent_get
+		case p_agreesWithSecondConsent_set(Parameter<Bool>)
         case p_canConfirm_get
         case p_isConfirming_get
+        case p_isLoadingConsents_get
+        case p_consents_get
+        case p_consentsLoadingError_get
         case p_error_get
 		case p_error_set(Parameter<AlertViewModel?>)
 
@@ -491,12 +509,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 				return Matcher.ComparisonResult(results)
             case (.p_provider_get,.p_provider_get): return Matcher.ComparisonResult.match
             case (.p_appointmentDate_get,.p_appointmentDate_get): return Matcher.ComparisonResult.match
-            case (.p_agreesWithConsultationDisclaimer_get,.p_agreesWithConsultationDisclaimer_get): return Matcher.ComparisonResult.match
-			case (.p_agreesWithConsultationDisclaimer_set(let left),.p_agreesWithConsultationDisclaimer_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
-            case (.p_agreesWithPersonalDataDisclaimer_get,.p_agreesWithPersonalDataDisclaimer_get): return Matcher.ComparisonResult.match
-			case (.p_agreesWithPersonalDataDisclaimer_set(let left),.p_agreesWithPersonalDataDisclaimer_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_agreesWithFirstConsent_get,.p_agreesWithFirstConsent_get): return Matcher.ComparisonResult.match
+			case (.p_agreesWithFirstConsent_set(let left),.p_agreesWithFirstConsent_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_agreesWithSecondConsent_get,.p_agreesWithSecondConsent_get): return Matcher.ComparisonResult.match
+			case (.p_agreesWithSecondConsent_set(let left),.p_agreesWithSecondConsent_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_canConfirm_get,.p_canConfirm_get): return Matcher.ComparisonResult.match
             case (.p_isConfirming_get,.p_isConfirming_get): return Matcher.ComparisonResult.match
+            case (.p_isLoadingConsents_get,.p_isLoadingConsents_get): return Matcher.ComparisonResult.match
+            case (.p_consents_get,.p_consents_get): return Matcher.ComparisonResult.match
+            case (.p_consentsLoadingError_get,.p_consentsLoadingError_get): return Matcher.ComparisonResult.match
             case (.p_error_get,.p_error_get): return Matcher.ComparisonResult.match
 			case (.p_error_set(let left),.p_error_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             default: return .none
@@ -510,12 +531,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
             case let .m_onChange__throttle_throttle(p0): return p0.intValue
             case .p_provider_get: return 0
             case .p_appointmentDate_get: return 0
-            case .p_agreesWithConsultationDisclaimer_get: return 0
-			case .p_agreesWithConsultationDisclaimer_set(let newValue): return newValue.intValue
-            case .p_agreesWithPersonalDataDisclaimer_get: return 0
-			case .p_agreesWithPersonalDataDisclaimer_set(let newValue): return newValue.intValue
+            case .p_agreesWithFirstConsent_get: return 0
+			case .p_agreesWithFirstConsent_set(let newValue): return newValue.intValue
+            case .p_agreesWithSecondConsent_get: return 0
+			case .p_agreesWithSecondConsent_set(let newValue): return newValue.intValue
             case .p_canConfirm_get: return 0
             case .p_isConfirming_get: return 0
+            case .p_isLoadingConsents_get: return 0
+            case .p_consents_get: return 0
+            case .p_consentsLoadingError_get: return 0
             case .p_error_get: return 0
 			case .p_error_set(let newValue): return newValue.intValue
             }
@@ -527,12 +551,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
             case .m_onChange__throttle_throttle: return ".onChange(throttle:)"
             case .p_provider_get: return "[get] .provider"
             case .p_appointmentDate_get: return "[get] .appointmentDate"
-            case .p_agreesWithConsultationDisclaimer_get: return "[get] .agreesWithConsultationDisclaimer"
-			case .p_agreesWithConsultationDisclaimer_set: return "[set] .agreesWithConsultationDisclaimer"
-            case .p_agreesWithPersonalDataDisclaimer_get: return "[get] .agreesWithPersonalDataDisclaimer"
-			case .p_agreesWithPersonalDataDisclaimer_set: return "[set] .agreesWithPersonalDataDisclaimer"
+            case .p_agreesWithFirstConsent_get: return "[get] .agreesWithFirstConsent"
+			case .p_agreesWithFirstConsent_set: return "[set] .agreesWithFirstConsent"
+            case .p_agreesWithSecondConsent_get: return "[get] .agreesWithSecondConsent"
+			case .p_agreesWithSecondConsent_set: return "[set] .agreesWithSecondConsent"
             case .p_canConfirm_get: return "[get] .canConfirm"
             case .p_isConfirming_get: return "[get] .isConfirming"
+            case .p_isLoadingConsents_get: return "[get] .isLoadingConsents"
+            case .p_consents_get: return "[get] .consents"
+            case .p_consentsLoadingError_get: return "[get] .consentsLoadingError"
             case .p_error_get: return "[get] .error"
 			case .p_error_set: return "[set] .error"
             }
@@ -553,17 +580,26 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         public static func appointmentDate(getter defaultValue: Date...) -> PropertyStub {
             return Given(method: .p_appointmentDate_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func agreesWithConsultationDisclaimer(getter defaultValue: Bool...) -> PropertyStub {
-            return Given(method: .p_agreesWithConsultationDisclaimer_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func agreesWithFirstConsent(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_agreesWithFirstConsent_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func agreesWithPersonalDataDisclaimer(getter defaultValue: Bool...) -> PropertyStub {
-            return Given(method: .p_agreesWithPersonalDataDisclaimer_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func agreesWithSecondConsent(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_agreesWithSecondConsent_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func canConfirm(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_canConfirm_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func isConfirming(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isConfirming_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isLoadingConsents(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isLoadingConsents_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func consents(getter defaultValue: ConsentsViewModel?...) -> PropertyStub {
+            return Given(method: .p_consents_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func consentsLoadingError(getter defaultValue: ConsentsErrorViewModel?...) -> PropertyStub {
+            return Given(method: .p_consentsLoadingError_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
             return Given(method: .p_error_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -599,12 +635,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var provider: Verify { return Verify(method: .p_provider_get) }
         public static var appointmentDate: Verify { return Verify(method: .p_appointmentDate_get) }
-        public static var agreesWithConsultationDisclaimer: Verify { return Verify(method: .p_agreesWithConsultationDisclaimer_get) }
-		public static func agreesWithConsultationDisclaimer(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_agreesWithConsultationDisclaimer_set(newValue)) }
-        public static var agreesWithPersonalDataDisclaimer: Verify { return Verify(method: .p_agreesWithPersonalDataDisclaimer_get) }
-		public static func agreesWithPersonalDataDisclaimer(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_agreesWithPersonalDataDisclaimer_set(newValue)) }
+        public static var agreesWithFirstConsent: Verify { return Verify(method: .p_agreesWithFirstConsent_get) }
+		public static func agreesWithFirstConsent(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_agreesWithFirstConsent_set(newValue)) }
+        public static var agreesWithSecondConsent: Verify { return Verify(method: .p_agreesWithSecondConsent_get) }
+		public static func agreesWithSecondConsent(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_agreesWithSecondConsent_set(newValue)) }
         public static var canConfirm: Verify { return Verify(method: .p_canConfirm_get) }
         public static var isConfirming: Verify { return Verify(method: .p_isConfirming_get) }
+        public static var isLoadingConsents: Verify { return Verify(method: .p_isLoadingConsents_get) }
+        public static var consents: Verify { return Verify(method: .p_consents_get) }
+        public static var consentsLoadingError: Verify { return Verify(method: .p_consentsLoadingError_get) }
         public static var error: Verify { return Verify(method: .p_error_get) }
 		public static func error(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_error_set(newValue)) }
     }

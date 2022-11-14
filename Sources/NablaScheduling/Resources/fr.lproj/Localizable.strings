@@ -57,3 +57,4 @@
 
 "confirmation_screen_error_title" = "Une erreur est survenue";
 "confirmation_screen_error_message" = "Impossible de confirmer le rendez-vous. Réessayez.";
+"confirmation_screen_error_retry_button" = "Réessayer";

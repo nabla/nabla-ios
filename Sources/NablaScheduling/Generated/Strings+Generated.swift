@@ -70,6 +70,8 @@ internal enum L10n {
   internal static let confirmationScreenDataDisclaimer = L10n.tr("Localizable", "confirmation_screen_data_disclaimer")
   /// Failed to schedule appointment. Please try again.
   internal static let confirmationScreenErrorMessage = L10n.tr("Localizable", "confirmation_screen_error_message")
+  /// Retry
+  internal static let confirmationScreenErrorRetryButton = L10n.tr("Localizable", "confirmation_screen_error_retry_button")
   /// Something went wrong
   internal static let confirmationScreenErrorTitle = L10n.tr("Localizable", "confirmation_screen_error_title")
   /// Confirm your appointment

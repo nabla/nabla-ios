@@ -38,6 +38,8 @@ public extension NablaViews {
         
         // MARK: - Private
         
+        private var backgroundAlreadySet = false
+        
         // MARK: Subviews
         
         private lazy var loadingIndicator: UIActivityIndicatorView = {
@@ -53,7 +55,7 @@ public extension NablaViews {
             
             addSubview(loadingIndicator)
             loadingIndicator.nabla.constraintToCenterInSuperView()
-            
+                        
             addTarget(self, action: #selector(tapHandler), for: .touchUpInside)
         }
         
@@ -72,13 +74,23 @@ public extension NablaViews {
                 titleLabel?.alpha = 1
             }
             
-            UIView.animate(withDuration: 0.2) { [self] in
-                if state.contains(.disabled) {
-                    backgroundColor = theme.disabledBackgroundColor
-                } else if state.contains(.highlighted) {
-                    backgroundColor = theme.highlightedBackgroundColor
+            let targetBackgroundColor: UIColor
+            if state.contains(.disabled) {
+                targetBackgroundColor = theme.disabledBackgroundColor
+            } else if state.contains(.highlighted) {
+                targetBackgroundColor = theme.highlightedBackgroundColor
+            } else {
+                targetBackgroundColor = theme.backgroundColor
+            }
+            
+            if targetBackgroundColor != backgroundColor {
+                if backgroundAlreadySet { // Animate only after the first background color change
+                    UIView.animate(withDuration: 0.2) { [self] in
+                        backgroundColor = targetBackgroundColor
+                    }
                 } else {
-                    backgroundColor = theme.backgroundColor
+                    backgroundAlreadySet = true
+                    backgroundColor = targetBackgroundColor
                 }
             }
         }

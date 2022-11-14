@@ -24,6 +24,7 @@ final class NablaSchedulingContainer {
     private(set) lazy var scheduleAppointmentInteractor: ScheduleAppointmentInteractor = ScheduleAppointmentInteractorImpl(repository: appointmentRepository)
     private(set) lazy var cancelAppointmentInteractor: CancelAppointmentInteractor = CancelAppointmentInteractorImpl(repository: appointmentRepository)
     private(set) lazy var watchProviderInteractor: WatchProviderInteractor = WatchProviderInteractorImpl(repository: providerRepository)
+    private(set) lazy var fetchConsentsInteractor: FetchConcentsInteractor = FetchConsentsInteractorImpl(repository: consentsRepository)
 
     // MARK: Initializer
     
@@ -59,6 +60,14 @@ final class NablaSchedulingContainer {
     )
 
     private lazy var providerRemoteDataSource: ProviderRemoteDataSource = ProviderRemoteDataSourceImpl(
+        gqlClient: gqlClient
+    )
+    
+    private lazy var consentsRepository: ConsentsRepository = ConsentsRepositoryImpl(
+        remoteDataSource: consentsRemoteDataSource
+    )
+    
+    private lazy var consentsRemoteDataSource: ConsentsRemoteDataSource = ConsentsRemoteDataSourceImpl(
         gqlClient: gqlClient
     )
 }

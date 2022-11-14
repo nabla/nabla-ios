@@ -57,3 +57,4 @@
 
 "confirmation_screen_error_title" = "Something went wrong";
 "confirmation_screen_error_message" = "Failed to schedule appointment. Please try again.";
+"confirmation_screen_error_retry_button" = "Retry";

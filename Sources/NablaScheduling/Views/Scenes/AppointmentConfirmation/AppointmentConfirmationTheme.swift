@@ -21,6 +21,12 @@ public extension NablaTheme {
         public static var disclaimersTextColor = Colors.Text.base
         /// Font used to display legal disclaimers of the appointment.
         public static var disclaimersFont = Fonts.body
+        /// Color used for displaying the error when an error loading the disclaimers occured.
+        public static var disclaimersErrorTextColor = Colors.Text.base
+        /// Font used for displaying the error when an error loading the disclaimers occured.
+        public static var disclaimersErrorFont = Fonts.body
+        /// Style of the retry button when an error loading the disclaimers occured.
+        public static var disclaimersErrorRetryButton = Button.accent
         
         /// Color used for the text of the cell to display appointment time.
         public static var captionTextColor: UIColor = .nabla.dynamic(lightMode: Colors.Text.accent, darkMode: Colors.Text.onAccent)
@@ -34,6 +40,6 @@ public extension NablaTheme {
         /// Style of the checkbox for legal disclaimers.
         public static var checkbox = Checkbox.base
         /// Style of the button to confirm the appointment.
-        public static var button = Button.accent
+        public static var confirmButton = Button.accent
     }
 }

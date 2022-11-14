@@ -2,7 +2,7 @@ import NablaCore
 import UIKit
 
 extension AppointmentConfirmationViewController {
-    final class CheckboxFieldView: UIControl {
+    final class CheckboxFieldView: UIView, UITextViewDelegate {
         // MARK: - Internal
         
         var isChecked: Bool {
@@ -10,12 +10,36 @@ extension AppointmentConfirmationViewController {
             set { checkBox.isChecked = newValue }
         }
         
-        var text: String? {
-            get { label.text }
-            set { label.text = newValue }
+        var attributedText: NSAttributedString? {
+            get { textView.attributedText }
+            set { textView.attributedText = newValue }
+        }
+        
+        var enableTapOnTextToCheck: Bool {
+            get { textTapGestureRecognizer != nil }
+            set {
+                if newValue {
+                    let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
+                    textTapGestureRecognizer = gestureRecognizer
+                    textView.addGestureRecognizer(gestureRecognizer)
+                    textView.isSelectable = false
+                } else {
+                    if let gestureRecognizer = textTapGestureRecognizer {
+                        textView.removeGestureRecognizer(gestureRecognizer)
+                    }
+                    
+                    textTapGestureRecognizer = nil
+                    textView.isSelectable = true
+                }
+            }
         }
         
         var onTap: (() -> Void)?
+        
+        func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction _: UITextItemInteraction) -> Bool {
+            UIApplication.shared.open(URL)
+            return false
+        }
         
         // MARK: Init
         
@@ -31,14 +55,19 @@ extension AppointmentConfirmationViewController {
         
         // MARK: - Private
         
+        private var textTapGestureRecognizer: UITapGestureRecognizer?
+        
         // MARK: Subviews
         
-        private lazy var label: UILabel = {
-            let view = UILabel()
-            view.numberOfLines = 0
-            view.textAlignment = .left
+        private lazy var textView: UITextView = {
+            let view = UITextView()
+            view.isEditable = false
+            view.isScrollEnabled = false
+            view.textAlignment = .natural
+            view.backgroundColor = .clear
             view.textColor = NablaTheme.AppointmentConfirmationTheme.disclaimersTextColor
             view.font = NablaTheme.AppointmentConfirmationTheme.disclaimersFont
+            view.textContainerInset = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 0)
             return view
         }()
         
@@ -50,20 +79,20 @@ extension AppointmentConfirmationViewController {
         }()
         
         private func setUp() {
-            let hstack = UIStackView(arrangedSubviews: [checkBox, label])
+            let hstack = UIStackView(arrangedSubviews: [checkBox, textView])
             hstack.axis = .horizontal
             hstack.distribution = .fill
-            hstack.alignment = .center
+            hstack.alignment = .leading
             hstack.spacing = 8
             addSubview(hstack)
             hstack.nabla.pinToSuperView()
-            hstack.isUserInteractionEnabled = false
             
-            addTarget(self, action: #selector(tapHandler), for: .touchUpInside)
+            checkBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapHandler)))
+            textView.delegate = self
         }
         
         // MARK: Handlers
-        
+
         @objc private func tapHandler() {
             onTap?()
         }

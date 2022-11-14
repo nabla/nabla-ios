@@ -39,7 +39,7 @@ extension AppointmentConfirmationViewController {
         
         // MARK: - Private
         
-        // MARK: Suviews
+        // MARK: Subviews
         
         private lazy var avatarView: NablaViews.AvatarView = {
             let view = NablaViews.AvatarView()

@@ -33,6 +33,11 @@ public final class NablaSchedulingClient: SchedulingClient {
         try await container.cancelAppointmentInteractor.execute(appointmentId: appointmentId)
     }
     
+    /// Throws `NablaError`
+    func fetchConsents() async throws -> Consents {
+        try await container.fetchConsentsInteractor.execute()
+    }
+    
     // MARK: Initializer
     
     public init(

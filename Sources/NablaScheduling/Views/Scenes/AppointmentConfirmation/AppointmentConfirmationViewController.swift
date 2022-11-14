@@ -46,18 +46,31 @@ final class AppointmentConfirmationViewController: UIViewController {
         return view
     }()
     
-    private lazy var consultationDisclaimerCheckboxField = makeCheckboxFieldView(label: L10n.confirmationScreenConsultationDisclaimer) { [viewModel] in
-        viewModel.agreesWithConsultationDisclaimer = !viewModel.agreesWithConsultationDisclaimer
+    private lazy var errorView: ErrorView = {
+        let view = ErrorView()
+        view.onRetryButtonTap = { [weak self] in
+            self?.viewModel.consentsLoadingError?.handler()
+        }
+        return view
+    }()
+    
+    private lazy var loadingView: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        view.startAnimating()
+        return view
+    }()
+    
+    private lazy var firstConsentCheckboxField = makeCheckboxFieldView { [viewModel] in
+        viewModel.agreesWithFirstConsent = !viewModel.agreesWithFirstConsent
     }
     
-    private lazy var dataDisclaimerCheckBoxField = makeCheckboxFieldView(label: L10n.confirmationScreenDataDisclaimer) { [viewModel] in
-        viewModel.agreesWithPersonalDataDisclaimer = !viewModel.agreesWithPersonalDataDisclaimer
+    private lazy var secondConsentCheckBoxField = makeCheckboxFieldView { [viewModel] in
+        viewModel.agreesWithSecondConsent = !viewModel.agreesWithSecondConsent
     }
     
-    private func makeCheckboxFieldView(label: String, onTap: @escaping () -> Void) -> CheckboxFieldView {
+    private func makeCheckboxFieldView(onTap: @escaping () -> Void) -> CheckboxFieldView {
         let view = CheckboxFieldView()
         view.isChecked = false
-        view.text = label
         view.onTap = onTap
         return view
     }
@@ -71,7 +84,7 @@ final class AppointmentConfirmationViewController: UIViewController {
     private lazy var actionButton: NablaViews.PrimaryButton = {
         let view = NablaViews.PrimaryButton()
         view.setTitle(L10n.confirmationScreenActionButtonLabel, for: .normal)
-        view.theme = NablaTheme.AppointmentConfirmationTheme.button
+        view.theme = NablaTheme.AppointmentConfirmationTheme.confirmButton
         view.onTap = { [viewModel] in
             viewModel.userDidTapConfirmButton()
         }
@@ -86,8 +99,10 @@ final class AppointmentConfirmationViewController: UIViewController {
         let vstack = UIStackView(
             arrangedSubviews: [
                 headerView,
-                consultationDisclaimerCheckboxField,
-                dataDisclaimerCheckBoxField,
+                errorView,
+                loadingView,
+                firstConsentCheckboxField,
+                secondConsentCheckBoxField,
             ]
         )
         vstack.axis = .vertical
@@ -121,11 +136,32 @@ final class AppointmentConfirmationViewController: UIViewController {
                 self.headerView.caption = L10n.confirmationScreenCaptionFormat(self.formatTimeAndDate(date: viewModel.appointmentDate))
             }
             
-            self.consultationDisclaimerCheckboxField.isChecked = viewModel.agreesWithConsultationDisclaimer
-            self.dataDisclaimerCheckBoxField.isChecked = viewModel.agreesWithPersonalDataDisclaimer
-            self.actionButton.isEnabled = viewModel.canConfirm
-            self.actionButton.isLoading = viewModel.isConfirming
-            self.updateError()
+            if viewModel.isLoadingConsents {
+                self.actionButton.isHidden = true
+                self.firstConsentCheckboxField.isHidden = true
+                self.secondConsentCheckBoxField.isHidden = true
+                self.errorView.isHidden = true
+                self.loadingView.isHidden = false
+            } else if let consentsLoadingError = viewModel.consentsLoadingError {
+                self.actionButton.isHidden = true
+                self.firstConsentCheckboxField.isHidden = true
+                self.secondConsentCheckBoxField.isHidden = true
+                self.errorView.isHidden = false
+                self.loadingView.isHidden = true
+                
+                self.errorView.text = consentsLoadingError.message
+            } else {
+                self.errorView.isHidden = true
+                self.loadingView.isHidden = true
+                
+                self.updateConsents(viewModel.consents)
+                
+                self.actionButton.isHidden = false
+                
+                self.actionButton.isEnabled = viewModel.canConfirm
+                self.actionButton.isLoading = viewModel.isConfirming
+                self.updateError()
+            }
         }
     }
     
@@ -138,6 +174,43 @@ final class AppointmentConfirmationViewController: UIViewController {
                    
         headerView.title = ProviderNameComponentsFormatter(style: .fullNameWithPrefix).string(from: .init(provider))
         headerView.subtitle = provider.title
+    }
+    
+    private func updateConsents(_: ConsentsViewModel?) {
+        if let consents = viewModel.consents, let firstConsentHtml = consents.firstConsentHtml {
+            firstConsentCheckboxField.attributedText = formatAttributedStringForDisplay(firstConsentHtml)
+            firstConsentCheckboxField.isChecked = viewModel.agreesWithFirstConsent
+            firstConsentCheckboxField.isHidden = false
+            firstConsentCheckboxField.enableTapOnTextToCheck = !consents.firstConsentContainsLink
+        } else {
+            firstConsentCheckboxField.isHidden = true
+        }
+        
+        if let consents = viewModel.consents, let secondConsentHtml = consents.secondConsentHtml {
+            secondConsentCheckBoxField.attributedText = formatAttributedStringForDisplay(secondConsentHtml)
+            secondConsentCheckBoxField.isChecked = viewModel.agreesWithSecondConsent
+            secondConsentCheckBoxField.isHidden = false
+            secondConsentCheckBoxField.enableTapOnTextToCheck = !consents.secondConsentContainsLink
+        } else {
+            secondConsentCheckBoxField.isHidden = true
+        }
+    }
+    
+    private func formatAttributedStringForDisplay(_ attributedString: NSAttributedString) -> NSAttributedString {
+        let mutableAttributedConsentHtml = NSMutableAttributedString(attributedString: attributedString)
+        mutableAttributedConsentHtml.addAttribute(
+            .font,
+            value: NablaTheme.AppointmentConfirmationTheme.disclaimersFont,
+            range: NSMakeRange(0, attributedString.length)
+        )
+        
+        mutableAttributedConsentHtml.addAttribute(
+            .foregroundColor,
+            value: NablaTheme.AppointmentConfirmationTheme.disclaimersTextColor,
+            range: NSMakeRange(0, attributedString.length)
+        )
+        
+        return mutableAttributedConsentHtml
     }
     
     private func updateError() {

@@ -1,0 +1,6 @@
+query GetAppointmentConfirmationConsents {
+    appointmentConfirmationConsents {
+        firstConsentHtml
+        secondConsentHtml
+    }
+}
