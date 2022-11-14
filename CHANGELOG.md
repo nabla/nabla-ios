@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0-alpha22] - 2022-11-14
 
 ### Added
+- Support for dynamic consents in Scheduling module that you can customize from the console.
 
 ### Changed
 - The `NablaClient.initialize` method now takes a `Configuration` struct instead of multiple params..
