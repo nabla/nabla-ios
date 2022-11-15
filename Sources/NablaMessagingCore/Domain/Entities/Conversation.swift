@@ -10,4 +10,5 @@ public struct Conversation {
     public let patientUnreadMessageCount: Int
     public let pictureUrl: URL?
     public let providers: [ProviderInConversation]
+    public let isLocked: Bool
 }

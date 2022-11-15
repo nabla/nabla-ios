@@ -53,8 +53,7 @@ final class ViewController: UIViewController {
 extension ViewController: ConversationListDelegate {
     func conversationList(didSelect conversation: Conversation) {
         let destination = NablaMessagingClientProtocolMock.shared.views.createConversationViewController(
-            conversation,
-            showComposer: true
+            conversation
         )
         navigationController?.pushViewController(destination, animated: true)
     }

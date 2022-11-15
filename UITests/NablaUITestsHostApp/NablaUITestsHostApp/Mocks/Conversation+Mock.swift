@@ -13,7 +13,8 @@ extension Conversation {
             lastModified: .init(timeIntervalSinceReferenceDate: 0),
             patientUnreadMessageCount: 0,
             pictureUrl: nil,
-            providers: []
+            providers: [],
+            isLocked: false
         )
     }
     

@@ -5,7 +5,6 @@ import NablaMessagingCore
 extension ConversationViewController {
     static func create(
         conversationId: UUID,
-        showComposer: Bool,
         client: NablaMessagingClientProtocol,
         logger: Logger,
         videoCallClient: VideoCallClient?,
@@ -34,7 +33,6 @@ extension ConversationViewController {
             )
         }
         return .init(
-            showComposer: showComposer,
             logger: logger,
             videoCallClient: videoCallClient,
             providers: providers,

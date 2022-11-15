@@ -11,13 +11,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     weak var delegate: ConversationViewControllerDelegate?
 
     init(
-        showComposer: Bool,
         logger: Logger,
         videoCallClient: VideoCallClient?,
         providers: [ConversationCellProvider],
         delegate: ConversationViewControllerDelegate?
     ) {
-        self.showComposer = showComposer
         self.logger = logger
         self.providers = providers
         self.videoCallClient = videoCallClient
@@ -140,7 +138,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     func scrollToItem(withId id: UUID) {
         guard
-            case let .loaded(items) = state,
+            case let .loaded(items, _) = state,
             let item = items.first(where: { $0.id == id }),
             let indexPath = dataSource.indexPath(for: DiffableConversationViewItem(value: item)) else {
             return
@@ -158,7 +156,6 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, DiffableConversationViewItem>
 
-    private let showComposer: Bool
     private let logger: Logger
     private let providers: [ConversationCellProvider]
     private let videoCallClient: VideoCallClient?
@@ -252,15 +249,17 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     // - Loaded -> collectionView + composerView
     private func updateLayoutAfterStateChange(oldValue: ConversationViewState) {
         switch (state, oldValue) {
-        case let (.loaded(items), .loaded(previousItems)):
+        case let (.loaded(items, showComposer), .loaded(previousItems, _)):
             applySnapshot(items: items, animatingDifferences: !previousItems.isEmpty)
+            updateComposerVisibility(showComposer: showComposer)
         case (.loading, _):
             switchToLoadingLayout()
             loadingView.startAnimating()
         case let (.error(viewModel), _):
             switchToErrorLayout(viewModel: viewModel)
-        case let (.loaded(items), _):
+        case let (.loaded(items, showComposer), _):
             switchToLoadedLayout(with: collectionView)
+            updateComposerVisibility(showComposer: showComposer)
             applySnapshot(items: items)
         }
     }
@@ -280,22 +279,12 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private func switchToLoadedLayout(with containedView: UIView) {
         view.nabla.removeSubviews()
-        if showComposer {
-            view.addSubview(composerView)
-            composerView.nabla.pinToSuperView(edges: .nabla.horizontal)
-        }
         view.addSubview(loadedView)
         loadedView.addSubview(containedView)
         loadedView.nabla.pinToSuperView(edges: .nabla.horizontal)
         containedView.nabla.pinToSuperView()
 
         loadedView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        if showComposer {
-            loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor).isActive = true
-            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
-        } else {
-            loadedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        }
     }
     
     private func switchLoadedLayout(from fromView: UIView, to toView: UIView) {
@@ -351,11 +340,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             })
         )
         if Bundle.main.nabla.hasCameraUsageDescription {
-            let scanDosumentAction = UIAlertAction(title: L10n.conversationAddMediaScanDocument, style: .default, handler: { [weak self] _ in
+            let scanDocumentAction = UIAlertAction(title: L10n.conversationAddMediaScanDocument, style: .default, handler: { [weak self] _ in
                 self?.presenter?.didTapScanDocumentButton()
             })
-            scanDosumentAction.isEnabled = !UIDevice.current.nabla.isSimulator
-            alert.addAction(scanDosumentAction)
+            scanDocumentAction.isEnabled = !UIDevice.current.nabla.isSimulator
+            alert.addAction(scanDocumentAction)
         }
         if #available(iOS 14, *) {
             alert.addAction(
@@ -370,6 +359,19 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         alert.popoverPresentationController?.sourceRect = sourceView.frame
         alert.popoverPresentationController?.permittedArrowDirections = [.down]
         present(alert, animated: true, completion: nil)
+    }
+
+    private func updateComposerVisibility(showComposer: Bool) {
+        if showComposer {
+            view.addSubview(composerView)
+            composerView.nabla.pinToSuperView(edges: .nabla.horizontal)
+
+            loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor).isActive = true
+            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
+        } else {
+            composerView.removeFromSuperview()
+            loadedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        }
     }
 }
 

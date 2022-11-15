@@ -25,7 +25,8 @@ extension NablaMessagingClientProtocolMock {
                             typingAt: Date(),
                             seenUntil: Date()
                         ),
-                    ]
+                    ],
+                    isLocked: false
                 )))
             }
             return WatcherMock()

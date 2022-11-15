@@ -27,6 +27,7 @@ import Foundation
           __typename
           ...ProviderInConversationFragment
         }
+        isLocked
       }
       """
 
@@ -44,6 +45,7 @@ import Foundation
         GraphQLField("updatedAt", type: .nonNull(.scalar(GQL.DateTime.self))),
         GraphQLField("pictureUrl", type: .object(PictureUrl.selections)),
         GraphQLField("providers", type: .nonNull(.list(.nonNull(.object(Provider.selections))))),
+        GraphQLField("isLocked", type: .nonNull(.scalar(Bool.self))),
       ]
     }
 
@@ -53,8 +55,8 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(id: GQL.UUID, title: String? = nil, subtitle: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, pictureUrl: PictureUrl? = nil, providers: [Provider]) {
-      self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "subtitle": subtitle, "lastMessagePreview": lastMessagePreview, "unreadMessageCount": unreadMessageCount, "inboxPreviewTitle": inboxPreviewTitle, "updatedAt": updatedAt, "pictureUrl": pictureUrl.flatMap { (value: PictureUrl) -> ResultMap in value.resultMap }, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }])
+     init(id: GQL.UUID, title: String? = nil, subtitle: String? = nil, lastMessagePreview: String? = nil, unreadMessageCount: Int, inboxPreviewTitle: String, updatedAt: GQL.DateTime, pictureUrl: PictureUrl? = nil, providers: [Provider], isLocked: Bool) {
+      self.init(unsafeResultMap: ["__typename": "Conversation", "id": id, "title": title, "subtitle": subtitle, "lastMessagePreview": lastMessagePreview, "unreadMessageCount": unreadMessageCount, "inboxPreviewTitle": inboxPreviewTitle, "updatedAt": updatedAt, "pictureUrl": pictureUrl.flatMap { (value: PictureUrl) -> ResultMap in value.resultMap }, "providers": providers.map { (value: Provider) -> ResultMap in value.resultMap }, "isLocked": isLocked])
     }
 
      var __typename: String {
@@ -144,6 +146,15 @@ import Foundation
       }
       set {
         resultMap.updateValue(newValue.map { (value: Provider) -> ResultMap in value.resultMap }, forKey: "providers")
+      }
+    }
+
+     var isLocked: Bool {
+      get {
+        return resultMap["isLocked"]! as! Bool
+      }
+      set {
+        resultMap.updateValue(newValue, forKey: "isLocked")
       }
     }
 

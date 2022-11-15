@@ -13,7 +13,6 @@ final class ConversationViewControllerTests: XCTestCase {
         super.setUp()
         sut = ConversationViewController.create(
             conversationId: UUID(),
-            showComposer: true,
             client: NablaMessagingClientProtocolMock(),
             logger: LoggerMock(),
             videoCallClient: nil,
@@ -33,7 +32,7 @@ final class ConversationViewControllerTests: XCTestCase {
     func testConversationVCConfigureWithEmpty() {
         // GIVEN
         // WHEN
-        sut.configure(withState: .loaded(items: []))
+        sut.configure(withState: .loaded(items: [], showComposer: true))
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
@@ -42,7 +41,6 @@ final class ConversationViewControllerTests: XCTestCase {
         // GIVEN
         sut = ConversationViewController.create(
             conversationId: UUID(),
-            showComposer: false,
             client: NablaMessagingClientProtocolMock(),
             logger: LoggerMock(),
             videoCallClient: nil,
@@ -50,7 +48,7 @@ final class ConversationViewControllerTests: XCTestCase {
         )
         sut.presenter = ConversationPresenterMock()
         // WHEN
-        sut.configure(withState: .loaded(items: []))
+        sut.configure(withState: .loaded(items: [], showComposer: false))
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
@@ -87,7 +85,7 @@ final class ConversationViewControllerTests: XCTestCase {
             DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .sent, replyTo: nil),
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.provider(provider))),
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.deletedProvider)),
-        ]))
+        ], showComposer: true))
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }

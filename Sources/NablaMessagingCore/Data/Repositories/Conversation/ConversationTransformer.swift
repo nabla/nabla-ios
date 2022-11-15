@@ -21,7 +21,8 @@ enum ConversationTransformer {
             lastModified: fragment.updatedAt,
             patientUnreadMessageCount: fragment.unreadMessageCount,
             pictureUrl: URL(string: fragment.pictureUrl?.fragments.ephemeralUrlFragment.url),
-            providers: transform(providers: fragment.providers)
+            providers: transform(providers: fragment.providers),
+            isLocked: fragment.isLocked
         )
     }
     
@@ -35,7 +36,8 @@ enum ConversationTransformer {
             lastModified: conversation.creationDate,
             patientUnreadMessageCount: 0,
             pictureUrl: nil,
-            providers: []
+            providers: [],
+            isLocked: false
         )
     }
     
