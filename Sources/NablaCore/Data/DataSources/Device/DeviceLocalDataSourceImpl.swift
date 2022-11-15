@@ -50,13 +50,22 @@ final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
     private let logger: Logger
     
     private func readCodeVersion() -> Int {
-        guard let url = NablaCorePackage.resourcesBundle.url(forResource: "versions", withExtension: "json") else { return 0 }
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        guard let url = NablaCorePackage.resourcesBundle.url(forResource: "version", withExtension: nil) else {
+            logger.error(message: "Failed to read code version, unable to find file")
+            return 0
+        }
         do {
             let data = try Data(contentsOf: url)
-            let file = try decoder.decode(VersionsFile.self, from: data)
-            return file.codeVersion
+            guard let stringValue = String(data: data, encoding: String.Encoding.utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+                logger.error(message: "Failed to read code version, unable to extract value")
+                return 0
+            }
+            guard let intValue = Int(stringValue) else {
+                logger.error(message: "Failed to read code version, unable to parse value (" + stringValue + ")")
+                return 0
+            }
+            
+            return intValue
         } catch {
             logger.error(message: "Failed to read code version", extra: ["error": error])
             return 0
