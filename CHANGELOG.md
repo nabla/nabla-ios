@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ⚠️ If you were using the `showComposer` parameter of `NablaClient.shared.messaging.views.createConversationViewController`, it is not available anymore and you should migrate to using lock conversation from the Console.
 
 ### Fixed
+ 
+- Fixed an issue in video calls where the Provider's video could sometime not be displayed.
 
 ## [1.0.0-alpha22] - 2022-11-14
 

@@ -93,15 +93,21 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     private var room: Room?
     private weak var view: VideoCallRoomViewContract?
     
+    private let localUserSerialQueue = DispatchQueue(label: "localUserSerialQueue", qos: .userInteractive)
     private var localUser: LocalUser? {
         didSet {
-            updateLocalUserState()
-            updateParticipants()
+            DispatchQueue.main.async {
+                self.updateLocalUserState()
+                self.updateParticipants()
+            }
         }
     }
     
+    private let remoteUserSerialQueue = DispatchQueue(label: "remoteUserSerialQueue", qos: .userInteractive)
     private var remoteUser: RemoteUser? {
-        didSet { updateParticipants() }
+        didSet {
+            DispatchQueue.main.async { self.updateParticipants() }
+        }
     }
     
     private func close() {
@@ -205,33 +211,39 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
 
 extension VideoCallRoomPresenterImpl: RoomDelegate {
     func room(_: Room, localParticipant: LocalParticipant, didPublish publication: LocalTrackPublication) {
-        var localUser = self.localUser ?? LocalUser(participant: localParticipant)
-        if let videoTrack = publication.track as? LocalVideoTrack {
-            localUser.videoTrack = videoTrack
-        } else if let audioTrack = publication.track as? LocalAudioTrack {
-            localUser.audioTrack = audioTrack
+        localUserSerialQueue.sync {
+            var localUser = self.localUser ?? LocalUser(participant: localParticipant)
+            if let videoTrack = publication.track as? LocalVideoTrack {
+                localUser.videoTrack = videoTrack
+            } else if let audioTrack = publication.track as? LocalAudioTrack {
+                localUser.audioTrack = audioTrack
+            }
+            self.localUser = localUser
         }
-        DispatchQueue.main.async { self.localUser = localUser }
     }
     
     func room(_: Room, participant: RemoteParticipant, didSubscribe _: RemoteTrackPublication, track: Track) {
-        var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
-        if let videoTrack = track as? VideoTrack {
-            remoteUser.videoTrack = videoTrack
-        } else if let audioTrack = track as? AudioTrack {
-            remoteUser.audioTrack = audioTrack
+        remoteUserSerialQueue.sync {
+            var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
+            if let videoTrack = track as? VideoTrack {
+                remoteUser.videoTrack = videoTrack
+            } else if let audioTrack = track as? AudioTrack {
+                remoteUser.audioTrack = audioTrack
+            }
+            self.remoteUser = remoteUser
         }
-        DispatchQueue.main.async { self.remoteUser = remoteUser }
     }
     
     func room(_: Room, participant: RemoteParticipant, didUnpublish publication: RemoteTrackPublication) {
-        var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
-        if publication.track is VideoTrack {
-            remoteUser.videoTrack = nil
-        } else if publication.track is AudioTrack {
-            remoteUser.audioTrack = nil
+        remoteUserSerialQueue.sync {
+            var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
+            if publication.track is VideoTrack {
+                remoteUser.videoTrack = nil
+            } else if publication.track is AudioTrack {
+                remoteUser.audioTrack = nil
+            }
+            self.remoteUser = remoteUser
         }
-        DispatchQueue.main.async { self.remoteUser = remoteUser }
     }
     
     func room(_: Room, didDisconnect error: Error?) {
@@ -243,7 +255,7 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
     }
     
     func room(_: Room, participantDidLeave _: RemoteParticipant) {
-        DispatchQueue.main.async {
+        remoteUserSerialQueue.sync {
             self.remoteUser = nil
         }
     }
@@ -258,22 +270,28 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
     }
     
     func room(_: Room, participant: Participant, didUpdate publication: TrackPublication, muted: Bool) {
-        if let localParticipant = participant as? LocalParticipant {
-            var localUser = localUser ?? LocalUser(participant: localParticipant)
-            if publication.track is VideoTrack {
-                localUser.videoMuted = muted
-            } else if publication.track is AudioTrack {
-                localUser.audioMuted = muted
+        localUserSerialQueue.sync {
+            if let localParticipant = participant as? LocalParticipant {
+                var localUser = localUser ?? LocalUser(participant: localParticipant)
+                if publication.track is VideoTrack {
+                    localUser.videoMuted = muted
+                } else if publication.track is AudioTrack {
+                    localUser.audioMuted = muted
+                }
+                self.localUser = localUser
             }
-            DispatchQueue.main.async { self.localUser = localUser }
-        } else if let remoteParticipant = participant as? RemoteParticipant {
-            var remoteUser = remoteUser ?? RemoteUser(participant: remoteParticipant)
-            if publication.track is VideoTrack {
-                remoteUser.videoMuted = muted
-            } else if publication.track is AudioTrack {
-                remoteUser.audioMuted = muted
+        }
+        
+        remoteUserSerialQueue.sync {
+            if let remoteParticipant = participant as? RemoteParticipant {
+                var remoteUser = remoteUser ?? RemoteUser(participant: remoteParticipant)
+                if publication.track is VideoTrack {
+                    remoteUser.videoMuted = muted
+                } else if publication.track is AudioTrack {
+                    remoteUser.audioMuted = muted
+                }
+                self.remoteUser = remoteUser
             }
-            DispatchQueue.main.async { self.remoteUser = remoteUser }
         }
     }
 }
