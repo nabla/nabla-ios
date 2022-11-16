@@ -28,7 +28,8 @@ public class NablaVideoCallViewFactoryImpl: InternalNablaVideoCallViewFactory {
                 token: token,
                 dependencies: .init(
                     currentVideoCallInteractor: client.container.currentVideoCallInteractor,
-                    logger: client.container.logger
+                    logger: client.container.logger,
+                    errorReporter: client.container.errorReporter
                 )
             )
             let viewController = VideoCallRoomViewController(presenter: presenter)

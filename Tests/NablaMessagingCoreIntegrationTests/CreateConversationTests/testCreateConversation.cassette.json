@@ -1,48 +1,13 @@
 {
+  "name" : "testCreateConversation.cassette",
   "interactions" : [
     {
-      "response" : {
-        "body" : {
-          "data" : {
-            "registerOrUpdateDevice" : {
-              "deviceId" : "1deb10fc-b7dc-4c3a-a4cd-d90c53e2d798",
-              "__typename" : "UpdateDeviceOutput"
-            }
-          }
-        },
-        "status" : 200,
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "headers" : {
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "Date" : "Tue, 15 Nov 2022 09:29:24 GMT",
-          "X-Request-ID" : "77461836-2a41-4e98-a8f6-9ee8de361d24",
-          "Server" : "ktor-server-core\/1.6.2",
-          "Connection" : "keep-alive",
-          "x-nabla-cloudregion" : "EU_WEST1",
-          "Content-Length" : "180",
-          "Vary" : "Origin"
-        }
-      },
-      "recorded_at" : 1668504564.3943691,
+      "recorded_at" : 1668601126.682158,
       "request" : {
-        "headers" : {
-          "X-Nabla-API-Key" : "test-api-key",
-          "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "X-Nabla-SDK-Platform" : "ios",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "Accept-Language" : "en",
-          "apollographql-client-version" : "13.3.1-20076",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY2ODUwNDc3NCwic2Vzc2lvbl91dWlkIjoiZGE0Mjg5MmYtNWNkNC00YjA2LTkzODMtNDVjYTkxNTJkMmMyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.LsDwdPzxu4bMI4WjtoBlHe_5eehcTQGk8-g8r7aGKI8",
-          "Content-Type" : "application\/json",
-          "X-Nabla-SDK-Version" : "1.0.0-alpha22",
-          "X-APOLLO-OPERATION-NAME" : "registerOrUpdateDevice"
-        },
+        "method" : "POST",
         "body" : {
           "Tests-Request-Index" : 0,
-          "query" : "mutation registerOrUpdateDevice($deviceId: UUID, $input: DeviceInput!) {\n  registerOrUpdateDevice(deviceId: $deviceId, device: $input) {\n    __typename\n    deviceId\n  }\n}",
+          "query" : "mutation registerOrUpdateDevice($deviceId: UUID, $input: DeviceInput!) {\n  registerOrUpdateDevice(deviceId: $deviceId, device: $input) {\n    __typename\n    deviceId\n    sentry {\n      __typename\n      env\n      dsn\n    }\n  }\n}",
           "operationName" : "registerOrUpdateDevice",
           "variables" : {
             "input" : {
@@ -57,38 +22,80 @@
             "deviceId" : null
           }
         },
-        "method" : "POST",
+        "headers" : {
+          "X-Nabla-API-Key" : "test-api-key",
+          "apollographql-client-version" : "13.3.1-20076",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "X-APOLLO-OPERATION-NAME" : "registerOrUpdateDevice",
+          "Content-Type" : "application\/json",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY2ODYwMTM0MSwic2Vzc2lvbl91dWlkIjoiMzk5MDJlNWMtYmE4Yi00NDAxLTgxMmMtZjdhNDJjYjllMTlkIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.utm7JM4OxjYHTxevQiHpB6sPHuhM4AlVpZ-N2PWf72Q",
+          "Accept-Language" : "en",
+          "X-Nabla-SDK-Platform" : "ios",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha22"
+        },
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
+      },
+      "response" : {
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "status" : 200,
+        "headers" : {
+          "X-Request-ID" : "bf19d394-31de-432e-a218-e397b26c3de7",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "Date" : "Wed, 16 Nov 2022 12:18:46 GMT",
+          "Connection" : "keep-alive",
+          "Content-Length" : "375",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "x-nabla-cloudregion" : "EU_WEST1",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Vary" : "Origin",
+          "Server" : "ktor-server-core\/1.6.2"
+        },
+        "body" : {
+          "data" : {
+            "registerOrUpdateDevice" : {
+              "deviceId" : "87b1778e-da54-41c5-b70c-482d36e493fc",
+              "sentry" : {
+                "env" : "dev",
+                "dsn" : "https:\/\/fa2c462be7f24bd7a510258fac2be401@sentry.nabla.com\/11",
+                "__typename" : "Sentry"
+              },
+              "__typename" : "UpdateDeviceOutput"
+            }
+          }
+        }
       }
     },
     {
-      "recorded_at" : 1668504564.4490762,
+      "recorded_at" : 1668601126.715759,
       "response" : {
-        "status" : 200,
         "headers" : {
-          "X-Request-ID" : "5bd1d95a-bcd9-4be8-8f6b-bffeeb07a27b",
-          "Content-Length" : "657",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "x-nabla-cloudregion" : "EU_WEST1",
+          "Connection" : "keep-alive",
           "Vary" : "Origin",
-          "Date" : "Tue, 15 Nov 2022 09:29:24 GMT",
           "Server" : "ktor-server-core\/1.6.2",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "Date" : "Wed, 16 Nov 2022 12:18:46 GMT",
           "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "Connection" : "keep-alive"
+          "X-Request-ID" : "aab58f2c-f4ac-4616-be15-0a1a2ec7b88e",
+          "Content-Length" : "657",
+          "x-nabla-cloudregion" : "EU_WEST1",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0"
         },
+        "status" : 200,
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "body" : {
           "data" : {
             "createConversation" : {
               "conversation" : {
                 "subtitle" : null,
-                "id" : "255dc746-e66a-4e97-a8be-f4d7a13bf67e",
+                "id" : "fd838511-b30c-4d54-9991-f4b29dfdd201",
                 "inboxPreviewTitle" : "Ask us anything",
                 "title" : null,
                 "isLocked" : false,
                 "lastMessagePreview" : "",
-                "updatedAt" : "2022-11-15T10:29:24.378+01:00",
+                "updatedAt" : "2022-11-16T13:18:46.618+01:00",
                 "unreadMessageCount" : 0,
                 "pictureUrl" : null,
                 "__typename" : "Conversation",
@@ -99,36 +106,34 @@
               "__typename" : "CreateConversationOutput"
             }
           }
-        },
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
+        }
       },
       "request" : {
-        "method" : "POST",
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "headers" : {
-          "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "Accept-Language" : "en",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "X-Nabla-API-Key" : "test-api-key",
-          "X-Nabla-SDK-Platform" : "ios",
-          "apollographql-client-version" : "13.3.1-20076",
-          "X-Nabla-SDK-Version" : "1.0.0-alpha22",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY2ODUwNDc3NCwic2Vzc2lvbl91dWlkIjoiZGE0Mjg5MmYtNWNkNC00YjA2LTkzODMtNDVjYTkxNTJkMmMyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.LsDwdPzxu4bMI4WjtoBlHe_5eehcTQGk8-g8r7aGKI8",
-          "Content-Type" : "application\/json",
-          "X-APOLLO-OPERATION-NAME" : "CreateConversation"
-        },
+        "method" : "POST",
         "body" : {
+          "Tests-Request-Index" : 1,
+          "query" : "mutation CreateConversation($title: String, $providerIds: [UUID!], $initialMessage: SendMessageInput) {\n  createConversation(\n    title: $title\n    providerIds: $providerIds\n    initialMessage: $initialMessage\n  ) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}",
+          "operationName" : "CreateConversation",
           "variables" : {
             "initialMessage" : null,
             "title" : null,
             "providerIds" : null
-          },
-          "query" : "mutation CreateConversation($title: String, $providerIds: [UUID!], $initialMessage: SendMessageInput) {\n  createConversation(\n    title: $title\n    providerIds: $providerIds\n    initialMessage: $initialMessage\n  ) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}",
-          "operationName" : "CreateConversation",
-          "Tests-Request-Index" : 1
+          }
+        },
+        "headers" : {
+          "apollographql-client-version" : "13.3.1-20076",
+          "X-Nabla-SDK-Platform" : "ios",
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "Content-Type" : "application\/json",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY2ODYwMTM0MSwic2Vzc2lvbl91dWlkIjoiMzk5MDJlNWMtYmE4Yi00NDAxLTgxMmMtZjdhNDJjYjllMTlkIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.utm7JM4OxjYHTxevQiHpB6sPHuhM4AlVpZ-N2PWf72Q",
+          "Accept-Language" : "en",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha22",
+          "X-APOLLO-OPERATION-NAME" : "CreateConversation",
+          "X-Nabla-API-Key" : "test-api-key",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios"
         }
       }
     }
-  ],
-  "name" : "testCreateConversation.cassette"
+  ]
 }

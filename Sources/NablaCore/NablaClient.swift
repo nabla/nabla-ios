@@ -25,8 +25,8 @@ public class NablaClient {
         let networkConfiguration = networkConfiguration ?? DefaultNetworkConfiguration()
         let container = CoreContainer(
             name: name,
+            configuration: configuration,
             networkConfiguration: networkConfiguration,
-            logger: configuration.logger,
             modules: modules
         )
         self.init(apiKey: configuration.apiKey, container: container)

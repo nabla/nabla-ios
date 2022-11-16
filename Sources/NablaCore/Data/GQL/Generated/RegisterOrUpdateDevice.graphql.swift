@@ -14,6 +14,11 @@ import Foundation
         registerOrUpdateDevice(deviceId: $deviceId, device: $input) {
           __typename
           deviceId
+          sentry {
+            __typename
+            env
+            dsn
+          }
         }
       }
       """
@@ -67,6 +72,7 @@ import Foundation
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("deviceId", type: .nonNull(.scalar(GQL.UUID.self))),
+            GraphQLField("sentry", type: .object(Sentry.selections)),
           ]
         }
 
@@ -76,8 +82,8 @@ import Foundation
           self.resultMap = unsafeResultMap
         }
 
-         init(deviceId: GQL.UUID) {
-          self.init(unsafeResultMap: ["__typename": "UpdateDeviceOutput", "deviceId": deviceId])
+         init(deviceId: GQL.UUID, sentry: Sentry? = nil) {
+          self.init(unsafeResultMap: ["__typename": "UpdateDeviceOutput", "deviceId": deviceId, "sentry": sentry.flatMap { (value: Sentry) -> ResultMap in value.resultMap }])
         }
 
          var __typename: String {
@@ -95,6 +101,64 @@ import Foundation
           }
           set {
             resultMap.updateValue(newValue, forKey: "deviceId")
+          }
+        }
+
+         var sentry: Sentry? {
+          get {
+            return (resultMap["sentry"] as? ResultMap).flatMap { Sentry(unsafeResultMap: $0) }
+          }
+          set {
+            resultMap.updateValue(newValue?.resultMap, forKey: "sentry")
+          }
+        }
+
+         struct Sentry: GraphQLSelectionSet {
+           static let possibleTypes: [String] = ["Sentry"]
+
+           static var selections: [GraphQLSelection] {
+            return [
+              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+              GraphQLField("env", type: .nonNull(.scalar(String.self))),
+              GraphQLField("dsn", type: .nonNull(.scalar(String.self))),
+            ]
+          }
+
+           private(set) var resultMap: ResultMap
+
+           init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
+          }
+
+           init(env: String, dsn: String) {
+            self.init(unsafeResultMap: ["__typename": "Sentry", "env": env, "dsn": dsn])
+          }
+
+           var __typename: String {
+            get {
+              return resultMap["__typename"]! as! String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "__typename")
+            }
+          }
+
+           var env: String {
+            get {
+              return resultMap["env"]! as! String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "env")
+            }
+          }
+
+           var dsn: String {
+            get {
+              return resultMap["dsn"]! as! String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "dsn")
+            }
           }
         }
       }

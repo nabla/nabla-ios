@@ -1,0 +1,1 @@
+typealias RemoteDevice = GQL.RegisterOrUpdateDeviceMutation.Data.RegisterOrUpdateDevice

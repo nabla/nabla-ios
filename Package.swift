@@ -35,6 +35,7 @@ let package = Package(
         // SDK
         .package(url: "https://github.com/apollographql/apollo-ios", from: "0.50.0"),
         .package(name: "LiveKit", url: "https://github.com/livekit/client-sdk-swift.git", from: "1.0.3"),
+        .package(name: "Sentry", url: "https://github.com/getsentry/sentry-cocoa.git", from: "7.30.1"),
         
         // Tests
         .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", from: "4.1.0"),
@@ -47,6 +48,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloWebSocket", package: "apollo-ios"),
+                .product(name: "Sentry", package: "Sentry"),
             ],
             exclude: [
                 "build.sh",

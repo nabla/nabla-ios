@@ -9,5 +9,5 @@ struct Installation {
 }
 
 protocol DeviceRemoteDataSource {
-    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<UUID, GQLError>) -> Cancellable
+    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<RemoteDevice, GQLError>) -> Cancellable
 }

@@ -30,8 +30,11 @@ struct TestEnvironment {
         
         let coreContainer = CoreContainer(
             name: "tests",
+            configuration: .init(
+                apiKey: "test-api-key",
+                logger: ConsoleLogger()
+            ),
             networkConfiguration: networkConfiguration,
-            logger: ConsoleLogger(),
             modules: []
         )
         coreContainer.urlSessionClient = MockURLSessionClient(session: session)
@@ -70,10 +73,10 @@ extension TestEnvironment: SessionTokenProvider {
     func provideTokens(forUserId _: String, completion: (AuthTokens?) -> Void) {
         completion(
             .init(
-                // Expires 04/08/2054
-                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY2ODUwNDc3NCwic2Vzc2lvbl91dWlkIjoiZGE0Mjg5MmYtNWNkNC00YjA2LTkzODMtNDVjYTkxNTJkMmMyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.qm9h2kjQiqfLaIxKCLT07394WIO6dZemXd21xTJRoYE",
-                // Expires 04/08/2054
-                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NzYyODA0NzQsInNlc3Npb25fdXVpZCI6ImRhNDI4OTJmLTVjZDQtNGIwNi05MzgzLTQ1Y2E5MTUyZDJjMiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.7X1uU7hut4SCuT5D05oMia6dasITCpUCWlnEsFybl5E"
+                // Expires 23/10/2054
+                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY2ODYwMTM0MSwic2Vzc2lvbl91dWlkIjoiMzk5MDJlNWMtYmE4Yi00NDAxLTgxMmMtZjdhNDJjYjllMTlkIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.ULPxh07iBDIIFZUXXpMP2Ljnr-oDIo-TsqPM4Oyjvc4",
+                // Expires 23/10/2054
+                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NzYzNzcwNDEsInNlc3Npb25fdXVpZCI6IjM5OTAyZTVjLWJhOGItNDQwMS04MTJjLWY3YTQyY2I5ZTE5ZCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.OREU35FKcLq0pFRoTu8khuvGJJU2JXGMKpWGoqgoveE"
             )
         )
     }

@@ -3,11 +3,11 @@ import Foundation
 final class DeviceRemoteDataSourceImpl: DeviceRemoteDataSource {
     // MARK: - Internal
     
-    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<UUID, GQLError>) -> Cancellable {
+    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<RemoteDevice, GQLError>) -> Cancellable {
         let input = makeDeviceInput(installation: installation)
         return gqlClient.perform(
             mutation: GQL.RegisterOrUpdateDeviceMutation(deviceId: installation.deviceId, input: input),
-            handler: handler.pullback { $0.registerOrUpdateDevice.deviceId }
+            handler: handler.pullback { $0.registerOrUpdateDevice }
         )
     }
     

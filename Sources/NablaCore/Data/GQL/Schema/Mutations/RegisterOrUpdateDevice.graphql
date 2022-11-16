@@ -4,5 +4,9 @@ mutation registerOrUpdateDevice(
 ) {
     registerOrUpdateDevice(deviceId: $deviceId, device: $input) {
         deviceId
+        sentry {
+            env
+            dsn
+        }
     }
 }

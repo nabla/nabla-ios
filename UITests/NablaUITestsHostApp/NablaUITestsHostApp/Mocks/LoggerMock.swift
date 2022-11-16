@@ -2,6 +2,10 @@ import NablaCore
 import NablaMessagingCore
 
 final class LoggerMock: Logger {
+    func debug(message: @autoclosure () -> String, extra: [String: Any]) {
+        print("[DEBUG] \(message()) - \(extra)")
+    }
+    
     func info(message: @autoclosure () -> String, extra: [String: Any]) {
         print("[INFO] \(message()) - \(extra)")
     }

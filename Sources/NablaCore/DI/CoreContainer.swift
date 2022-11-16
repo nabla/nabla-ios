@@ -4,7 +4,9 @@ import Foundation
 public class CoreContainer {
     // MARK: - Public
     
-    public let logger: Logger
+    public var logger: Logger {
+        configuration.logger
+    }
     
     public private(set) lazy var logOutInteractor: LogOutInteractor = LogOutInteractorImpl(
         userRepository: userRepository,
@@ -59,6 +61,10 @@ public class CoreContainer {
     public private(set) lazy var videoCallClient: VideoCallClient? = videoCallModule?.makeClient(container: self)
     
     public private(set) lazy var schedulingClient: SchedulingClient? = schedulingModule?.makeClient(container: self)
+
+    public private(set) lazy var errorReporter: ErrorReporter = configuration.enableReporting
+        ? SentryErrorReporter(logger: logger)
+        : NoOpErrorReporter()
     
     // MARK: - Internal
     
@@ -77,16 +83,16 @@ public class CoreContainer {
         store: keyValueStore,
         logger: logger
     )
-    
+
     init(
         name: String,
+        configuration: Configuration,
         networkConfiguration: NetworkConfiguration,
-        logger: Logger,
         modules: [Module]
     ) {
         self.name = name
         self.networkConfiguration = networkConfiguration
-        self.logger = logger
+        self.configuration = configuration
         self.modules = modules
         messagingModule = modules.first(as: MessagingModule.self)
         videoCallModule = modules.first(as: VideoCallModule.self)
@@ -96,11 +102,12 @@ public class CoreContainer {
     // MARK: - Private
 
     private let name: String
+    private let configuration: Configuration
     private let networkConfiguration: NetworkConfiguration
     private let messagingModule: MessagingModule?
     private let videoCallModule: VideoCallModule?
     private let schedulingModule: SchedulingModule?
-    
+
     private lazy var reachabilityRefetchTrigger: ReachabilityRefetchTrigger = .init(environment: environment)
 
     private lazy var interceptorProvider: InterceptorProvider = HttpInterceptorProvider(
@@ -144,7 +151,8 @@ public class CoreContainer {
     private lazy var deviceRepository: DeviceRepository = DeviceRepositoryImpl(
         deviceLocalDataSource: deviceLocalDataSource,
         deviceRemoteDataSource: deviceRemoteDataSource,
-        logger: logger
+        logger: logger,
+        errorReporter: errorReporter
     )
 }
 

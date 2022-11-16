@@ -13,6 +13,7 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     struct Dependencies {
         let currentVideoCallInteractor: CurrentVideoCallInteractor
         let logger: Logger
+        let errorReporter: ErrorReporter
     }
     
     func bind(to view: VideoCallRoomViewContract) {
@@ -92,6 +93,7 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     
     private var room: Room?
     private weak var view: VideoCallRoomViewContract?
+    private var videoCallRoomErrorReporterHelper: VideoCallRoomErrorReporterHelper?
     
     private let localUserSerialQueue = DispatchQueue(label: "localUserSerialQueue", qos: .userInteractive)
     private var localUser: LocalUser? {
@@ -112,11 +114,17 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     
     private func close() {
         view?.close()
-        dependencies.currentVideoCallInteractor.resignCurrentVideoCall()
+        
+        room?.disconnect().then { [weak self] in
+            self?.dependencies.currentVideoCallInteractor.resignCurrentVideoCall()
+        }
     }
     
     private func connectToRoom() {
         let room = Room(delegate: self)
+        videoCallRoomErrorReporterHelper = VideoCallRoomErrorReporterHelper(errorReporter: dependencies.errorReporter)
+        videoCallRoomErrorReporterHelper.map { room.add(delegate: $0) }
+        
         room.connect(url, token).then { [weak self] room in
             self?.room = room
             

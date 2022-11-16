@@ -3,6 +3,7 @@ import os
 
 public class ConsoleLogger: Logger {
     public enum Level: Int, Comparable {
+        case debug
         case info
         case warning
         case error
@@ -15,6 +16,11 @@ public class ConsoleLogger: Logger {
     // MARK: - Public
     
     public var level: Level
+    
+    public func debug(message: @autoclosure () -> String, extra: [String: Any]) {
+        guard level <= .debug else { return }
+        report("[Debug] " + message(), extra: extra, type: .debug)
+    }
     
     public func info(message: @autoclosure () -> String, extra: [String: Any]) {
         guard level <= .info else { return }

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Reporting: Add an ErrorReporter to report anonymous events to nabla servers to help debug some features like video calls.
+
 ### Changed
 
 - Removed the `showComposer` parameter from `createConversationViewController` method and relied on `Conversation` `isLocked` property to hide the composer.  
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for dynamic consents in Scheduling module that you can customize from the console.
 
 ### Changed
+
 - The `NablaClient.initialize` method now takes a `Configuration` struct instead of multiple params..
 ⚠️ This change is breaking and you will need to update all `NablaClient` `initialize` and `init` calls.
 

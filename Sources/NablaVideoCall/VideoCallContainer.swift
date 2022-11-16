@@ -5,7 +5,8 @@ final class VideoCallContainer {
     // MARK: - Internal
     
     var logger: Logger { coreContainer.logger }
-    
+    var errorReporter: ErrorReporter { coreContainer.errorReporter }
+
     let networkConfiguration: NetworkConfiguration
     
     let currentVideoCallInteractor = CurrentVideoCallInteractor()
