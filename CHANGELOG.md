@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha23] - 2022-11-16
+
+### Added
+
 - Reporting: Add an ErrorReporter to report anonymous events to nabla servers to help debug some features like video calls.
 
 ### Changed
