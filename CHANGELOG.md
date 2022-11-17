@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+
+## [1.0.0-alpha24] - 2022-11-17
+
+### Added
+
+### Changed
+
+### Fixed
+
 - Fixed NablaTheme.Colors being immutable.
 
 
