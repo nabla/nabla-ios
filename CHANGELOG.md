@@ -45,8 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for dynamic consents in Scheduling module that you can customize from the console.
 
 ### Changed
-
-- The `NablaClient.initialize` method now takes a `Configuration` struct instead of multiple params..
+- The `NablaClient.initialize` method now takes a `Configuration` struct instead of multiple params.
 ⚠️ This change is breaking and you will need to update all `NablaClient` `initialize` and `init` calls.
 
 - `NablaTheme` colors have been reworked to better support dark mode. The new colors can be found in `NablaTheme.Colors`.
