@@ -47,3 +47,10 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Tests/NablaMessagingUITests/Generated
   - Tests/NablaSchedulingTests/Generated
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown, github-actions-logging)
+
+custom_rules:
+  mutable_theme_properties:
+    included: '(Theme|Theme\+.*).swift'
+    regex: '(public static let)|(public let)'
+    message: "All public theme properties must be mutable"
+    severity: error
