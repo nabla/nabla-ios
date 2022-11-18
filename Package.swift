@@ -33,14 +33,14 @@ let package = Package(
     ],
     dependencies: [
         // SDK
-        .package(url: "https://github.com/apollographql/apollo-ios", from: "0.50.0"),
-        .package(name: "LiveKit", url: "https://github.com/livekit/client-sdk-swift.git", from: "1.0.3"),
-        .package(name: "Sentry", url: "https://github.com/getsentry/sentry-cocoa.git", from: "7.30.1"),
+        .package(url: "https://github.com/apollographql/apollo-ios", .exact("0.51.2")),
+        .package(name: "LiveKit", url: "https://github.com/livekit/client-sdk-swift.git", .exact("1.0.5")),
+        .package(name: "Sentry", url: "https://github.com/getsentry/sentry-cocoa.git", .exact("7.31.2")),
         
         // Tests
-        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", from: "4.1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.10.0"),
-        .package(url: "https://github.com/venmo/DVR", from: "2.1.0"),
+        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", .exact("4.1.0")),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", .exact("1.10.0")),
+        .package(url: "https://github.com/venmo/DVR", .exact("2.1.0")),
     ],
     targets: [
         .target(
