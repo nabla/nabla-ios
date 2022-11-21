@@ -27,7 +27,9 @@ public class NotificationRefetchTrigger: RefetchTrigger {
     }
     
     @objc private func notificationHandler() {
-        trigger()
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.trigger()
+        }
     }
     
     deinit {
