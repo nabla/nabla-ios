@@ -4,7 +4,13 @@ import Foundation
 import UIKit
 
 final class VideoMessageContentView: UIView, MessageContentView {
-    // MARK: - Init
+    // MARK: - Internal
+        
+    weak var viewController: UIViewController? {
+        didSet { setUpPlayerController() }
+    }
+    
+    // MARK: Init
 
     init() {
         super.init(frame: .zero)
@@ -16,10 +22,10 @@ final class VideoMessageContentView: UIView, MessageContentView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - MessageContentView
+    // MARK: MessageContentView
 
     func configure(with viewModel: VideoMessageContentViewModel) throws {
-        playerView.player = AVPlayer(playerItem: AVPlayerItem(asset: try DataAVAsset(source: viewModel.videoSource)))
+        playerViewController.player = AVPlayer(playerItem: AVPlayerItem(asset: try DataAVAsset(source: viewModel.videoSource)))
         widthConstraint?.isActive = false
         heightConstraint?.isActive = false
         (widthConstraint, heightConstraint) = nabla.constraintToSize(idealSize(contentSize: viewModel.originalVideoSize))
@@ -28,21 +34,32 @@ final class VideoMessageContentView: UIView, MessageContentView {
     func configure(sender _: ConversationMessageSender) {}
     
     func prepareForReuse() {
-        playerView.player = nil
+        playerViewController.player = nil
     }
     
     // MARK: - Private
 
-    private lazy var playerView: AVPlayerViewController = makePlayerView()
+    private lazy var playerViewController: AVPlayerViewController = makePlayerViewController()
     private var widthConstraint: NSLayoutConstraint?
     private var heightConstraint: NSLayoutConstraint?
 
     private func setUp() {
-        addSubview(playerView.view)
-        playerView.view.nabla.pinToSuperView()
+        if #available(iOS 16, *) {
+            let overlay = PassthroughiOS16Overlay()
+            addSubview(overlay)
+            overlay.nabla.constraintToCenterInSuperView()
+        }
     }
     
-    private func makePlayerView() -> AVPlayerViewController {
+    private func setUpPlayerController() {
+        guard playerViewController.view.superview == nil else { return }
+        viewController?.addChild(playerViewController)
+        insertSubview(playerViewController.view, at: 0)
+        playerViewController.view.nabla.pinToSuperView()
+        playerViewController.didMove(toParent: viewController)
+    }
+    
+    private func makePlayerViewController() -> AVPlayerViewController {
         let playerViewController = AVPlayerViewController()
         playerViewController.entersFullScreenWhenPlaybackBegins = true
         playerViewController.exitsFullScreenWhenPlaybackEnds = true

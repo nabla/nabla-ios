@@ -14,6 +14,7 @@ final class DeletedMessageCellProvider: ConversationCellProvider {
         collectionView: UICollectionView,
         indexPath: IndexPath,
         item: ConversationViewItem,
+        viewController _: UIViewController?,
         delegate: ConversationCellPresenterDelegate
     ) -> UICollectionViewCell? {
         guard let item = item as? DeletedMessageViewItem else {

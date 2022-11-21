@@ -9,6 +9,7 @@ protocol ConversationCellProvider {
         collectionView: UICollectionView,
         indexPath: IndexPath,
         item: ConversationViewItem,
+        viewController: UIViewController?,
         delegate: ConversationCellPresenterDelegate
     ) -> UICollectionViewCell?
 }

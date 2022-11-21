@@ -12,6 +12,7 @@ public extension NablaExtension where Base: UIImage {
         case rotateCamera = "camera.rotate"
         case phoneDownFill = "phone.down.fill"
         case ellipsis
+        case playFill = "play.fill"
     }
     
     static func symbol(_ symbol: SFSymbol) -> UIImage {

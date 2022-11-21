@@ -26,6 +26,7 @@ final class VideoMessageCellProvider: ConversationCellProvider {
         collectionView: UICollectionView,
         indexPath: IndexPath,
         item: ConversationViewItem,
+        viewController: UIViewController?,
         delegate: ConversationCellPresenterDelegate
     ) -> UICollectionViewCell? {
         guard let item = item as? VideoMessageViewItem else {
@@ -39,6 +40,7 @@ final class VideoMessageCellProvider: ConversationCellProvider {
         )
         presenter.attachView(cell)
         cell.configure(presenter: presenter)
+        cell.content.viewController = viewController
         return cell
     }
     

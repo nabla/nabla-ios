@@ -233,6 +233,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
                 collectionView: collectionView,
                 indexPath: indexPath,
                 item: item,
+                viewController: self,
                 delegate: self
             ) {
                 return cell
