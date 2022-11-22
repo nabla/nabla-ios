@@ -16,13 +16,14 @@ class AuthenticatorImpl: Authenticator {
         session = Session(
             userId: userId,
             provider: provider,
-            authTokens: nil
+            tokens: nil
         )
     }
     
     func logOut() {
+        let oldTokens = session?.tokens
         session = nil
-        notifyTokensChanged()
+        notifyTokensChanged(oldValue: oldTokens, newValue: nil)
     }
     
     func getAccessToken(handler: ResultHandler<AuthenticationState, AuthenticationError>) {
@@ -31,17 +32,20 @@ class AuthenticatorImpl: Authenticator {
             return
         }
         
-        if let authTokens = session.authTokens, !Self.isExpired(authTokens.accessToken) {
-            handler(.success(.authenticated(accessToken: authTokens.accessToken)))
+        if let tokens = session.tokens, !tokens.accessToken.isExpired {
+            handler(.success(.authenticated(accessToken: tokens.accessToken.value)))
             return
         }
         
         let task = makeOrReuseRenewSessionTask(session: session)
-        task.addOnComplete { [session] result in
+        task.addOnComplete { [weak self] result in
+            guard let self = self else { return }
             switch result {
-            case let .success(authTokens):
-                session.authTokens = authTokens
-                handler(.success(.authenticated(accessToken: authTokens.accessToken)))
+            case let .success(tokens):
+                let oldTokens = session.tokens
+                session.tokens = tokens
+                self.notifyTokensChanged(oldValue: oldTokens, newValue: tokens)
+                handler(.success(.authenticated(accessToken: tokens.accessToken.value)))
             case let .failure(error):
                 handler(.failure(error))
             }
@@ -80,68 +84,64 @@ class AuthenticatorImpl: Authenticator {
     private let httpManager: HTTPManager
     
     private var session: Session?
-    private var renewTask: SharedTask<Result<AuthTokens, AuthenticationError>>?
+    private var renewTask: SharedTask<Result<SessionTokens, AuthenticationError>>?
     
-    private static func isExpired(_ token: String) -> Bool {
-        do {
-            let jwt = try decode(jwt: token)
-            guard let expiresAt = jwt.expiresAt else { return false }
-            return expiresAt.nabla.isPast
-        } catch {
-            return true
-        }
-    }
-    
-    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<AuthTokens, AuthenticationError>> {
+    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<SessionTokens, AuthenticationError>> {
         if let existing = renewTask {
             return existing
         }
-        let renewTask = SharedTask<Result<AuthTokens, AuthenticationError>> { [weak self] completion in
+        let renewTask = SharedTask<Result<SessionTokens, AuthenticationError>> { [weak self] completion in
             guard let self = self else { return }
             self.renewSession(session) { result in
                 completion(result)
                 self.renewTask = nil
-                self.notifyTokensChanged()
             }
         }
         self.renewTask = renewTask
         return renewTask
     }
     
-    private func notifyTokensChanged() {
+    private func notifyTokensChanged(oldValue: SessionTokens?, newValue: SessionTokens?) {
+        guard newValue != oldValue else { return }
         notificationCenter.post(name: Constants.tokenChangedNotification, object: nil)
     }
     
-    private func renewSession(_ session: Session, completion: @escaping (Result<AuthTokens, AuthenticationError>) -> Void) {
-        if let authTokens = session.authTokens, !Self.isExpired(authTokens.refreshToken) {
-            fetchTokens(refreshToken: authTokens.refreshToken, completion: completion)
+    private func renewSession(_ session: Session, completion: @escaping (Result<SessionTokens, AuthenticationError>) -> Void) {
+        if let tokens = session.tokens, !tokens.refreshToken.isExpired {
+            fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
             return
         }
         requireTokens(session: session, completion: completion)
     }
     
-    private func requireTokens(session: Session, completion: @escaping (Result<AuthTokens, AuthenticationError>) -> Void) {
+    private func requireTokens(session: Session, completion: @escaping (Result<SessionTokens, AuthenticationError>) -> Void) {
         session.provider.provideTokens(forUserId: session.userId) { [weak self] authTokens in
-            guard let self = self else {
+            guard let self = self, let authTokens = authTokens else {
                 return completion(.failure(AuthenticationProviderFailedToProvideTokensError()))
             }
             
-            if let authTokens = authTokens {
-                if Self.isExpired(authTokens.refreshToken) {
+            do {
+                let accessToken = try Self.deserialize(token: authTokens.accessToken)
+                let refreshToken = try Self.deserialize(token: authTokens.refreshToken)
+                
+                if refreshToken.isExpired {
                     completion(.failure(AuthenticationProviderDidProvideExpiredTokensError()))
-                } else if Self.isExpired(authTokens.accessToken) {
-                    self.fetchTokens(refreshToken: authTokens.refreshToken, completion: completion)
+                } else if accessToken.isExpired {
+                    self.fetchTokens(refreshToken: refreshToken, completion: completion)
                 } else {
-                    completion(.success(authTokens))
+                    let tokens = SessionTokens(accessToken: accessToken, refreshToken: refreshToken)
+                    completion(.success(tokens))
                 }
-            } else {
-                completion(.failure(AuthenticationProviderFailedToProvideTokensError()))
+            } catch let error as AuthenticationError {
+                completion(.failure(error))
+            } catch {
+                completion(.failure(UnknownAuthenticationError(undelryingError: error)))
             }
         }
     }
     
-    private func fetchTokens(refreshToken: String, completion: @escaping (Result<AuthTokens, AuthenticationError>) -> Void) {
-        let request = RefreshTokenEndpoint.request(refreshToken: refreshToken)
+    private func fetchTokens(refreshToken: Token, completion: @escaping (Result<SessionTokens, AuthenticationError>) -> Void) {
+        let request = RefreshTokenEndpoint.request(refreshToken: refreshToken.value)
         httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request) { result in
             switch result {
             case let .failure(error):
@@ -151,11 +151,19 @@ class AuthenticatorImpl: Authenticator {
                     completion(.failure(FailedToRefreshTokensError(reason: error)))
                 }
             case let .success(response):
-                let authTokens = AuthTokens(
-                    accessToken: response.accessToken,
-                    refreshToken: response.refreshToken
-                )
-                completion(.success(authTokens))
+                do {
+                    let accessToken = try Self.deserialize(token: response.accessToken)
+                    let refreshToken = try Self.deserialize(token: response.refreshToken)
+                    let tokens = SessionTokens(
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    )
+                    completion(.success(tokens))
+                } catch let error as AuthenticationError {
+                    completion(.failure(error))
+                } catch {
+                    completion(.failure(UnknownAuthenticationError(undelryingError: error)))
+                }
             }
         }
     }
@@ -171,6 +179,15 @@ class AuthenticatorImpl: Authenticator {
             case .generic, .notFound, .unavailableService:
                 return false
             }
+        }
+    }
+    
+    private static func deserialize(token: String) throws -> Token {
+        do {
+            let jwt = try decode(jwt: token)
+            return Token(value: token, expiresAt: jwt.expiresAt)
+        } catch {
+            throw AuthenticationProviderDidProvideInvalidTokensError(reason: error)
         }
     }
 }
