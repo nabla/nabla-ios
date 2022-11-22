@@ -179,6 +179,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }()
     
     private let loadedView: UIView = .init()
+    private var loadedViewBottomConstraint: NSLayoutConstraint?
 
     private lazy var collectionView: UICollectionView = makeCollectionView()
     private lazy var composerView: ComposerView = makeComposerView()
@@ -363,15 +364,18 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
 
     private func updateComposerVisibility(showComposer: Bool) {
+        loadedViewBottomConstraint?.isActive = false
         if showComposer {
             view.addSubview(composerView)
             composerView.nabla.pinToSuperView(edges: .nabla.horizontal)
 
             loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor).isActive = true
-            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
+            loadedViewBottomConstraint = composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+            loadedViewBottomConstraint?.isActive = true
         } else {
             composerView.removeFromSuperview()
-            loadedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+            loadedViewBottomConstraint = loadedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            loadedViewBottomConstraint?.isActive = true
         }
     }
 }

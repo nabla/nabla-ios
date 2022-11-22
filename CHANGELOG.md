@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a layout issue in the conversation screen that happens when a conversation is unlocked while displayed on screen.  
+
 
 ## [1.0.0-alpha24] - 2022-11-17
 
