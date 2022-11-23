@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added an empty state when the conversation list is empty.
+- Added an empty state when the conversation list is empty. You can customize this text appearance using `Theme.ConversationPreview.EmptyView` attributes.
 
 ### Changed
 
