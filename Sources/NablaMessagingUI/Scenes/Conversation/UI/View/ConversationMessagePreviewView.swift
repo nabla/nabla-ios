@@ -20,12 +20,11 @@ class ConversationMessagePreviewView: UIView {
                    sender: ConversationMessageSender) {
         iconImageView.image = viewModel.icon
         authorLabel.text = viewModel.author
-        previewLabel.text = viewModel.preview
-        // Here
-        previewImageView.imageSource = viewModel.previewImage
+        previewLabel.text = viewModel.text
+        previewImageView.source = viewModel.image
 
         iconImageViewContainer.isHidden = viewModel.icon == nil
-        previewImageView.isHidden = viewModel.previewImage == nil
+        previewImageView.isHidden = viewModel.image == nil
 
         switch sender {
         case .me:

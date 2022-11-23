@@ -4,5 +4,5 @@ import UIKit
 
 struct ImageMessageContentViewModel {
     let originalImageSize: CGSize?
-    let imageSource: MediaSource
+    let imageSource: ImageSource
 }

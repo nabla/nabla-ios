@@ -80,7 +80,7 @@ public extension NablaViews {
             backgroundColor = NablaTheme.Shared.avatarViewBackgroundColor
             if let url = URL(string: viewModel.url) {
                 backgroundColor = .clear
-                imageAvatarView.imageSource = .url(url)
+                imageAvatarView.source = .url(url)
                 setVisible(subview: imageAvatarView)
             } else if let text = viewModel.text {
                 initialsAvatarView.text = text

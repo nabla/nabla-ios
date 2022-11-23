@@ -28,41 +28,46 @@ struct ConversationMessagePreviewViewModelTransformer {
         }
 
         if let textMessage = item as? TextMessageViewItem {
-            return .init(icon: nil, author: author, preview: textMessage.text, previewImage: nil)
+            return .init(
+                icon: nil,
+                author: author,
+                text: textMessage.text,
+                image: nil
+            )
         } else if let imageMessage = item as? ImageMessageViewItem {
             return .init(
                 icon: NablaTheme.Conversation.replyToImageIcon,
                 author: author,
-                preview: L10n.conversationReplyToPreviewPicture,
-                previewImage: MediaContentTransformer.transform(imageMessage.image.content)
+                text: L10n.conversationReplyToPreviewPicture,
+                image: imageMessage.image.source
             )
         } else if item is VideoMessageViewItem {
             return .init(
                 icon: NablaTheme.Conversation.replyToVideoIcon,
                 author: author,
-                preview: L10n.conversationReplyToPreviewVideo,
-                previewImage: nil
+                text: L10n.conversationReplyToPreviewVideo,
+                image: nil
             )
         } else if let documentMessage = item as? DocumentMessageViewItem {
             return .init(
                 icon: NablaTheme.Conversation.replyToDocumentIcon,
                 author: author,
-                preview: L10n.conversationReplyToPreviewDocument,
-                previewImage: documentMessage.document.thumbnailUrl.map(MediaSource.url)
+                text: L10n.conversationReplyToPreviewDocument,
+                image: documentMessage.document.thumbnail
             )
         } else if item as? AudioMessageViewItem != nil {
             return .init(
                 icon: NablaTheme.Conversation.replyToAudioIcon,
                 author: author,
-                preview: L10n.conversationReplyToPreviewAudio,
-                previewImage: nil
+                text: L10n.conversationReplyToPreviewAudio,
+                image: nil
             )
         } else if item as? DeletedMessageViewItem != nil {
             return .init(
                 icon: nil,
                 author: author,
-                preview: L10n.conversationDeletedMessage,
-                previewImage: nil
+                text: L10n.conversationDeletedMessage,
+                image: nil
             )
         }
 

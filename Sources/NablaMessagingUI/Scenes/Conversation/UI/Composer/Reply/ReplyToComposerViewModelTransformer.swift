@@ -50,9 +50,9 @@ private extension ConversationViewMessageItem {
         return L10n.conversationReplyToPreviewUnknown
     }
 
-    var imagePreview: MediaSource? {
+    var imagePreview: ImageSource? {
         if let imageMessage = self as? ImageMessageViewItem {
-            return MediaContentTransformer.transform(imageMessage.image.content)
+            return imageMessage.image.source
         }
         return nil
     }

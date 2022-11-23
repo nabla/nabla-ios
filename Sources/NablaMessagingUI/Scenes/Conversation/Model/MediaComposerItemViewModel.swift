@@ -3,11 +3,10 @@ import NablaCore
 
 struct MediaComposerItemViewModel {
     enum MediaType {
-        case image
-        case video
+        case image(source: ImageSource)
+        case video(source: MediaSource)
         case pdf
     }
 
-    let mediaSource: MediaSource
     let type: MediaType
 }

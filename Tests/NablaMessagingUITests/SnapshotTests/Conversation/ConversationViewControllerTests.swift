@@ -81,7 +81,7 @@ final class ConversationViewControllerTests: XCTestCase {
             TypingIndicatorViewItem(sender: .provider(provider)),
             TextMessageViewItem(id: UUID(), date: Date(), sender: .me, sendingState: .failed, replyTo: nil, text: .loremStub),
             DateSeparatorViewItem(id: UUID(), date: Date(timeIntervalSince1970: 0)),
-            DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mockWithInvalidUrl),
+            DocumentMessageViewItem(id: UUID(), date: Date(), sender: .provider(provider), sendingState: .sent, replyTo: nil, document: .mock),
             DeletedMessageViewItem(id: UUID(), date: Date(), sender: .system(.mock()), sendingState: .sent, replyTo: nil),
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.provider(provider))),
             ConversationActivityViewItem(id: UUID(), date: Date(), activity: .providerJoined(.deletedProvider)),

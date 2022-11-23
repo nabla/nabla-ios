@@ -3,7 +3,7 @@ import NablaCore
 
 public struct AudioFile: Media, Equatable, Hashable {
     public let fileName: String
-    public let content: MediaContent
+    public let content: MediaSource
     public let durationMs: Int
     public let audioMimeType: MimeType.Audio
 
@@ -11,7 +11,7 @@ public struct AudioFile: Media, Equatable, Hashable {
         .audio(audioMimeType)
     }
 
-    public init(fileName: String, content: MediaContent, durationMs: Int, mimeType: MimeType.Audio) {
+    public init(fileName: String, content: MediaSource, durationMs: Int, mimeType: MimeType.Audio) {
         self.fileName = fileName
         self.content = content
         self.durationMs = durationMs

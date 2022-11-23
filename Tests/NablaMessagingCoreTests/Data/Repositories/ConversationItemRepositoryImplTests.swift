@@ -40,7 +40,7 @@ class ConversationItemRepositoryImplTests: XCTestCase {
         let input = MessageInput.image(
             content: .init(
                 fileName: "fileName",
-                content: .url(URL(fileURLWithPath: "")),
+                source: .url(URL(fileURLWithPath: "")),
                 size: nil,
                 mimeType: .jpg
             )
@@ -84,7 +84,7 @@ class ConversationItemRepositoryImplTests: XCTestCase {
                             media:
                             .init(
                                 fileName: "fileName",
-                                content: .url(URL(fileURLWithPath: "")),
+                                source: .url(URL(fileURLWithPath: "")),
                                 size: nil,
                                 mimeType: .jpg
                             )
@@ -107,7 +107,7 @@ class ConversationItemRepositoryImplTests: XCTestCase {
                             media:
                             .init(
                                 fileName: "fileName",
-                                content: .url(URL(fileURLWithPath: "")),
+                                source: .url(URL(fileURLWithPath: "")),
                                 size: nil,
                                 mimeType: .jpg
                             )

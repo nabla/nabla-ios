@@ -4,10 +4,6 @@ public extension String {
     static var urlStubImage: Self {
         "https://avatars.githubusercontent.com/u/39350711?s=200&v=4"
     }
-    
-    static var urlStubInvalidImage: Self {
-        "http://this.image.does.not.exist/image.jpg"
-    }
 
     static var urlStubVideo: Self {
         "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"

@@ -68,7 +68,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: transform(replyToFragment),
                 content: ImageFile(
                     fileName: imageContent.imageFileUpload.fileName,
-                    content: .url(url),
+                    source: .url(url),
                     size: size,
                     mimeType: .from(rawValue: imageContent.imageFileUpload.mimeType)
                 )
@@ -85,7 +85,7 @@ final class RemoteConversationItemTransformer {
                 content: DocumentFile(
                     fileName: documentContent.documentFileUpload.fileName,
                     content: .url(url),
-                    thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
+                    thumbnail: .fromString(documentContent.documentFileUpload.thumbnail?.url.url),
                     mimeType: .from(rawValue: documentContent.documentFileUpload.mimeType)
                 )
             )
@@ -181,7 +181,7 @@ final class RemoteConversationItemTransformer {
                 replyTo: nil,
                 content: ImageFile(
                     fileName: imageContent.imageFileUpload.fileName,
-                    content: .url(url),
+                    source: .url(url),
                     size: size,
                     mimeType: .from(rawValue: imageContent.imageFileUpload.mimeType)
                 )
@@ -198,7 +198,7 @@ final class RemoteConversationItemTransformer {
                 content: DocumentFile(
                     fileName: documentContent.documentFileUpload.fileName,
                     content: .url(url),
-                    thumbnailUrl: URL(string: documentContent.documentFileUpload.thumbnail?.url.url),
+                    thumbnail: .fromString(documentContent.documentFileUpload.thumbnail?.url.url),
                     mimeType: .from(rawValue: documentContent.documentFileUpload.mimeType)
                 )
             )

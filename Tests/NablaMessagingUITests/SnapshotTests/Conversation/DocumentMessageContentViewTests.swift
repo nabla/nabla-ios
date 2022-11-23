@@ -21,7 +21,7 @@ final class DocumentMessageContentViewTests: XCTestCase {
                 sender: .me(isContiguous: false),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stubImage, filename: .filenameStub),
+                content: .init(thumbnail: .stubLocalImage, filename: .filenameStub),
                 menuElements: []
             )
         )
@@ -37,7 +37,7 @@ final class DocumentMessageContentViewTests: XCTestCase {
                 sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stubImage, filename: .filenameStub),
+                content: .init(thumbnail: .stubLocalImage, filename: .filenameStub),
                 menuElements: []
             )
         )
@@ -53,7 +53,7 @@ final class DocumentMessageContentViewTests: XCTestCase {
                 sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
-                content: .init(url: .stubImage, filename: .filenameStub),
+                content: .init(thumbnail: .stubLocalImage, filename: .filenameStub),
                 menuElements: []
             )
         )

@@ -4,9 +4,9 @@ public extension NablaViews {
     class ImageView: UIImageView {
         // MARK: - Public
 
-        public var imageSource: MediaSource? {
+        public var source: ImageSource? {
             didSet {
-                switch imageSource {
+                switch source {
                 case .none:
                     image = nil
                     url = nil

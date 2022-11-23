@@ -3,17 +3,21 @@ import NablaCore
 
 public struct ImageFile: Media, Equatable, Hashable {
     public let fileName: String
-    public let content: MediaContent
+    public let source: ImageSource
     public let size: MediaSize?
     public let imageMimeType: MimeType.Image
 
     public var mimeType: MimeType {
         .image(imageMimeType)
     }
+    
+    public var content: MediaSource {
+        source.asMedia()
+    }
 
-    public init(fileName: String, content: MediaContent, size: MediaSize?, mimeType: MimeType.Image) {
+    public init(fileName: String, source: ImageSource, size: MediaSize?, mimeType: MimeType.Image) {
         self.fileName = fileName
-        self.content = content
+        self.source = source
         self.size = size
         imageMimeType = mimeType
     }

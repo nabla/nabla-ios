@@ -3,5 +3,5 @@ import NablaCore
 
 struct ImageDetailViewModel {
     let fileName: String
-    let imageSource: MediaSource
+    let image: ImageSource
 }

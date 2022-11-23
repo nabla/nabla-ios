@@ -5,5 +5,5 @@ import UIKit
 struct ReplyToComposerViewModel {
     let sender: String
     let preview: String
-    let imagePreview: MediaSource?
+    let imagePreview: ImageSource?
 }

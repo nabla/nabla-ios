@@ -53,7 +53,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .me,
                 sendingState: .sent,
                 replyTo: nil,
-                image: .mock
+                image: .mockWithLocalAsset
             ),
             text: .loremStub
         )
@@ -187,7 +187,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .provider(provider),
                 sendingState: .sent,
                 replyTo: nil,
-                image: .mock
+                image: .mockWithLocalAsset
             ),
             text: .loremStub
         )

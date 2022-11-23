@@ -22,7 +22,7 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
     
     func configure(with viewModel: ImageDetailViewModel) {
         // Here
-        imageView.imageSource = viewModel.imageSource
+        imageView.source = viewModel.image
         fileName = viewModel.fileName
     }
     

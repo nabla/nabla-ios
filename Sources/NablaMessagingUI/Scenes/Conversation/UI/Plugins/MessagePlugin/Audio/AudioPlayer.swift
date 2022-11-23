@@ -25,7 +25,7 @@ class AudioPlayer {
 
     func play(_ audioFile: AudioFile) {
         do {
-            let avAsset = try DataAVAsset(source: MediaContentTransformer.transform(audioFile.content))
+            let avAsset = try DataAVAsset(source: audioFile.content)
             avAsset.loadValuesAsynchronously(forKeys: ["playable"]) { [weak self] in
                 guard let self = self else { return }
                 let playerItem = AVPlayerItem(asset: avAsset)

@@ -7,7 +7,7 @@ struct DocumentDetailViewModelTransformer {
     func transform(document: DocumentFile) -> DocumentDetailViewModel {
         DocumentDetailViewModel(
             fileName: document.fileName,
-            documentSource: MediaContentTransformer.transform(document.content)
+            documentSource: document.content
         )
     }
 }

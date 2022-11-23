@@ -69,7 +69,7 @@ final class MediaReader {
         }
         let media = ImageFile(
             fileName: fileUrl.lastPathComponent,
-            content: .url(fileUrl),
+            source: .url(fileUrl),
             size: fileUrl.imageSize,
             mimeType: .from(rawValue: MediaReader.mimeType(for: fileUrl.path))
         )
@@ -93,7 +93,7 @@ final class MediaReader {
 
                 let media = ImageFile(
                     fileName: fileName,
-                    content: .url(temporaryFileUrl),
+                    source: .url(temporaryFileUrl),
                     size: temporaryFileUrl.imageSize,
                     mimeType: .jpg
                 )

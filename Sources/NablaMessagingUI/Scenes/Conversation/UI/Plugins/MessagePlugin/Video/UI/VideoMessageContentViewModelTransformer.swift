@@ -7,7 +7,7 @@ struct VideoMessageContentViewModelTransformer {
     static func transform(item: VideoMessageViewItem) -> VideoMessageContentView.ContentViewModel {
         .init(
             originalVideoSize: originalVideoSize(from: item),
-            videoSource: MediaContentTransformer.transform(item.video.content)
+            videoSource: item.video.content
         )
     }
 

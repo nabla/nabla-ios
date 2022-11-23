@@ -26,15 +26,15 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     
     func configure(with viewModel: MediaComposerItemViewModel) throws {
         switch viewModel.type {
-        case .image:
+        case let .image(source):
             // Here
-            imageView.imageSource = viewModel.mediaSource
+            imageView.source = source
             setVisibleView(imageView)
         case .pdf:
             imageView.image = NablaTheme.Conversation.mediaComposerDocumentIcon
             setVisibleView(imageView)
-        case .video:
-            try playerView.setMediaSource(mediaSource: viewModel.mediaSource)
+        case let .video(source):
+            try playerView.setMediaSource(mediaSource: source)
             setVisibleView(playerView)
         }
     }
@@ -49,7 +49,7 @@ class MediaComposerCollectionViewCell: UICollectionViewCell, Reusable {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
-        imageView.imageSource = nil
+        imageView.source = nil
     }
     
     // MARK: - Private

@@ -6,6 +6,6 @@ import UIKit
 struct ConversationMessagePreviewViewModel {
     let icon: UIImage?
     let author: String
-    let preview: String
-    let previewImage: MediaSource?
+    let text: String
+    let image: ImageSource?
 }

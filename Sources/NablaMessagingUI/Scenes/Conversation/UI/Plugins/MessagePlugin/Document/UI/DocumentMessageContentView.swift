@@ -25,8 +25,8 @@ class DocumentMessageContentView: UIView, MessageContentView {
     // MARK: - MessageContentView
     
     func configure(with viewModel: DocumentMessageContentViewModel) {
-        if let mediaSource = viewModel.url.map(MediaSource.url) {
-            imageView.imageSource = mediaSource
+        if let thumbnail = viewModel.thumbnail {
+            imageView.source = thumbnail
         } else {
             imageView.image = CoreAssets.Assets.documentPlaceholder.image
         }
@@ -48,7 +48,7 @@ class DocumentMessageContentView: UIView, MessageContentView {
     }
     
     func prepareForReuse() {
-        imageView.imageSource = nil
+        imageView.source = nil
         label.text = nil
     }
     

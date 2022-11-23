@@ -44,7 +44,7 @@ final class ComposerViewTests: XCTestCase {
         // GIVEN
         sut.placeHolder = .placeholderStub
         // WHEN
-        sut.add([ImageFile.mockWithInvalidUrl])
+        sut.add([ImageFile.mockWithLocalAsset])
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: CGSize(width: 320, height: 200)))
     }
@@ -84,7 +84,7 @@ final class ComposerViewTests: XCTestCase {
             sender: .me,
             sendingState: .sent,
             replyTo: nil,
-            image: .mock
+            image: .mockWithLocalAsset
         )
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: CGSize(width: 320, height: 200)))

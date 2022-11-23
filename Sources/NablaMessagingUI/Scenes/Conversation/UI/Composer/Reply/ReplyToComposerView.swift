@@ -18,7 +18,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
         authorLabel.text = viewModel.sender
         previewLabel.text = viewModel.preview
         // Here
-        previewImageView.imageSource = viewModel.imagePreview
+        previewImageView.source = viewModel.imagePreview
 
         previewImageView.isHidden = viewModel.imagePreview == nil
     }

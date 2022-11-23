@@ -66,7 +66,10 @@ let package = Package(
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
-            path: "Tests/NablaCoreTestsUtils"
+            path: "Tests/NablaCoreTestsUtils",
+            resources: [
+                .process("Resources"),
+            ]
         ),
         .testTarget(
             name: "NablaCoreTests",
@@ -96,6 +99,7 @@ let package = Package(
             name: "NablaMessagingCoreTestsUtils",
             dependencies: [
                 .target(name: "NablaMessagingCore"),
+                .target(name: "NablaCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
             ],
             path: "Tests/NablaMessagingCoreTestsUtils"

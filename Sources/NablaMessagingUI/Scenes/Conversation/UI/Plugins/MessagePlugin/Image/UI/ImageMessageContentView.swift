@@ -20,7 +20,7 @@ final class ImageMessageContentView: UIView, MessageContentView {
     
     func configure(with viewModel: ImageMessageContentViewModel) {
         // Here
-        imageView.imageSource = viewModel.imageSource
+        imageView.source = viewModel.imageSource
 
         widthConstraint?.isActive = false
         heightConstraint?.isActive = false
@@ -30,7 +30,7 @@ final class ImageMessageContentView: UIView, MessageContentView {
     func configure(sender _: ConversationMessageSender) {}
     
     func prepareForReuse() {
-        imageView.imageSource = nil
+        imageView.source = nil
     }
     
     // MARK: - Private

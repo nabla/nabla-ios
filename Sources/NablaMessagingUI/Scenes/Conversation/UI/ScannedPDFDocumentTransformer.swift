@@ -16,7 +16,7 @@ enum ScannedPDFDocumentTransformer {
                 formatter.string(from: Date())
             ),
             content: .data(data),
-            thumbnailUrl: nil,
+            thumbnail: nil,
             mimeType: .pdf
         )
     }

@@ -3,7 +3,7 @@ import NablaCore
 
 struct RemoteFileUpload {
     let fileName: String
-    let content: MediaContent
+    let content: MediaSource
     let mimeType: MimeType
     let purpose: Purpose
     
