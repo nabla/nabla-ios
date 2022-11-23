@@ -1,5 +1,5 @@
 // Conversion List
-"conversation_list_empty_preview" = "Nouvelle conversation";
+"conversation_list_empty_state_label" = "Aucune conversation";
 "conversation_list_last_message_yesterday" = "Hier";
 "conversation_list_button_retry" = "Réessayer";
 "conversation_list_load_error_label" = "Une erreur est survenue lors du chargement des conversations, veuillez réessayer.";

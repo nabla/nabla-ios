@@ -32,6 +32,13 @@ public extension NablaTheme {
         public static var createConversationIcon = UIImage(systemName: "square.and.pencil")
         /// Color used for the create conversation button in the Inbox view.
         public static var createConversationColor = Colors.Text.accent
+        
+        public enum EmptyView {
+            /// Color of the message when the conversation list is empty.
+            public static var textColor = Colors.Text.subdued
+            /// Font of the message when the conversation list is empty.
+            public static var font = Fonts.subtitleMedium
+        }
     }
 
     enum Conversation {

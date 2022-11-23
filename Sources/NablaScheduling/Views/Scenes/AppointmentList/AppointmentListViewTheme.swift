@@ -7,9 +7,9 @@ public extension NablaTheme {
         public static var backgroundColor = Colors.Background.underCard
         
         /// Color used for the text of the empty state where no appointments are scheduled.
-        public static var emptyViewTextColor: UIColor = Colors.Text.base
+        public static var emptyViewTextColor: UIColor = Colors.Text.subdued
         /// Font used for the text of the empty state where no appointments are scheduled.
-        public static var emptyViewFont: UIFont = Fonts.caption
+        public static var emptyViewFont: UIFont = Fonts.subtitleMedium
         
         /// Style of the button used to schedule a new appointment.
         public static var button = Button.accent

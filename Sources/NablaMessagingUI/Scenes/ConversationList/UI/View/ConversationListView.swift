@@ -39,16 +39,24 @@ public class ConversationListView: UIView, ConversationListViewContract {
             tableView.nabla.reload(animated: animated)
             loadingIndicator.isHidden = true
             errorView.isHidden = true
-            tableView.isHidden = false
+            if viewModel.items.isEmpty {
+                tableView.isHidden = true
+                emptyView.isHidden = false
+            } else {
+                tableView.isHidden = false
+                emptyView.isHidden = true
+            }
         case let .error(errorViewModel):
             errorView.configure(with: errorViewModel)
             loadingIndicator.isHidden = true
             errorView.isHidden = false
             tableView.isHidden = true
+            emptyView.isHidden = true
         case .loading:
             loadingIndicator.isHidden = false
             errorView.isHidden = true
             tableView.isHidden = true
+            emptyView.isHidden = true
         }
     }
     
@@ -65,6 +73,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
     // MARK: - Private
     
     private lazy var tableView: UITableView = createTableView()
+    private lazy var emptyView = EmptyView()
     private lazy var loadingIndicator: UIActivityIndicatorView = createLoadingIndicator()
     private lazy var errorView: ErrorView = createErrorView()
     private lazy var loadingFooterView: LoadingFooterView = createLoadingFooterView()
@@ -73,6 +82,8 @@ public class ConversationListView: UIView, ConversationListViewContract {
     
     private func setUp() {
         backgroundColor = NablaTheme.ConversationPreview.backgroundColor
+        addSubview(emptyView)
+        emptyView.nabla.pinToSuperView()
         addSubview(tableView)
         tableView.nabla.pinToSuperView()
         addSubview(loadingIndicator)

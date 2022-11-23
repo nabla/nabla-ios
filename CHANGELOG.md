@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added an empty state when the conversation list is empty.
+
 ### Changed
 
 - Added a "play" indicator on videos on iOS 16 since the default one has been removed by the system update.

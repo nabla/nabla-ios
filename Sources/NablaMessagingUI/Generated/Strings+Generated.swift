@@ -50,8 +50,8 @@ internal enum L10n {
   internal static let conversationDeletedMessage = L10n.tr("Localizable", "conversation_deleted_message")
   /// Retry
   internal static let conversationListButtonRetry = L10n.tr("Localizable", "conversation_list_button_retry")
-  /// New conversation
-  internal static let conversationListEmptyPreview = L10n.tr("Localizable", "conversation_list_empty_preview")
+  /// No conversations
+  internal static let conversationListEmptyStateLabel = L10n.tr("Localizable", "conversation_list_empty_state_label")
   /// Yesterday
   internal static let conversationListLastMessageYesterday = L10n.tr("Localizable", "conversation_list_last_message_yesterday")
   /// An error occurred while loading the conversations, please try again.
