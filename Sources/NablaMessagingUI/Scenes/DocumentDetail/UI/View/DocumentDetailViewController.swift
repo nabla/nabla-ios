@@ -6,12 +6,13 @@ import WebKit
 final class DocumentDetailViewController: UIViewController, DocumentDetailViewContract {
     // MARK: - Lifecycle
     
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
         presenter?.start()
+        navigationController?.navigationBar.tintColor = NablaTheme.DocumentDetail.iconsTintColor
     }
-    
+
     // MARK: - Public
     
     var presenter: DocumentDetailPresenter?
@@ -32,10 +33,11 @@ final class DocumentDetailViewController: UIViewController, DocumentDetailViewCo
         }
 
         fileName = viewModel.fileName
+        title = viewModel.fileName
     }
     
     // MARK: - Private
-    
+
     private var fileName: String?
     
     private lazy var pdfView: WKWebView = {
@@ -43,12 +45,17 @@ final class DocumentDetailViewController: UIViewController, DocumentDetailViewCo
         view.scrollView.isScrollEnabled = true
         return view
     }()
-    
+
     private func setUp() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
             target: self,
             action: #selector(shareAction)
+        )
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .stop,
+            target: self,
+            action: #selector(closeAction)
         )
         view.addSubview(pdfView)
         pdfView.nabla.pinToSuperView()
@@ -77,5 +84,9 @@ final class DocumentDetailViewController: UIViewController, DocumentDetailViewCo
                 self.present(activityController, animated: true)
             }
         }
+    }
+
+    @objc private func closeAction() {
+        dismiss(animated: true)
     }
 }

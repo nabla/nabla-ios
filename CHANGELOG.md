@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Added a "play" indicator on videos on iOS 16 since the default one has been removed by the system update.
+- The full screen image and document viewers in conversation screen are now presented modally with customizable theming.
 
 ### Fixed
 

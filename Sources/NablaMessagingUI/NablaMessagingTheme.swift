@@ -220,5 +220,12 @@ public extension NablaTheme {
     enum ImageDetail {
         /// Color used for the background of the full screen viewer for an image.
         public static var backgroundColor = Colors.Background.base
+        /// UIIColor used to tint the buttons in the full screen viewer for an image.
+        public static var iconsTintColor = Colors.Stroke.accent
+    }
+    
+    enum DocumentDetail {
+        /// UIIColor used to tint the buttons in the full screen viewer for a document.
+        public static var iconsTintColor = Colors.Stroke.accent
     }
 }

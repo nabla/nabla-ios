@@ -7,23 +7,25 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
     var presenter: ImageDetailPresenter?
     
     // MARK: - Lifecycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
+        navigationController?.navigationBar.tintColor = NablaTheme.ImageDetail.iconsTintColor
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    
         presenter?.start()
     }
     
     // MARK: - ImageDetailViewContract
     
     func configure(with viewModel: ImageDetailViewModel) {
-        // Here
         imageView.source = viewModel.image
         fileName = viewModel.fileName
+        title = viewModel.fileName
     }
     
     // MARK: - Private
@@ -31,21 +33,27 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
     private var fileName: String?
     
     private lazy var imageView: NablaViews.ImageView = makeImageView()
-    
+
     private func setUp() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
             target: self,
             action: #selector(shareAction)
         )
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .stop,
+            target: self,
+            action: #selector(closeAction)
+        )
         view.backgroundColor = NablaTheme.ImageDetail.backgroundColor
         view.addSubview(imageView)
-        imageView.nabla.pinToSuperView()
+        imageView.nabla.pin(to: view.safeAreaLayoutGuide)
     }
     
     private func makeImageView() -> NablaViews.ImageView {
         let imageView = NablaViews.ImageView(frame: .zero)
         imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = .clear
         return imageView
     }
     
@@ -57,6 +65,10 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
             UIActivityViewController(activityItems: [image, self], applicationActivities: nil),
             animated: true
         )
+    }
+    
+    @objc private func closeAction() {
+        dismiss(animated: true)
     }
 }
 

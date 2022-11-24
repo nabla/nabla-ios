@@ -150,6 +150,7 @@ let package = Package(
             resources: [
                 .process("SnapshotTests/Conversation/__Snapshots__"),
                 .process("SnapshotTests/ConversationList/__Snapshots__"),
+                .process("SnapshotTests/ImageDetail/__Snapshots__"),
             ]
         ),
         .target(
