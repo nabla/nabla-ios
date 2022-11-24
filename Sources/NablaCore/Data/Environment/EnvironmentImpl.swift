@@ -2,7 +2,7 @@ import Foundation
 
 class EnvironmentImpl: Environment {
     let platform = "ios"
-    let version = "1.0.0-alpha24"
+    let version = "1.0.0-alpha25"
     
     var serverUrl: URL {
         var components = URLComponents()
