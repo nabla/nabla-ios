@@ -201,14 +201,14 @@ private extension NSAttributedString {
     // https://stackoverflow.com/a/54900313/2508174
     func trimWhiteSpacesAndNewLines() -> NSAttributedString {
         let invertedSet = CharacterSet.whitespacesAndNewlines.inverted
-        let startRange = string.utf8.description.rangeOfCharacter(from: invertedSet)
-        let endRange = string.utf8.description.rangeOfCharacter(from: invertedSet, options: .backwards)
+        let startRange = string.utf16.description.rangeOfCharacter(from: invertedSet)
+        let endRange = string.utf16.description.rangeOfCharacter(from: invertedSet, options: .backwards)
         guard let startLocation = startRange?.upperBound, let endLocation = endRange?.lowerBound else {
             return NSAttributedString(string: string)
         }
 
-        let location = string.utf8.distance(from: string.startIndex, to: startLocation) - 1
-        let length = string.utf8.distance(from: startLocation, to: endLocation) + 2
+        let location = string.utf16.distance(from: string.startIndex, to: startLocation) - 1
+        let length = string.utf16.distance(from: startLocation, to: endLocation) + 2
         let range = NSRange(location: location, length: length)
         return attributedSubstring(from: range)
     }
