@@ -89,4 +89,22 @@ final class ConversationViewControllerTests: XCTestCase {
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
+    
+    /// This test makes sure that iOS will find the `UIScrollView` and will be able to adjust the navigation bar and tab bar according to its scroll offset.
+    /// Since `SwiftSnapshotTesting` is not able to take a snapshot a the application with nested `UINavigationController` and `UITabBarController` correctly,
+    /// this test replicates how the system will look for the `UIScrollView` and checks that it can be found.
+    func testConversationVCIntegratedInNavigation() {
+        // GIVEN
+        sut.configure(withState: .loaded(items: [], showComposer: true))
+        // WHEN
+        var firstView = sut.view
+        while let firstSubview = firstView?.subviews.first {
+            firstView = firstSubview
+            if firstView is UIScrollView {
+                break
+            }
+        }
+        // THEN
+        XCTAssert(firstView is UIScrollView)
+    }
 }

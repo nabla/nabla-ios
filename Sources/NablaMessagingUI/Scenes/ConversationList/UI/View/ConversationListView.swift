@@ -82,10 +82,10 @@ public class ConversationListView: UIView, ConversationListViewContract {
     
     private func setUp() {
         backgroundColor = NablaTheme.ConversationPreview.backgroundColor
-        addSubview(emptyView)
-        emptyView.nabla.pinToSuperView()
         addSubview(tableView)
         tableView.nabla.pinToSuperView()
+        addSubview(emptyView)
+        emptyView.nabla.pinToSuperView()
         addSubview(loadingIndicator)
         loadingIndicator.nabla.constraintToCenterInSuperView()
         addSubview(errorView)
