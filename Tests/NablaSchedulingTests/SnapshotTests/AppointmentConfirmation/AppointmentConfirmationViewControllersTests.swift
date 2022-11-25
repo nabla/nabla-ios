@@ -139,6 +139,40 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
+    
+    func testAppointmentConfirmationViewControllerWithSpecialCharacters() {
+        // GIVEN
+        viewModel.given(.isLoadingConsents(getter: false))
+        viewModel.given(.consentsLoadingError(getter: nil))
+        viewModel.given(.consents(getter: ConsentsViewModel(
+            firstConsentHtml: try? NSAttributedString(
+                data: Data("<p>This is a consent with <b>bold</b> and a <a href=\"https://www.google.com/\">link</a> and an 🤷‍♂️</p>".utf8),
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue,
+                ],
+                documentAttributes: nil
+            ),
+            firstConsentContainsLink: true,
+            secondConsentHtml: try? NSAttributedString(
+                data: Data("<p>This is a consent with a 😆 and a <br /> line break and a 🤷‍♂️ and finishing with empty chars                    </p>".utf8),
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue,
+                ],
+                documentAttributes: nil
+            ),
+            secondConsentContainsLink: true
+        )))
+        viewModel.given(.agreesWithFirstConsent(getter: false))
+        viewModel.given(.agreesWithSecondConsent(getter: false))
+        viewModel.given(.canConfirm(getter: false))
+        viewModel.given(.isConfirming(getter: false))
+        viewModel.given(.error(getter: nil))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
 
     func testAppointmentConfirmationViewControllerUnchecked() {
         // GIVEN
