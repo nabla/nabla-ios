@@ -2,9 +2,10 @@ import Foundation
 
 public enum UploadClientError: Error {
     case noAccessToken
-    case impossibleToBuildFormData
+    case impossibleToBuildFormData(Error)
     case noValidData
     case failedToSerializePurpose
+    case failedRequest(HTTPError)
 }
 
 public struct UploadData {
@@ -39,26 +40,22 @@ public final class UploadClient {
 
     // MARK: - Public
     
-    public func upload(_ data: UploadData, handler: ResultHandler<UUID, UploadClientError>) -> Cancellable {
-        let umbrella = UmbrellaCancellable()
-        
-        authenticator.getAccessToken(
-            handler: .init { [weak self, weak umbrella] result in
-                guard let self = self, let umbrella = umbrella, !umbrella.isCancelled else { return }
-                guard let state = result.nabla.value else {
-                    handler(.failure(.noAccessToken))
-                    return
-                }
-                switch state {
-                case let .authenticated(accessToken: token):
-                    let task = self.doUpload(authToken: token, data: data, handler: handler)
-                    umbrella.add(task)
-                case .notAuthenticated:
-                    handler(.failure(.noAccessToken))
-                }
-            })
-        
-        return umbrella
+    /// - Throws: ``UploadClientError``
+    public func upload(_ data: UploadData) async throws -> UUID {
+        do {
+            let auth = try await authenticator.getAccessToken()
+            
+            switch auth {
+            case let .authenticated(accessToken: token):
+                return try await doUpload(authToken: token, data: data)
+            case .notAuthenticated:
+                throw UploadClientError.noAccessToken
+            }
+        } catch let error as UploadClientError {
+            throw error
+        } catch is AuthenticationError {
+            throw UploadClientError.noAccessToken
+        }
     }
     
     // MARK: - Private
@@ -73,14 +70,15 @@ public final class UploadClient {
         ]
     }
     
-    private func makeMultipartFormData(data: UploadData) -> Result<MultipartFormData.BuildResult, UploadClientError> {
+    /// - Throws: ``UploadClientError``
+    private func makeMultipartFormData(data: UploadData) async throws -> MultipartFormData.BuildResult {
         guard
             let purpose = data.purpose.data(using: .utf8)
         else {
-            return .failure(UploadClientError.failedToSerializePurpose)
+            throw UploadClientError.failedToSerializePurpose
         }
         do {
-            let multipartFormData = try MultipartFormData.Builder.build(
+            return try MultipartFormData.Builder.build(
                 with: [
                     (
                         name: "purpose",
@@ -97,42 +95,42 @@ public final class UploadClient {
                 ],
                 willSeparateBy: RandomBoundaryGenerator.generate()
             )
-            return .success(multipartFormData)
         } catch {
-            return .failure(.impossibleToBuildFormData)
+            throw UploadClientError.impossibleToBuildFormData(error)
         }
     }
     
+    /// - Throws: ``UploadClientError``
     private func doUpload(
         authToken: String,
-        data: UploadData,
-        handler: ResultHandler<UUID, UploadClientError>
-    ) -> Cancellable {
+        data: UploadData
+    ) async throws -> UUID {
         var request = UploadEndpoint.request()
         var headers = makeHeaders(authToken: authToken)
         var body: Data?
         
-        switch makeMultipartFormData(data: data) {
-        case let .success(multipartFormData):
-            headers[HTTPHeaders.ContentType] = multipartFormData.contentType
-            body = multipartFormData.body
-        case .failure:
-            handler(.failure(.impossibleToBuildFormData))
-            return Failure()
-        }
+        let multipartFormData = try await makeMultipartFormData(data: data)
+        headers[HTTPHeaders.ContentType] = multipartFormData.contentType
+        body = multipartFormData.body
         
         request = request.headers(headers)
         request = request.body(body)
         
-        return httpManager.fetch(UploadEndpoint.Result.self, associatedTo: request) { result in
+        do {
+            let response = try await httpManager.fetch(UploadEndpoint.Result.self, associatedTo: request)
             guard
-                let uuidString = result.nabla.value?.first,
+                let uuidString = response.first,
                 let uuid = UUID(uuidString: uuidString)
             else {
-                handler(.failure(.noValidData))
-                return
+                throw UploadClientError.noValidData
             }
-            handler(.success(uuid))
+            return uuid
+        } catch let error as UploadClientError {
+            throw error
+        } catch let error as HTTPError {
+            throw UploadClientError.failedRequest(error)
+        } catch {
+            throw UploadClientError.noValidData
         }
     }
     

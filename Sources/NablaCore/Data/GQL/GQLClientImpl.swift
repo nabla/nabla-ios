@@ -20,7 +20,7 @@ class GQLClientImpl: GQLClient, AsyncGQLClient {
         query: Query,
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
-    ) -> NablaCore.Cancellable {
+    ) -> NablaCancellable {
         apollo.fetch(query: query, cachePolicy: cachePolicy) { [logger] response in
             let result = Self.parseApolloResponse(response, logger: logger)
             handler(result)
@@ -31,7 +31,7 @@ class GQLClientImpl: GQLClient, AsyncGQLClient {
     public func perform<Mutation: GQLMutation>(
         mutation: Mutation,
         handler: ResultHandler<Mutation.Data, GQLError>
-    ) -> NablaCore.Cancellable {
+    ) -> NablaCancellable {
         apollo.perform(mutation: mutation) { [logger] response in
             let result = Self.parseApolloResponse(response, logger: logger)
             handler(result)
@@ -54,7 +54,7 @@ class GQLClientImpl: GQLClient, AsyncGQLClient {
     public func subscribe<Subscription: GQLSubscription>(
         subscription: Subscription,
         handler: ResultHandler<Subscription.Data, GQLError>
-    ) -> NablaCore.Cancellable {
+    ) -> NablaCancellable {
         apollo.subscribe(subscription: subscription) { [logger] response in
             let result = Self.parseApolloResponse(response, logger: logger)
             handler(result)

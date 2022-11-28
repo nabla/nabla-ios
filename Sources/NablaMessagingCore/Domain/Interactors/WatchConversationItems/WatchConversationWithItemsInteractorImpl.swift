@@ -20,8 +20,8 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
         conversationId: UUID,
         handler: ResultHandler<ConversationItems, NablaError>
     ) -> PaginatedWatcher {
-        guard isAuthenticated(handler: handler) else {
-            return FailurePaginatedWatcher()
+        guard isAuthenticated else {
+            return FailurePaginatedWatcher(handler: handler, error: MissingAuthenticationProviderError())
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
         return itemsRepository.watchConversationItems(ofConversationWithId: transientId, handler: handler)

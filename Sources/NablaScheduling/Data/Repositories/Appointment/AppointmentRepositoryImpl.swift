@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import NablaCore
-import Combine
 
 final class AppointmentRepositoryImpl: AppointmentRepository {
     // MARK: - Internal

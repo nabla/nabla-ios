@@ -20,7 +20,7 @@ final class TypingIndicatorContentView: UIView, MessageContentView {
     
     func configure(with _: Void) {}
     
-    func configure(sender: ConversationMessageSender) {}
+    func configure(sender _: ConversationMessageSender) {}
     
     func prepareForReuse() {}
     

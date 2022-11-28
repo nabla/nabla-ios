@@ -2,11 +2,14 @@ import Foundation
 @testable import NablaMessagingCore
 
 extension Conversation {
-    static func mock() -> Conversation {
+    static func mock(
+        id: UUID = .init(),
+        title: String? = nil
+    ) -> Conversation {
         conversationCount += 1
         return Conversation(
-            id: .init(),
-            title: "Title \(conversationCount)",
+            id: id,
+            title: title ?? "Title \(conversationCount)",
             subtitle: "Subtitle \(conversationCount)",
             inboxPreviewTitle: "PreviewTitle \(conversationCount)",
             lastMessagePreview: "MessagePreview \(conversationCount)",

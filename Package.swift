@@ -128,6 +128,7 @@ let package = Package(
         .target(
             name: "NablaMessagingUI",
             dependencies: [
+                .target(name: "NablaCore"),
                 .target(name: "NablaMessagingCore"),
                 .target(name: "NablaDocumentScanner"),
             ],

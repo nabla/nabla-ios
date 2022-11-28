@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -7,10 +8,7 @@ protocol ConversationItemLocalDataSource {
     
     func getConversationItem(withClientId clientId: UUID) -> LocalConversationItem?
     
-    func watchConversationItems(
-        ofConversationWithId conversationId: UUID,
-        callback: @escaping ([LocalConversationItem]) -> Void
-    ) -> Cancellable
+    func watchConversationItems(ofConversationWithId conversationId: UUID) -> AnyPublisher<[LocalConversationItem], Never>
     
     func addConversationItem(_ conversationItem: LocalConversationItem)
     

@@ -15,21 +15,14 @@ final class DeleteMessageInteractorImpl: AuthenticatedInteractor, DeleteMessageI
     }
 
     // MARK: - DeleteMessageInteractor
-
-    func execute(
-        messageId: UUID,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable {
-        guard isAuthenticated(handler: handler) else {
-            return Failure()
+    
+    /// - Throws: ``NablaError``
+    func execute(messageId: UUID, conversationId: UUID) async throws {
+        guard isAuthenticated else {
+            throw MissingAuthenticationProviderError()
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
-        return itemsRepository.deleteMessage(
-            withId: messageId,
-            conversationId: transientId,
-            handler: handler
-        )
+        try await itemsRepository.deleteMessage(withId: messageId, conversationId: transientId)
     }
     
     // MARK: - Private

@@ -54,13 +54,12 @@ public extension NablaPublisherExtension {
     }
 }
 
-public extension NablaExtension where Base: Publisher, Base.Failure == Never {
+public extension NablaPublisherExtension where Base.Failure == Never {
     func sink(
         receiveValue: @escaping (Base.Output) -> Void = { _ in }
     ) -> AnyCancellable {
         base
             .sink(
-                receiveCompletion: { _ in },
                 receiveValue: { output in
                     receiveValue(output)
                 }
@@ -73,7 +72,6 @@ public extension NablaExtension where Base: Publisher, Base.Failure == Never {
         base
             .receive(on: DispatchQueue.main)
             .sink(
-                receiveCompletion: { _ in },
                 receiveValue: { output in
                     receiveValue(output)
                 }

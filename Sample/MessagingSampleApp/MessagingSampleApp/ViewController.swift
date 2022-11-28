@@ -18,13 +18,13 @@ class ViewController: DemoViewController {
     // MARK: Handlers
     
     override func createConversationButtonHandler() {
-        createConversationAction = NablaMessagingClient.shared.createConversation { result in
-            switch result {
-            case let .failure(error):
-                print(error)
-            case let .success(conversation):
+        Task {
+            do {
+                let conversation = try await NablaMessagingClient.shared.createConversation()
                 let destination = NablaClient.shared.messaging.views.createConversationViewController(conversation)
                 self.navigationController?.pushViewController(destination, animated: true)
+            } catch {
+                print(error)
             }
         }
     }

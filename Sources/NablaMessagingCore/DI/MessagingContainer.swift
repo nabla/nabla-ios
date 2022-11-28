@@ -104,11 +104,13 @@ public class MessagingContainer {
 
     private lazy var conversationRemoteDataSource: ConversationRemoteDataSource = ConversationRemoteDataSourceImpl(
         gqlClient: coreContainer.gqlClient,
+        asyncGqlClient: coreContainer.gqlClient,
         gqlStore: coreContainer.gqlStore
     )
 
     private lazy var conversationItemRemoteDataSource: ConversationItemRemoteDataSource = ConversationItemRemoteDataSourceImpl(
         gqlClient: coreContainer.gqlClient,
+        asyncGqlClient: coreContainer.gqlClient,
         gqlStore: coreContainer.gqlStore,
         logger: coreContainer.logger
     )

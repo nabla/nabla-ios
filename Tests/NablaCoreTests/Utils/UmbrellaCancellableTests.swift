@@ -3,7 +3,7 @@ import NablaCoreTestsUtils
 import XCTest
 
 class UmbrellaCancellableTests: XCTestCase {
-    private let cancellable = CancellableMock()
+    private let cancellable = NablaCancellableMock()
     
     func testIsCancelledAfterCancel() throws {
         // GIVEN
@@ -18,7 +18,7 @@ class UmbrellaCancellableTests: XCTestCase {
         // GIVEN
         
         // Make a strong `cancellable` for set up, but only keep a `weak` reference on it during the test.
-        var cancellable: Cancellable? = CancellableMock()
+        var cancellable: NablaCancellable? = NablaCancellableMock()
         weak var weakCancellable = cancellable
         
         var sut: UmbrellaCancellable? = .init()

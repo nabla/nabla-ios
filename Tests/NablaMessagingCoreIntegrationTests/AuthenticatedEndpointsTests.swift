@@ -1,3 +1,4 @@
+import Combine
 import NablaCore
 import NablaMessagingCore
 import XCTest
@@ -12,77 +13,100 @@ class AuthenticatedEndpointsTests: XCTestCase {
         messagingClient = NablaMessagingClient(container: nablaClient.container)
     }
     
-    private func assertAuthenticationErrorHandler<T>(
-        file: StaticString = #filePath, line: UInt = #line
-    ) -> (Result<T, NablaError>) -> Void {
-        let handlerCalled = expectation(description: "Handler was called")
-        return { result in
-            switch result {
+    private func assertAuthenticationErrorPublisher<T, E: Error>(_ publisher: AnyPublisher<T, E>) {
+        let receiveErrorCalled = expectation(description: "receiveCompletion called with error")
+        let receiveCompletionCalled = expectation(description: "receiveCompletion called with finished")
+        receiveCompletionCalled.isInverted = true
+        let receiveValueCalled = expectation(description: "receiveValue called")
+        receiveValueCalled.isInverted = true
+        let cancellable = publisher.sink { completion in
+            switch completion {
+            case .finished:
+                break
             case let .failure(error):
-                switch error {
-                case is MissingAuthenticationProviderError:
-                    break
-                default:
-                    XCTFail("Expected `MissingAuthenticationProviderError`, received \(error)", file: file, line: line)
-                }
-            case .success:
-                XCTFail("Should not succeed", file: file, line: line)
+                XCTAssert(error is MissingAuthenticationProviderError)
+                receiveErrorCalled.fulfill()
             }
-            handlerCalled.fulfill()
+        } receiveValue: { _ in
+            receiveValueCalled.fulfill()
         }
+        waitForExpectations(timeout: 0.5)
+        XCTAssertNotNil(cancellable)
     }
     
     func testWatchConversationsFailsWhenNotAuthenticated() {
-        _ = messagingClient.watchConversations(handler: assertAuthenticationErrorHandler())
-        waitForExpectations(timeout: 0.5)
+        let publisher = messagingClient.watchConversations()
+        assertAuthenticationErrorPublisher(publisher)
     }
     
-    func testCreateConversationFailsWhenNotAuthenticated() {
-        _ = messagingClient.createConversation(
-            title: nil,
-            providerIds: nil,
-            handler: assertAuthenticationErrorHandler()
-        )
-        waitForExpectations(timeout: 0.5)
+    func testCreateConversationFailsWhenNotAuthenticated() async {
+        do {
+            _ = try await messagingClient.createConversation(
+                title: nil,
+                providerIds: nil
+            )
+            XCTFail("Call should not succeed")
+        } catch {
+            XCTAssert(error is MissingAuthenticationProviderError)
+        }
     }
     
     func testWatchConversationFailsWhenNotAuthenticated() {
-        _ = messagingClient.watchConversation(.init(), handler: assertAuthenticationErrorHandler())
-        waitForExpectations(timeout: 0.5)
+        let publisher = messagingClient.watchConversation(withId: .init())
+        assertAuthenticationErrorPublisher(publisher)
     }
     
     func testWatchItemsOfConversationWithIdFailsWhenNotAuthenticated() {
-        _ = messagingClient.watchItems(ofConversationWithId: .init(), handler: assertAuthenticationErrorHandler())
-        waitForExpectations(timeout: 0.5)
+        let publisher = messagingClient.watchItems(ofConversationWithId: .init())
+        assertAuthenticationErrorPublisher(publisher)
     }
     
-    func testMarkConversationAsSeenFailsWhenNotAuthenticated() {
-        _ = messagingClient.markConversationAsSeen(.init(), handler: assertAuthenticationErrorHandler())
-        waitForExpectations(timeout: 0.5)
+    func testMarkConversationAsSeenFailsWhenNotAuthenticated() async {
+        do {
+            _ = try await messagingClient.markConversationAsSeen(.init())
+            XCTFail("Call should not succeed")
+        } catch {
+            XCTAssert(error is MissingAuthenticationProviderError)
+        }
     }
     
-    func testSetIsTypingFailsWhenNotAuthenticated() {
-        _ = messagingClient.setIsTyping(true, inConversationWithId: .init(), handler: assertAuthenticationErrorHandler())
-        waitForExpectations(timeout: 0.5)
+    func testSetIsTypingFailsWhenNotAuthenticated() async {
+        do {
+            _ = try await messagingClient.setIsTyping(true, inConversationWithId: .init())
+            XCTFail("Call should not succeed")
+        } catch {
+            XCTAssert(error is MissingAuthenticationProviderError)
+        }
     }
     
-    func testSendMessageInConversationWithIdFailsWhenNotAuthenticated() {
-        _ = messagingClient.sendMessage(
-            .text(content: "Hello world!"),
-            replyingToMessageWithId: nil,
-            inConversationWithId: .init(),
-            handler: assertAuthenticationErrorHandler()
-        )
-        waitForExpectations(timeout: 0.5)
+    func testSendMessageInConversationWithIdFailsWhenNotAuthenticated() async {
+        do {
+            _ = try await messagingClient.sendMessage(
+                .text(content: "Hello world!"),
+                replyingToMessageWithId: nil,
+                inConversationWithId: .init()
+            )
+            XCTFail("Call should not succeed")
+        } catch {
+            XCTAssert(error is MissingAuthenticationProviderError)
+        }
     }
     
-    func testRetrySendingItemWithIdInConversationWithIdFailsWhenNotAuthenticated() {
-        _ = messagingClient.retrySending(itemWithId: .init(), inConversationWithId: .init(), handler: assertAuthenticationErrorHandler())
-        waitForExpectations(timeout: 0.5)
+    func testRetrySendingItemWithIdInConversationWithIdFailsWhenNotAuthenticated() async {
+        do {
+            _ = try await messagingClient.retrySending(itemWithId: .init(), inConversationWithId: .init())
+            XCTFail("Call should not succeed")
+        } catch {
+            XCTAssert(error is MissingAuthenticationProviderError)
+        }
     }
     
-    func testDeleteMessageWithIdInConversationWithIdFailsWhenNotAuthenticated() {
-        _ = messagingClient.deleteMessage(withId: .init(), conversationId: .init(), handler: assertAuthenticationErrorHandler())
-        waitForExpectations(timeout: 0.5)
+    func testDeleteMessageWithIdInConversationWithIdFailsWhenNotAuthenticated() async {
+        do {
+            _ = try await messagingClient.deleteMessage(withId: .init(), conversationId: .init())
+            XCTFail("Call should not succeed")
+        } catch {
+            XCTAssert(error is MissingAuthenticationProviderError)
+        }
     }
 }

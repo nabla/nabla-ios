@@ -1,36 +1,38 @@
+import Combine
 import Foundation
 import NablaCore
-
-private enum Constants {
-    static let localItemsDidChangeNotification = Notification.Name(rawValue: "com.nabla.localConversationItemsDidChangeNotification")
-    static let updatedConversationIdKey = "updatedConversationIdKey"
-}
 
 class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     // MARK: - Internal
     
     func getConversationItems(ofConversationWithId conversationId: UUID) -> [LocalConversationItem] {
-        conversationItems.values
-            .filter { $0.conversationId == conversationId }
-            .nabla.sorted(\.date)
+        storage(forConversationWithId: conversationId)
+            .value
+            .values
+            .nabla.sorted(\LocalConversationItem.date)
     }
     
     func getConversationItem(withClientId clientId: UUID) -> LocalConversationItem? {
-        conversationItems[clientId]
+        for conversationStorage in storage.value.values {
+            if let item = conversationStorage.value[clientId] {
+                return item
+            }
+        }
+        return nil
     }
     
-    func watchConversationItems(
-        ofConversationWithId conversationId: UUID,
-        callback: @escaping ([LocalConversationItem]) -> Void
-    ) -> Cancellable {
-        LocalDataSourceWatcher(localDataSource: self, conversationId: conversationId, callback: callback)
+    func watchConversationItems(ofConversationWithId conversationId: UUID) -> AnyPublisher<[LocalConversationItem], Never> {
+        storage(forConversationWithId: conversationId)
+            .map { conversationStorage in
+                conversationStorage.values.nabla.sorted(\LocalConversationItem.date)
+            }
+            .eraseToAnyPublisher()
     }
     
     func addConversationItem(
         _ conversationItem: LocalConversationItem
     ) {
-        conversationItems[conversationItem.clientId] = conversationItem
-        notifyChange(forConversationWithId: conversationItem.conversationId)
+        storage(forConversationWithId: conversationItem.conversationId).value[conversationItem.clientId] = conversationItem
     }
     
     func updateConversationItem(
@@ -42,91 +44,47 @@ class ConversationItemLocalDataSourceImpl: ConversationItemLocalDataSource {
     func updateConversationItems(
         _ conversationItems: [LocalConversationItem]
     ) {
-        var conversationIds = Set<UUID>()
-        for conversationItem in conversationItems {
-            self.conversationItems[conversationItem.clientId] = conversationItem
-            conversationIds.insert(conversationItem.conversationId)
-        }
-        for conversationId in conversationIds {
-            notifyChange(forConversationWithId: conversationId)
+        let itemsPerConversations = conversationItems.nabla.toGroups(\.conversationId)
+        for (conversationId, items) in itemsPerConversations {
+            updateConversationItems(items, inConversationWithId: conversationId)
         }
     }
     
     func removeConversationItem(
         withClientId clientId: UUID
     ) {
-        conversationItems.removeValue(forKey: clientId)
-        notifyChange(forConversationWithId: clientId)
+        for conversationStorage in storage.value.values {
+            if conversationStorage.value[clientId] != nil {
+                conversationStorage.value.removeValue(forKey: clientId)
+            }
+        }
     }
     
     // MARK: - Private
     
-    private var conversationItems = [UUID: LocalConversationItem]()
+    private typealias ConversationStorage = CurrentValueSubject<[UUID: LocalConversationItem], Never>
+    private typealias GlobalStorage = CurrentValueSubject<[UUID: ConversationStorage], Never>
     
-    private func notifyChange(forConversationWithId conversationId: UUID) {
-        NotificationCenter.default.post(
-            name: Constants.localItemsDidChangeNotification,
-            object: nil,
-            userInfo: [
-                Constants.updatedConversationIdKey: conversationId,
-            ]
-        )
-    }
-}
-
-private class LocalDataSourceWatcher: Cancellable {
-    // MARK: - Internal
+    private let storage = GlobalStorage([:])
     
-    func cancel() {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: Constants.localItemsDidChangeNotification,
-            object: nil
-        )
+    private func storage(forConversationWithId conversationId: UUID) -> ConversationStorage {
+        if let conversationStorage = storage.value[conversationId] {
+            return conversationStorage
+        }
+        let conversationStorage = ConversationStorage([:])
+        storage.value[conversationId] = conversationStorage
+        return conversationStorage
     }
     
-    init(
-        localDataSource: ConversationItemLocalDataSource,
-        conversationId: UUID,
-        callback: @escaping ([LocalConversationItem]) -> Void
+    private func updateConversationItems(
+        _ conversationItems: [LocalConversationItem],
+        inConversationWithId conversationId: UUID
     ) {
-        self.localDataSource = localDataSource
-        self.conversationId = conversationId
-        self.callback = callback
-        observeUpdates()
-        notifyNewValues()
-    }
-    
-    deinit {
-        cancel()
-    }
-    
-    // MARK: - Private
-    
-    private let localDataSource: ConversationItemLocalDataSource
-    
-    private let conversationId: UUID
-    private let callback: ([LocalConversationItem]) -> Void
-    
-    private func observeUpdates() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(localDataSourceDidChangeNotificationHandler),
-            name: Constants.localItemsDidChangeNotification,
-            object: nil
-        )
-    }
-    
-    @objc private func localDataSourceDidChangeNotificationHandler(_ notification: Notification) {
-        guard
-            let updatedConversationId = notification.userInfo?[Constants.updatedConversationIdKey] as? UUID,
-            updatedConversationId == conversationId
-        else { return }
-        notifyNewValues()
-    }
-    
-    private func notifyNewValues() {
-        let items = localDataSource.getConversationItems(ofConversationWithId: conversationId)
-        callback(items)
+        let conversationStorage = storage(forConversationWithId: conversationId)
+        var updatedItems = conversationStorage.value
+        for item in conversationItems {
+            updatedItems[item.clientId] = item
+        }
+        conversationStorage.send(updatedItems)
     }
 }

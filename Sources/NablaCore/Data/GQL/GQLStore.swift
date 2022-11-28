@@ -2,7 +2,6 @@ import Apollo
 import Foundation
 
 // sourcery: AutoMockable
-// sourcery: typealias = "Cancellable = NablaCore.Cancellable"
 public protocol GQLStore {
     func createCache<Query: GQLQuery>(
         for query: Query,

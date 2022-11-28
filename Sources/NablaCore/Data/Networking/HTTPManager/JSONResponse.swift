@@ -1,7 +1,7 @@
 import Foundation
 
 public struct JSONResponse {
-    let result: Result<Data, HTTPError>
+    let data: Data
     let request: URLRequest?
     let response: HTTPURLResponse?
 }

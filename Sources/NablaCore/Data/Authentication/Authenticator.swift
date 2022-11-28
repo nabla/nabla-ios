@@ -12,6 +12,8 @@ public protocol Authenticator {
     )
     func logOut()
     func getAccessToken(handler: ResultHandler<AuthenticationState, AuthenticationError>)
+    /// - Throws: ``AuthenticationError``
+    func getAccessToken() async throws -> AuthenticationState
     func addObserver(_ observer: Any, selector: Selector)
     func removeObserver(_ observer: Any)
     func isSessionInitialized() -> Bool

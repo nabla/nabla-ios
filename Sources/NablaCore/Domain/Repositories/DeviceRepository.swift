@@ -1,11 +1,11 @@
 import Foundation
 
 protocol DeviceRepository {
-    func updateOrRegisterDevice(withModules modules: [Module]) -> Cancellable
+    func updateOrRegisterDevice(withModules modules: [Module]) -> NablaCancellable
 }
 
 final class DeviceRepositoryImpl: DeviceRepository {
-    func updateOrRegisterDevice(withModules modules: [Module]) -> Cancellable {
+    func updateOrRegisterDevice(withModules modules: [Module]) -> NablaCancellable {
         let installation = Installation(
             deviceId: deviceLocalDataSource.deviceId,
             deviceModel: deviceLocalDataSource.deviceModel,

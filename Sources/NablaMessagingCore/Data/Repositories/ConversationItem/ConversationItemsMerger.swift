@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -20,14 +21,14 @@ class ConversationItemsMerger: PaginatedWatcher {
         remoteWatcher?.refetch()
     }
     
-    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         guard let remoteWatcher = remoteWatcher else {
             fatalError("You should always call `ConversationItemsMerger.resume()` before calling `loadMore(completion:)`.")
         }
         return remoteWatcher.loadMore(completion: completion)
     }
     
-    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         guard let remoteWatcher = remoteWatcher else {
             fatalError("You should always call `ConversationItemsMerger.resume()` before calling `loadMore(completion:)`.")
         }
@@ -68,18 +69,19 @@ class ConversationItemsMerger: PaginatedWatcher {
     private let handler: ResultHandler<ConversationItems, GQLError>
     
     private var remoteWatcher: PaginatedWatcher?
-    private var localWatcher: Cancellable?
-    private var remoteIdObserver: Cancellable?
+    private var localWatcher: AnyCancellable?
+    private var remoteIdObserver: NablaCancellable?
     
     private var remoteData: Result<RemoteConversationItems, GQLError>?
     private var localData: [LocalConversationItem]?
     
     private func observeLocalData(localId: UUID) {
-        localWatcher = localDataSource.watchConversationItems(ofConversationWithId: localId) { [weak self] items in
-            guard let self = self else { return }
-            self.localData = items
-            self.notifyNewValues()
-        }
+        localWatcher = localDataSource.watchConversationItems(ofConversationWithId: localId)
+            .sink { [weak self] items in
+                guard let self = self else { return }
+                self.localData = items
+                self.notifyNewValues()
+            }
     }
     
     private func observeRemoteData(remoteId: UUID) {

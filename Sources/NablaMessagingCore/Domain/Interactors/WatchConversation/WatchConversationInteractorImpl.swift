@@ -12,8 +12,8 @@ class WatchConversationInteractorImpl: AuthenticatedInteractor, WatchConversatio
     // MARK: - WatchConversationInteractor
 
     func execute(_ conversationId: UUID, handler: ResultHandler<Conversation, NablaError>) -> Watcher {
-        guard isAuthenticated(handler: handler) else {
-            return Failure()
+        guard isAuthenticated else {
+            return Failure(handler: handler, error: MissingAuthenticationProviderError())
         }
         let transientId = repository.getConversationTransientId(from: conversationId)
         return repository.watchConversation(withId: transientId, handler: handler)

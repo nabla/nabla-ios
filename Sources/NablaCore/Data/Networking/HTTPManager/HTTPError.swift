@@ -10,6 +10,7 @@ public enum HTTPError: Error {
         case unreachableService
         case cancelled
         case generic(Error?)
+        case noResponse
     }
     
     public enum ServerError: Error {

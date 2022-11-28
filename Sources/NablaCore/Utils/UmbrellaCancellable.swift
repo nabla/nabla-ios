@@ -1,9 +1,9 @@
 import Foundation
 
-public class UmbrellaCancellable: Cancellable {
+public class UmbrellaCancellable: NablaCancellable {
     // MARK: - Public
     
-    public func add(_ cancellable: Cancellable) {
+    public func add(_ cancellable: NablaCancellable) {
         children.append(cancellable)
     }
     
@@ -26,5 +26,5 @@ public class UmbrellaCancellable: Cancellable {
     
     // MARK: - Private
     
-    private var children: [Cancellable] = []
+    private var children: [NablaCancellable] = []
 }

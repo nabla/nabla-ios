@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 import NablaMessagingCore
@@ -7,9 +8,8 @@ protocol NablaMessagingClientProtocol {
     func createConversation(
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: MessageInput?,
-        handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Cancellable
+        initialMessage: MessageInput?
+    ) async throws -> Conversation
     
     func createDraftConversation(
         title: String?,
@@ -17,46 +17,35 @@ protocol NablaMessagingClientProtocol {
     ) -> Conversation
 
     func watchItems(
-        ofConversationWithId conversationId: UUID,
-        handler: @escaping (Result<ConversationItems, NablaError>) -> Void
-    ) -> PaginatedWatcher
+        ofConversationWithId conversationId: UUID
+    ) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError>
 
     func setIsTyping(
         _ isTyping: Bool,
-        inConversationWithId conversationId: UUID,
-        handler: @escaping (Result<Void, NablaError>) -> Void
-    ) -> Cancellable
+        inConversationWithId conversationId: UUID
+    ) async throws
 
-    func markConversationAsSeen(
-        _ conversationId: UUID,
-        handler: @escaping (Result<Void, NablaError>) -> Void
-    ) -> Cancellable
+    func markConversationAsSeen(_ conversationId: UUID) async throws
 
-    func watchConversations(handler: @escaping (Result<ConversationList, NablaError>) -> Void) -> PaginatedWatcher
+    func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError>
 
-    func watchConversation(
-        _ conversationId: UUID,
-        handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Watcher
+    func watchConversation(withId conversationId: UUID) -> AnyPublisher<Conversation, NablaError>
 
     func sendMessage(
         _ message: MessageInput,
         replyingToMessageWithId: UUID?,
-        inConversationWithId conversationId: UUID,
-        handler: @escaping (Result<Void, NablaError>) -> Void
-    ) -> Cancellable
+        inConversationWithId conversationId: UUID
+    ) async throws
 
     func retrySending(
         itemWithId itemId: UUID,
-        inConversationWithId conversationId: UUID,
-        handler: @escaping (Result<Void, NablaError>) -> Void
-    ) -> Cancellable
+        inConversationWithId conversationId: UUID
+    ) async throws
 
     func deleteMessage(
         withId messageId: UUID,
-        conversationId: UUID,
-        handler: @escaping (Result<Void, NablaError>) -> Void
-    ) -> Cancellable
+        conversationId: UUID
+    ) async throws
     
     func addRefetchTriggers(_ triggers: RefetchTrigger...)
 }
@@ -66,44 +55,36 @@ extension NablaMessagingClient: NablaMessagingClientProtocol {}
 extension NablaMessagingClientProtocol {
     func sendMessage(
         _ message: MessageInput,
-        inConversationWithId conversationId: UUID,
-        handler: @escaping (Result<Void, NablaError>) -> Void
-    ) -> Cancellable {
-        sendMessage(message, replyingToMessageWithId: nil, inConversationWithId: conversationId, handler: handler)
+        inConversationWithId conversationId: UUID
+    ) async throws {
+        try await sendMessage(message, replyingToMessageWithId: nil, inConversationWithId: conversationId)
     }
     
     func createConversation(
-        title: String?,
-        handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Cancellable {
-        createConversation(
+        title: String?
+    ) async throws -> Conversation {
+        try await createConversation(
             title: title,
             providerIds: nil,
-            initialMessage: nil,
-            handler: handler
+            initialMessage: nil
         )
     }
     
     func createConversation(
-        providerIds: [UUID]?,
-        handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Cancellable {
-        createConversation(
+        providerIds: [UUID]?
+    ) async throws -> Conversation {
+        try await createConversation(
             title: nil,
             providerIds: providerIds,
-            initialMessage: nil,
-            handler: handler
+            initialMessage: nil
         )
     }
     
-    func createConversation(
-        handler: @escaping (Result<Conversation, NablaError>) -> Void
-    ) -> Cancellable {
-        createConversation(
+    func createConversation() async throws -> Conversation {
+        try await createConversation(
             title: nil,
             providerIds: nil,
-            initialMessage: nil,
-            handler: handler
+            initialMessage: nil
         )
     }
     

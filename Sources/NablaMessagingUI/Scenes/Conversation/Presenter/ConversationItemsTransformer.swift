@@ -1,15 +1,16 @@
 import Foundation
+import NablaCore
 import NablaMessagingCore
 
 enum ConversationItemsTransformer {
     static func transform(
-        conversationItems: ConversationItems,
+        conversationItems: PaginatedList<ConversationItem>,
         providers: [ProviderInConversation],
         focusedTextItemId: UUID?
     ) -> [ConversationViewItem] {
         var viewItems = [ConversationViewItem]()
 
-        let contentItems = conversationItems.items.compactMap(transform)
+        let contentItems = conversationItems.elements.compactMap(transform)
         viewItems.append(contentsOf: contentItems)
         
         let typingItems = providers

@@ -1,6 +1,6 @@
 import NablaCore
 
-final class CancellableMock: Cancellable {
+final class NablaCancellableMock: NablaCancellable {
     func cancel() {}
 }
 

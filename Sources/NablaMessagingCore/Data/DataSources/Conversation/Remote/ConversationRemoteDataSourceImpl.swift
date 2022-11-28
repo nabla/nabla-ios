@@ -6,9 +6,11 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
 
     init(
         gqlClient: GQLClient,
+        asyncGqlClient: AsyncGQLClient,
         gqlStore: GQLStore
     ) {
         self.gqlClient = gqlClient
+        self.asyncGqlClient = asyncGqlClient
         self.gqlStore = gqlStore
     }
     
@@ -19,7 +21,7 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
         providerIds: [UUID]?,
         initialMessage: GQL.SendMessageInput?,
         handler: ResultHandler<RemoteConversation, GQLError>
-    ) -> Cancellable {
+    ) -> NablaCancellable {
         gqlClient.perform(
             mutation: GQL.CreateConversationMutation(
                 title: title,
@@ -34,25 +36,16 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
         )
     }
     
-    func setIsTyping(
-        _ isTyping: Bool,
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable {
-        gqlClient.perform(
-            mutation: GQL.SetTypingMutation(conversationId: conversationId, isTyping: isTyping),
-            handler: handler.pullback(void)
+    /// - Throws: ``GQLError``
+    func setIsTyping(_ isTyping: Bool, conversationId: UUID) async throws {
+        _ = try await asyncGqlClient.perform(
+            mutation: GQL.SetTypingMutation(conversationId: conversationId, isTyping: isTyping)
         )
     }
     
-    func markConversationAsSeen(
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable {
-        gqlClient.perform(
-            mutation: GQL.MaskAsSeenMutation(conversationId: conversationId),
-            handler: handler.pullback(void)
-        )
+    /// - Throws: ``GQLError``
+    func markConversationAsSeen(conversationId: UUID) async throws {
+        _ = try await asyncGqlClient.perform(mutation: GQL.MaskAsSeenMutation(conversationId: conversationId))
     }
     
     func watchConversation(
@@ -77,7 +70,7 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     
     func subscribeToConversationsEvents(
         handler: ResultHandler<RemoteConversationsEvent, GQLError>
-    ) -> Cancellable {
+    ) -> NablaCancellable {
         gqlClient.subscribe(
             subscription: GQL.ConversationsEventsSubscription(),
             handler: .init { [weak self] result in
@@ -108,6 +101,7 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     }
     
     private let gqlClient: GQLClient
+    private let asyncGqlClient: AsyncGQLClient
     private let gqlStore: GQLStore
     
     private func handleConversationsEvent(_ event: RemoteConversationsEvent) {

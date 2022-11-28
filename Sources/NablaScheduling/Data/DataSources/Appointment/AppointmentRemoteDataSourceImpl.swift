@@ -180,15 +180,15 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     private func handle(_ event: RemoteAppointmentsEvent) {
         if let createdEvent = event.asAppointmentCreatedEvent {
-            Task(priority: .background) {
+            Task(priority: .userInitiated) {
                 try await self.insert(createdEvent.appointment.fragments.appointmentFragment)
             }
         } else if let updatedEvent = event.asAppointmentUpdatedEvent {
-            Task(priority: .background) {
+            Task(priority: .userInitiated) {
                 try await self.updateFilteredQueriesAfterAppointmentChange(appointment: updatedEvent.appointment.fragments.appointmentFragment)
             }
         } else if let cancelledEvent = event.asAppointmentCancelledEvent {
-            Task(priority: .background) {
+            Task(priority: .userInitiated) {
                 try await self.remove(appointmentWithId: cancelledEvent.appointmentId)
             }
         }

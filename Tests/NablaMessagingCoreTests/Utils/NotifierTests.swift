@@ -90,7 +90,7 @@ class NotifierTests: XCTestCase {
         let expectation = expectation(description: "Notifier.observe should not get called")
         expectation.isInverted = true
         // WHEN
-        var cancellable: Cancellable? = sut.observe { _ in
+        var cancellable: NablaCancellable? = sut.observe { _ in
             expectation.fulfill()
         }
         cancellable = nil

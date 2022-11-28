@@ -117,5 +117,5 @@ public class NablaClient {
         apiKey.replacingOccurrences(of: "Authorization: Bearer ", with: "")
     }
     
-    private var registerDeviceAction: Cancellable?
+    private var registerDeviceAction: NablaCancellable?
 }

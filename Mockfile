@@ -13,7 +13,8 @@ NablaCore:
         - NablaCoreTestUtils
     testable:
         - NablaCore
-    import: []
+    import:
+        - Combine
     prototype: false
     sourcery: []
 
@@ -31,6 +32,7 @@ NablaMessagingCore:
         - NablaMessagingCore
     import:
         - NablaCore
+        - Combine
     prototype: false
     sourcery: []
 
@@ -50,6 +52,7 @@ NablaMessagingUI:
     import:
         - NablaCore
         - NablaMessagingCore
+        - Combine
     prototype: false
     sourcery: []
 

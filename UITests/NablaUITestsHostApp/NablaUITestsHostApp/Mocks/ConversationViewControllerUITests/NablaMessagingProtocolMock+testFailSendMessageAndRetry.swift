@@ -1,34 +1,30 @@
+import Combine
 import Foundation
+import NablaCore
 @testable import NablaMessagingCore
 
 extension NablaMessagingClientProtocolMock {
     func setupForTestFailSendMessageAndRetry() {
         setupForTestCreateConversation()
+        
+        let watchItemsSubject = CurrentValueSubject<PaginatedList<ConversationItem>, Never>(.empty)
 
-        watchConversationClosure = { _, handler in
-            handler(.success(.mock()))
-            return WatcherMock()
-        }
-
-        watchItemsClosure = { _, handler in
-            handler(.success(.init(
-                hasMore: false,
-                items: []
-            )))
-            return PaginatedWatcherMock()
+        watchItemsClosure = { _ in
+            watchItemsSubject
+                .setFailureType(to: NablaError.self)
+                .eraseToAnyPublisher()
         }
 
         var textContent = ""
         let textMessageId = UUID()
 
-        sendMessageClosure = { message, _, _ in
+        sendMessageClosure = { message, _ in
             if case let .text(content) = message {
                 textContent = content
             }
-            self.watchItemsReceivedInvocations.forEach { params in
-                params.handler(.success(.init(
-                    hasMore: false,
-                    items: [
+            self.watchItemsReceivedInvocations.forEach { _ in
+                let list = PaginatedList<ConversationItem>(
+                    elements: [
                         TextMessageItem(
                             id: textMessageId,
                             date: Date(),
@@ -37,17 +33,17 @@ extension NablaMessagingClientProtocolMock {
                             replyTo: nil,
                             content: textContent
                         ),
-                    ]
-                )))
+                    ],
+                    loadMore: nil
+                )
+                watchItemsSubject.send(list)
             }
-            return PaginatedWatcherMock()
         }
 
-        retrySendingClosure = { _, _, _ in
-            self.watchItemsReceivedInvocations.forEach { params in
-                params.handler(.success(.init(
-                    hasMore: false,
-                    items: [
+        retrySendingClosure = { _, _ in
+            self.watchItemsReceivedInvocations.forEach { _ in
+                let list = PaginatedList<ConversationItem>(
+                    elements: [
                         TextMessageItem(
                             id: textMessageId,
                             date: .init(),
@@ -56,10 +52,11 @@ extension NablaMessagingClientProtocolMock {
                             replyTo: nil,
                             content: textContent
                         ),
-                    ]
-                )))
+                    ],
+                    loadMore: nil
+                )
+                watchItemsSubject.send(list)
             }
-            return PaginatedWatcherMock()
         }
     }
 }

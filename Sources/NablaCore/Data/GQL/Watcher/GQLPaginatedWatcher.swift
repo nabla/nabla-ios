@@ -12,11 +12,11 @@ open class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
         watcher?.refetch()
     }
 
-    public func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    public func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         loadMore(numberOfItems: numberOfItemsPerPage, completion: completion)
     }
     
-    public func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    public func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         gqlClient
             .fetch(
                 query: makeQuery(cursor: cursor, numberOfItems: numberOfItems),

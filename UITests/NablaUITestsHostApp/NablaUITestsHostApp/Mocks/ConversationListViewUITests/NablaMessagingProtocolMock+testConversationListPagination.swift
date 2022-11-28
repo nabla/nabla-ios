@@ -1,30 +1,32 @@
+import Combine
 import Foundation
+import NablaCore
 @testable import NablaMessagingCore
 
 extension NablaMessagingClientProtocolMock {
     func setupForTestConversationListPagination() {
-        let conversation1 = Conversation.mock()
-        let conversation2 = Conversation.mock()
-        let conversation3 = Conversation.mock()
+        let subject = CurrentValueSubject<PaginatedList<Conversation>, NablaError>(.empty)
         
-        let paginatedWatcher = PaginatedWatcherMock()
-        paginatedWatcher.loadMoreClosure = { completion in
-            DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
-                self.watchConversationsParams.forEach { params in
-                    params.handler(.success(ConversationList(
-                        conversations: [conversation1, conversation2, conversation3],
-                        hasMore: false
-                    )))
+        let dynamicList = PaginatedList<Conversation>(
+            elements: [.mock()],
+            loadMore: {
+                await withCheckedContinuation { continuation in
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+                        let old = subject.value
+                        let new = PaginatedList<Conversation>(
+                            elements: old.elements + [.mock(), .mock()],
+                            loadMore: old.loadMore
+                        )
+                        subject.send(new)
+                        continuation.resume()
+                    }
                 }
-                completion(.success(()))
             }
-            
-            return CancellableMock()
-        }
+        )
+        subject.send(dynamicList)
         
-        watchConversationsClosure = { handler in
-            handler(.success(ConversationList(conversations: [conversation1], hasMore: true)))
-            return paginatedWatcher
+        watchConversationsClosure = {
+            subject.eraseToAnyPublisher()
         }
     }
 }

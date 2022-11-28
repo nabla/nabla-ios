@@ -10,10 +10,8 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
 
     // MARK: - FileUploadRemoteDataSource
     
-    func upload(
-        file: RemoteFileUpload,
-        handler: ResultHandler<UUID, FileUploadRemoteDataSourceError>
-    ) -> Cancellable {
+    /// - Throws: ``FileUploadRemoteDataSourceError``
+    func upload(file: RemoteFileUpload) async throws -> UUID {
         let uploadData: Data
         switch file.content {
         case let .data(data):
@@ -26,8 +24,7 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
                     url.stopAccessingSecurityScopedResource()
                 }
             } catch {
-                handler(.failure(.cannotReadFileData))
-                return Failure()
+                throw FileUploadRemoteDataSourceError.cannotReadFileData
             }
         }
         
@@ -37,10 +34,13 @@ class FileUploadRemoteDataSourceImpl: FileUploadRemoteDataSource {
             fileName: file.fileName,
             mimeType: file.mimeType
         )
-        return uploadClient.upload(
-            upload,
-            handler: handler.pullbackError(FileUploadRemoteDataSourceError.uploadError)
-        )
+        do {
+            return try await uploadClient.upload(upload)
+        } catch let error as UploadClientError {
+            throw FileUploadRemoteDataSourceError.uploadError(error)
+        } catch {
+            throw FileUploadRemoteDataSourceError.unknownError(error)
+        }
     }
     
     // MARK: - Private

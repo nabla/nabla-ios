@@ -1,3 +1,4 @@
+import Combine
 import NablaCore
 import NablaCoreTestsUtils
 @testable import NablaMessagingCore
@@ -86,10 +87,11 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
         sut.addConversationItem(item)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
-        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
-            XCTAssertEqual(items.count, 1)
-            watcherWasCalledWithInitialValue.fulfill()
-        }
+        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId)
+            .sink { items in
+                XCTAssertEqual(items.count, 1)
+                watcherWasCalledWithInitialValue.fulfill()
+            }
         // THEN
         wait(for: [watcherWasCalledWithInitialValue], timeout: 0)
         XCTAssertNotNil(watcher) // `watcher` must be retained past the `wait` for tests to work
@@ -101,17 +103,18 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         let watcherWasCalledWithNewValue = expectation(description: "watcher was called with new value")
         // WHEN
-        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
-            switch items.count {
-            case 0:
-                watcherWasCalledWithInitialValue.fulfill()
-            case 1:
-                XCTAssertEqual(items[0].clientId, item.clientId)
-                watcherWasCalledWithNewValue.fulfill()
-            default:
-                XCTFail("Unexpect watcher callback call")
+        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId)
+            .sink { items in
+                switch items.count {
+                case 0:
+                    watcherWasCalledWithInitialValue.fulfill()
+                case 1:
+                    XCTAssertEqual(items[0].clientId, item.clientId)
+                    watcherWasCalledWithNewValue.fulfill()
+                default:
+                    XCTFail("Unexpect watcher callback call")
+                }
             }
-        }
         sut.addConversationItem(item)
         // THEN
         wait(for: [watcherWasCalledWithInitialValue, watcherWasCalledWithNewValue], timeout: 0)
@@ -125,17 +128,18 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         let watcherWasCalledWithUpdatedValue = expectation(description: "watcher was called with updated value")
         // WHEN
-        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
-            guard let textMessage = items.first as? LocalTextMessageItem else { return XCTFail() }
-            switch textMessage.sendingState {
-            case .toBeSent:
-                watcherWasCalledWithInitialValue.fulfill()
-            case .sent:
-                watcherWasCalledWithUpdatedValue.fulfill()
-            default:
-                XCTFail("Unexpect watcher callback call")
+        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId)
+            .sink { items in
+                guard let textMessage = items.first as? LocalTextMessageItem else { return XCTFail() }
+                switch textMessage.sendingState {
+                case .toBeSent:
+                    watcherWasCalledWithInitialValue.fulfill()
+                case .sent:
+                    watcherWasCalledWithUpdatedValue.fulfill()
+                default:
+                    XCTFail("Unexpect watcher callback call")
+                }
             }
-        }
         item.sendingState = .sent
         sut.updateConversationItem(item)
         // THEN
@@ -149,14 +153,15 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
         let item = LocalTextMessageItem.mock(conversationId: otherConversationId)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
-        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
-            switch items.count {
-            case 0:
-                watcherWasCalledWithInitialValue.fulfill()
-            default:
-                XCTFail("Unexpect watcher callback call")
+        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId)
+            .sink { items in
+                switch items.count {
+                case 0:
+                    watcherWasCalledWithInitialValue.fulfill()
+                default:
+                    XCTFail("Unexpect watcher callback call")
+                }
             }
-        }
         sut.addConversationItem(item)
         // THEN
         wait(for: [watcherWasCalledWithInitialValue], timeout: 0)
@@ -168,14 +173,15 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
         let item = LocalTextMessageItem.mock(conversationId: conversationId)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
-        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
-            switch items.count {
-            case 0:
-                watcherWasCalledWithInitialValue.fulfill()
-            default:
-                XCTFail("Unexpect watcher callback call")
+        let watcher = sut.watchConversationItems(ofConversationWithId: conversationId)
+            .sink { items in
+                switch items.count {
+                case 0:
+                    watcherWasCalledWithInitialValue.fulfill()
+                default:
+                    XCTFail("Unexpect watcher callback call")
+                }
             }
-        }
         watcher.cancel()
         sut.addConversationItem(item)
         // THEN
@@ -188,14 +194,15 @@ class ConversationItemLocalDataSourceTests: XCTestCase {
         let item = LocalTextMessageItem.mock(conversationId: conversationId)
         let watcherWasCalledWithInitialValue = expectation(description: "watcher was called with initial value")
         // WHEN
-        var watcher: Cancellable? = sut.watchConversationItems(ofConversationWithId: conversationId) { items in
-            switch items.count {
-            case 0:
-                watcherWasCalledWithInitialValue.fulfill()
-            default:
-                XCTFail("Unexpect watcher callback call")
+        var watcher: AnyCancellable? = sut.watchConversationItems(ofConversationWithId: conversationId)
+            .sink { items in
+                switch items.count {
+                case 0:
+                    watcherWasCalledWithInitialValue.fulfill()
+                default:
+                    XCTFail("Unexpect watcher callback call")
+                }
             }
-        }
         watcher = nil
         sut.addConversationItem(item)
         // THEN

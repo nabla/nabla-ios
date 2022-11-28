@@ -7,11 +7,13 @@ import XCTest
 
 class ConversationRemoteDataSourceTests: XCTestCase {
     private var mockGqlClient: GQLClientMock!
+    private var mockAsyncGqlClient: AsyncGQLClientMock!
     private var mockGqlStore: GQLStoreMock!
 
     override func setUp() {
         super.setUp()
         mockGqlClient = GQLClientMock()
+        mockAsyncGqlClient = AsyncGQLClientMock()
         mockGqlStore = GQLStoreMock()
         
         Matcher.default.register(GQL.MaskAsSeenMutation.self) { lhs, rhs in
@@ -24,14 +26,18 @@ class ConversationRemoteDataSourceTests: XCTestCase {
         mockGqlStore = nil
     }
 
-    func testMarkConversationAsSeenCallsClientWithCorrectMutation() {
+    func testMarkConversationAsSeenCallsClientWithCorrectMutation() async throws {
         // GIVEN
         let conversationId = UUID()
-        let sut = ConversationRemoteDataSourceImpl(gqlClient: mockGqlClient, gqlStore: mockGqlStore)
-        Given(mockGqlClient, .perform(mutation: .any(GQL.MaskAsSeenMutation.self), handler: .any, willReturn: CancellableMock()))
+        let sut = ConversationRemoteDataSourceImpl(
+            gqlClient: mockGqlClient,
+            asyncGqlClient: mockAsyncGqlClient,
+            gqlStore: mockGqlStore
+        )
+        mockAsyncGqlClient.given(.perform(mutation: .any(GQL.MaskAsSeenMutation.self), willReturn: .init(unsafeResultMap: [:])))
         // WHEN
-        _ = sut.markConversationAsSeen(conversationId: conversationId, handler: .void)
+        _ = try await sut.markConversationAsSeen(conversationId: conversationId)
         // THEN
-        Verify(mockGqlClient, .perform(mutation: .value(GQL.MaskAsSeenMutation(conversationId: conversationId)), handler: .any))
+        mockAsyncGqlClient.verify(.perform(mutation: .value(GQL.MaskAsSeenMutation(conversationId: conversationId))))
     }
 }

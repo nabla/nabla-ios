@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 @testable import NablaCore
 @testable import NablaMessagingCore
@@ -6,15 +7,9 @@ extension NablaMessagingClientProtocolMock {
     func setupForTestFocusOnTextMessage() {
         setupForTestCreateConversation()
 
-        watchConversationClosure = { _, handler in
-            handler(.success(.mock()))
-            return WatcherMock()
-        }
-
-        watchItemsClosure = { _, handler in
-            handler(.success(.init(
-                hasMore: false,
-                items: [
+        watchItemsClosure = { _ in
+            let list = PaginatedList<ConversationItem>(
+                elements: [
                     TextMessageItem(
                         id: .init(),
                         date: .init(),
@@ -31,9 +26,12 @@ extension NablaMessagingClientProtocolMock {
                         replyTo: nil,
                         content: "Hello"
                     ),
-                ]
-            )))
-            return PaginatedWatcherMock()
+                ],
+                loadMore: nil
+            )
+            return Just(list)
+                .setFailureType(to: NablaError.self)
+                .eraseToAnyPublisher()
         }
     }
 }

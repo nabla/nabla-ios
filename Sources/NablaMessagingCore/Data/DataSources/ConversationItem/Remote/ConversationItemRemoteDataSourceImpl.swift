@@ -6,11 +6,14 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
 
     init(
         gqlClient: GQLClient,
+        asyncGqlClient: AsyncGQLClient,
         gqlStore: GQLStore,
         logger: Logger
     ) {
         self.gqlClient = gqlClient
+        
         self.gqlStore = gqlStore
+        self.asyncGqlClient = asyncGqlClient
         self.logger = logger
     }
 
@@ -34,7 +37,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         remoteMessageInput: GQL.SendMessageInput,
         conversationId: UUID,
         handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable {
+    ) -> NablaCancellable {
         gqlClient.perform(
             mutation: GQL.SendMessageMutation(
                 conversationId: conversationId,
@@ -49,20 +52,15 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         )
     }
 
-    func delete(
-        messageId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable {
-        gqlClient.perform(
-            mutation: GQL.DeleteMessageMutation(messageId: messageId),
-            handler: handler.pullback(void)
-        )
+    /// - Throws: ``GQLError``
+    func delete(messageId: UUID) async throws {
+        _ = try await asyncGqlClient.perform(mutation: GQL.DeleteMessageMutation(messageId: messageId))
     }
 
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
         handler: ResultHandler<RemoteConversationEvent, GQLError>
-    ) -> Cancellable {
+    ) -> NablaCancellable {
         gqlClient.subscribe(subscription: GQL.ConversationEventsSubscription(id: conversationId), handler: .init { [weak self] result in
             guard let self = self else {
                 return
@@ -83,6 +81,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     // MARK: - Private
     
     private let gqlClient: GQLClient
+    private let asyncGqlClient: AsyncGQLClient
     private let gqlStore: GQLStore
     private let logger: Logger
     

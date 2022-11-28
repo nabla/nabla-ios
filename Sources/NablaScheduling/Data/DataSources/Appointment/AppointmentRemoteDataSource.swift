@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import NablaCore
-import Combine
 
 protocol AppointmentRemoteDataSource {
     func watchAppointments(state: RemoteAppointment.State.Enum) -> AnyPublisher<PaginatedList<RemoteAppointment>, GQLError>

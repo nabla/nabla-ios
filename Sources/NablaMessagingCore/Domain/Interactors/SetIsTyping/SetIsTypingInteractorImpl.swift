@@ -10,17 +10,14 @@ final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInter
     }
 
     // MARK: - SetIsTypingInteractor
-
-    func execute(
-        isTyping: Bool,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable {
-        guard isAuthenticated(handler: handler) else {
-            return Failure()
+    
+    /// - Throws: ``NablaError``
+    func execute(isTyping: Bool, conversationId: UUID) async throws {
+        guard isAuthenticated else {
+            throw MissingAuthenticationProviderError()
         }
         let transientId = repository.getConversationTransientId(from: conversationId)
-        return repository.setIsTyping(isTyping, conversationId: transientId, handler: handler)
+        try await repository.setIsTyping(isTyping, conversationId: transientId)
     }
     
     // MARK: - Private

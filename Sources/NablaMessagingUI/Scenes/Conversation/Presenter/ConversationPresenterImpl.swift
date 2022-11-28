@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 import NablaMessagingCore
@@ -17,32 +18,32 @@ final class ConversationPresenterImpl: ConversationPresenter {
             view?.configure(withConversation: conversationViewModel)
         }
         watchItems()
+        observeIsTyping()
     }
     
     func didTapOnSend(text: String, medias: [Media], replyingToMessageUUID replyToUUID: UUID?) {
         view?.emptyComposer()
         medias.forEach { media in
             guard let input = media.messageInput else { return }
-            let cancellable = client.sendMessage(input, replyingToMessageWithId: nil, inConversationWithId: conversationId, handler: { result in
-                switch result {
-                case .success:
-                    break
-                case let .failure(error):
-                    self.logger.warning(message: "Failed to send a media", extra: ["type": type(of: media), "reason": error])
-                }
-            })
-            sendMessageActions.append(cancellable)
-        }
-        if !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            let cancellable = client.sendMessage(.text(content: text), replyingToMessageWithId: replyToUUID, inConversationWithId: conversationId) { result in
-                switch result {
-                case .success:
-                    break
-                case let .failure(error):
-                    self.logger.warning(message: "Failed to send text", extra: ["reason": error])
+            Task(priority: .userInitiated) {
+                do {
+                    try await client.sendMessage(input, inConversationWithId: conversationId)
+                } catch {
+                    logger.warning(message: "Failed to send a media", extra: ["type": type(of: media), "reason": error])
                 }
             }
-            sendMessageActions.append(cancellable)
+        }
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        Task(priority: .userInitiated) {
+            do {
+                try await client.sendMessage(
+                    .text(content: text),
+                    replyingToMessageWithId: replyToUUID,
+                    inConversationWithId: conversationId
+                )
+            } catch {
+                logger.warning(message: "Failed to send text", extra: ["reason": error])
+            }
         }
     }
     
@@ -54,13 +55,16 @@ final class ConversationPresenterImpl: ConversationPresenter {
         view?.displayMediaPicker(source: .library(imageLimit: nil))
     }
 
-    func didFinishRecordingAudioFile(_ file: AudioFile, replyingToMessageUUID _: UUID?) {
-        sendAudioMessageAction = client.sendMessage(.audio(content: file), replyingToMessageWithId: nil, inConversationWithId: conversationId) { [weak self] result in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                self?.logger.warning(message: "Failed to send text", extra: ["reason": error])
+    func didFinishRecordingAudioFile(_ file: AudioFile, replyingToMessageUUID: UUID?) {
+        Task(priority: .userInitiated) {
+            do {
+                try await client.sendMessage(
+                    .audio(content: file),
+                    replyingToMessageWithId: replyingToMessageUUID,
+                    inConversationWithId: conversationId
+                )
+            } catch {
+                logger.warning(message: "Failed to send text", extra: ["reason": error])
             }
         }
     }
@@ -93,47 +97,35 @@ final class ConversationPresenterImpl: ConversationPresenter {
             return
         }
         draftText = text
-        localTypingDebouncer.execute { [weak self] in
-            guard let self = self else { return }
-            self.setTypingAction = self.client.setIsTyping(
-                !text.isEmpty,
-                inConversationWithId: self.conversationId,
-                handler: { _ in }
-            )
-        }
+        isTypingSubject.send(!text.isEmpty)
     }
 
     func didReachEndOfConversation() {
-        guard canLoadMoreItems, loadMoreItemsAction == nil else { return }
-        loadMoreItemsAction = itemsWatcher?.loadMore { [weak self] result in
-            switch result {
-            case let .failure(error):
-                self?.logger.warning(message: "Failed to load more items", extra: ["reason": error])
-                self?.view?.showErrorAlert(
+        guard let loadMore = conversationItems?.loadMore, loadMoreItemsAction == nil else { return }
+        loadMoreItemsAction = Task(priority: .userInitiated, operation: {
+            do {
+                try await loadMore()
+            } catch {
+                logger.warning(message: "Failed to load more items", extra: ["reason": error])
+                view?.showErrorAlert(
                     viewModel: .init(
                         title: L10n.conversationLoadMoreErrorTitle,
                         message: L10n.conversationLoadMoreErrorMessage,
                         defaultAction: L10n.conversationLoadMoreErrorAlertAction
                     )
                 )
-            case .success:
-                break
             }
-            self?.loadMoreItemsAction = nil
-        }
+            loadMoreItemsAction = nil
+        })
     }
     
     func didTapDeleteMessageButton(withId messageId: UUID) {
-        deleteMessageAction = client.deleteMessage(
-            withId: messageId,
-            conversationId: conversationId
-        ) { result in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
-                self.logger.warning(message: "Failed to delete message", extra: ["reason": error])
-                self.view?.showErrorAlert(
+        Task(priority: .userInitiated) {
+            do {
+                try await client.deleteMessage(withId: messageId, conversationId: conversationId)
+            } catch {
+                logger.warning(message: "Failed to delete message", extra: ["reason": error])
+                view?.showErrorAlert(
                     viewModel: .init(
                         title: L10n.conversationDeleteMessageErrorTitle,
                         message: L10n.conversationDeleteMessageErrorMessage,
@@ -153,7 +145,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     func didTapTextItem(withId id: UUID) {
-        guard case .me = (conversationItems?.items.first(where: { $0.id == id }) as? TextMessageItem)?.sender else {
+        guard case .me = (conversationItems?.elements.first(where: { $0.id == id }) as? TextMessageItem)?.sender else {
             return
         }
         if id == focusedPatientTextItemId {
@@ -207,32 +199,21 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
     private weak var view: ConversationViewContract?
     private var conversation: Conversation?
-    private var conversationItems: ConversationItems?
-    private var canLoadMoreItems = false
+    private var conversationItems: PaginatedList<ConversationItem>?
     private var draftText: String = ""
     private var state: ConversationViewState = .loading {
-        didSet {
-            DispatchQueue.main.async { [view, state] in
-                view?.configure(withState: state)
-            }
-        }
+        didSet { view?.configure(withState: state) }
     }
 
     private var focusedPatientTextItemId: UUID? {
-        didSet {
-            refreshItems()
-        }
+        didSet { refreshItems() }
     }
 
-    private var itemsWatcher: PaginatedWatcher?
-    private var conversationWatcher: Cancellable?
-    private var sendMessageActions = [Cancellable]()
-    private var sendAudioMessageAction: Cancellable?
-    private var deleteMessageAction: Cancellable?
-    private var setTypingAction: Cancellable?
-    private var loadMoreItemsAction: Cancellable?
-    private var markAsSeenAction: Cancellable?
-    private let localTypingDebouncer: Debouncer = .init(delay: 0.2, queue: .global(qos: .userInitiated))
+    private var itemsWatcher: AnyCancellable?
+    private var conversationWatcher: AnyCancellable?
+    private var loadMoreItemsAction: Task<Void, Never>?
+    private let isTypingSubject = PassthroughSubject<Bool, Never>()
+    private var isTypingObserver: AnyCancellable?
     
     private var canRecordAudio: Bool {
         Bundle.main.nabla.hasMicrophoneUsageDescription
@@ -241,45 +222,55 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private func watchItems() {
         state = .loading
         
-        conversationWatcher = client.watchConversation(
-            conversationId,
-            handler: { [weak self] result in
+        conversationWatcher = client.watchConversation(withId: conversationId)
+            .nabla.drive(receiveValue: { [weak self] conversation in
                 guard let self = self else { return }
-                
-                switch result {
-                case let .failure(error):
-                    self.logger.warning(message: "Failed to watch conversation", extra: ["reason": error])
-                    self.state = .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry))
-                case let .success(conversation):
-                    self.conversation = conversation
-                    
-                    let conversationViewModel = Self.transform(conversation: conversation)
-                    self.set(conversation: conversationViewModel)
-
-                    self.refreshItems()
-                }
-            }
-        )
-        
-        itemsWatcher = client.watchItems(ofConversationWithId: conversationId) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .failure(error):
-                self.logger.warning(message: "Failed to watch messages", extra: ["reason": error])
+                self.conversation = conversation
+                let conversationViewModel = Self.transform(conversation: conversation)
+                self.view?.configure(withConversation: conversationViewModel)
+                self.refreshItems()
+            }, receiveError: { [weak self] error in
+                guard let self = self else { return }
+                self.logger.warning(message: "Failed to watch conversation", extra: ["reason": error])
                 self.state = .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry))
-            case let .success(conversationItems):
+            })
+        
+        itemsWatcher = client.watchItems(ofConversationWithId: conversationId)
+            .nabla.drive(receiveValue: { [weak self] conversationItems in
+                guard let self = self else { return }
                 self.conversationItems = conversationItems
                 self.refreshItems()
-                self.markAsSeenAction = self.client.markConversationAsSeen(self.conversationId, handler: { _ in })
-                self.canLoadMoreItems = conversationItems.hasMore
+                self.markConversationAsSeen()
+            }, receiveError: { [weak self] error in
+                guard let self = self else { return }
+                self.logger.warning(message: "Failed to watch messages", extra: ["reason": error])
+                self.state = .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry))
+            })
+    }
+    
+    private func markConversationAsSeen() {
+        Task(priority: .userInitiated) {
+            do {
+                try await self.client.markConversationAsSeen(conversationId)
+            } catch {
+                logger.warning(message: "Failed to mark conversation as seen", extra: ["error": error])
             }
         }
     }
-
-    private func set(conversation: ConversationViewModel) {
-        DispatchQueue.main.async { [view] in
-            view?.configure(withConversation: conversation)
-        }
+    
+    private func observeIsTyping() {
+        isTypingObserver = isTypingSubject
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.global(qos: .userInitiated))
+            .sink { [weak self] isTyping in
+                guard let self = self else { return }
+                Task(priority: .userInitiated) {
+                    do {
+                        try await self.client.setIsTyping(isTyping, inConversationWithId: self.conversationId)
+                    } catch {
+                        self.logger.warning(message: "Failed to set is typing", extra: ["error": error])
+                    }
+                }
+            }
     }
     
     private static func transform(conversation: Conversation) -> ConversationViewModel {
@@ -290,7 +281,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
         )
     }
     
-    private func transformAndUpdateState(conversationItems: ConversationItems, conversation: Conversation?) {
+    private func transformAndUpdateState(conversationItems: PaginatedList<ConversationItem>, conversation: Conversation?) {
         let items = ConversationItemsTransformer.transform(
             conversationItems: conversationItems,
             providers: conversation?.providers ?? [],

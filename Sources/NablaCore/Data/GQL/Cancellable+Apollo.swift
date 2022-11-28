@@ -1,12 +1,12 @@
 import Apollo
 
 extension Apollo.Cancellable {
-    func toNablaCancellable() -> NablaCore.Cancellable {
+    func toNablaCancellable() -> NablaCancellable {
         ApolloCancellable(apollo: self)
     }
 }
 
-private class ApolloCancellable: NablaCore.Cancellable {
+private class ApolloCancellable: NablaCancellable {
     init(apollo: Apollo.Cancellable) {
         self.apollo = apollo
     }

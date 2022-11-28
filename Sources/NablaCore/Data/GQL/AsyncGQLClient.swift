@@ -12,6 +12,7 @@ public enum GQLFetchPolicy {
     case returnCacheDataDontFetch
 }
 
+// sourcery: AutoMockable
 public protocol AsyncGQLClient {
     /// Throws `GQLError`
     func fetch<Query: GQLQuery>(query: Query, cachePolicy: GQLFetchPolicy) async throws -> Query.Data

@@ -10,6 +10,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed `Cancellable` and `ResultHandler` from client interfaces.
+  - watchers now return some `AnyPublisher` from the `Combine` framework.
+  - other methods return only once, and leverage the new `async`/`await` feature from Swift.
+  
+⚠️ Here is an example to migrate watchers:
+
+```swift
+// Before
+
+private var watcher: Cancellable?
+
+private func startWatching() {
+    watcher = client.watchConversations(handler: { [weak self] result in
+        // Do something with result
+    })
+}
+
+// After
+import Combine
+
+private var watcher: AnyCancellable?
+
+private func startWatching() {
+    watcher = client.watchConversations()
+        .sink(receiveValue: { conversations in
+            // Do something with conversations
+        })
+}
+```
+
+You can use `sink(receiveCompletion:receiveValue:)` to catch errors. See https://developer.apple.com/documentation/combine/receiving-and-handling-events-with-combine for more details.
+
+⚠️ Here is an example to migrate to `async`/`await`:
+
+```swift
+// Before
+NablaMessagingClient.shared.markConversationAsSeen(handler: { [weak self] result in
+    // Do something with result
+})
+
+// After
+Task(priority: .userInitiated) {
+    do {
+        try await NablaMessagingClient.shared.markConversationAsSeen(conversationId)
+    } catch {
+        // Do something with error
+    }
+}
+```
+
+To learn more about `async`, `await` and `Task`: https://docs.swift.org/swift-book/LanguageGuide/Concurrency.html.
+
 ### Fixed
 
 

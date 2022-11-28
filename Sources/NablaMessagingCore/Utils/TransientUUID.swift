@@ -13,7 +13,7 @@ class TransientUUID {
         remoteIdNotifier.notify(value: remoteId)
     }
     
-    func observeRemoteId(_ callback: @escaping (_ remoteId: UUID) -> Void) -> Cancellable {
+    func observeRemoteId(_ callback: @escaping (_ remoteId: UUID) -> Void) -> NablaCancellable {
         remoteIdNotifier.observe { [weak self] remoteId in
             self?.remoteId = remoteId
             callback(remoteId)
@@ -38,5 +38,5 @@ class TransientUUID {
     
     private lazy var remoteIdNotifier: Notifier<UUID> = .init(id: localId.uuidString)
     
-    private var selfObserveCancellable: Cancellable?
+    private var selfObserveCancellable: NablaCancellable?
 }

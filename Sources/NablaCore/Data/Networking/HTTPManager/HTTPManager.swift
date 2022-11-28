@@ -15,34 +15,25 @@ public final class HTTPManager {
     
     // MARK: - Public
     
-    @discardableResult
+    /// - Throws: ``HTTPError``
     public func fetch<Resource: Decodable>(
         _ type: Resource.Type,
-        associatedTo request: HTTPRequest,
-        completion: @escaping (Result<Resource, HTTPError>) -> Void
-    ) -> Cancellable {
-        fetch(request) { response in
-            switch response.result {
-            case let .success(data):
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = request.keyDecodingStrategy
-                    let value = try decoder.decode(type, from: data)
-                    completion(.success(value))
-                } catch {
-                    completion(.failure(.decodingError(error)))
-                }
-            case let .failure(error):
-                completion(.failure(error))
-            }
+        associatedTo request: HTTPRequest
+    ) async throws -> Resource {
+        let response = try await fetch(request)
+        
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = request.keyDecodingStrategy
+        
+        do {
+            return try decoder.decode(type, from: response.data)
+        } catch {
+            throw HTTPError.decodingError(error)
         }
     }
     
-    @discardableResult
-    public func fetch(
-        _ baseRequest: HTTPRequest,
-        completion: @escaping (JSONResponse) -> Void
-    ) -> Cancellable {
+    /// - Throws: ``HTTPError``
+    public func fetch(_ baseRequest: HTTPRequest) async throws -> JSONResponse {
         let updatedRequest = requestBehavior.modify(request: baseRequest)
         
         guard let urlRequest = urlRequestMapper.map(httpRequest: updatedRequest) else {
@@ -51,14 +42,13 @@ public final class HTTPManager {
         
         requestBehavior.beforeSend(request: updatedRequest)
         
-        return session.responseJSON(with: urlRequest) { [weak self] response in
-            self?.requestBehavior.afterSend(request: baseRequest, response: response)
-            let alteredResponse = self?.requestBehavior.modify(
-                request: updatedRequest,
-                response: response
-            ) ?? response
-            completion(alteredResponse)
-        }
+        let response = try await session.responseJSON(with: urlRequest)
+        requestBehavior.afterSend(request: baseRequest, response: response)
+        let alteredResponse = requestBehavior.modify(
+            request: updatedRequest,
+            response: response
+        )
+        return alteredResponse
     }
 
     // MARK: - Private
@@ -67,5 +57,3 @@ public final class HTTPManager {
     private let requestBehavior: RequestBehavior
     private let urlRequestMapper: URLRequestMapper
 }
-
-extension URLSessionDataTask: Cancellable {}

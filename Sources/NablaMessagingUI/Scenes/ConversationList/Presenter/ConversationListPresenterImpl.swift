@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 import NablaMessagingCore
@@ -26,14 +27,15 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     }
     
     func didSelectConversation(at indexPath: IndexPath) {
-        delegate?.conversationList(didSelect: list.conversations[indexPath.row])
+        delegate?.conversationList(didSelect: list.elements[indexPath.row])
     }
     
     func didScrollToBottom() {
-        guard list.hasMore, !isLoading else { return }
+        guard let loadMore = list.loadMore, !isLoading else { return }
         isLoading = true
-        loadMoreAction = watcher?.loadMore { [weak self] _ in
-            self?.isLoading = false
+        Task(priority: .userInitiated) {
+            try await loadMore()
+            self.isLoading = false
         }
     }
     
@@ -47,11 +49,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     private let client: NablaMessagingClientProtocol
     private weak var viewContract: ConversationListViewContract?
     
-    private var list: ConversationList = .empty {
-        didSet {
-            displayContent()
-        }
-    }
+    private var list: PaginatedList<Conversation> = .empty
     
     private var isLoading = false {
         didSet {
@@ -63,39 +61,34 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         }
     }
     
-    private var watcher: PaginatedWatcher?
-    private var loadMoreAction: Cancellable?
+    private var watcher: AnyCancellable?
     
     private func watchConversations() {
         guard !isLoading else { return }
         isLoading = true
-        watcher = client.watchConversations(handler: { [weak self] result in
-            self?.isLoading = false
-            self?.handle(result: result)
-        })
-    }
-    
-    private func handle(result: Result<ConversationList, NablaError>) {
-        switch result {
-        case let .success(list):
-            self.list = list
-        case let .failure(error):
-            logger.warning(message: "Failed to watch conversations", extra: ["reason": error])
-            let viewModel = ErrorViewModel(
-                message: L10n.conversationListLoadErrorLabel,
-                buttonTitle: L10n.conversationListButtonRetry
-            )
-            configureView(with: .error(viewModel))
-        }
-    }
-
-    private func displayContent() {
-        let viewModel = ConversationListViewModelTransformer().transform(conversations: list.conversations)
-        configureView(with: .loaded(viewModel: viewModel))
+        watcher = client.watchConversations().nabla.drive(
+            receiveValue: { [weak self] list in
+                guard let self = self else { return }
+                self.isLoading = false
+                self.list = list
+                let viewModel = ConversationListViewModelTransformer().transform(conversations: list.elements)
+                self.configureView(with: .loaded(viewModel: viewModel))
+            },
+            receiveError: { [weak self] error in
+                guard let self = self else { return }
+                self.isLoading = false
+                self.logger.warning(message: "Failed to watch conversations", extra: ["reason": error])
+                let viewModel = ErrorViewModel(
+                    message: L10n.conversationListLoadErrorLabel,
+                    buttonTitle: L10n.conversationListButtonRetry
+                )
+                self.configureView(with: .error(viewModel))
+            }
+        )
     }
 
     private func displayLoading() {
-        if list.conversations.isEmpty {
+        if list.elements.isEmpty {
             configureView(with: .loading)
         } else {
             displayLoadingMore()

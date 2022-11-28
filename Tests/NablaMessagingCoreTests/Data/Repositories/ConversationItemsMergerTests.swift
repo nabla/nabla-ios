@@ -1,3 +1,4 @@
+import Combine
 import NablaCoreTestsUtils
 @testable import NablaMessagingCore
 import NablaMessagingCoreTestsUtils
@@ -11,13 +12,12 @@ class ConversationItemsMergerTests: XCTestCase {
     private let logger = LoggerMock()
     
     private let remoteWatcher = PaginatedWatcherMock()
-    private let localCancellable = CancellableMock()
     
     override func setUp() {
         super.setUp()
         
         remoteDataSource.given(.watchConversationItems(ofConversationWithId: .any, handler: .any, willReturn: remoteWatcher))
-        localDataSource.given(.watchConversationItems(ofConversationWithId: .any, callback: .any, willReturn: localCancellable))
+        localDataSource.given(.watchConversationItems(ofConversationWithId: .any, willReturn: PassthroughSubject<[LocalConversationItem], Never>().eraseToAnyPublisher()))
     }
 
     func testWatchersAreCancelledOnDeinit() throws {
@@ -34,7 +34,6 @@ class ConversationItemsMergerTests: XCTestCase {
         sut = nil
         // THEN
         remoteWatcher.verify(.cancel())
-        localCancellable.verify(.cancel())
         XCTAssertNil(sut) // Silences "sut not used" warning
     }
 }

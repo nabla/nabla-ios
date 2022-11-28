@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -80,7 +81,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     private let appointment: Appointment
     private let videoCallClient: VideoCallClient?
     
-    private var currentVideoCallWatcher: Cancellable?
+    private var currentVideoCallWatcher: AnyCancellable?
     
     @Published private var currentVideoCallToken: String?
     @Published private var joinableVideoCallRoom: Appointment.VideoCallRoom?
@@ -125,8 +126,10 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     }
     
     private func observeCurrentVideoCall() {
-        currentVideoCallWatcher = videoCallClient?.watchCurrentVideoCall { [weak self] token in
-            self?.currentVideoCallToken = token
-        }
+        guard let client = videoCallClient else { return }
+        currentVideoCallWatcher = client.watchCurrentVideoCall()
+            .nabla.drive { [weak self] token in
+                self?.currentVideoCallToken = token
+            }
     }
 }

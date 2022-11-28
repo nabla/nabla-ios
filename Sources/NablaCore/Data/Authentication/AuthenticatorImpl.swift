@@ -53,6 +53,12 @@ class AuthenticatorImpl: Authenticator {
         task.resume()
     }
     
+    func getAccessToken() async throws -> AuthenticationState {
+        try await withCheckedThrowingContinuation { continuation in
+            getAccessToken(handler: .init(continuation.resume(with:)))
+        }
+    }
+    
     func addObserver(_ observer: Any, selector: Selector) {
         notificationCenter.addObserver(
             observer,
@@ -142,28 +148,27 @@ class AuthenticatorImpl: Authenticator {
     
     private func fetchTokens(refreshToken: Token, completion: @escaping (Result<SessionTokens, AuthenticationError>) -> Void) {
         let request = RefreshTokenEndpoint.request(refreshToken: refreshToken.value)
-        httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request) { result in
-            switch result {
-            case let .failure(error):
+        Task {
+            do {
+                let response = try await httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request)
+                
+                let accessToken = try Self.deserialize(token: response.accessToken)
+                let refreshToken = try Self.deserialize(token: response.refreshToken)
+                let tokens = SessionTokens(
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
+                )
+                completion(.success(tokens))
+            } catch let error as HTTPError {
                 if Self.isAuthorizationError(error) {
                     completion(.failure(AuthorizationDeniedError(reason: error)))
                 } else {
                     completion(.failure(FailedToRefreshTokensError(reason: error)))
                 }
-            case let .success(response):
-                do {
-                    let accessToken = try Self.deserialize(token: response.accessToken)
-                    let refreshToken = try Self.deserialize(token: response.refreshToken)
-                    let tokens = SessionTokens(
-                        accessToken: accessToken,
-                        refreshToken: refreshToken
-                    )
-                    completion(.success(tokens))
-                } catch let error as AuthenticationError {
-                    completion(.failure(error))
-                } catch {
-                    completion(.failure(UnknownAuthenticationError(undelryingError: error)))
-                }
+            } catch let error as AuthenticationError {
+                completion(.failure(error))
+            } catch {
+                completion(.failure(UnknownAuthenticationError(undelryingError: error)))
             }
         }
     }

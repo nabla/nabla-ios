@@ -1,3 +1,4 @@
+import NablaCore
 @testable import NablaMessagingCore
 import NablaMessagingCoreTestsUtils
 @testable import NablaMessagingUI
@@ -14,9 +15,9 @@ final class ConversationItemsTransformerTests: XCTestCase {
         focusedTextItemId: UUID? = nil
     ) -> [ConversationViewItem] {
         ConversationItemsTransformer.transform(
-            conversationItems: ConversationItems(
-                hasMore: hasMore,
-                items: items
+            conversationItems: PaginatedList(
+                elements: items,
+                loadMore: hasMore ? {} : nil
             ),
             providers: [],
             focusedTextItemId: focusedTextItemId

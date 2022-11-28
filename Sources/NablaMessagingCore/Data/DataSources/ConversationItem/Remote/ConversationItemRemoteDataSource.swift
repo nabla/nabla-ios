@@ -11,16 +11,14 @@ protocol ConversationItemRemoteDataSource {
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID,
         handler: ResultHandler<RemoteConversationEvent, GQLError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
     func send(
         remoteMessageInput: GQL.SendMessageInput,
         conversationId: UUID,
         handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
-    func delete(
-        messageId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable
+    /// - Throws: ``GQLError``
+    func delete(messageId: UUID) async throws
 }

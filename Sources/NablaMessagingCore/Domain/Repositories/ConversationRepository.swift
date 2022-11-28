@@ -13,21 +13,16 @@ protocol ConversationRepository {
         providerIds: [UUID]?,
         initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
     func createDraftConversation(
         title: String?,
         providerIds: [UUID]?
     ) -> Conversation
     
-    func setIsTyping(
-        _ isTyping: Bool,
-        conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
+    /// - Throws: ``NablaError``
+    func setIsTyping(_ isTyping: Bool, conversationId: TransientUUID) async throws
     
-    func markConversationAsSeen(
-        conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
+    /// - Throws: ``NablaError``
+    func markConversationAsSeen(conversationId: TransientUUID) async throws
 }

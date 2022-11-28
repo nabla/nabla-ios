@@ -138,7 +138,7 @@ class TransientUUIDTests: XCTestCase {
         let expectation = expectation(description: "TransientUUID.observeRemoteId should not get called")
         expectation.isInverted = true
         // WHEN
-        var cancellable: Cancellable? = sut.observeRemoteId { _ in
+        var cancellable: NablaCancellable? = sut.observeRemoteId { _ in
             expectation.fulfill()
         }
         cancellable = nil

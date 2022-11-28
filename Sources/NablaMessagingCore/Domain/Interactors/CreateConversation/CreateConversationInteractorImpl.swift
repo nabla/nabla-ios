@@ -16,9 +16,9 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
         providerIds: [UUID]?,
         initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
-    ) -> Cancellable {
-        guard isAuthenticated(handler: handler) else {
-            return Failure()
+    ) -> NablaCancellable {
+        guard isAuthenticated else {
+            return Failure(handler: handler, error: MissingAuthenticationProviderError())
         }
         return repository.createConversation(
             title: title,

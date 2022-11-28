@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 import UIKit
@@ -9,8 +10,8 @@ public final class NablaVideoCallClient: VideoCallClient {
         container.currentVideoCallInteractor.currentVideoCallToken
     }
     
-    public func watchCurrentVideoCall(callback: @escaping (_ token: String?) -> Void) -> Cancellable {
-        container.currentVideoCallInteractor.watchCurrentVideoCall(callback: callback)
+    public func watchCurrentVideoCall() -> AnyPublisher<String?, Never> {
+        container.currentVideoCallInteractor.watchCurrentVideoCall()
     }
     
     public func openVideoCallRoom(url: String, token: String, from viewController: UIViewController) {

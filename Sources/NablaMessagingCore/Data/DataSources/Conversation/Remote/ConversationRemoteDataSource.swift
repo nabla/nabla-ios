@@ -8,18 +8,13 @@ protocol ConversationRemoteDataSource {
         providerIds: [UUID]?,
         initialMessage: GQL.SendMessageInput?,
         handler: ResultHandler<RemoteConversation, GQLError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
-    func setIsTyping(
-        _ isTyping: Bool,
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable
+    /// - Throws: ``GQLError``
+    func setIsTyping(_ isTyping: Bool, conversationId: UUID) async throws
     
-    func markConversationAsSeen(
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> Cancellable
+    /// - Throws: ``GQLError``
+    func markConversationAsSeen(conversationId: UUID) async throws
     
     func watchConversation(_ conversationId: UUID, handler: ResultHandler<RemoteConversation, GQLError>) -> Watcher
     
@@ -27,5 +22,5 @@ protocol ConversationRemoteDataSource {
     
     func subscribeToConversationsEvents(
         handler: ResultHandler<RemoteConversationsEvent, GQLError>
-    ) -> Cancellable
+    ) -> NablaCancellable
 }

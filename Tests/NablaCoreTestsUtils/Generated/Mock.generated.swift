@@ -8,8 +8,339 @@
 
 import SwiftyMocky
 import XCTest
+import Combine
 @testable import NablaCore
 
+
+// MARK: - AsyncGQLClient
+
+open class AsyncGQLClientMock: AsyncGQLClient, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func fetch<Query: GQLQuery>(query: Query, cachePolicy: GQLFetchPolicy) throws -> Query.Data {
+        addInvocation(.m_fetch__query_querycachePolicy_cachePolicy(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<GQLFetchPolicy>.value(`cachePolicy`)))
+		let perform = methodPerformValue(.m_fetch__query_querycachePolicy_cachePolicy(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<GQLFetchPolicy>.value(`cachePolicy`))) as? (Query, GQLFetchPolicy) -> Void
+		perform?(`query`, `cachePolicy`)
+		var __value: Query.Data
+		do {
+		    __value = try methodReturnValue(.m_fetch__query_querycachePolicy_cachePolicy(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<GQLFetchPolicy>.value(`cachePolicy`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for fetch<Query: GQLQuery>(query: Query, cachePolicy: GQLFetchPolicy). Use given")
+			Failure("Stub return value not specified for fetch<Query: GQLQuery>(query: Query, cachePolicy: GQLFetchPolicy). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func perform<Mutation: GQLMutation>(mutation: Mutation) throws -> Mutation.Data {
+        addInvocation(.m_perform__mutation_mutation(Parameter<Mutation>.value(`mutation`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_perform__mutation_mutation(Parameter<Mutation>.value(`mutation`).wrapAsGeneric())) as? (Mutation) -> Void
+		perform?(`mutation`)
+		var __value: Mutation.Data
+		do {
+		    __value = try methodReturnValue(.m_perform__mutation_mutation(Parameter<Mutation>.value(`mutation`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for perform<Mutation: GQLMutation>(mutation: Mutation). Use given")
+			Failure("Stub return value not specified for perform<Mutation: GQLMutation>(mutation: Mutation). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func watch<Query: GQLQuery>(query: Query) -> AnyPublisher<Query.Data, GQLError> {
+        addInvocation(.m_watch__query_query(Parameter<Query>.value(`query`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_watch__query_query(Parameter<Query>.value(`query`).wrapAsGeneric())) as? (Query) -> Void
+		perform?(`query`)
+		var __value: AnyPublisher<Query.Data, GQLError>
+		do {
+		    __value = try methodReturnValue(.m_watch__query_query(Parameter<Query>.value(`query`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watch<Query: GQLQuery>(query: Query). Use given")
+			Failure("Stub return value not specified for watch<Query: GQLQuery>(query: Query). Use given")
+		}
+		return __value
+    }
+
+    open func subscribe<Subscription: GQLSubscription>(subscription: Subscription) -> AnyPublisher<Subscription.Data, GQLError> {
+        addInvocation(.m_subscribe__subscription_subscription(Parameter<Subscription>.value(`subscription`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_subscribe__subscription_subscription(Parameter<Subscription>.value(`subscription`).wrapAsGeneric())) as? (Subscription) -> Void
+		perform?(`subscription`)
+		var __value: AnyPublisher<Subscription.Data, GQLError>
+		do {
+		    __value = try methodReturnValue(.m_subscribe__subscription_subscription(Parameter<Subscription>.value(`subscription`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for subscribe<Subscription: GQLSubscription>(subscription: Subscription). Use given")
+			Failure("Stub return value not specified for subscribe<Subscription: GQLSubscription>(subscription: Subscription). Use given")
+		}
+		return __value
+    }
+
+    open func addRefetchTriggers(_ triggers: [RefetchTrigger]) {
+        addInvocation(.m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>.value(`triggers`)))
+		let perform = methodPerformValue(.m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>.value(`triggers`))) as? ([RefetchTrigger]) -> Void
+		perform?(`triggers`)
+    }
+
+
+    fileprivate enum MethodType {
+        case m_fetch__query_querycachePolicy_cachePolicy(Parameter<GenericAttribute>, Parameter<GQLFetchPolicy>)
+        case m_perform__mutation_mutation(Parameter<GenericAttribute>)
+        case m_watch__query_query(Parameter<GenericAttribute>)
+        case m_subscribe__subscription_subscription(Parameter<GenericAttribute>)
+        case m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_fetch__query_querycachePolicy_cachePolicy(let lhsQuery, let lhsCachepolicy), .m_fetch__query_querycachePolicy_cachePolicy(let rhsQuery, let rhsCachepolicy)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "query"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCachepolicy, rhs: rhsCachepolicy, with: matcher), lhsCachepolicy, rhsCachepolicy, "cachePolicy"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_perform__mutation_mutation(let lhsMutation), .m_perform__mutation_mutation(let rhsMutation)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMutation, rhs: rhsMutation, with: matcher), lhsMutation, rhsMutation, "mutation"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_watch__query_query(let lhsQuery), .m_watch__query_query(let rhsQuery)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "query"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_subscribe__subscription_subscription(let lhsSubscription), .m_subscribe__subscription_subscription(let rhsSubscription)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsSubscription, rhs: rhsSubscription, with: matcher), lhsSubscription, rhsSubscription, "subscription"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_addRefetchTriggers__triggers(let lhsTriggers), .m_addRefetchTriggers__triggers(let rhsTriggers)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTriggers, rhs: rhsTriggers, with: matcher), lhsTriggers, rhsTriggers, "_ triggers"))
+				return Matcher.ComparisonResult(results)
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_fetch__query_querycachePolicy_cachePolicy(p0, p1): return p0.intValue + p1.intValue
+            case let .m_perform__mutation_mutation(p0): return p0.intValue
+            case let .m_watch__query_query(p0): return p0.intValue
+            case let .m_subscribe__subscription_subscription(p0): return p0.intValue
+            case let .m_addRefetchTriggers__triggers(p0): return p0.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_fetch__query_querycachePolicy_cachePolicy: return ".fetch(query:cachePolicy:)"
+            case .m_perform__mutation_mutation: return ".perform(mutation:)"
+            case .m_watch__query_query: return ".watch(query:)"
+            case .m_subscribe__subscription_subscription: return ".subscribe(subscription:)"
+            case .m_addRefetchTriggers__triggers: return ".addRefetchTriggers(_:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<GQLFetchPolicy>, willReturn: Query.Data...) -> MethodStub {
+            return Given(method: .m_fetch__query_querycachePolicy_cachePolicy(`query`.wrapAsGeneric(), `cachePolicy`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, willReturn: Mutation.Data...) -> MethodStub {
+            return Given(method: .m_perform__mutation_mutation(`mutation`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watch<Query: GQLQuery>(query: Parameter<Query>, willReturn: AnyPublisher<Query.Data, GQLError>...) -> MethodStub {
+            return Given(method: .m_watch__query_query(`query`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, willReturn: AnyPublisher<Subscription.Data, GQLError>...) -> MethodStub {
+            return Given(method: .m_subscribe__subscription_subscription(`subscription`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watch<Query: GQLQuery>(query: Parameter<Query>, willProduce: (Stubber<AnyPublisher<Query.Data, GQLError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Query.Data, GQLError>] = []
+			let given: Given = { return Given(method: .m_watch__query_query(`query`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Query.Data, GQLError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, willProduce: (Stubber<AnyPublisher<Subscription.Data, GQLError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Subscription.Data, GQLError>] = []
+			let given: Given = { return Given(method: .m_subscribe__subscription_subscription(`subscription`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Subscription.Data, GQLError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func fetch<Query:GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<GQLFetchPolicy>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_fetch__query_querycachePolicy_cachePolicy(`query`.wrapAsGeneric(), `cachePolicy`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<GQLFetchPolicy>, willProduce: (StubberThrows<Query.Data>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_fetch__query_querycachePolicy_cachePolicy(`query`.wrapAsGeneric(), `cachePolicy`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Query.Data).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func perform<Mutation:GQLMutation>(mutation: Parameter<Mutation>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_perform__mutation_mutation(`mutation`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, willProduce: (StubberThrows<Mutation.Data>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_perform__mutation_mutation(`mutation`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Mutation.Data).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func fetch<Query>(query: Parameter<Query>, cachePolicy: Parameter<GQLFetchPolicy>) -> Verify where Query:GQLQuery { return Verify(method: .m_fetch__query_querycachePolicy_cachePolicy(`query`.wrapAsGeneric(), `cachePolicy`))}
+        public static func perform<Mutation>(mutation: Parameter<Mutation>) -> Verify where Mutation:GQLMutation { return Verify(method: .m_perform__mutation_mutation(`mutation`.wrapAsGeneric()))}
+        public static func watch<Query>(query: Parameter<Query>) -> Verify where Query:GQLQuery { return Verify(method: .m_watch__query_query(`query`.wrapAsGeneric()))}
+        public static func subscribe<Subscription>(subscription: Parameter<Subscription>) -> Verify where Subscription:GQLSubscription { return Verify(method: .m_subscribe__subscription_subscription(`subscription`.wrapAsGeneric()))}
+        public static func addRefetchTriggers(_ triggers: Parameter<[RefetchTrigger]>) -> Verify { return Verify(method: .m_addRefetchTriggers__triggers(`triggers`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func fetch<Query>(query: Parameter<Query>, cachePolicy: Parameter<GQLFetchPolicy>, perform: @escaping (Query, GQLFetchPolicy) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_fetch__query_querycachePolicy_cachePolicy(`query`.wrapAsGeneric(), `cachePolicy`), performs: perform)
+        }
+        public static func perform<Mutation>(mutation: Parameter<Mutation>, perform: @escaping (Mutation) -> Void) -> Perform where Mutation:GQLMutation {
+            return Perform(method: .m_perform__mutation_mutation(`mutation`.wrapAsGeneric()), performs: perform)
+        }
+        public static func watch<Query>(query: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_watch__query_query(`query`.wrapAsGeneric()), performs: perform)
+        }
+        public static func subscribe<Subscription>(subscription: Parameter<Subscription>, perform: @escaping (Subscription) -> Void) -> Perform where Subscription:GQLSubscription {
+            return Perform(method: .m_subscribe__subscription_subscription(`subscription`.wrapAsGeneric()), performs: perform)
+        }
+        public static func addRefetchTriggers(_ triggers: Parameter<[RefetchTrigger]>, perform: @escaping ([RefetchTrigger]) -> Void) -> Perform {
+            return Perform(method: .m_addRefetchTriggers__triggers(`triggers`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
 
 // MARK: - AsyncGQLStore
 
@@ -36,7 +367,6 @@ open class AsyncGQLStoreMock: AsyncGQLStore, Mock {
     public typealias PropertyStub = Given
     public typealias MethodStub = Given
     public typealias SubscriptStub = Given
-    public typealias Cancellable = NablaCore.Cancellable
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -393,178 +723,6 @@ open class AsyncGQLStoreMock: AsyncGQLStore, Mock {
     }
 }
 
-// MARK: - Cancellable
-
-open class CancellableMock: Cancellable, Mock {
-    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
-        SwiftyMockyTestObserver.setup()
-        self.sequencingPolicy = sequencingPolicy
-        self.stubbingPolicy = stubbingPolicy
-        self.file = file
-        self.line = line
-    }
-
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-
-    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
-    public typealias PropertyStub = Given
-    public typealias MethodStub = Given
-    public typealias SubscriptStub = Given
-    public typealias Cancellable = NablaCore.Cancellable
-
-    /// Convenience method - call setupMock() to extend debug information when failure occurs
-    public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
-    }
-
-    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
-    public func resetMock(_ scopes: MockScope...) {
-        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
-        if scopes.contains(.invocation) { invocations = [] }
-        if scopes.contains(.given) { methodReturnValues = [] }
-        if scopes.contains(.perform) { methodPerformValues = [] }
-    }
-
-
-
-
-
-    open func cancel() {
-        addInvocation(.m_cancel)
-		let perform = methodPerformValue(.m_cancel) as? () -> Void
-		perform?()
-    }
-
-
-    fileprivate enum MethodType {
-        case m_cancel
-
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
-            switch (lhs, rhs) {
-            case (.m_cancel, .m_cancel): return .match
-            }
-        }
-
-        func intValue() -> Int {
-            switch self {
-            case .m_cancel: return 0
-            }
-        }
-        func assertionName() -> String {
-            switch self {
-            case .m_cancel: return ".cancel()"
-            }
-        }
-    }
-
-    open class Given: StubbedMethod {
-        fileprivate var method: MethodType
-
-        private init(method: MethodType, products: [StubProduct]) {
-            self.method = method
-            super.init(products)
-        }
-
-
-    }
-
-    public struct Verify {
-        fileprivate var method: MethodType
-
-        public static func cancel() -> Verify { return Verify(method: .m_cancel)}
-    }
-
-    public struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
-
-        public static func cancel(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_cancel, performs: perform)
-        }
-    }
-
-    public func given(_ method: Given) {
-        methodReturnValues.append(method)
-    }
-
-    public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let fullMatches = matchingCalls(method, file: file, line: line)
-        let success = count.matches(fullMatches)
-        let assertionName = method.method.assertionName()
-        let feedback: String = {
-            guard !success else { return "" }
-            return Utils.closestCallsMessage(
-                for: self.invocations.map { invocation in
-                    matcher.set(file: file, line: line)
-                    defer { matcher.clearFileAndLine() }
-                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
-                },
-                name: assertionName
-            )
-        }()
-        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        self.queue.sync { invocations.append(call) }
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
-        matcher.set(file: self.file, line: self.line)
-        defer { matcher.clearFileAndLine() }
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        matcher.set(file: self.file, line: self.line)
-        defer { matcher.clearFileAndLine() }
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
-        matcher.set(file: file ?? self.file, line: line ?? self.line)
-        defer { matcher.clearFileAndLine() }
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
-    }
-    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
-        return matchingCalls(method.method, file: file, line: line).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
-    }
-}
-
 // MARK: - DeviceLocalDataSource
 
 open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
@@ -805,7 +963,6 @@ open class GQLClientMock: GQLClient, Mock {
     public typealias PropertyStub = Given
     public typealias MethodStub = Given
     public typealias SubscriptStub = Given
-    public typealias Cancellable = NablaCore.Cancellable
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -825,11 +982,11 @@ open class GQLClientMock: GQLClient, Mock {
 
 
 
-    open func fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>) -> Cancellable {
+    open func fetch<Query: GQLQuery>(query: Query, cachePolicy: CachePolicy, handler: ResultHandler<Query.Data, GQLError>) -> NablaCancellable {
         addInvocation(.m_fetch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_fetch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric())) as? (Query, CachePolicy, ResultHandler<Query.Data, GQLError>) -> Void
 		perform?(`query`, `cachePolicy`, `handler`)
-		var __value: Cancellable
+		var __value: NablaCancellable
 		do {
 		    __value = try methodReturnValue(.m_fetch__query_querycachePolicy_cachePolicyhandler_handler(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<CachePolicy>.value(`cachePolicy`), Parameter<ResultHandler<Query.Data, GQLError>>.value(`handler`).wrapAsGeneric())).casted()
 		} catch {
@@ -839,11 +996,11 @@ open class GQLClientMock: GQLClient, Mock {
 		return __value
     }
 
-    open func perform<Mutation: GQLMutation>(mutation: Mutation, handler: ResultHandler<Mutation.Data, GQLError>) -> Cancellable {
+    open func perform<Mutation: GQLMutation>(mutation: Mutation, handler: ResultHandler<Mutation.Data, GQLError>) -> NablaCancellable {
         addInvocation(.m_perform__mutation_mutationhandler_handler(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<ResultHandler<Mutation.Data, GQLError>>.value(`handler`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_perform__mutation_mutationhandler_handler(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<ResultHandler<Mutation.Data, GQLError>>.value(`handler`).wrapAsGeneric())) as? (Mutation, ResultHandler<Mutation.Data, GQLError>) -> Void
 		perform?(`mutation`, `handler`)
-		var __value: Cancellable
+		var __value: NablaCancellable
 		do {
 		    __value = try methodReturnValue(.m_perform__mutation_mutationhandler_handler(Parameter<Mutation>.value(`mutation`).wrapAsGeneric(), Parameter<ResultHandler<Mutation.Data, GQLError>>.value(`handler`).wrapAsGeneric())).casted()
 		} catch {
@@ -867,11 +1024,11 @@ open class GQLClientMock: GQLClient, Mock {
 		return __value
     }
 
-    open func subscribe<Subscription: GQLSubscription>(subscription: Subscription, handler: ResultHandler<Subscription.Data, GQLError>) -> Cancellable {
+    open func subscribe<Subscription: GQLSubscription>(subscription: Subscription, handler: ResultHandler<Subscription.Data, GQLError>) -> NablaCancellable {
         addInvocation(.m_subscribe__subscription_subscriptionhandler_handler(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<ResultHandler<Subscription.Data, GQLError>>.value(`handler`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_subscribe__subscription_subscriptionhandler_handler(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<ResultHandler<Subscription.Data, GQLError>>.value(`handler`).wrapAsGeneric())) as? (Subscription, ResultHandler<Subscription.Data, GQLError>) -> Void
 		perform?(`subscription`, `handler`)
-		var __value: Cancellable
+		var __value: NablaCancellable
 		do {
 		    __value = try methodReturnValue(.m_subscribe__subscription_subscriptionhandler_handler(Parameter<Subscription>.value(`subscription`).wrapAsGeneric(), Parameter<ResultHandler<Subscription.Data, GQLError>>.value(`handler`).wrapAsGeneric())).casted()
 		} catch {
@@ -960,29 +1117,29 @@ open class GQLClientMock: GQLClient, Mock {
         }
 
 
-        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willReturn: Cancellable...) -> MethodStub {
+        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willReturn: NablaCancellable...) -> MethodStub {
             return Given(method: .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>, willReturn: Cancellable...) -> MethodStub {
+        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>, willReturn: NablaCancellable...) -> MethodStub {
             return Given(method: .m_perform__mutation_mutationhandler_handler(`mutation`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func watch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willReturn: Watcher...) -> MethodStub {
             return Given(method: .m_watch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>, willReturn: Cancellable...) -> MethodStub {
+        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>, willReturn: NablaCancellable...) -> MethodStub {
             return Given(method: .m_subscribe__subscription_subscriptionhandler_handler(`subscription`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
+        public static func fetch<Query: GQLQuery>(query: Parameter<Query>, cachePolicy: Parameter<CachePolicy>, handler: Parameter<ResultHandler<Query.Data, GQLError>>, willProduce: (Stubber<NablaCancellable>) -> Void) -> MethodStub {
+            let willReturn: [NablaCancellable] = []
 			let given: Given = { return Given(method: .m_fetch__query_querycachePolicy_cachePolicyhandler_handler(`query`.wrapAsGeneric(), `cachePolicy`, `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
+			let stubber = given.stub(for: (NablaCancellable).self)
 			willProduce(stubber)
 			return given
         }
-        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
+        public static func perform<Mutation: GQLMutation>(mutation: Parameter<Mutation>, handler: Parameter<ResultHandler<Mutation.Data, GQLError>>, willProduce: (Stubber<NablaCancellable>) -> Void) -> MethodStub {
+            let willReturn: [NablaCancellable] = []
 			let given: Given = { return Given(method: .m_perform__mutation_mutationhandler_handler(`mutation`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
+			let stubber = given.stub(for: (NablaCancellable).self)
 			willProduce(stubber)
 			return given
         }
@@ -993,10 +1150,10 @@ open class GQLClientMock: GQLClient, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
+        public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, handler: Parameter<ResultHandler<Subscription.Data, GQLError>>, willProduce: (Stubber<NablaCancellable>) -> Void) -> MethodStub {
+            let willReturn: [NablaCancellable] = []
 			let given: Given = { return Given(method: .m_subscribe__subscription_subscriptionhandler_handler(`subscription`.wrapAsGeneric(), `handler`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
+			let stubber = given.stub(for: (NablaCancellable).self)
 			willProduce(stubber)
 			return given
         }
@@ -1131,7 +1288,6 @@ open class GQLStoreMock: GQLStore, Mock {
     public typealias PropertyStub = Given
     public typealias MethodStub = Given
     public typealias SubscriptStub = Given
-    public typealias Cancellable = NablaCore.Cancellable
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -1935,6 +2091,177 @@ open class LoggerMock: Logger, Mock {
     }
 }
 
+// MARK: - NablaCancellable
+
+open class NablaCancellableMock: NablaCancellable, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+
+    fileprivate enum MethodType {
+        case m_cancel
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_cancel, .m_cancel): return .match
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_cancel: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_cancel: return ".cancel()"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func cancel() -> Verify { return Verify(method: .m_cancel)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
 // MARK: - PaginatedWatcher
 
 open class PaginatedWatcherMock: PaginatedWatcher, Mock {
@@ -1979,11 +2306,11 @@ open class PaginatedWatcherMock: PaginatedWatcher, Mock {
 
 
 
-    open func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    open func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         addInvocation(.m_loadMore__completion_completion(Parameter<(Result<Void, NablaError>) -> Void>.value(`completion`)))
 		let perform = methodPerformValue(.m_loadMore__completion_completion(Parameter<(Result<Void, NablaError>) -> Void>.value(`completion`))) as? (@escaping (Result<Void, NablaError>) -> Void) -> Void
 		perform?(`completion`)
-		var __value: Cancellable
+		var __value: NablaCancellable
 		do {
 		    __value = try methodReturnValue(.m_loadMore__completion_completion(Parameter<(Result<Void, NablaError>) -> Void>.value(`completion`))).casted()
 		} catch {
@@ -1993,11 +2320,11 @@ open class PaginatedWatcherMock: PaginatedWatcher, Mock {
 		return __value
     }
 
-    open func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    open func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         addInvocation(.m_loadMore__numberOfItems_numberOfItemscompletion_completion(Parameter<Int>.value(`numberOfItems`), Parameter<(Result<Void, NablaError>) -> Void>.value(`completion`)))
 		let perform = methodPerformValue(.m_loadMore__numberOfItems_numberOfItemscompletion_completion(Parameter<Int>.value(`numberOfItems`), Parameter<(Result<Void, NablaError>) -> Void>.value(`completion`))) as? (Int, @escaping (Result<Void, NablaError>) -> Void) -> Void
 		perform?(`numberOfItems`, `completion`)
-		var __value: Cancellable
+		var __value: NablaCancellable
 		do {
 		    __value = try methodReturnValue(.m_loadMore__numberOfItems_numberOfItemscompletion_completion(Parameter<Int>.value(`numberOfItems`), Parameter<(Result<Void, NablaError>) -> Void>.value(`completion`))).casted()
 		} catch {
@@ -2073,23 +2400,23 @@ open class PaginatedWatcherMock: PaginatedWatcher, Mock {
         }
 
 
-        public static func loadMore(completion: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+        public static func loadMore(completion: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: NablaCancellable...) -> MethodStub {
             return Given(method: .m_loadMore__completion_completion(`completion`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: Cancellable...) -> MethodStub {
+        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, NablaError>) -> Void>, willReturn: NablaCancellable...) -> MethodStub {
             return Given(method: .m_loadMore__numberOfItems_numberOfItemscompletion_completion(`numberOfItems`, `completion`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func loadMore(completion: Parameter<(Result<Void, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
+        public static func loadMore(completion: Parameter<(Result<Void, NablaError>) -> Void>, willProduce: (Stubber<NablaCancellable>) -> Void) -> MethodStub {
+            let willReturn: [NablaCancellable] = []
 			let given: Given = { return Given(method: .m_loadMore__completion_completion(`completion`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
+			let stubber = given.stub(for: (NablaCancellable).self)
 			willProduce(stubber)
 			return given
         }
-        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, NablaError>) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
+        public static func loadMore(numberOfItems: Parameter<Int>, completion: Parameter<(Result<Void, NablaError>) -> Void>, willProduce: (Stubber<NablaCancellable>) -> Void) -> MethodStub {
+            let willReturn: [NablaCancellable] = []
 			let given: Given = { return Given(method: .m_loadMore__numberOfItems_numberOfItemscompletion_completion(`numberOfItems`, `completion`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
+			let stubber = given.stub(for: (NablaCancellable).self)
 			willProduce(stubber)
 			return given
         }
@@ -2249,16 +2576,16 @@ open class VideoCallClientMock: VideoCallClient, Mock {
 
 
 
-    open func watchCurrentVideoCall(callback: @escaping (_ token: String?) -> Void) -> Cancellable {
-        addInvocation(.m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>.value(`callback`)))
-		let perform = methodPerformValue(.m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>.value(`callback`))) as? (@escaping (_ token: String?) -> Void) -> Void
-		perform?(`callback`)
-		var __value: Cancellable
+    open func watchCurrentVideoCall() -> AnyPublisher<String?, Never> {
+        addInvocation(.m_watchCurrentVideoCall)
+		let perform = methodPerformValue(.m_watchCurrentVideoCall) as? () -> Void
+		perform?()
+		var __value: AnyPublisher<String?, Never>
 		do {
-		    __value = try methodReturnValue(.m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>.value(`callback`))).casted()
+		    __value = try methodReturnValue(.m_watchCurrentVideoCall).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for watchCurrentVideoCall(callback: @escaping (_ token: String?) -> Void). Use given")
-			Failure("Stub return value not specified for watchCurrentVideoCall(callback: @escaping (_ token: String?) -> Void). Use given")
+			onFatalFailure("Stub return value not specified for watchCurrentVideoCall(). Use given")
+			Failure("Stub return value not specified for watchCurrentVideoCall(). Use given")
 		}
 		return __value
     }
@@ -2271,17 +2598,14 @@ open class VideoCallClientMock: VideoCallClient, Mock {
 
 
     fileprivate enum MethodType {
-        case m_watchCurrentVideoCall__callback_callback(Parameter<(_ token: String?) -> Void>)
+        case m_watchCurrentVideoCall
         case m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(Parameter<String>, Parameter<String>, Parameter<UIViewController>)
         case p_crossModuleViews_get
         case p_currentVideoCallToken_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_watchCurrentVideoCall__callback_callback(let lhsCallback), .m_watchCurrentVideoCall__callback_callback(let rhsCallback)):
-				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher), lhsCallback, rhsCallback, "callback"))
-				return Matcher.ComparisonResult(results)
+            case (.m_watchCurrentVideoCall, .m_watchCurrentVideoCall): return .match
 
             case (.m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(let lhsUrl, let lhsToken, let lhsViewcontroller), .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(let rhsUrl, let rhsToken, let rhsViewcontroller)):
 				var results: [Matcher.ParameterComparisonResult] = []
@@ -2297,7 +2621,7 @@ open class VideoCallClientMock: VideoCallClient, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_watchCurrentVideoCall__callback_callback(p0): return p0.intValue
+            case .m_watchCurrentVideoCall: return 0
             case let .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .p_crossModuleViews_get: return 0
             case .p_currentVideoCallToken_get: return 0
@@ -2305,7 +2629,7 @@ open class VideoCallClientMock: VideoCallClient, Mock {
         }
         func assertionName() -> String {
             switch self {
-            case .m_watchCurrentVideoCall__callback_callback: return ".watchCurrentVideoCall(callback:)"
+            case .m_watchCurrentVideoCall: return ".watchCurrentVideoCall()"
             case .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController: return ".openVideoCallRoom(url:token:from:)"
             case .p_crossModuleViews_get: return "[get] .crossModuleViews"
             case .p_currentVideoCallToken_get: return "[get] .currentVideoCallToken"
@@ -2328,13 +2652,13 @@ open class VideoCallClientMock: VideoCallClient, Mock {
             return Given(method: .p_currentVideoCallToken_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
-        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>, willReturn: Cancellable...) -> MethodStub {
-            return Given(method: .m_watchCurrentVideoCall__callback_callback(`callback`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func watchCurrentVideoCall(willReturn: AnyPublisher<String?, Never>...) -> MethodStub {
+            return Given(method: .m_watchCurrentVideoCall, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>, willProduce: (Stubber<Cancellable>) -> Void) -> MethodStub {
-            let willReturn: [Cancellable] = []
-			let given: Given = { return Given(method: .m_watchCurrentVideoCall__callback_callback(`callback`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Cancellable).self)
+        public static func watchCurrentVideoCall(willProduce: (Stubber<AnyPublisher<String?, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<String?, Never>] = []
+			let given: Given = { return Given(method: .m_watchCurrentVideoCall, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<String?, Never>).self)
 			willProduce(stubber)
 			return given
         }
@@ -2343,7 +2667,7 @@ open class VideoCallClientMock: VideoCallClient, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>) -> Verify { return Verify(method: .m_watchCurrentVideoCall__callback_callback(`callback`))}
+        public static func watchCurrentVideoCall() -> Verify { return Verify(method: .m_watchCurrentVideoCall)}
         public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>) -> Verify { return Verify(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(`url`, `token`, `viewController`))}
         public static var crossModuleViews: Verify { return Verify(method: .p_crossModuleViews_get) }
         public static var currentVideoCallToken: Verify { return Verify(method: .p_currentVideoCallToken_get) }
@@ -2353,8 +2677,8 @@ open class VideoCallClientMock: VideoCallClient, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func watchCurrentVideoCall(callback: Parameter<(_ token: String?) -> Void>, perform: @escaping (@escaping (_ token: String?) -> Void) -> Void) -> Perform {
-            return Perform(method: .m_watchCurrentVideoCall__callback_callback(`callback`), performs: perform)
+        public static func watchCurrentVideoCall(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchCurrentVideoCall, performs: perform)
         }
         public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>, perform: @escaping (String, String, UIViewController) -> Void) -> Perform {
             return Perform(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(`url`, `token`, `viewController`), performs: perform)

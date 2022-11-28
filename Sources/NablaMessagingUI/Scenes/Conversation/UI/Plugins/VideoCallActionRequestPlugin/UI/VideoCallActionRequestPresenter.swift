@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 import NablaMessagingCore
@@ -8,8 +9,7 @@ final class VideoCallActionRequestPresenter:
         VideoCallActionRequestContentView,
         VideoCallActionRequestViewItem,
         ConversationMessageCell<VideoCallActionRequestContentView>
-    >
-{
+    > {
     // MARK: - Internal
     
     override var item: VideoCallActionRequestViewItem {
@@ -35,9 +35,10 @@ final class VideoCallActionRequestPresenter:
             transformContent: Self.makeTransformer(videoCallClient: videoCallClient)
         )
         
-        watchCurrentCallSubscription = videoCallClient.watchCurrentVideoCall { [weak self] currentVideoCallToken in
-            self?.updateCallState(currentVideoCallToken: currentVideoCallToken)
-        }
+        watchCurrentCallSubscription = videoCallClient.watchCurrentVideoCall()
+            .nabla.drive { [weak self] currentVideoCallToken in
+                self?.updateCallState(currentVideoCallToken: currentVideoCallToken)
+            }
     }
     
     func userDidTapJoinRoomButton() {
@@ -54,7 +55,7 @@ final class VideoCallActionRequestPresenter:
     
     // MARK: - Private
     
-    private var watchCurrentCallSubscription: Cancellable?
+    private var watchCurrentCallSubscription: AnyCancellable?
     
     private typealias Transformer = (VideoCallActionRequestViewItem) -> VideoCallActionRequestContentView.ContentViewModel
     private static func makeTransformer(videoCallClient: VideoCallClient) -> Transformer {

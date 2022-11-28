@@ -6,12 +6,8 @@ class AuthenticatedInteractor {
         self.authenticator = authenticator
     }
 
-    final func isAuthenticated<Data>(handler: ResultHandler<Data, NablaError>) -> Bool {
-        if !authenticator.isSessionInitialized() {
-            handler(.failure(MissingAuthenticationProviderError()))
-            return false
-        }
-        return true
+    final var isAuthenticated: Bool {
+        authenticator.isSessionInitialized()
     }
 
     // MARK: - Private

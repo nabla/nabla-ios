@@ -20,9 +20,9 @@ final class RetrySendingMessageInteractorImpl: AuthenticatedInteractor, RetrySen
         itemId: UUID,
         conversationId: UUID,
         handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable {
-        guard isAuthenticated(handler: handler) else {
-            return Failure()
+    ) -> NablaCancellable {
+        guard isAuthenticated else {
+            return Failure(handler: handler, error: MissingAuthenticationProviderError())
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
         return itemsRepository.retrySending(itemWithId: itemId, inConversationWithId: transientId, handler: handler)

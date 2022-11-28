@@ -77,7 +77,7 @@ class ConversationRepositoryImpl: ConversationRepository {
         providerIds: [UUID]?,
         initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
-    ) -> Cancellable {
+    ) -> NablaCancellable {
         let umbrella = UmbrellaCancellable()
         
         let prepareTask = prepareInitialMessage(
@@ -122,27 +122,30 @@ class ConversationRepositoryImpl: ConversationRepository {
         return ConversationTransformer.transform(conversation: localConversation)
     }
     
-    func setIsTyping(
-        _ isTyping: Bool,
-        conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable {
-        guard let remoteId = conversationId.remoteId else { return Failure() }
+    /// - Throws: ``NablaError``
+    func setIsTyping(_ isTyping: Bool, conversationId: TransientUUID) async throws {
+        guard let remoteId = conversationId.remoteId else { return }
         
-        return remoteDataSource.setIsTyping(
-            isTyping,
-            conversationId: remoteId,
-            handler: handler.pullbackError(GQLErrorTransformer.transform)
-        )
+        do {
+            try await remoteDataSource.setIsTyping(isTyping, conversationId: remoteId)
+        } catch let error as GQLError {
+            throw GQLErrorTransformer.transform(gqlError: error)
+        } catch {
+            throw InternalError(underlyingError: error)
+        }
     }
     
-    func markConversationAsSeen(conversationId: TransientUUID, handler: ResultHandler<Void, NablaError>) -> Cancellable {
-        guard let remoteId = conversationId.remoteId else { return Failure() }
+    /// - Throws: ``NablaError``
+    func markConversationAsSeen(conversationId: TransientUUID) async throws {
+        guard let remoteId = conversationId.remoteId else { return }
         
-        return remoteDataSource.markConversationAsSeen(
-            conversationId: remoteId,
-            handler: handler.pullbackError(GQLErrorTransformer.transform)
-        )
+        do {
+            try await remoteDataSource.markConversationAsSeen(conversationId: remoteId)
+        } catch let error as GQLError {
+            throw GQLErrorTransformer.transform(gqlError: error)
+        } catch {
+            throw InternalError(underlyingError: error)
+        }
     }
     
     // MARK: - Private
@@ -151,13 +154,13 @@ class ConversationRepositoryImpl: ConversationRepository {
     private let localDataSource: ConversationLocalDataSource
     private let fileUploadDataSource: FileUploadRemoteDataSource
 
-    private weak var conversationsEventsSubscription: Cancellable?
+    private weak var conversationsEventsSubscription: NablaCancellable?
     private let remoteTypingDebouncer: Debouncer = .init(
         delay: ProviderInConversation.Constants.typingTimeWindowTimeInterval,
         queue: .global(qos: .userInitiated)
     )
     
-    private func makeOrReuseConversationEventsSubscription() -> Cancellable {
+    private func makeOrReuseConversationEventsSubscription() -> NablaCancellable {
         if let subscription = conversationsEventsSubscription {
             return subscription
         }
@@ -170,16 +173,15 @@ class ConversationRepositoryImpl: ConversationRepository {
     private func prepareInitialMessage(
         _ message: MessageInput?,
         handler: ResultHandler<GQL.SendMessageInput?, NablaError>
-    ) -> Cancellable {
+    ) -> NablaCancellable {
         guard let message = message else {
-            handler(.success(nil))
-            return Success()
+            return Success(handler: handler, value: nil)
         }
         
         switch message {
         case let .text(content):
-            handler(.success(.init(content: .init(textInput: .init(text: content)), clientId: .init())))
-            return Success()
+            let input = GQL.SendMessageInput(content: .init(textInput: .init(text: content)), clientId: .init())
+            return Success(handler: handler, value: input)
         case let .image(content):
             return fileUploadDataSource.upload(
                 file: transform(content),
@@ -225,6 +227,8 @@ class ConversationRepositoryImpl: ConversationRepository {
         case .cannotReadFileData:
             return CanNotReadFileDataError()
         case let .uploadError(error):
+            return ServerError(underlyingError: error)
+        case let .unknownError(error):
             return ServerError(underlyingError: error)
         }
     }

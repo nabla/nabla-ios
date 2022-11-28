@@ -12,17 +12,14 @@ protocol ConversationItemRepository {
         replyToMessageId: UUID?,
         inConversationWithId: TransientUUID,
         handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
     func retrySending(
         itemWithId itemId: UUID,
         inConversationWithId: TransientUUID,
         handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
-    func deleteMessage(
-        withId messageId: UUID,
-        conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
+    /// - Throws: ``NablaError``
+    func deleteMessage(withId messageId: UUID, conversationId: TransientUUID) async throws
 }

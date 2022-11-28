@@ -13,15 +13,15 @@ final class PaginatedWatcherAndSubscriptionHolder: PaginatedWatcher {
         cancellables.removeAll() // Whe do not own the `cancellables`, we only release them. Someone else might still use them.
     }
     
-    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    func loadMore(completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         watcher.loadMore(completion: completion)
     }
     
-    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> Cancellable {
+    func loadMore(numberOfItems: Int, completion: @escaping (Result<Void, NablaError>) -> Void) -> NablaCancellable {
         watcher.loadMore(numberOfItems: numberOfItems, completion: completion)
     }
     
-    func hold(_ cancellable: Cancellable) {
+    func hold(_ cancellable: NablaCancellable) {
         cancellables.append(cancellable)
     }
     
@@ -38,5 +38,5 @@ final class PaginatedWatcherAndSubscriptionHolder: PaginatedWatcher {
     // MARK: - Private
     
     private let watcher: PaginatedWatcher
-    private var cancellables = [Cancellable]()
+    private var cancellables = [NablaCancellable]()
 }

@@ -10,11 +10,8 @@ extension XCUIApplication {
             XCTContext.runActivity(named: "Create conversation") { _ in
                 buttons["compose"].tap()
             }
-            XCTContext.runActivity(named: "Tap on newly created conversation") { _ in
-                tables.staticTexts["PreviewTitle 1"].waitUntilExists().tap()
-            }
             XCTContext.runActivity(named: "Wait for conversation title to appear") { _ in
-                _ = staticTexts["Title 2"].waitUntilExistsAssert()
+                _ = staticTexts["Title 1"].waitUntilExistsAssert()
             }
         }
     }

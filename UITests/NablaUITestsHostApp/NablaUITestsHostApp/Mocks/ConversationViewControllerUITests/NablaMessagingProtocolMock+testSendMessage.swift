@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 @testable import NablaCore
 @testable import NablaMessagingCore
@@ -5,29 +6,21 @@ import Foundation
 extension NablaMessagingClientProtocolMock {
     func setupForTestSendMessage() {
         setupForTestCreateConversation()
+        
+        let watchItemsSubject = CurrentValueSubject<PaginatedList<ConversationItem>, NablaError>(.empty)
 
-        watchConversationClosure = { _, handler in
-            handler(.success(.mock()))
-            return WatcherMock()
+        watchItemsClosure = { _ in
+            watchItemsSubject.eraseToAnyPublisher()
         }
 
-        watchItemsClosure = { _, handler in
-            handler(.success(.init(
-                hasMore: false,
-                items: []
-            )))
-            return PaginatedWatcherMock()
-        }
-
-        sendMessageClosure = { message, _, _ in
+        sendMessageClosure = { message, _ in
             var textContent = ""
             if case let .text(content) = message {
                 textContent = content
             }
-            self.watchItemsReceivedInvocations.forEach { params in
-                params.handler(.success(.init(
-                    hasMore: false,
-                    items: [
+            self.watchItemsReceivedInvocations.forEach { _ in
+                let list = PaginatedList<ConversationItem>(
+                    elements: [
                         TextMessageItem(
                             id: .init(),
                             date: .init(),
@@ -36,10 +29,11 @@ extension NablaMessagingClientProtocolMock {
                             replyTo: nil,
                             content: textContent
                         ),
-                    ]
-                )))
+                    ],
+                    loadMore: nil
+                )
+                watchItemsSubject.send(list)
             }
-            return PaginatedWatcherMock()
         }
     }
 }

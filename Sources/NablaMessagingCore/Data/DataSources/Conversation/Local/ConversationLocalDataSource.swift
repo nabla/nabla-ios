@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -9,5 +10,5 @@ protocol ConversationLocalDataSource {
     
     func updateConversation(_ conversation: LocalConversation)
     
-    func watchConversation(_ conversationId: UUID, callback: @escaping (LocalConversation) -> Void) -> Cancellable
+    func watchConversation(_ conversationId: UUID) -> AnyPublisher<LocalConversation?, Never>
 }

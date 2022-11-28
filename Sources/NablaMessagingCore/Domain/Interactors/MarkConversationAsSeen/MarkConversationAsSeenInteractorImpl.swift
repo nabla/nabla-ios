@@ -11,15 +11,13 @@ final class MarkConversationAsSeenInteractorImpl: AuthenticatedInteractor, MarkC
 
     // MARK: - MarkConversationAsSeenInteractor
 
-    func execute(
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable {
-        guard isAuthenticated(handler: handler) else {
-            return Failure()
+    /// - Throws: ``NablaError``
+    func execute(conversationId: UUID) async throws {
+        guard isAuthenticated else {
+            throw MissingAuthenticationProviderError()
         }
         let transientId = repository.getConversationTransientId(from: conversationId)
-        return repository.markConversationAsSeen(conversationId: transientId, handler: handler)
+        try await repository.markConversationAsSeen(conversationId: transientId)
     }
     
     // MARK: - Private

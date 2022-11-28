@@ -1,18 +1,17 @@
 import Foundation
 
 // sourcery: AutoMockable
-// sourcery: typealias = "Cancellable = NablaCore.Cancellable"
 public protocol GQLClient {
     func fetch<Query: GQLQuery>(
         query: Query,
         cachePolicy: CachePolicy,
         handler: ResultHandler<Query.Data, GQLError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
     func perform<Mutation: GQLMutation>(
         mutation: Mutation,
         handler: ResultHandler<Mutation.Data, GQLError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
     func watch<Query: GQLQuery>(
         query: Query,
@@ -23,7 +22,7 @@ public protocol GQLClient {
     func subscribe<Subscription: GQLSubscription>(
         subscription: Subscription,
         handler: ResultHandler<Subscription.Data, GQLError>
-    ) -> Cancellable
+    ) -> NablaCancellable
     
     func addRefetchTriggers(_ triggers: [RefetchTrigger])
 }

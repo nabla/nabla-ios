@@ -47,10 +47,7 @@ class ConversationItemRepositoryImplTests: XCTestCase {
         )
         let conversationId = TransientUUID(remoteId: .init())
         let expectation = expectation(description: "")
-        fileUploadRemoteDataSource.perform(.upload(file: .any, handler: .any, perform: { _, handler in
-            handler(.failure(.cannotReadFileData))
-        }))
-        fileUploadRemoteDataSource.given(.upload(file: .any, handler: .any, willReturn: Failure()))
+        fileUploadRemoteDataSource.given(.upload(file: .any, willThrow: FileUploadRemoteDataSourceError.cannotReadFileData))
         Matcher.default.register(LocalConversationItem.self) { rhs, lhs in
             guard let rhs = rhs as? LocalImageMessageItem, let lhs = lhs as? LocalImageMessageItem else { return false }
             return rhs.conversationId == lhs.conversationId

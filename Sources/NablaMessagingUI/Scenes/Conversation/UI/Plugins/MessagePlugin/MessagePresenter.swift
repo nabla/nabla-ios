@@ -109,8 +109,6 @@ class MessagePresenter<
     private let client: NablaMessagingClientProtocol
     private let transformContent: (Item) -> ContentView.ContentViewModel
 
-    private var retrySendingAction: Cancellable?
-
     private(set) weak var view: MessageCellContract?
     
     private func transformSender() -> ConversationMessageSender {
@@ -127,15 +125,12 @@ class MessagePresenter<
     }
     
     private func retrySendingMessage() {
-        guard retrySendingAction == nil else { return }
-        retrySendingAction = client.retrySending(itemWithId: item.id, inConversationWithId: conversationId) { [weak self] result in
-            switch result {
-            case let .failure(error):
-                self?.logger.warning(message: "Failed send retry", extra: ["reason": error])
-            case .success:
-                break
+        Task(priority: .userInitiated) {
+            do {
+                try await client.retrySending(itemWithId: item.id, inConversationWithId: conversationId)
+            } catch {
+                logger.warning(message: "Failed send retry", extra: ["reason": error])
             }
-            self?.retrySendingAction = nil
         }
     }
 }

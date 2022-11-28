@@ -1,6 +1,6 @@
 import Foundation
 
 // sourcery: AutoMockable
-public protocol Watcher: Cancellable {
+public protocol Watcher: NablaCancellable {
     func refetch()
 }

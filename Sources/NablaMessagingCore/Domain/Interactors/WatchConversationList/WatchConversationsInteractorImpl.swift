@@ -12,8 +12,8 @@ class WatchConversationsInteractorImpl: AuthenticatedInteractor, WatchConversati
     // MARK: - WatchConversationsInteractor
     
     func execute(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher {
-        guard isAuthenticated(handler: handler) else {
-            return FailurePaginatedWatcher()
+        guard isAuthenticated else {
+            return FailurePaginatedWatcher(handler: handler, error: MissingAuthenticationProviderError())
         }
         return repository.watchConversations(handler: handler)
     }

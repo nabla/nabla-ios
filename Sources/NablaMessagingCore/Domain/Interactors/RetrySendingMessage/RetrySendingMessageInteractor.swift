@@ -6,5 +6,5 @@ protocol RetrySendingMessageInteractor {
         itemId: UUID,
         conversationId: UUID,
         handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
+    ) -> NablaCancellable
 }

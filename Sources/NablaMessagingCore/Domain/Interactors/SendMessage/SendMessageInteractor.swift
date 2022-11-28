@@ -7,5 +7,5 @@ protocol SendMessageInteractor {
         replyToMessageId: UUID?,
         conversationId: UUID,
         handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable
+    ) -> NablaCancellable
 }

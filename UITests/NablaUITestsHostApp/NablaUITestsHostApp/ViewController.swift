@@ -23,13 +23,13 @@ final class ViewController: UIViewController {
     // MARK: Handlers
 
     @objc func createConversationButtonHandler() {
-        createConversationAction = NablaMessagingClientProtocolMock.shared.createConversation { result in
-            switch result {
-            case let .failure(error):
-                print(error)
-            case let .success(conversation):
+        Task {
+            do {
+                let conversation = try await NablaMessagingClientProtocolMock.shared.createConversation()
                 let destination = NablaMessagingClientProtocolMock.shared.views.createConversationViewController(conversation)
-                self.navigationController?.pushViewController(destination, animated: true)
+                navigationController?.pushViewController(destination, animated: true)
+            } catch {
+                print(error)
             }
         }
     }

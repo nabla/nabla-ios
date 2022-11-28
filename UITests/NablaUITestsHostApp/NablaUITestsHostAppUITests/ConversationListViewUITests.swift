@@ -17,9 +17,6 @@ final class ConversationListViewUITests: XCTestCase {
         XCTContext.runActivity(named: "Create conversation") { _ in
             app.buttons["compose"].tap()
         }
-        XCTContext.runActivity(named: "Tap on newly created conversation") { _ in
-            app.tables.staticTexts["PreviewTitle 1"].waitUntilExists().tap()
-        }
                 
         // THEN
         XCTContext.runActivity(named: "Wait for conversation title to appear") { _ in

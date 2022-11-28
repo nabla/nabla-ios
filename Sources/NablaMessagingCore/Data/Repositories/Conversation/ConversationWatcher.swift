@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -47,18 +48,19 @@ final class ConversationWatcher: Watcher {
     private let localDataSource: ConversationLocalDataSource
     private let remoteDataSource: ConversationRemoteDataSource
     
-    private var localWatcher: Cancellable?
-    private var remoteIdObserver: Cancellable?
+    private var localWatcher: AnyCancellable?
+    private var remoteIdObserver: NablaCancellable?
     private var remoteWatcher: Watcher?
     
     private var remoteConversationResult: Result<RemoteConversation, GQLError>?
     private var localConversation: LocalConversation?
     
     private func observeLocalData(localId: UUID) {
-        localWatcher = localDataSource.watchConversation(localId) { [weak self] localConversation in
-            self?.localConversation = localConversation
-            self?.notifyChange()
-        }
+        localWatcher = localDataSource.watchConversation(localId)
+            .sink { [weak self] localConversation in
+                self?.localConversation = localConversation
+                self?.notifyChange()
+            }
     }
     
     private func observeRemoteData(remoteId: UUID) {

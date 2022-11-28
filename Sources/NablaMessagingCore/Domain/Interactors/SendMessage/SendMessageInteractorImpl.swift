@@ -21,13 +21,12 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
         replyToMessageId: UUID?,
         conversationId: UUID,
         handler: ResultHandler<Void, NablaError>
-    ) -> Cancellable {
-        guard isAuthenticated(handler: handler) else {
-            return Failure()
+    ) -> NablaCancellable {
+        guard isAuthenticated else {
+            return Failure(handler: handler, error: MissingAuthenticationProviderError())
         }
         guard isMessageValid(message) else {
-            handler(.failure(InvalidMessageError()))
-            return Failure()
+            return Failure(handler: handler, error: InvalidMessageError())
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
         return itemsRepository.sendMessage(

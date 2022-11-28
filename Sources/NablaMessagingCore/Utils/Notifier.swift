@@ -4,7 +4,7 @@ import NablaCore
 class Notifier<T> {
     // MARK: - Internal
     
-    func observe(_ callback: @escaping (T) -> Void) -> Cancellable {
+    func observe(_ callback: @escaping (T) -> Void) -> NablaCancellable {
         Observer(
             notificationName: notificationName,
             center: center,
@@ -31,7 +31,7 @@ class Notifier<T> {
     private let notificationName: Notification.Name
     private let center: NotificationCenter
     
-    private class Observer<T>: Cancellable {
+    private class Observer<T>: NablaCancellable {
         let notificationName: Notification.Name
         let center: NotificationCenter
         let callback: (T) -> Void

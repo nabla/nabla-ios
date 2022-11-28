@@ -3,7 +3,7 @@ import Foundation
 struct LocalConversation {
     let id: UUID
     var remoteId: UUID?
-    let creationDate: Date
-    let title: String?
-    let providerIds: [UUID]?
+    var creationDate: Date
+    var title: String?
+    var providerIds: [UUID]?
 }

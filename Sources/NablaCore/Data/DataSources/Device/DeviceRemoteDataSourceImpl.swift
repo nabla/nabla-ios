@@ -3,7 +3,7 @@ import Foundation
 final class DeviceRemoteDataSourceImpl: DeviceRemoteDataSource {
     // MARK: - Internal
     
-    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<RemoteDevice, GQLError>) -> Cancellable {
+    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<RemoteDevice, GQLError>) -> NablaCancellable {
         let input = makeDeviceInput(installation: installation)
         return gqlClient.perform(
             mutation: GQL.RegisterOrUpdateDeviceMutation(deviceId: installation.deviceId, input: input),

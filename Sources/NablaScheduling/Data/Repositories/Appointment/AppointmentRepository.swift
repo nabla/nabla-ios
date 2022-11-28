@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import NablaCore
-import Combine
 
 protocol AppointmentRepository {
     func watchAppointments(state: Appointment.State) -> AnyPublisher<PaginatedList<Appointment>, NablaError>
