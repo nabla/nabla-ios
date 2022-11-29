@@ -12,7 +12,7 @@ public class CoreContainer {
         userRepository: userRepository,
         authenticator: authenticator,
         gqlStore: gqlStore,
-        keyValueStore: keyValueStore,
+        scopedKeyValueStore: scopedKeyValueStore,
         logger: logger
     )
     
@@ -80,7 +80,8 @@ public class CoreContainer {
     
     // Mutable for mocking purposes
     lazy var deviceLocalDataSource: DeviceLocalDataSource = DeviceLocalDataSourceImpl(
-        store: keyValueStore,
+        scopedStore: scopedKeyValueStore,
+        unscopedStore: dangerouslyUnscopedKeyValueStore,
         logger: logger
     )
 
@@ -141,10 +142,13 @@ public class CoreContainer {
 
     private lazy var userLocalDataSource: UserLocalDataSource = UserLocalDataSourceImpl(
         logger: logger,
-        store: keyValueStore
+        store: scopedKeyValueStore
     )
 
-    private lazy var keyValueStore: KeyValueStore = KeyValueStoreImpl(namespace: name)
+    private lazy var scopedKeyValueStore: KeyValueStore = KeyValueStoreImpl(namespace: name)
+    /// This one is not scoped to the Nabla SDK instance meaning it will be shared across multiple instances of the SDK.
+    /// You probably don't want to use it unless you have a very good reason to do so.
+    private lazy var dangerouslyUnscopedKeyValueStore: KeyValueStore = KeyValueStoreImpl(namespace: "nablaGlobal")
     
     private lazy var deviceRemoteDataSource: DeviceRemoteDataSource = DeviceRemoteDataSourceImpl(gqlClient: gqlClient)
     

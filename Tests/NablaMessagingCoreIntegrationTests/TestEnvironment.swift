@@ -23,7 +23,7 @@ struct TestEnvironment {
         let networkConfiguration = NetworkConfiguration(session: session)
         
         let deviceLocalDataSource = DeviceLocalDataSourceMock()
-        deviceLocalDataSource.given(.deviceId(getter: nil))
+        deviceLocalDataSource.given(.getDeviceId(forUserId: .any, willProduce: { stubber in stubber.return(nil) }))
         deviceLocalDataSource.given(.codeVersion(getter: 42))
         deviceLocalDataSource.given(.deviceModel(getter: "Mocked: Simulator"))
         deviceLocalDataSource.given(.deviceOSVersion(getter: "Mocked: iOS13"))

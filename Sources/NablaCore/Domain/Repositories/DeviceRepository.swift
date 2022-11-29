@@ -1,13 +1,13 @@
 import Foundation
 
 protocol DeviceRepository {
-    func updateOrRegisterDevice(withModules modules: [Module]) -> NablaCancellable
+    func updateOrRegisterDevice(userId: String, withModules modules: [Module]) -> NablaCancellable
 }
 
 final class DeviceRepositoryImpl: DeviceRepository {
-    func updateOrRegisterDevice(withModules modules: [Module]) -> NablaCancellable {
+    func updateOrRegisterDevice(userId: String, withModules modules: [Module]) -> NablaCancellable {
         let installation = Installation(
-            deviceId: deviceLocalDataSource.deviceId,
+            deviceId: deviceLocalDataSource.getDeviceId(forUserId: userId),
             deviceModel: deviceLocalDataSource.deviceModel,
             deviceOSVersion: deviceLocalDataSource.deviceOSVersion,
             codeVersion: deviceLocalDataSource.codeVersion,
@@ -20,7 +20,7 @@ final class DeviceRepositoryImpl: DeviceRepository {
                 case let .failure(error):
                     logger.error(message: "Failed to register device", extra: ["error": error])
                 case let .success(remoteDevice):
-                    deviceLocalDataSource.deviceId = remoteDevice.deviceId
+                    deviceLocalDataSource.setDeviceId(remoteDevice.deviceId, forUserId: userId)
                     if let sentry = remoteDevice.sentry {
                         self.errorReporter.enable(dsn: sentry.dsn, env: sentry.env)
                     } else {

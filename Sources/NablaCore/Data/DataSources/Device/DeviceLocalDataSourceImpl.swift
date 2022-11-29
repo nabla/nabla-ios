@@ -4,9 +4,19 @@ import UIKit
 final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
     // MARK: - Internal
     
-    var deviceId: UUID? {
-        get { try? store.get(forKey: Keys.deviceIdKey) }
-        set { try? store.set(newValue, forKey: Keys.deviceIdKey) }
+    func getDeviceId(forUserId userId: String) -> UUID? {
+        let globalDeviceId: UUID? = try? dangerouslyUnscopedStore.get(forKey: generateKeyForDeviceId(forUserId: userId))
+        
+        if globalDeviceId == nil, let legacyDeviceId: UUID = try? scopedStore.get(forKey: Keys.deviceIdKey) {
+            migrateLegacyDeviceIdToGlobalStorage(legacyDeviceId, forUserId: userId)
+            return legacyDeviceId
+        }
+        
+        return globalDeviceId
+    }
+    
+    func setDeviceId(_ deviceId: UUID, forUserId userId: String) {
+        try? dangerouslyUnscopedStore.set(deviceId, forKey: generateKeyForDeviceId(forUserId: userId))
     }
     
     var deviceModel: String {
@@ -33,10 +43,12 @@ final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
     // MARK: Init
     
     init(
-        store: KeyValueStore,
+        scopedStore: KeyValueStore,
+        unscopedStore: KeyValueStore,
         logger: Logger
     ) {
-        self.store = store
+        self.scopedStore = scopedStore
+        dangerouslyUnscopedStore = unscopedStore
         self.logger = logger
     }
     
@@ -46,7 +58,9 @@ final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
         static let deviceIdKey = "DeviceLocalDataSourceImpl.deviceIdKey"
     }
 
-    private let store: KeyValueStore
+    private let scopedStore: KeyValueStore
+    /// We store the deviceId in the unscoped storage so that we are sure we always send the same deviceId for a given userId, no matter the SDK instance
+    private let dangerouslyUnscopedStore: KeyValueStore
     private let logger: Logger
     
     private func readCodeVersion() -> Int {
@@ -70,6 +84,15 @@ final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
             logger.error(message: "Failed to read code version", extra: ["error": error])
             return 0
         }
+    }
+    
+    private func generateKeyForDeviceId(forUserId userId: String) -> String {
+        "\(Keys.deviceIdKey)_\(userId.hashValue)"
+    }
+    
+    private func migrateLegacyDeviceIdToGlobalStorage(_ legacyDeviceId: UUID, forUserId userId: String) {
+        setDeviceId(legacyDeviceId, forUserId: userId)
+        scopedStore.remove(key: Keys.deviceIdKey)
     }
 }
 

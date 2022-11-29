@@ -1,14 +1,14 @@
 import Foundation
 
 protocol RegisterDeviceInteractor {
-    func execute() -> NablaCancellable
+    func execute(userId: String) -> NablaCancellable
 }
 
 final class RegisterDeviceInteractorImpl: RegisterDeviceInteractor {
     // MARK: - Internal
     
-    func execute() -> NablaCancellable {
-        deviceRepository.updateOrRegisterDevice(withModules: modules)
+    func execute(userId: String) -> NablaCancellable {
+        deviceRepository.updateOrRegisterDevice(userId: userId, withModules: modules)
     }
     
     // MARK: Init

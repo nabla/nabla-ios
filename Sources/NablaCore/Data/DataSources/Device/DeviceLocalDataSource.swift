@@ -2,7 +2,8 @@ import Foundation
 
 // sourcery: AutoMockable
 protocol DeviceLocalDataSource: AnyObject {
-    var deviceId: UUID? { get set }
+    func getDeviceId(forUserId userId: String) -> UUID?
+    func setDeviceId(_ deviceId: UUID, forUserId userId: String)
     var deviceModel: String { get }
     var deviceOSVersion: String { get }
     var codeVersion: Int { get }

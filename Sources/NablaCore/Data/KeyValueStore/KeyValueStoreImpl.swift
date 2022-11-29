@@ -27,6 +27,10 @@ class KeyValueStoreImpl: KeyValueStore {
         }
     }
     
+    func remove(key: String) {
+        userDefaults.removeObject(forKey: key)
+    }
+    
     init(
         namespace: String,
         userDefaults: UserDefaults = .standard

@@ -763,12 +763,6 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var deviceId: UUID? {
-		get {	invocations.append(.p_deviceId_get); return __p_deviceId ?? optionalGivenGetterValue(.p_deviceId_get, "DeviceLocalDataSourceMock - stub value for deviceId was not defined") }
-		set {	invocations.append(.p_deviceId_set(.value(newValue))); __p_deviceId = newValue }
-	}
-	private var __p_deviceId: (UUID)?
-
     public var deviceModel: String {
 		get {	invocations.append(.p_deviceModel_get); return __p_deviceModel ?? givenGetterValue(.p_deviceModel_get, "DeviceLocalDataSourceMock - stub value for deviceModel was not defined") }
 	}
@@ -788,17 +782,45 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 
 
 
+    open func getDeviceId(forUserId userId: String) -> UUID? {
+        addInvocation(.m_getDeviceId__forUserId_userId(Parameter<String>.value(`userId`)))
+		let perform = methodPerformValue(.m_getDeviceId__forUserId_userId(Parameter<String>.value(`userId`))) as? (String) -> Void
+		perform?(`userId`)
+		var __value: UUID? = nil
+		do {
+		    __value = try methodReturnValue(.m_getDeviceId__forUserId_userId(Parameter<String>.value(`userId`))).casted()
+		} catch {
+			// do nothing
+		}
+		return __value
+    }
+
+    open func setDeviceId(_ deviceId: UUID, forUserId userId: String) {
+        addInvocation(.m_setDeviceId__deviceIdforUserId_userId(Parameter<UUID>.value(`deviceId`), Parameter<String>.value(`userId`)))
+		let perform = methodPerformValue(.m_setDeviceId__deviceIdforUserId_userId(Parameter<UUID>.value(`deviceId`), Parameter<String>.value(`userId`))) as? (UUID, String) -> Void
+		perform?(`deviceId`, `userId`)
+    }
+
 
     fileprivate enum MethodType {
-        case p_deviceId_get
-		case p_deviceId_set(Parameter<UUID?>)
+        case m_getDeviceId__forUserId_userId(Parameter<String>)
+        case m_setDeviceId__deviceIdforUserId_userId(Parameter<UUID>, Parameter<String>)
         case p_deviceModel_get
         case p_deviceOSVersion_get
         case p_codeVersion_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
-            switch (lhs, rhs) {            case (.p_deviceId_get,.p_deviceId_get): return Matcher.ComparisonResult.match
-			case (.p_deviceId_set(let left),.p_deviceId_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<UUID?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            switch (lhs, rhs) {
+            case (.m_getDeviceId__forUserId_userId(let lhsUserid), .m_getDeviceId__forUserId_userId(let rhsUserid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "forUserId userId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_setDeviceId__deviceIdforUserId_userId(let lhsDeviceid, let lhsUserid), .m_setDeviceId__deviceIdforUserId_userId(let rhsDeviceid, let rhsUserid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDeviceid, rhs: rhsDeviceid, with: matcher), lhsDeviceid, rhsDeviceid, "_ deviceId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "forUserId userId"))
+				return Matcher.ComparisonResult(results)
             case (.p_deviceModel_get,.p_deviceModel_get): return Matcher.ComparisonResult.match
             case (.p_deviceOSVersion_get,.p_deviceOSVersion_get): return Matcher.ComparisonResult.match
             case (.p_codeVersion_get,.p_codeVersion_get): return Matcher.ComparisonResult.match
@@ -808,8 +830,8 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 
         func intValue() -> Int {
             switch self {
-            case .p_deviceId_get: return 0
-			case .p_deviceId_set(let newValue): return newValue.intValue
+            case let .m_getDeviceId__forUserId_userId(p0): return p0.intValue
+            case let .m_setDeviceId__deviceIdforUserId_userId(p0, p1): return p0.intValue + p1.intValue
             case .p_deviceModel_get: return 0
             case .p_deviceOSVersion_get: return 0
             case .p_codeVersion_get: return 0
@@ -817,8 +839,8 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
         }
         func assertionName() -> String {
             switch self {
-            case .p_deviceId_get: return "[get] .deviceId"
-			case .p_deviceId_set: return "[set] .deviceId"
+            case .m_getDeviceId__forUserId_userId: return ".getDeviceId(forUserId:)"
+            case .m_setDeviceId__deviceIdforUserId_userId: return ".setDeviceId(_:forUserId:)"
             case .p_deviceModel_get: return "[get] .deviceModel"
             case .p_deviceOSVersion_get: return "[get] .deviceOSVersion"
             case .p_codeVersion_get: return "[get] .codeVersion"
@@ -834,9 +856,6 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
             super.init(products)
         }
 
-        public static func deviceId(getter defaultValue: UUID?...) -> PropertyStub {
-            return Given(method: .p_deviceId_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
         public static func deviceModel(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_deviceModel_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
@@ -847,13 +866,23 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
             return Given(method: .p_codeVersion_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
+        public static func getDeviceId(forUserId userId: Parameter<String>, willReturn: UUID?...) -> MethodStub {
+            return Given(method: .m_getDeviceId__forUserId_userId(`userId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getDeviceId(forUserId userId: Parameter<String>, willProduce: (Stubber<UUID?>) -> Void) -> MethodStub {
+            let willReturn: [UUID?] = []
+			let given: Given = { return Given(method: .m_getDeviceId__forUserId_userId(`userId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UUID?).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static var deviceId: Verify { return Verify(method: .p_deviceId_get) }
-		public static func deviceId(set newValue: Parameter<UUID?>) -> Verify { return Verify(method: .p_deviceId_set(newValue)) }
+        public static func getDeviceId(forUserId userId: Parameter<String>) -> Verify { return Verify(method: .m_getDeviceId__forUserId_userId(`userId`))}
+        public static func setDeviceId(_ deviceId: Parameter<UUID>, forUserId userId: Parameter<String>) -> Verify { return Verify(method: .m_setDeviceId__deviceIdforUserId_userId(`deviceId`, `userId`))}
         public static var deviceModel: Verify { return Verify(method: .p_deviceModel_get) }
         public static var deviceOSVersion: Verify { return Verify(method: .p_deviceOSVersion_get) }
         public static var codeVersion: Verify { return Verify(method: .p_codeVersion_get) }
@@ -863,6 +892,12 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func getDeviceId(forUserId userId: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_getDeviceId__forUserId_userId(`userId`), performs: perform)
+        }
+        public static func setDeviceId(_ deviceId: Parameter<UUID>, forUserId userId: Parameter<String>, perform: @escaping (UUID, String) -> Void) -> Perform {
+            return Perform(method: .m_setDeviceId__deviceIdforUserId_userId(`deviceId`, `userId`), performs: perform)
+        }
     }
 
     public func given(_ method: Given) {
@@ -1610,6 +1645,12 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
 		return __value
     }
 
+    open func remove(key: String) {
+        addInvocation(.m_remove__key_key(Parameter<String>.value(`key`)))
+		let perform = methodPerformValue(.m_remove__key_key(Parameter<String>.value(`key`))) as? (String) -> Void
+		perform?(`key`)
+    }
+
     open func clear() {
         addInvocation(.m_clear)
 		let perform = methodPerformValue(.m_clear) as? () -> Void
@@ -1620,6 +1661,7 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
     fileprivate enum MethodType {
         case m_set__objectforKey_key(Parameter<GenericAttribute>, Parameter<String>)
         case m_get__forKey_key(Parameter<String>)
+        case m_remove__key_key(Parameter<String>)
         case m_clear
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
@@ -1635,6 +1677,11 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsKey, rhs: rhsKey, with: matcher), lhsKey, rhsKey, "forKey key"))
 				return Matcher.ComparisonResult(results)
 
+            case (.m_remove__key_key(let lhsKey), .m_remove__key_key(let rhsKey)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsKey, rhs: rhsKey, with: matcher), lhsKey, rhsKey, "key"))
+				return Matcher.ComparisonResult(results)
+
             case (.m_clear, .m_clear): return .match
             default: return .none
             }
@@ -1644,6 +1691,7 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
             switch self {
             case let .m_set__objectforKey_key(p0, p1): return p0.intValue + p1.intValue
             case let .m_get__forKey_key(p0): return p0.intValue
+            case let .m_remove__key_key(p0): return p0.intValue
             case .m_clear: return 0
             }
         }
@@ -1651,6 +1699,7 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
             switch self {
             case .m_set__objectforKey_key: return ".set(_:forKey:)"
             case .m_get__forKey_key: return ".get(forKey:)"
+            case .m_remove__key_key: return ".remove(key:)"
             case .m_clear: return ".clear()"
             }
         }
@@ -1695,6 +1744,7 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
 
         public static func set<T>(_ object: Parameter<T?>, forKey key: Parameter<String>) -> Verify where T:Codable { return Verify(method: .m_set__objectforKey_key(`object`.wrapAsGeneric(), `key`))}
         public static func get(forKey key: Parameter<String>) -> Verify { return Verify(method: .m_get__forKey_key(`key`))}
+        public static func remove(key: Parameter<String>) -> Verify { return Verify(method: .m_remove__key_key(`key`))}
         public static func clear() -> Verify { return Verify(method: .m_clear)}
     }
 
@@ -1707,6 +1757,9 @@ open class KeyValueStoreMock: KeyValueStore, Mock {
         }
         public static func get(forKey key: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_get__forKey_key(`key`), performs: perform)
+        }
+        public static func remove(key: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_remove__key_key(`key`), performs: perform)
         }
         public static func clear(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_clear, performs: perform)

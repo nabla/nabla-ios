@@ -82,7 +82,7 @@ public class NablaClient {
         container.userRepository.setCurrentUser(User(id: userId))
         container.authenticator.authenticate(userId: userId, provider: provider)
         
-        registerDeviceAction = container.registerDeviceInteractor.execute()
+        registerDeviceAction = container.registerDeviceInteractor.execute(userId: userId)
     }
 
     /// Log the current user out
