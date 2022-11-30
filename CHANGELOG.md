@@ -64,6 +64,8 @@ To learn more about `async`, `await` and `Task`: https://docs.swift.org/swift-bo
 
 ### Fixed
 
+- Fixed an issue preventing the watchers from automatically fetching new data after connectivity is restored.
+
 
 ## [1.0.0-alpha26] - 2022-11-25
 

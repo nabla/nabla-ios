@@ -5,6 +5,8 @@ class ReachabilityRefetchTrigger: RefetchTrigger {
 
     init(environment: Environment) {
         self.environment = environment
+        super.init()
+        observeServerReachability()
     }
 
     // MARK: - Private
@@ -22,14 +24,14 @@ class ReachabilityRefetchTrigger: RefetchTrigger {
             } else {
                 reachability = try Reachability()
             }
-            try observeServerReachability(reachability)
             return reachability
         } catch {
             return nil
         }
     }
     
-    private func observeServerReachability(_ reachability: Reachability) throws {
+    private func observeServerReachability() {
+        guard let reachability = reachability else { return }
         // Refresh the cache when the host becomes reachable again
         reachability.whenReachable = { [weak self] _ in
             guard let self = self else { return }
@@ -42,6 +44,6 @@ class ReachabilityRefetchTrigger: RefetchTrigger {
             }
         }
         
-        try reachability.startNotifier()
+        try? reachability.startNotifier()
     }
 }
