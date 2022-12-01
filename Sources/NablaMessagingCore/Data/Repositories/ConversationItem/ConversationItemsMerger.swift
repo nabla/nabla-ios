@@ -96,6 +96,9 @@ class ConversationItemsMerger: PaginatedWatcher {
     }
     
     private func notifyNewValues() {
+        // We start emitting values only when `remoteData` exists, or when it is not applicable (aka conversation is local-only).
+        guard remoteData != nil || conversationId.remoteId == nil else { return }
+        
         let remoteConversation: RemoteConversationItems.Conversation.Conversation?
         switch remoteData {
         case .none:

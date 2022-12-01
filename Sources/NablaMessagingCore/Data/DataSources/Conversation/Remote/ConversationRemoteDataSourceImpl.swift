@@ -64,6 +64,7 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
             gqlClient: gqlClient,
             gqlStore: gqlStore,
             numberOfItemsPerPage: Constants.numberOfItemsPerPage,
+            preloadCache: false,
             handler: handler
         )
     }

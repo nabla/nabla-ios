@@ -175,6 +175,7 @@ private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationI
             gqlClient: gqlClient,
             gqlStore: gqlStore,
             numberOfItemsPerPage: numberOfItemsPerPage,
+            preloadCache: true,
             handler: handler
         )
     }

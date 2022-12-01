@@ -206,7 +206,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     private var focusedPatientTextItemId: UUID? {
-        didSet { refreshItems() }
+        didSet { updateConversationItems() }
     }
 
     private var itemsWatcher: AnyCancellable?
@@ -228,7 +228,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self.conversation = conversation
                 let conversationViewModel = Self.transform(conversation: conversation)
                 self.view?.configure(withConversation: conversationViewModel)
-                self.refreshItems()
+                self.updateConversationItems()
             }, receiveError: { [weak self] error in
                 guard let self = self else { return }
                 self.logger.warning(message: "Failed to watch conversation", extra: ["reason": error])
@@ -239,7 +239,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             .nabla.drive(receiveValue: { [weak self] conversationItems in
                 guard let self = self else { return }
                 self.conversationItems = conversationItems
-                self.refreshItems()
+                self.updateConversationItems()
                 self.markConversationAsSeen()
             }, receiveError: { [weak self] error in
                 guard let self = self else { return }
@@ -280,20 +280,16 @@ final class ConversationPresenterImpl: ConversationPresenter {
             avatar: AvatarViewModelTransformer.avatar(for: conversation)
         )
     }
-    
-    private func transformAndUpdateState(conversationItems: PaginatedList<ConversationItem>, conversation: Conversation?) {
-        let items = ConversationItemsTransformer.transform(
+
+    /// Updates the content of the conversation. Its items, but also other elements that might appear in the list (example: typing indicators)
+    private func updateConversationItems() {
+        guard let conversationItems = conversationItems else { return }
+        let viewItems = ConversationItemsTransformer.transform(
             conversationItems: conversationItems,
             providers: conversation?.providers ?? [],
             focusedTextItemId: focusedPatientTextItemId
         )
-        state = .loaded(items: items, showComposer: !(conversation?.isLocked ?? false))
-    }
-
-    private func refreshItems() {
-        conversationItems.map {
-            transformAndUpdateState(conversationItems: $0, conversation: conversation)
-        }
+        state = .loaded(items: viewItems, showComposer: !(conversation?.isLocked ?? false))
     }
 }
 
