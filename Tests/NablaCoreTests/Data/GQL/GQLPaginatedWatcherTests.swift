@@ -20,7 +20,6 @@ class GQLPaginatedWatcherTests: XCTestCase {
             gqlClient: gqlClient,
             gqlStore: gqlStore,
             numberOfItemsPerPage: 50,
-            preloadCache: false,
             handler: .void
         )
         // WHEN

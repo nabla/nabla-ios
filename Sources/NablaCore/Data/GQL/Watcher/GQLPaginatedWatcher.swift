@@ -57,7 +57,6 @@ open class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
         gqlClient: GQLClient,
         gqlStore: GQLStore,
         numberOfItemsPerPage: Int,
-        preloadCache: Bool,
         handler: ResultHandler<Query.Data, GQLError>
     ) {
         self.gqlClient = gqlClient
@@ -68,7 +67,7 @@ open class GQLPaginatedWatcher<Query: PaginatedQuery>: PaginatedWatcher {
         watcher = gqlClient
             .watch(
                 query: makeQuery(cursor: nil, numberOfItems: numberOfItemsPerPage),
-                cachePolicy: preloadCache ? .returnCacheDataAndFetch : .fetchIgnoringCacheData,
+                cachePolicy: .returnCacheDataAndFetch,
                 handler: .init { [weak self] result in
                     guard let self = self else {
                         return
