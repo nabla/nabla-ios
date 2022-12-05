@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Fixed
+
+
+## [1.0.0-alpha27] - 2022-12-05
+
+### Added
+
+### Changed
+
 - Removed `Cancellable` and `ResultHandler` from client interfaces.
   - watchers now return some `AnyPublisher` from the `Combine` framework.
   - other methods return only once, and leverage the new `async`/`await` feature from Swift.
