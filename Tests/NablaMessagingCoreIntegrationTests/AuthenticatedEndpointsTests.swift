@@ -42,6 +42,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
     func testCreateConversationFailsWhenNotAuthenticated() async {
         do {
             _ = try await messagingClient.createConversation(
+                message: .text(content: "Hello"),
                 title: nil,
                 providerIds: nil
             )

@@ -710,16 +710,16 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
 		return __value
     }
 
-    open func createConversation(title: String?, providerIds: [UUID]?) -> LocalConversation {
-        addInvocation(.m_createConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`)))
-		let perform = methodPerformValue(.m_createConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))) as? (String?, [UUID]?) -> Void
+    open func startConversation(title: String?, providerIds: [UUID]?) -> LocalConversation {
+        addInvocation(.m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`)))
+		let perform = methodPerformValue(.m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))) as? (String?, [UUID]?) -> Void
 		perform?(`title`, `providerIds`)
 		var __value: LocalConversation
 		do {
-		    __value = try methodReturnValue(.m_createConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))).casted()
+		    __value = try methodReturnValue(.m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for createConversation(title: String?, providerIds: [UUID]?). Use given")
-			Failure("Stub return value not specified for createConversation(title: String?, providerIds: [UUID]?). Use given")
+			onFatalFailure("Stub return value not specified for startConversation(title: String?, providerIds: [UUID]?). Use given")
+			Failure("Stub return value not specified for startConversation(title: String?, providerIds: [UUID]?). Use given")
 		}
 		return __value
     }
@@ -747,7 +747,7 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
 
     fileprivate enum MethodType {
         case m_getConversation__withId_id(Parameter<UUID>)
-        case m_createConversation__title_titleproviderIds_providerIds(Parameter<String?>, Parameter<[UUID]?>)
+        case m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>, Parameter<[UUID]?>)
         case m_updateConversation__conversation(Parameter<LocalConversation>)
         case m_watchConversation__conversationId(Parameter<UUID>)
 
@@ -758,7 +758,7 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsId, rhs: rhsId, with: matcher), lhsId, rhsId, "withId id"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_createConversation__title_titleproviderIds_providerIds(let lhsTitle, let lhsProviderids), .m_createConversation__title_titleproviderIds_providerIds(let rhsTitle, let rhsProviderids)):
+            case (.m_startConversation__title_titleproviderIds_providerIds(let lhsTitle, let lhsProviderids), .m_startConversation__title_titleproviderIds_providerIds(let rhsTitle, let rhsProviderids)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher), lhsTitle, rhsTitle, "title"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsProviderids, rhs: rhsProviderids, with: matcher), lhsProviderids, rhsProviderids, "providerIds"))
@@ -780,7 +780,7 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
         func intValue() -> Int {
             switch self {
             case let .m_getConversation__withId_id(p0): return p0.intValue
-            case let .m_createConversation__title_titleproviderIds_providerIds(p0, p1): return p0.intValue + p1.intValue
+            case let .m_startConversation__title_titleproviderIds_providerIds(p0, p1): return p0.intValue + p1.intValue
             case let .m_updateConversation__conversation(p0): return p0.intValue
             case let .m_watchConversation__conversationId(p0): return p0.intValue
             }
@@ -788,7 +788,7 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
         func assertionName() -> String {
             switch self {
             case .m_getConversation__withId_id: return ".getConversation(withId:)"
-            case .m_createConversation__title_titleproviderIds_providerIds: return ".createConversation(title:providerIds:)"
+            case .m_startConversation__title_titleproviderIds_providerIds: return ".startConversation(title:providerIds:)"
             case .m_updateConversation__conversation: return ".updateConversation(_:)"
             case .m_watchConversation__conversationId: return ".watchConversation(_:)"
             }
@@ -807,8 +807,8 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
         public static func getConversation(withId id: Parameter<UUID>, willReturn: LocalConversation?...) -> MethodStub {
             return Given(method: .m_getConversation__withId_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willReturn: LocalConversation...) -> MethodStub {
-            return Given(method: .m_createConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willReturn: LocalConversation...) -> MethodStub {
+            return Given(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func watchConversation(_ conversationId: Parameter<UUID>, willReturn: AnyPublisher<LocalConversation?, Never>...) -> MethodStub {
             return Given(method: .m_watchConversation__conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -820,9 +820,9 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willProduce: (Stubber<LocalConversation>) -> Void) -> MethodStub {
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willProduce: (Stubber<LocalConversation>) -> Void) -> MethodStub {
             let willReturn: [LocalConversation] = []
-			let given: Given = { return Given(method: .m_createConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (LocalConversation).self)
 			willProduce(stubber)
 			return given
@@ -840,7 +840,7 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
         fileprivate var method: MethodType
 
         public static func getConversation(withId id: Parameter<UUID>) -> Verify { return Verify(method: .m_getConversation__withId_id(`id`))}
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>) -> Verify { return Verify(method: .m_createConversation__title_titleproviderIds_providerIds(`title`, `providerIds`))}
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>) -> Verify { return Verify(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`))}
         public static func updateConversation(_ conversation: Parameter<LocalConversation>) -> Verify { return Verify(method: .m_updateConversation__conversation(`conversation`))}
         public static func watchConversation(_ conversationId: Parameter<UUID>) -> Verify { return Verify(method: .m_watchConversation__conversationId(`conversationId`))}
     }
@@ -852,8 +852,8 @@ open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
         public static func getConversation(withId id: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
             return Perform(method: .m_getConversation__withId_id(`id`), performs: perform)
         }
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, perform: @escaping (String?, [UUID]?) -> Void) -> Perform {
-            return Perform(method: .m_createConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), performs: perform)
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, perform: @escaping (String?, [UUID]?) -> Void) -> Perform {
+            return Perform(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), performs: perform)
         }
         public static func updateConversation(_ conversation: Parameter<LocalConversation>, perform: @escaping (LocalConversation) -> Void) -> Perform {
             return Perform(method: .m_updateConversation__conversation(`conversation`), performs: perform)
@@ -980,16 +980,16 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
 
 
 
-    open func createConversation(title: String?, providerIds: [UUID]?, initialMessage: GQL.SendMessageInput?, handler: ResultHandler<RemoteConversation, GQLError>) -> NablaCancellable {
-        addInvocation(.m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`), Parameter<GQL.SendMessageInput?>.value(`initialMessage`), Parameter<ResultHandler<RemoteConversation, GQLError>>.value(`handler`)))
-		let perform = methodPerformValue(.m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`), Parameter<GQL.SendMessageInput?>.value(`initialMessage`), Parameter<ResultHandler<RemoteConversation, GQLError>>.value(`handler`))) as? (String?, [UUID]?, GQL.SendMessageInput?, ResultHandler<RemoteConversation, GQLError>) -> Void
-		perform?(`title`, `providerIds`, `initialMessage`, `handler`)
+    open func createConversation(message: GQL.SendMessageInput?, title: String?, providerIds: [UUID]?, handler: ResultHandler<RemoteConversation, GQLError>) -> NablaCancellable {
+        addInvocation(.m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(Parameter<GQL.SendMessageInput?>.value(`message`), Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`), Parameter<ResultHandler<RemoteConversation, GQLError>>.value(`handler`)))
+		let perform = methodPerformValue(.m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(Parameter<GQL.SendMessageInput?>.value(`message`), Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`), Parameter<ResultHandler<RemoteConversation, GQLError>>.value(`handler`))) as? (GQL.SendMessageInput?, String?, [UUID]?, ResultHandler<RemoteConversation, GQLError>) -> Void
+		perform?(`message`, `title`, `providerIds`, `handler`)
 		var __value: NablaCancellable
 		do {
-		    __value = try methodReturnValue(.m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`), Parameter<GQL.SendMessageInput?>.value(`initialMessage`), Parameter<ResultHandler<RemoteConversation, GQLError>>.value(`handler`))).casted()
+		    __value = try methodReturnValue(.m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(Parameter<GQL.SendMessageInput?>.value(`message`), Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`), Parameter<ResultHandler<RemoteConversation, GQLError>>.value(`handler`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for createConversation(title: String?, providerIds: [UUID]?, initialMessage: GQL.SendMessageInput?, handler: ResultHandler<RemoteConversation, GQLError>). Use given")
-			Failure("Stub return value not specified for createConversation(title: String?, providerIds: [UUID]?, initialMessage: GQL.SendMessageInput?, handler: ResultHandler<RemoteConversation, GQLError>). Use given")
+			onFatalFailure("Stub return value not specified for createConversation(message: GQL.SendMessageInput?, title: String?, providerIds: [UUID]?, handler: ResultHandler<RemoteConversation, GQLError>). Use given")
+			Failure("Stub return value not specified for createConversation(message: GQL.SendMessageInput?, title: String?, providerIds: [UUID]?, handler: ResultHandler<RemoteConversation, GQLError>). Use given")
 		}
 		return __value
     }
@@ -1064,7 +1064,7 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
 
 
     fileprivate enum MethodType {
-        case m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(Parameter<String?>, Parameter<[UUID]?>, Parameter<GQL.SendMessageInput?>, Parameter<ResultHandler<RemoteConversation, GQLError>>)
+        case m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(Parameter<GQL.SendMessageInput?>, Parameter<String?>, Parameter<[UUID]?>, Parameter<ResultHandler<RemoteConversation, GQLError>>)
         case m_setIsTyping__isTypingconversationId_conversationId(Parameter<Bool>, Parameter<UUID>)
         case m_markConversationAsSeen__conversationId_conversationId(Parameter<UUID>)
         case m_watchConversation__conversationIdhandler_handler(Parameter<UUID>, Parameter<ResultHandler<RemoteConversation, GQLError>>)
@@ -1073,11 +1073,11 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(let lhsTitle, let lhsProviderids, let lhsInitialmessage, let lhsHandler), .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(let rhsTitle, let rhsProviderids, let rhsInitialmessage, let rhsHandler)):
+            case (.m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(let lhsMessage, let lhsTitle, let lhsProviderids, let lhsHandler), .m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(let rhsMessage, let rhsTitle, let rhsProviderids, let rhsHandler)):
 				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher), lhsTitle, rhsTitle, "title"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsProviderids, rhs: rhsProviderids, with: matcher), lhsProviderids, rhsProviderids, "providerIds"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsInitialmessage, rhs: rhsInitialmessage, with: matcher), lhsInitialmessage, rhsInitialmessage, "initialMessage"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher), lhsHandler, rhsHandler, "handler"))
 				return Matcher.ComparisonResult(results)
 
@@ -1113,7 +1113,7 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
 
         func intValue() -> Int {
             switch self {
-            case let .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_setIsTyping__isTypingconversationId_conversationId(p0, p1): return p0.intValue + p1.intValue
             case let .m_markConversationAsSeen__conversationId_conversationId(p0): return p0.intValue
             case let .m_watchConversation__conversationIdhandler_handler(p0, p1): return p0.intValue + p1.intValue
@@ -1123,7 +1123,7 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
         }
         func assertionName() -> String {
             switch self {
-            case .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler: return ".createConversation(title:providerIds:initialMessage:handler:)"
+            case .m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler: return ".createConversation(message:title:providerIds:handler:)"
             case .m_setIsTyping__isTypingconversationId_conversationId: return ".setIsTyping(_:conversationId:)"
             case .m_markConversationAsSeen__conversationId_conversationId: return ".markConversationAsSeen(conversationId:)"
             case .m_watchConversation__conversationIdhandler_handler: return ".watchConversation(_:handler:)"
@@ -1142,8 +1142,8 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
         }
 
 
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, initialMessage: Parameter<GQL.SendMessageInput?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>, willReturn: NablaCancellable...) -> MethodStub {
-            return Given(method: .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(`title`, `providerIds`, `initialMessage`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func createConversation(message: Parameter<GQL.SendMessageInput?>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>, willReturn: NablaCancellable...) -> MethodStub {
+            return Given(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(`message`, `title`, `providerIds`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>, willReturn: Watcher...) -> MethodStub {
             return Given(method: .m_watchConversation__conversationIdhandler_handler(`conversationId`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -1154,9 +1154,9 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
         public static func subscribeToConversationsEvents(handler: Parameter<ResultHandler<RemoteConversationsEvent, GQLError>>, willReturn: NablaCancellable...) -> MethodStub {
             return Given(method: .m_subscribeToConversationsEvents__handler_handler(`handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, initialMessage: Parameter<GQL.SendMessageInput?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>, willProduce: (Stubber<NablaCancellable>) -> Void) -> MethodStub {
+        public static func createConversation(message: Parameter<GQL.SendMessageInput?>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>, willProduce: (Stubber<NablaCancellable>) -> Void) -> MethodStub {
             let willReturn: [NablaCancellable] = []
-			let given: Given = { return Given(method: .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(`title`, `providerIds`, `initialMessage`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(`message`, `title`, `providerIds`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (NablaCancellable).self)
 			willProduce(stubber)
 			return given
@@ -1207,7 +1207,7 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, initialMessage: Parameter<GQL.SendMessageInput?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>) -> Verify { return Verify(method: .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(`title`, `providerIds`, `initialMessage`, `handler`))}
+        public static func createConversation(message: Parameter<GQL.SendMessageInput?>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>) -> Verify { return Verify(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(`message`, `title`, `providerIds`, `handler`))}
         public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<UUID>) -> Verify { return Verify(method: .m_setIsTyping__isTypingconversationId_conversationId(`isTyping`, `conversationId`))}
         public static func markConversationAsSeen(conversationId: Parameter<UUID>) -> Verify { return Verify(method: .m_markConversationAsSeen__conversationId_conversationId(`conversationId`))}
         public static func watchConversation(_ conversationId: Parameter<UUID>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>) -> Verify { return Verify(method: .m_watchConversation__conversationIdhandler_handler(`conversationId`, `handler`))}
@@ -1219,8 +1219,8 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func createConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, initialMessage: Parameter<GQL.SendMessageInput?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>, perform: @escaping (String?, [UUID]?, GQL.SendMessageInput?, ResultHandler<RemoteConversation, GQLError>) -> Void) -> Perform {
-            return Perform(method: .m_createConversation__title_titleproviderIds_providerIdsinitialMessage_initialMessagehandler_handler(`title`, `providerIds`, `initialMessage`, `handler`), performs: perform)
+        public static func createConversation(message: Parameter<GQL.SendMessageInput?>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, handler: Parameter<ResultHandler<RemoteConversation, GQLError>>, perform: @escaping (GQL.SendMessageInput?, String?, [UUID]?, ResultHandler<RemoteConversation, GQLError>) -> Void) -> Perform {
+            return Perform(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIdshandler_handler(`message`, `title`, `providerIds`, `handler`), performs: perform)
         }
         public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<UUID>, perform: @escaping (Bool, UUID) -> Void) -> Perform {
             return Perform(method: .m_setIsTyping__isTypingconversationId_conversationId(`isTyping`, `conversationId`), performs: perform)

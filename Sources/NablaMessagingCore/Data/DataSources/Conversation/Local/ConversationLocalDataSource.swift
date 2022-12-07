@@ -6,7 +6,7 @@ import NablaCore
 protocol ConversationLocalDataSource {
     func getConversation(withId id: UUID) -> LocalConversation?
     
-    func createConversation(title: String?, providerIds: [UUID]?) -> LocalConversation
+    func startConversation(title: String?, providerIds: [UUID]?) -> LocalConversation
     
     func updateConversation(_ conversation: LocalConversation)
     

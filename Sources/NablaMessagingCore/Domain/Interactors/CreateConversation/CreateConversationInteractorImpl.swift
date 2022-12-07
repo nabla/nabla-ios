@@ -12,18 +12,18 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
     // MARK: - Internal
     
     func execute(
+        message: MessageInput,
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> NablaCancellable {
         guard isAuthenticated else {
             return Failure(handler: handler, error: MissingAuthenticationProviderError())
         }
         return repository.createConversation(
+            message: message,
             title: title,
             providerIds: providerIds,
-            initialMessage: initialMessage,
             handler: handler
         )
     }

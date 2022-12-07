@@ -12,16 +12,28 @@ class CreateConversationTests: XCTestCase {
     
     func testCreateConversation() async throws {
         let env = TestEnvironment.make()
-        
+        // swiftlint:disable force_unwrapping
+        env.mockUUIDGenerator.values = [
+            UUID(uuidString: "157C934B-6199-4B2B-9A83-5B06E76C04BE")!,
+        ]
         env.session.beginRecording()
-        _ = try await env.messagingClient.createConversation(title: nil, providerIds: nil)
-        env.session.endRecording()
+        _ = try await env.messagingClient.createConversation(message: .text(content: "Hello"), title: nil, providerIds: nil)
+        
+        let endRecordingCompletion = expectation(description: "enRecording did complete")
+        env.session.endRecording {
+            endRecordingCompletion.fulfill()
+        }
+        wait(for: [endRecordingCompletion], timeout: 3)
     }
 
     func testCreateConversationThenConversationIsReturned() async throws {
         let env = TestEnvironment.make()
+        // swiftlint:disable force_unwrapping
+        env.mockUUIDGenerator.values = [
+            UUID(uuidString: "78069512-1617-42EB-9E4A-C1114B1DA90D")!,
+        ]
         env.session.beginRecording()
-
+        
         // 1 - Watch conversations
         var initalConversationsCount = -1
         let initialListDidLoad = expectation(description: "Initial conversation list did load")
@@ -39,7 +51,7 @@ class CreateConversationTests: XCTestCase {
         watcher1.cancel()
         
         // 2 - Create conversation
-        let createdConversation = try await env.messagingClient.createConversation()
+        let createdConversation = try await env.messagingClient.createConversation(message: .text(content: "Hello"))
         
         // 3 - Observe conversations again
         let finalListDidLoad = expectation(description: "Final conversation list did load")
@@ -59,7 +71,11 @@ class CreateConversationTests: XCTestCase {
         wait(for: [finalListDidLoad], timeout: 3)
         watcher2.cancel()
         
-        env.session.endRecording()
+        let endRecordingCompletion = expectation(description: "enRecording did complete")
+        env.session.endRecording {
+            endRecordingCompletion.fulfill()
+        }
+        wait(for: [endRecordingCompletion], timeout: 3)
     }
 }
 

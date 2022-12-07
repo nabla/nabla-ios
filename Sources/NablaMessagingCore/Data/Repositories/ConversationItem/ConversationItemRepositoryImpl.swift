@@ -473,9 +473,9 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         
         return conversationRemoteDataSource
             .createConversation(
+                message: sendInput,
                 title: localConversation?.title,
                 providerIds: localConversation?.providerIds,
-                initialMessage: sendInput,
                 handler: .init { [weak self] result in
                     switch result {
                     case let .failure(error):

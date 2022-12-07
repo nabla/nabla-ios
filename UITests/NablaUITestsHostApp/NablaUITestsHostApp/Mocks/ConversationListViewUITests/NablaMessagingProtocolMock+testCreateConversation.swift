@@ -14,7 +14,7 @@ extension NablaMessagingClientProtocolMock {
         watchConversationsClosure = {
             watchConversationsSubject.eraseToAnyPublisher()
         }
-        createConversationClosure = { title, _, _ in
+        startConversationClosure = { title, _ in
             let created = Conversation.mock(title: title)
             let old = watchConversationsSubject.value
             let new = PaginatedList<Conversation>(

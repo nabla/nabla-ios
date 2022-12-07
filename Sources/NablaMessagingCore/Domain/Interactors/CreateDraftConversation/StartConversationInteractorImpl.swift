@@ -1,7 +1,7 @@
 import Foundation
 import NablaCore
 
-final class CreateDraftConversationInteractorImpl: CreateDraftConversationInteractor {
+final class StartConversationInteractorImpl: StartConversationInteractor {
     // MARK: - Initializer
 
     init(repository: ConversationRepository) {
@@ -14,7 +14,10 @@ final class CreateDraftConversationInteractorImpl: CreateDraftConversationIntera
         title: String?,
         providerIds: [UUID]?
     ) -> Conversation {
-        repository.createDraftConversation(title: title, providerIds: providerIds)
+        repository.startConversation(
+            title: title,
+            providerIds: providerIds
+        )
     }
     
     // MARK: - Private

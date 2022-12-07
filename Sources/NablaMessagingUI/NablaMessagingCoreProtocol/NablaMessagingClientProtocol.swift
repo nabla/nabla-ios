@@ -6,12 +6,12 @@ import NablaMessagingCore
 // sourcery: AutoMockable
 protocol NablaMessagingClientProtocol {
     func createConversation(
+        message: MessageInput,
         title: String?,
-        providerIds: [UUID]?,
-        initialMessage: MessageInput?
+        providerIds: [UUID]?
     ) async throws -> Conversation
     
-    func createDraftConversation(
+    func startConversation(
         title: String?,
         providerIds: [UUID]?
     ) -> Conversation
@@ -61,42 +61,46 @@ extension NablaMessagingClientProtocol {
     }
     
     func createConversation(
+        message: MessageInput,
         title: String?
     ) async throws -> Conversation {
         try await createConversation(
+            message: message,
             title: title,
-            providerIds: nil,
-            initialMessage: nil
+            providerIds: nil
         )
     }
     
     func createConversation(
+        message: MessageInput,
         providerIds: [UUID]?
     ) async throws -> Conversation {
         try await createConversation(
+            message: message,
             title: nil,
-            providerIds: providerIds,
-            initialMessage: nil
+            providerIds: providerIds
         )
     }
     
-    func createConversation() async throws -> Conversation {
+    func createConversation(
+        message: MessageInput
+    ) async throws -> Conversation {
         try await createConversation(
-            title: nil,
-            providerIds: nil,
-            initialMessage: nil
-        )
-    }
-    
-    func createDraftConversation() -> Conversation {
-        createDraftConversation(
+            message: message,
             title: nil,
             providerIds: nil
         )
     }
     
-    func createDraftConversation(title: String?) -> Conversation {
-        createDraftConversation(
+    func startConversation() -> Conversation {
+        startConversation(
+            title: nil,
+            providerIds: nil
+        )
+    }
+    
+    func startConversation(title: String?) -> Conversation {
+        startConversation(
             title: title,
             providerIds: nil
         )

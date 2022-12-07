@@ -27,7 +27,7 @@ class InboxPresenterImpl: InboxPresenter {
     func start() {}
 
     func userDidTapCreateConversation() {
-        createDraftConversation()
+        createConversation()
     }
 
     func userDidSelectConversation(_ conversation: Conversation) {
@@ -42,8 +42,8 @@ class InboxPresenterImpl: InboxPresenter {
     private weak var viewContract: InboxViewContract?
     private weak var delegate: InboxDelegate?
 
-    private func createDraftConversation() {
-        let conversation = client.createDraftConversation()
+    private func createConversation() {
+        let conversation = client.startConversation()
         delegate?.inbox(didCreate: conversation)
     }
 }

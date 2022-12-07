@@ -3,9 +3,9 @@ import NablaCore
 
 protocol CreateConversationInteractor {
     func execute(
+        message: MessageInput,
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> NablaCancellable
 }

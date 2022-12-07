@@ -13,21 +13,21 @@ public class NablaMessagingClient: NablaCore.MessagingClient {
     public let container: MessagingContainer
     
     /// Create a new conversation on behalf of the current user.
+    /// - Parameter message: initial message to be sent in the conversation.
     /// - Parameter title: optional - title for the conversation
     /// - Parameter providerIds: optional - list providers ids that will participate in the conversation. Make sure the specified providers have enough rights to participate to a conversation. See [Roles and Permissions](https://docs.nabla.com/docs/roles-and-permissions).
-    /// - Parameter initialMessage: optional - initial message to be sent in the conversation.
     /// - Returns: The created ``Conversation``
     /// - Throws: ``NablaError``
     public func createConversation(
+        message: MessageInput,
         title: String? = nil,
-        providerIds: [UUID]? = nil,
-        initialMessage: MessageInput? = nil
+        providerIds: [UUID]? = nil
     ) async throws -> Conversation {
         try await Self.wrap { handler in
             container.createConversationInteractor.execute(
+                message: message,
                 title: title,
                 providerIds: providerIds,
-                initialMessage: initialMessage,
                 handler: handler
             )
         }
@@ -37,11 +37,14 @@ public class NablaMessagingClient: NablaCore.MessagingClient {
     /// - Parameter title: optional - title for the conversation
     /// - Parameter providerIds: optional - list providers ids that will participate in the conversation. Make sure the specified providers have enough rights to participate to a conversation. See [Roles and Permissions](https://docs.nabla.com/docs/roles-and-permissions).
     /// - Returns: The created ``Conversation``.
-    public func createDraftConversation(
+    public func startConversation(
         title: String? = nil,
         providerIds: [UUID]? = nil
     ) -> Conversation {
-        container.createDraftConversationInteractor.execute(title: title, providerIds: providerIds)
+        container.startConversationInteractor.execute(
+            title: title,
+            providerIds: providerIds
+        )
     }
     
     /// Watch the list of messages in a conversation.

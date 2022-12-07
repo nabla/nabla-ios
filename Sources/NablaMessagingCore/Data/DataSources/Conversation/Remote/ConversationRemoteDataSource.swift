@@ -4,9 +4,9 @@ import NablaCore
 // sourcery: AutoMockable
 protocol ConversationRemoteDataSource {
     func createConversation(
+        message: GQL.SendMessageInput?,
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: GQL.SendMessageInput?,
         handler: ResultHandler<RemoteConversation, GQLError>
     ) -> NablaCancellable
     

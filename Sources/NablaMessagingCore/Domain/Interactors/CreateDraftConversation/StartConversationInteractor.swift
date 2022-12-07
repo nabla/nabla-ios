@@ -1,7 +1,7 @@
 import Foundation
 import NablaCore
 
-protocol CreateDraftConversationInteractor {
+protocol StartConversationInteractor {
     func execute(
         title: String?,
         providerIds: [UUID]?

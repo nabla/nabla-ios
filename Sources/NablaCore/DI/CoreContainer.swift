@@ -65,6 +65,8 @@ public class CoreContainer {
     public private(set) lazy var errorReporter: ErrorReporter = configuration.enableReporting
         ? SentryErrorReporter(logger: logger)
         : NoOpErrorReporter()
+
+    public internal(set) lazy var uuidGenerator: UUIDGenerator = FoundationUUIDGenerator()
     
     // MARK: - Internal
     

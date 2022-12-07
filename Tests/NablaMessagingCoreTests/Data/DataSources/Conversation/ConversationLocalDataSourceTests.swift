@@ -21,7 +21,7 @@ class ConversationLocalDataSourceTests: XCTestCase {
     func testWatchIsTriggeredOnUpdate() throws {
         // GIVEN
         let sut = ConversationLocalDataSourceImpl()
-        var conversation = sut.createConversation(title: "Some title", providerIds: nil)
+        var conversation = sut.startConversation(title: "Some title", providerIds: nil)
         
         let initialExpectation = expectation(description: "Watcher should emit once with the initial `title`")
         let updatedExpectation = expectation(description: "Watcher should emit again with the new `title`")

@@ -17,16 +17,16 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     // MARK: - Internal
     
     func createConversation(
+        message: GQL.SendMessageInput?,
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: GQL.SendMessageInput?,
         handler: ResultHandler<RemoteConversation, GQLError>
     ) -> NablaCancellable {
         gqlClient.perform(
             mutation: GQL.CreateConversationMutation(
                 title: title,
                 providerIds: providerIds,
-                initialMessage: initialMessage
+                initialMessage: message
             ),
             handler: handler.pullback { [weak self] response in
                 let conversation = response.createConversation.conversation.fragments.conversationFragment

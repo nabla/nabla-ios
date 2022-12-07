@@ -7,11 +7,13 @@ class ConversationRepositoryImpl: ConversationRepository {
     init(
         remoteDataSource: ConversationRemoteDataSource,
         localDataSource: ConversationLocalDataSource,
-        fileUploadDataSource: FileUploadRemoteDataSource
+        fileUploadDataSource: FileUploadRemoteDataSource,
+        uuidGenerator: UUIDGenerator
     ) {
         self.remoteDataSource = remoteDataSource
         self.localDataSource = localDataSource
         self.fileUploadDataSource = fileUploadDataSource
+        self.uuidGenerator = uuidGenerator
     }
 
     // MARK: - Internal
@@ -73,26 +75,26 @@ class ConversationRepositoryImpl: ConversationRepository {
     }
     
     func createConversation(
+        message: MessageInput,
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> NablaCancellable {
         let umbrella = UmbrellaCancellable()
         
         let prepareTask = prepareInitialMessage(
-            initialMessage,
+            message,
             handler: .init { [weak umbrella, remoteDataSource] result in
                 guard let umbrella = umbrella, !umbrella.isCancelled else { return }
                 
                 switch result {
                 case let .failure(error):
                     handler(.failure(error))
-                case let .success(intialMessageInput):
+                case let .success(messageInput):
                     let createTask = remoteDataSource.createConversation(
+                        message: messageInput,
                         title: title,
                         providerIds: providerIds,
-                        initialMessage: intialMessageInput,
                         handler: handler
                             .pullbackError { error in
                                 switch error {
@@ -114,11 +116,11 @@ class ConversationRepositoryImpl: ConversationRepository {
         return umbrella
     }
     
-    func createDraftConversation(
+    func startConversation(
         title: String?,
         providerIds: [UUID]?
     ) -> Conversation {
-        let localConversation = localDataSource.createConversation(title: title, providerIds: providerIds)
+        let localConversation = localDataSource.startConversation(title: title, providerIds: providerIds)
         return ConversationTransformer.transform(conversation: localConversation)
     }
     
@@ -149,7 +151,8 @@ class ConversationRepositoryImpl: ConversationRepository {
     }
     
     // MARK: - Private
-    
+
+    private let uuidGenerator: UUIDGenerator
     private let remoteDataSource: ConversationRemoteDataSource
     private let localDataSource: ConversationLocalDataSource
     private let fileUploadDataSource: FileUploadRemoteDataSource
@@ -178,37 +181,38 @@ class ConversationRepositoryImpl: ConversationRepository {
             return Success(handler: handler, value: nil)
         }
         
+        let clientId = uuidGenerator.generate()
         switch message {
         case let .text(content):
-            let input = GQL.SendMessageInput(content: .init(textInput: .init(text: content)), clientId: .init())
+            let input = GQL.SendMessageInput(content: .init(textInput: .init(text: content)), clientId: clientId)
             return Success(handler: handler, value: input)
         case let .image(content):
             return fileUploadDataSource.upload(
                 file: transform(content),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(imageInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+                    .pullback { .init(content: .init(imageInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
             )
         case let .video(content):
             return fileUploadDataSource.upload(
                 file: transform(content),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(videoInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+                    .pullback { .init(content: .init(videoInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
             )
         case let .document(content):
             return fileUploadDataSource.upload(
                 file: transform(content),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(documentInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+                    .pullback { .init(content: .init(documentInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
             )
         case let .audio(content):
             return fileUploadDataSource.upload(
                 file: transform(content),
                 handler: handler
                     .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(audioInput: .init(upload: .init(uuid: $0))), clientId: .init()) }
+                    .pullback { .init(content: .init(audioInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
             )
         }
     }

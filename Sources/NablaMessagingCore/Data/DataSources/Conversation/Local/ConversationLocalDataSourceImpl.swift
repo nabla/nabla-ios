@@ -9,7 +9,7 @@ final class ConversationLocalDataSourceImpl: ConversationLocalDataSource {
         conversations.value[id]
     }
     
-    func createConversation(title: String?, providerIds: [UUID]?) -> LocalConversation {
+    func startConversation(title: String?, providerIds: [UUID]?) -> LocalConversation {
         let conversation = LocalConversation(
             id: .init(),
             remoteId: nil,

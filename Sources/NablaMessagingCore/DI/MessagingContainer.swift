@@ -20,14 +20,15 @@ public class MessagingContainer {
         coreContainer.logOutInteractor
     }
 
-    private(set) lazy var createConversationInteractor: CreateConversationInteractor = CreateConversationInteractorImpl(
-        authenticator: coreContainer.authenticator,
+    private(set) lazy var startConversationInteractor: StartConversationInteractor = StartConversationInteractorImpl(
         repository: conversationRepository
     )
-    
-    private(set) lazy var createDraftConversationInteractor: CreateDraftConversationInteractor = CreateDraftConversationInteractorImpl(
-        repository: conversationRepository
-    )
+
+    private(set) lazy var createConversationInteractor: CreateConversationInteractor
+        = CreateConversationInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: conversationRepository
+        )
 
     private(set) lazy var watchConversationItemsInteractor: WatchConversationItemsInteractor = WatchConversationItemsInteractorImpl(
         authenticator: coreContainer.authenticator,
@@ -88,7 +89,8 @@ public class MessagingContainer {
     private lazy var conversationRepository: ConversationRepository = ConversationRepositoryImpl(
         remoteDataSource: conversationRemoteDataSource,
         localDataSource: conversationLocalDataSource,
-        fileUploadDataSource: fileUploadRemoteDataSource
+        fileUploadDataSource: fileUploadRemoteDataSource,
+        uuidGenerator: coreContainer.uuidGenerator
     )
 
     private lazy var conversationItemRepository: ConversationItemRepository = ConversationItemRepositoryImpl(

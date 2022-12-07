@@ -9,13 +9,13 @@ protocol ConversationRepository {
     func watchConversations(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher
     
     func createConversation(
+        message: MessageInput,
         title: String?,
         providerIds: [UUID]?,
-        initialMessage: MessageInput?,
         handler: ResultHandler<Conversation, NablaError>
     ) -> NablaCancellable
     
-    func createDraftConversation(
+    func startConversation(
         title: String?,
         providerIds: [UUID]?
     ) -> Conversation

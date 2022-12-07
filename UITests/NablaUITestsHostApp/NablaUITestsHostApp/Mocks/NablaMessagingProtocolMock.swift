@@ -8,28 +8,28 @@ import NablaMessagingCore
 final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     func addRefetchTriggers(_: RefetchTrigger...) {}
 
-    var createConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, initialMessage: MessageInput?, Void)] = []
-    var createConversationClosure: ((_ title: String?, _ providerIds: [UUID]?, _ initialMessage: MessageInput?) async throws -> Conversation)?
+    var createConversationReceivedInvocations: [(message: MessageInput, title: String?, providerIds: [UUID]?, Void)] = []
+    var createConversationClosure: ((_ message: MessageInput, _ title: String?, _ providerIds: [UUID]?) async throws -> Conversation)?
     
     func createConversation(
+        message: MessageInput,
         title: String?,
-        providerIds: [UUID]?,
-        initialMessage: MessageInput?
+        providerIds: [UUID]?
     ) async throws -> Conversation {
-        createConversationReceivedInvocations.append((title: title, providerIds: providerIds, initialMessage: initialMessage, ()))
+        createConversationReceivedInvocations.append((message: message, title: title, providerIds: providerIds, ()))
         if let closure = createConversationClosure {
-            return try await closure(title, providerIds, initialMessage)
+            return try await closure(message, title, providerIds)
         } else {
             fatalError("Missing mock for \(#function)")
         }
     }
     
-    var createDraftConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, Void)] = []
-    var createDraftConversationClosure: ((_ title: String?, _ providerIds: [UUID]?) -> Conversation)?
+    var startConversationReceivedInvocations: [(title: String?, providerIds: [UUID]?, Void)] = []
+    var startConversationClosure: ((_ title: String?, _ providerIds: [UUID]?) -> Conversation)?
     
-    func createDraftConversation(title: String?, providerIds: [UUID]?) -> Conversation {
-        createDraftConversationReceivedInvocations.append((title: title, providerIds: providerIds, ()))
-        return createDraftConversationClosure?(title, providerIds) ?? Conversation.mock()
+    func startConversation(title: String?, providerIds: [UUID]?) -> Conversation {
+        startConversationReceivedInvocations.append((title: title, providerIds: providerIds, ()))
+        return startConversationClosure?(title, providerIds) ?? Conversation.mock()
     }
 
     var watchItemsReceivedInvocations: [(conversationId: UUID, Void)] = []
