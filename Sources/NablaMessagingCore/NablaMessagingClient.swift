@@ -13,13 +13,13 @@ public class NablaMessagingClient: NablaCore.MessagingClient {
     public let container: MessagingContainer
     
     /// Create a new conversation on behalf of the current user.
-    /// - Parameter message: initial message to be sent in the conversation.
+    /// - Parameter withMessage: initial message to be sent in the conversation.
     /// - Parameter title: optional - title for the conversation
     /// - Parameter providerIds: optional - list providers ids that will participate in the conversation. Make sure the specified providers have enough rights to participate to a conversation. See [Roles and Permissions](https://docs.nabla.com/docs/roles-and-permissions).
     /// - Returns: The created ``Conversation``
     /// - Throws: ``NablaError``
     public func createConversation(
-        message: MessageInput,
+        withMessage message: MessageInput,
         title: String? = nil,
         providerIds: [UUID]? = nil
     ) async throws -> Conversation {

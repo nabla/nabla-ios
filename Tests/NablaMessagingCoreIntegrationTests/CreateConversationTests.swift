@@ -17,7 +17,7 @@ class CreateConversationTests: XCTestCase {
             UUID(uuidString: "157C934B-6199-4B2B-9A83-5B06E76C04BE")!,
         ]
         env.session.beginRecording()
-        _ = try await env.messagingClient.createConversation(message: .text(content: "Hello"), title: nil, providerIds: nil)
+        _ = try await env.messagingClient.createConversation(withMessage: .text(content: "Hello"), title: nil, providerIds: nil)
         
         let endRecordingCompletion = expectation(description: "enRecording did complete")
         env.session.endRecording {
@@ -51,7 +51,7 @@ class CreateConversationTests: XCTestCase {
         watcher1.cancel()
         
         // 2 - Create conversation
-        let createdConversation = try await env.messagingClient.createConversation(message: .text(content: "Hello"))
+        let createdConversation = try await env.messagingClient.createConversation(withMessage: .text(content: "Hello"))
         
         // 3 - Observe conversations again
         let finalListDidLoad = expectation(description: "Final conversation list did load")

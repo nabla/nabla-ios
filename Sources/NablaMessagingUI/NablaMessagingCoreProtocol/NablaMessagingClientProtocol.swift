@@ -6,7 +6,7 @@ import NablaMessagingCore
 // sourcery: AutoMockable
 protocol NablaMessagingClientProtocol {
     func createConversation(
-        message: MessageInput,
+        withMessage message: MessageInput,
         title: String?,
         providerIds: [UUID]?
     ) async throws -> Conversation
@@ -61,32 +61,32 @@ extension NablaMessagingClientProtocol {
     }
     
     func createConversation(
-        message: MessageInput,
+        withMessage message: MessageInput,
         title: String?
     ) async throws -> Conversation {
         try await createConversation(
-            message: message,
+            withMessage: message,
             title: title,
             providerIds: nil
         )
     }
     
     func createConversation(
-        message: MessageInput,
+        withMessage message: MessageInput,
         providerIds: [UUID]?
     ) async throws -> Conversation {
         try await createConversation(
-            message: message,
+            withMessage: message,
             title: nil,
             providerIds: providerIds
         )
     }
     
     func createConversation(
-        message: MessageInput
+        withMessage message: MessageInput
     ) async throws -> Conversation {
         try await createConversation(
-            message: message,
+            withMessage: message,
             title: nil,
             providerIds: nil
         )

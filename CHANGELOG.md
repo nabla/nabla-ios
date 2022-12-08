@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Messaging Core: Renamed `createDraftConversation` to `startConversation`. It keeps the behavior of creating the conversation lazily when the patient sends the first message.
-- Messaging Core: `createConversation` now requires a `message` argument and should be used to start a conversation on behalf of the patient with a first message from them.
+- Messaging Core: `createConversation` now has a required `withMessage` argument and should be used to start a conversation on behalf of the patient with a first message from them.
 
 ### Fixed
 

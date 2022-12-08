@@ -12,7 +12,7 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     var createConversationClosure: ((_ message: MessageInput, _ title: String?, _ providerIds: [UUID]?) async throws -> Conversation)?
     
     func createConversation(
-        message: MessageInput,
+        withMessage message: MessageInput,
         title: String?,
         providerIds: [UUID]?
     ) async throws -> Conversation {
