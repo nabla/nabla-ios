@@ -61,6 +61,7 @@ extension AppointmentConfirmationViewController {
             view.numberOfLines = 0
             view.textColor = NablaTheme.AppointmentConfirmationTheme.captionTextColor
             view.font = NablaTheme.AppointmentConfirmationTheme.captionFont
+            view.setContentCompressionResistancePriority(.required, for: .horizontal)
             view.textAlignment = .center
             return view
         }()

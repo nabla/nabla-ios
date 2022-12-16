@@ -139,12 +139,15 @@ final class ComposerView: UIView {
     }()
 
     private lazy var borderedContainerView: UIView = {
+        let view = UIView()
         let stackView = UIStackView(arrangedSubviews: [mediaComposerView, textView])
         stackView.axis = .vertical
-        stackView.layer.cornerRadius = Constants.textViewMinHeight / 2
-        stackView.layer.borderWidth = 1
         // borderColor managed in `updateAppearance`
-        return stackView
+        view.addSubview(stackView)
+        stackView.nabla.pinToSuperView()
+        view.layer.cornerRadius = Constants.textViewMinHeight / 2
+        view.layer.borderWidth = 1
+        return view
     }()
     
     private lazy var textView: TextView = {
@@ -298,6 +301,7 @@ extension ComposerView: TextViewDelegate {
     func textViewDidChange(_: TextView) {
         sendButton.isEnabled = enableSendButton
         delegate?.composerViewDidUpdateTextDraft(self)
+        if textView.isScrollEnabled { layoutSubviews() }
     }
 }
 
