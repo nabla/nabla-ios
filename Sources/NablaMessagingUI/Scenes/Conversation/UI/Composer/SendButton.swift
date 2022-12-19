@@ -29,7 +29,7 @@ extension ComposerView {
         private var subscriptions = [AnyCancellable]()
         
         private func initialize() {
-            imageView?.nabla.pinToSuperView(insets: .nabla.all(4), priority: .defaultHigh)
+            imageView?.nabla.pinToSuperView(insets: .nabla.all(2), priority: .defaultHigh)
             imageView?.contentMode = .scaleAspectFit
             setTintColor(tintColor, for: .normal)
             

@@ -6,7 +6,7 @@ import SnapshotTesting
 import XCTest
 
 final class ComposerViewTests: XCTestCase {
-    private let size = CGSize(width: 320, height: 52)
+    private let size = CGSize(width: 320, height: 56)
     private var sut: ComposerView!
 
     override func setUp() {

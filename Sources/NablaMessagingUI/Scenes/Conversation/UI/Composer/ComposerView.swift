@@ -96,12 +96,9 @@ final class ComposerView: UIView {
     }
     
     private enum Constants {
-        static let controlsSize: CGFloat = 24
-        static let textViewMinHeight: CGFloat = 44
+        static let controlsSize: CGFloat = 32
+        static let textViewMinHeight: CGFloat = 32
         static let maximumHeight: CGFloat = 124
-        static let hStackSpacing: CGFloat = 4
-        static let hStackMargins: NSDirectionalEdgeInsets = .nabla.make(horizontal: Constants.unit * 4, vertical: Constants.unit)
-        private static let unit: CGFloat = 4
     }
     
     private var hasReachedMaximumHeight: Bool {
@@ -129,11 +126,11 @@ final class ComposerView: UIView {
                 sendButton,
             ]
         )
-        stackView.spacing = Constants.hStackSpacing
+        stackView.spacing = 0
         stackView.setCustomSpacing(8, after: recordAudioButton)
 
         container.addSubview(stackView)
-        stackView.nabla.pinToSuperView(insets: Constants.hStackMargins)
+        stackView.nabla.pinToSuperView(insets: .nabla.make(horizontal: 16, vertical: 12))
         
         return container
     }()

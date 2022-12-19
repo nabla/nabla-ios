@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Icon.svg",
+      "filename" : "videoCallActionRequestIconLight.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "videoCallActionRequestIconDark.svg",
       "idiom" : "universal"
     }
   ],
