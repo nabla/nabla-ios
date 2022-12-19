@@ -225,7 +225,7 @@ final class ComposerView: UIView {
         let presenter = AudioRecorderComposerPresenterImpl(viewContract: view, dependencies: .init(logger: logger))
         presenter.delegate = self
         view.presenter = presenter
-
+        view.nabla.constraintHeight(Constants.textViewMinHeight, relation: .greaterThanOrEqual)
         return view
     }()
 
