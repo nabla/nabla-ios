@@ -49,8 +49,6 @@ public extension NablaViews {
         }()
         
         private func setUp() {
-            layer.cornerRadius = 8
-            
             contentEdgeInsets = .nabla.all(16)
             
             addSubview(loadingIndicator)
@@ -60,6 +58,7 @@ public extension NablaViews {
         }
         
         private func updateAppearance() {
+            layer.cornerRadius = theme.cornerRadius
             titleLabel?.font = theme.font
             loadingIndicator.color = theme.textColor
             setTitleColor(theme.textColor, for: .normal)

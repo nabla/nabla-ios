@@ -111,6 +111,8 @@ public extension NablaTheme {
         /// Color used to display the duration of a voice message sent by another user  in the conversation screen (might be system or another patient).
         public static var audioMessageOtherTitleColor = Colors.Text.base
 
+        /// Icon for the video call action requests in the conversation screen.
+        public static var videoCallActionRequestIcon: UIImage = CoreAssets.Assets.videoCallActionRequestIcon.image
         /// Theme for the video call action requests button in the conversation screen.
         public static var videoCallActionRequestButton = Button.base
 

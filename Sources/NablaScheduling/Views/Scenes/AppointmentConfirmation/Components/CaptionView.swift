@@ -30,7 +30,7 @@ extension AppointmentConfirmationViewController {
         
         override func layoutSubviews() {
             super.layoutSubviews()
-            backgroundView.layer.cornerRadius = min(frame.height, frame.width) / 2
+            updateCaptionShape()
         }
         
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -82,6 +82,16 @@ extension AppointmentConfirmationViewController {
         
         private func updateAppearance() {
             backgroundView.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionBorderColor.cgColor
+            updateCaptionShape()
+        }
+        
+        private func updateCaptionShape() {
+            switch NablaTheme.AppointmentConfirmationTheme.captionShape {
+            case .capsule:
+                backgroundView.layer.cornerRadius = min(frame.height, frame.width) / 2
+            case let .rounderRect(cornerRadius):
+                backgroundView.layer.cornerRadius = cornerRadius
+            }
         }
     }
 }

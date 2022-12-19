@@ -61,7 +61,7 @@ final class TimeSlotGroupCell: UITableViewCell, Reusable {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = NablaTheme.TimeSlotPickerViewTheme.CellTheme.backgroundColor
-        view.layer.cornerRadius = 8
+        view.layer.cornerRadius = NablaTheme.TimeSlotPickerViewTheme.CellTheme.cornerRadius
         return view
     }()
     
@@ -127,7 +127,7 @@ final class TimeSlotGroupCell: UITableViewCell, Reusable {
         contentView.addSubview(containerView)
         containerView.nabla.pinToSuperView(
             edges: [.leading, .top, .trailing],
-            insets: .init(top: 16, leading: 16, bottom: 0, trailing: 16)
+            insets: .init(top: 12, leading: 16, bottom: 0, trailing: 16)
         )
         // We define the bottom constraint as `lessThanOrEqualTo` with a lower priority to improve the open/close animation
         let bottomConstraint = containerView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor)

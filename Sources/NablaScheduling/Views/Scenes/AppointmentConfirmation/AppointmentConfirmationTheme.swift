@@ -7,6 +7,8 @@ public extension NablaTheme {
         public static var backgroundColor = Colors.Background.underCard
         /// Background color for the appointment confirmation header view.
         public static var headerBackgroundColor = Colors.Fill.card
+        /// Background color for the appointment confirmation header view.
+        public static var headerCornerRadius = CGFloat(12)
         
         /// Color used to display the name of the doctor.
         public static var doctorNameColor = Colors.Text.base
@@ -34,6 +36,8 @@ public extension NablaTheme {
         public static var captionBackgroundColor: UIColor = .nabla.dynamic(lightMode: Colors.Fill.accentSubdued, darkMode: Colors.Fill.accent)
         /// Color used for the border of the capsule to display appointment time.
         public static var captionBorderColor: UIColor = Colors.Stroke.accent
+        /// Shape used for the border of the capsule to display appointment time.
+        public static var captionShape: CaptionShape = .capsule
         /// Font used for the text of the capsule to display appointment time.
         public static var captionFont = Fonts.bodyMedium
         
@@ -41,5 +45,10 @@ public extension NablaTheme {
         public static var checkbox = Checkbox.base
         /// Style of the button to confirm the appointment.
         public static var confirmButton = Button.accent
+        
+        public enum CaptionShape {
+            case capsule
+            case rounderRect(cornerRadius: CGFloat)
+        }
     }
 }

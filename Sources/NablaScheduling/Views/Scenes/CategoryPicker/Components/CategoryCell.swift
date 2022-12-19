@@ -26,7 +26,7 @@ final class CategoryCell: UITableViewCell, Reusable {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = NablaTheme.CategoryPickerViewTheme.CellTheme.backgroundColor
-        view.layer.cornerRadius = 12
+        view.layer.cornerRadius = NablaTheme.CategoryPickerViewTheme.CellTheme.cornerRadius
         return view
     }()
     
@@ -58,7 +58,7 @@ final class CategoryCell: UITableViewCell, Reusable {
         hstack.nabla.pinToSuperView(insets: .nabla.all(12))
         
         contentView.addSubview(containerView)
-        containerView.nabla.pinToSuperView(insets: .init(top: 8, leading: 16, bottom: 0, trailing: 16))
+        containerView.nabla.pinToSuperView(insets: .init(top: 12, leading: 16, bottom: 0, trailing: 16))
     }
     
     override func setSelected(_: Bool, animated _: Bool) {

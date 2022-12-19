@@ -55,7 +55,7 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.image = CoreAssets.Assets.videoCallActionRequestIcon.image
+        view.image = NablaTheme.Conversation.videoCallActionRequestIcon
         return view
     }()
     

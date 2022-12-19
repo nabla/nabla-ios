@@ -35,7 +35,8 @@ public enum NablaTheme {
             textColor: Colors.ButtonText.onBase,
             highlightedTextColor: Colors.ButtonText.onBaseHighlighted,
             disabledTextColor: Colors.ButtonText.onBaseDisabled,
-            font: Fonts.subtitleMedium
+            font: Fonts.subtitleMedium,
+            cornerRadius: 8
         )
         
         public static var accent = NablaViews.PrimaryButton.Theme(
@@ -45,7 +46,8 @@ public enum NablaTheme {
             textColor: Colors.ButtonText.onAccent,
             highlightedTextColor: Colors.ButtonText.onAccentHighlighted,
             disabledTextColor: Colors.ButtonText.onAccentDisabled,
-            font: Fonts.subtitleMedium
+            font: Fonts.subtitleMedium,
+            cornerRadius: 8
         )
         
         public static var accentSubdued = NablaViews.PrimaryButton.Theme(
@@ -55,7 +57,8 @@ public enum NablaTheme {
             textColor: Colors.ButtonText.onAccentSubdued,
             highlightedTextColor: Colors.ButtonText.onAccentSubduedHighlighted,
             disabledTextColor: Colors.ButtonText.onAccentSubduedDisabled,
-            font: Fonts.subtitleMedium
+            font: Fonts.subtitleMedium,
+            cornerRadius: 8
         )
     }
     

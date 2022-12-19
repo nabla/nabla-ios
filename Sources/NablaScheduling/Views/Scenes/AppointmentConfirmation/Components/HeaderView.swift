@@ -72,7 +72,7 @@ extension AppointmentConfirmationViewController {
         
         private func setUp() {
             backgroundColor = NablaTheme.AppointmentConfirmationTheme.headerBackgroundColor
-            layer.cornerRadius = 12
+            layer.cornerRadius = NablaTheme.AppointmentConfirmationTheme.headerCornerRadius
             
             let vstack = UIStackView(arrangedSubviews: [avatarView, titleLabel, subtitleLabel, captionView])
             vstack.axis = .vertical

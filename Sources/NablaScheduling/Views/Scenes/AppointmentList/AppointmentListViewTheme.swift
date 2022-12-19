@@ -15,6 +15,8 @@ public extension NablaTheme {
         public static var button = Button.accent
         
         public enum CellTheme {
+            /// Corner radius used for the background of an appointment cell.
+            public static var cornerRadius = CGFloat(14)
             /// Color used for the background of an appointment cell.
             public static var backgroundColor = Colors.Fill.card
             /// Color used for the name of the doctor of an upcoming appointment.

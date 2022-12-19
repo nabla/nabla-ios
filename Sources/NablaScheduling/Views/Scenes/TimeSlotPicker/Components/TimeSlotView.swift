@@ -51,10 +51,10 @@ final class TimeSlotView: UIControl {
     
     private func setUp() {
         layer.borderWidth = 1
-        layer.cornerRadius = 8
+        layer.cornerRadius = NablaTheme.TimeSlotPickerViewTheme.CellTheme.ButtonTheme.cornerRadius
         
         addSubview(label)
-        label.nabla.pinToSuperView(insets: .nabla.all(6))
+        label.nabla.pinToSuperView(insets: NablaTheme.TimeSlotPickerViewTheme.CellTheme.ButtonTheme.insets)
         
         addTarget(self, action: #selector(tapHandler), for: .touchUpInside)
     }

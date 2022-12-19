@@ -32,7 +32,7 @@ xcassets:
         enumName: CoreAssets
         imageTypeName: CoreImageAsset
         imageAliasName: CoreImageAssetAlias
-        publicAccess: true
+        publicAccess: false
         bundle: NablaMessagingUIPackage.resourcesBundle
 ## Generate constants for your storyboards and XIBs.
 ##   This one generates 2 output files, one containing the storyboard scenes, and another for the segues.

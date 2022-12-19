@@ -9,6 +9,7 @@ class NavigationController: UINavigationController {
     override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
         rootViewController.navigationItem.nabla.addLeftBarButtonItem(closeButton)
+        nabla.withOpaqueNavigationBarBackground()
     }
     
     @available(*, unavailable)

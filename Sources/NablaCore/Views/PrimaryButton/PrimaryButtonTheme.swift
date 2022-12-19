@@ -9,6 +9,7 @@ public extension NablaViews.PrimaryButton {
         public var highlightedTextColor: UIColor
         public var disabledTextColor: UIColor
         public var font: UIFont
+        public var cornerRadius: CGFloat
         
         public init(
             backgroundColor: UIColor,
@@ -17,7 +18,8 @@ public extension NablaViews.PrimaryButton {
             textColor: UIColor,
             highlightedTextColor: UIColor,
             disabledTextColor: UIColor,
-            font: UIFont
+            font: UIFont,
+            cornerRadius: CGFloat
         ) {
             self.backgroundColor = backgroundColor
             self.highlightedBackgroundColor = highlightedBackgroundColor
@@ -26,6 +28,7 @@ public extension NablaViews.PrimaryButton {
             self.highlightedTextColor = highlightedTextColor
             self.disabledTextColor = disabledTextColor
             self.font = font
+            self.cornerRadius = cornerRadius
         }
     }
 }

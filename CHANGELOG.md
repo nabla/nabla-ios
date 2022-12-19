@@ -8,11 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added NablaTheme `PrimaryButtonTheme.cornerRadius` property.
+- Added NablaTheme `AppointmentListViewTheme.CellTheme.cornerRadius` property.
+- Added NablaTheme `CategoryPickerViewTheme.CellTheme.cornerRadius` property.
+- Added NablaTheme `TimeSlotPickerViewTheme.CellTheme.cornerRadius` property.
+- Added NablaTheme `TimeSlotPickerViewTheme.CellTheme.insets` property.
+- Added NablaTheme `TimeSlotPickerViewTheme.CellTheme.ButtonTheme.cornerRadius` property.
+- Added NablaTheme `AppointmentConfirmationTheme.headerCornerRadius` property.
+- Added NablaTheme `AppointmentConfirmationTheme.captionShape` property.
+- Added NablaTheme `Conversation.videoCallActionRequestIcon` property.
+
+
 ### Changed
+
+- Changed spacings between cards in the apointment list, apointment category list and time slot list.
 
 ### Fixed
 
 - Fixed some UI layout issues in the Conversation screen composer and in the Scheduling confirmation screen.
+- Fixed the color of the chat's content appearing below the composer in Messaging UI module.
+- Fixed a bug where some view controllers would override the global `UINavigationBar.appearance()`.
+
 
 ## [1.0.0-alpha28] - 2022-12-13
 

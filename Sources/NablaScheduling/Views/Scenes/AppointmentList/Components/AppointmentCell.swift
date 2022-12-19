@@ -32,7 +32,7 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = NablaTheme.AppointmentListViewTheme.CellTheme.backgroundColor
-        view.layer.cornerRadius = 14
+        view.layer.cornerRadius = NablaTheme.AppointmentListViewTheme.CellTheme.cornerRadius
         return view
     }()
     
@@ -100,7 +100,7 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
         vstack.nabla.pinToSuperView(insets: .nabla.all(16))
         
         contentView.addSubview(containerView)
-        containerView.nabla.pinToSuperView(insets: .nabla.make(horizontal: 16, vertical: 8), priority: .defaultHigh)
+        containerView.nabla.pinToSuperView(insets: .init(top: 12, leading: 16, bottom: 0, trailing: 16), priority: .defaultHigh)
     }
     
     private func setUpViewModel() {

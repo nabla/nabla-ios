@@ -37,7 +37,7 @@ final class AppointmentListViewController: UIViewController {
     private var selectedCategory: Category?
     
     private enum Constants {
-        static let headerHeight = CGFloat(63)
+        static let headerHeight = CGFloat(47)
     }
     
     // MARK: Life cycle
@@ -133,7 +133,7 @@ final class AppointmentListViewController: UIViewController {
         view.backgroundColor = NablaTheme.AppointmentListViewTheme.backgroundColor
         
         headerContainer.addSubview(segmentedControl)
-        segmentedControl.nabla.pinToSuperView(insets: .nabla.all(16))
+        segmentedControl.nabla.pinToSuperView(insets: .init(top: 16, leading: 16, bottom: 0, trailing: 16))
         
         view.addSubview(tableView)
         tableView.nabla.pin(to: view.safeAreaLayoutGuide)

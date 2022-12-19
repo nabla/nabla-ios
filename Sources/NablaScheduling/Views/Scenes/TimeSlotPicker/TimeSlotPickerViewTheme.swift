@@ -10,6 +10,8 @@ public extension NablaTheme {
         public static var button = Button.accent
         
         public enum CellTheme {
+            /// Corner radius of the background of the cell for a day in the time slot picker view.
+            public static var cornerRadius = CGFloat(8)
             /// Color of the background of the cell for a day in the time slot picker view.
             public static var backgroundColor = Colors.Fill.card
             /// Color of the date of a day in the time slot picker view.
@@ -24,6 +26,10 @@ public extension NablaTheme {
             public static var indicatorColor = Colors.Text.subdued
             
             public enum ButtonTheme {
+                /// Corner radius of the time slot buttons.
+                public static var cornerRadius = CGFloat(8)
+                /// Insets of the time slot buttons.
+                public static var insets = NSDirectionalEdgeInsets.nabla.all(6)
                 /// Background color of a time slot time when not selected.
                 public static var backgroundColor = UIColor.clear
                 /// Border color of a time slot time when not selected.

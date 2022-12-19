@@ -43,22 +43,17 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         navigationItem.titleView = navigationItem.titleView ?? titleView
         navigationItem.largeTitleDisplayMode = .never
         
-        // Use the default appearance background
-        // But enforce using `configureWithOpaqueBackground` because the navbar is not able to detect the correct scroll position of `FlippedCollectionView`
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithDefaultBackground()
-        let backgroundEffect = appearance.backgroundEffect
-        let backgroundColor = appearance.backgroundColor
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundEffect = backgroundEffect
-        appearance.backgroundColor = backgroundColor
-        navigationItem.compactAppearance = appearance
-        navigationItem.standardAppearance = appearance
-        navigationItem.scrollEdgeAppearance = appearance
+        let scrollEdgeAppearance = navigationItem.scrollEdgeAppearance
+            ?? UINavigationBar.appearance().scrollEdgeAppearance?.copy()
+            ?? UINavigationBarAppearance()
+        scrollEdgeAppearance.configureWithDefaultBackground()
+        navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
     }
     
     private func setUp() {
-        view.backgroundColor = NablaTheme.Conversation.backgroundColor
+        // The background of the chat is set on the `collectionView`.
+        // We use the `composerBackgroundColor` here because of safe area, `self.view` is visble under the composer.
+        view.backgroundColor = NablaTheme.Conversation.composerBackgroundColor
     }
 
     // MARK: - Internal
