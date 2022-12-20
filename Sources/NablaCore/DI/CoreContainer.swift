@@ -1,5 +1,8 @@
 import Apollo
 import Foundation
+#if canImport(ApolloSQLite)
+    import ApolloSQLite
+#endif
 
 public class CoreContainer {
     // MARK: - Public
@@ -140,7 +143,18 @@ public class CoreContainer {
         webSocketTransport: webSocketTransport
     )
     
-    private lazy var apolloStore: ApolloStore = .init()
+    private lazy var apolloStore: ApolloStore = {
+        if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+            let documentsURL = URL(fileURLWithPath: documentsPath)
+            let sqliteFileURL = documentsURL.appendingPathComponent("nabla_apollo.sqlite")
+            if let sqliteCache = try? SQLiteNormalizedCache(fileURL: sqliteFileURL) {
+                return .init(cache: sqliteCache)
+            } else {
+                logger.error(message: "Error initializing SQLite cache, cache will be in memory only and won't be persisted.")
+            }
+        }
+        return .init()
+    }()
 
     private lazy var userLocalDataSource: UserLocalDataSource = UserLocalDataSourceImpl(
         logger: logger,

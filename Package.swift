@@ -48,6 +48,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloWebSocket", package: "apollo-ios"),
+                .product(name: "ApolloSQLite", package: "apollo-ios"),
                 .product(name: "Sentry", package: "Sentry"),
             ],
             exclude: [
