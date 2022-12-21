@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha29] - 2022-12-21
+
+### Added
+
 - Enable cache persistence on disk for network calls in Messaging and Scheduling modules.
 - Added NablaTheme `PrimaryButtonTheme.cornerRadius` property.
 - Added NablaTheme `AppointmentListViewTheme.CellTheme.cornerRadius` property.
