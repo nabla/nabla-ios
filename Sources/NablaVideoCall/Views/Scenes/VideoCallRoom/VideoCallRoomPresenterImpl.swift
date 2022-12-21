@@ -234,9 +234,9 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
         remoteUserSerialQueue.sync {
             var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
             if let videoTrack = track as? VideoTrack {
-                remoteUser.videoTrack = videoTrack
+                remoteUser.videoTracks.append(videoTrack)
             } else if let audioTrack = track as? AudioTrack {
-                remoteUser.audioTrack = audioTrack
+                remoteUser.audioTracks.append(audioTrack)
             }
             self.remoteUser = remoteUser
         }
@@ -245,10 +245,10 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
     func room(_: Room, participant: RemoteParticipant, didUnpublish publication: RemoteTrackPublication) {
         remoteUserSerialQueue.sync {
             var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
-            if publication.track is VideoTrack {
-                remoteUser.videoTrack = nil
-            } else if publication.track is AudioTrack {
-                remoteUser.audioTrack = nil
+            if let videoTrack = publication.track as? VideoTrack {
+                remoteUser.videoTracks.removeAll(where: { $0.sid == videoTrack.sid })
+            } else if let audioTrack = publication.track as? AudioTrack {
+                remoteUser.audioTracks.removeAll(where: { $0.sid == audioTrack.sid })
             }
             self.remoteUser = remoteUser
         }
@@ -306,6 +306,7 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
 
 private protocol User {
     func getVideoTrack() -> VideoTrack?
+    func getAudioTrack() -> AudioTrack?
 }
 
 private struct LocalUser: User {
@@ -322,16 +323,24 @@ private struct LocalUser: User {
     func getVideoTrack() -> VideoTrack? {
         videoMuted ? nil : videoTrack
     }
+    
+    func getAudioTrack() -> AudioTrack? {
+        audioMuted ? nil : audioTrack
+    }
 }
 
 private struct RemoteUser: User {
     let participant: RemoteParticipant
-    var videoTrack: VideoTrack?
+    var videoTracks = [VideoTrack]()
     var videoMuted: Bool = false
-    var audioTrack: AudioTrack?
+    var audioTracks = [AudioTrack]()
     var audioMuted: Bool = false
     
     func getVideoTrack() -> VideoTrack? {
-        videoMuted ? nil : videoTrack
+        videoMuted ? nil : videoTracks.last
+    }
+    
+    func getAudioTrack() -> AudioTrack? {
+        audioMuted ? nil : audioTracks.last
     }
 }
