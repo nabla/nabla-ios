@@ -42,6 +42,7 @@ final class LoadingButton: UIControl {
     
     private lazy var loadingIndicator: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView()
+        view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.startAnimating()
         return view
     }()

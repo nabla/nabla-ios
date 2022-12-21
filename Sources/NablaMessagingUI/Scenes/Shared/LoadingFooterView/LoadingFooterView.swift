@@ -1,4 +1,5 @@
 import Foundation
+import NablaCore
 import UIKit
 
 class LoadingFooterView: UIView {
@@ -23,6 +24,7 @@ class LoadingFooterView: UIView {
     
     private func setup() {
         let activityIndicatorView = UIActivityIndicatorView(style: .medium)
+        activityIndicatorView.color = NablaTheme.Shared.loadingViewIndicatorTintColor
         activityIndicatorView.startAnimating()
         addSubview(activityIndicatorView)
         activityIndicatorView.nabla.constraintToCenterInSuperView()

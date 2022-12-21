@@ -63,7 +63,7 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
         let view = UILabel()
         view.text = L10n.videoCallActionRequestTitle
         view.textColor = NablaTheme.Conversation.textMessageProviderTextColor
-        view.font = NablaTheme.Fonts.bodyMedium
+        view.font = NablaTheme.Fonts.subtitleMedium
         view.numberOfLines = 1
         view.nabla.constraintHeight(24)
         return view

@@ -54,6 +54,7 @@ struct TestEnvironment {
             session: session,
             mockUUIDGenerator: mockUUIDGenerator
         )
+        nablaClient.logOut() // Clears persisted data
         nablaClient.authenticate(userId: userId, provider: env)
         return env
     }

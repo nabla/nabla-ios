@@ -125,6 +125,7 @@ final class AppointmentListViewController: UIViewController {
     
     private lazy var loadingView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .large)
+        view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.startAnimating()
         return view
     }()

@@ -45,6 +45,7 @@ public extension NablaViews {
         private lazy var loadingIndicator: UIActivityIndicatorView = {
             let view = UIActivityIndicatorView()
             view.hidesWhenStopped = true
+            view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
             return view
         }()
         

@@ -104,6 +104,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
     
     private func createLoadingIndicator() -> UIActivityIndicatorView {
         let view = UIActivityIndicatorView(style: .large)
+        view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.startAnimating()
         return view
     }

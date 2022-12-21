@@ -26,5 +26,9 @@ final class LoadingView: UIView {
     
     // MARK: - Private
     
-    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
+        return view
+    }()
 }

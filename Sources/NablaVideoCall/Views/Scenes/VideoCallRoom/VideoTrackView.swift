@@ -3,6 +3,7 @@
 #else
     import LiveKit
 #endif
+import NablaCore
 import UIKit
 
 class VideoTrackView: UIView {
@@ -36,8 +37,8 @@ class VideoTrackView: UIView {
     
     private let spinner: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .large)
+        view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.startAnimating()
-        view.color = .systemBlue
         return view
     }()
     

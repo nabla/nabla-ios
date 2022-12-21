@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed some UI layout issues in the Conversation screen composer and in the Scheduling confirmation screen.
 - Fixed the color of the chat's content appearing below the composer in Messaging UI module.
 - Fixed a bug where some view controllers would override the global `UINavigationBar.appearance()`.
+- All spinners now use the `NablaTheme.Shared.loadingViewIndicatorTintColor` color.
 
 
 ## [1.0.0-alpha28] - 2022-12-13
