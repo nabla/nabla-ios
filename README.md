@@ -36,7 +36,7 @@ And then run `pod install` to update your project.
 
 ## Sample app
 
-You can find an example of a basic integration of the Messaging UI SDK in our [demo app](https://github.com/nabla/nabla-ios/tree/main/Example/NablaExampleApp).
+You can find an example of a basic integration of the Messaging UI SDK in our [demo app](https://github.com/nabla/nabla-ios/tree/main/Sample/MessagingSampleApp).
 
 ## Need more help?
 
