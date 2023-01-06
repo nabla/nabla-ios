@@ -37,11 +37,11 @@ struct TestEnvironment {
                 logger: ConsoleLogger()
             ),
             networkConfiguration: networkConfiguration,
+            urlSessionClient: MockURLSessionClient(session: session),
+            deviceLocalDataSource: deviceLocalDataSource,
+            uuidGenerator: mockUUIDGenerator,
             modules: []
         )
-        coreContainer.urlSessionClient = MockURLSessionClient(session: session)
-        coreContainer.deviceLocalDataSource = deviceLocalDataSource
-        coreContainer.uuidGenerator = mockUUIDGenerator
         let nablaClient = NablaClient(
             apiKey: "test-api-key",
             container: coreContainer
@@ -78,10 +78,10 @@ extension TestEnvironment: SessionTokenProvider {
     func provideTokens(forUserId _: String, completion: (AuthTokens?) -> Void) {
         completion(
             .init(
-                // Expires 14/08/2054
-                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MjY3MDMyMDAwMywic2Vzc2lvbl91dWlkIjoiMjllNmU5MjUtZWNlMy00Mjg2LWFiOTAtOTE1OTkyMWY1OGIyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.g3hCledHFjNce6n6lAV9fksIWIM92oXHUyu-6DkNQIE",
-                // Expires 12/11/2054
-                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IlJlZnJlc2giLCJleHAiOjI2NzgwOTU3MDMsInNlc3Npb25fdXVpZCI6IjI5ZTZlOTI1LWVjZTMtNDI4Ni1hYjkwLTkxNTk5MjFmNThiMiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.jW3WaRblAX9roCULLxai8-cwGS6OBENgvoZzu_lGn7Y"
+                // Expires 17/09/2054
+                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjEyNjcwNTc2MjExLCJzZXNzaW9uX3V1aWQiOiJjZGUwOTY0NS01YzM0LTQyYmQtYmQxYS0zMWYwYzExMDYzMTMiLCJvcmdhbml6YXRpb25TdHJpbmdJZCI6Im5hYmxhIn0.9oR2z4ZLJTYMS-v7ZihACwa30eKdDRn4giGYoxgqrK0",
+                // Expires 17/09/2054
+                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJSZWZyZXNoIiwiZXhwIjoyNjc4MzUxOTExLCJzZXNzaW9uX3V1aWQiOiJjZGUwOTY0NS01YzM0LTQyYmQtYmQxYS0zMWYwYzExMDYzMTMiLCJvcmdhbml6YXRpb25TdHJpbmdJZCI6Im5hYmxhIn0.6OqBNXTC-2dj30WKDq7oyVHkTPAFm_NkJeZE1Zh3Bls"
             )
         )
     }

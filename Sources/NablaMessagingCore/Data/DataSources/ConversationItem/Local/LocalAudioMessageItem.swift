@@ -6,7 +6,7 @@ struct LocalAudioMessageItem: LocalMediaConversationMessage {
     let date: Date
     var sendingState: ConversationMessageSendingState
     let replyToUuid: UUID?
-    let content: LocalMediaMessageItemContent<AudioFile>
+    var content: LocalMediaMessageItemContent<AudioFile>
     var isUploaded: Bool {
         content.uploadUuid != nil
     }

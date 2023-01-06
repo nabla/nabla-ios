@@ -4,12 +4,10 @@ import NablaCore
 final class VideoCallContainer {
     // MARK: - Internal
     
-    var logger: Logger { coreContainer.logger }
-    var errorReporter: ErrorReporter { coreContainer.errorReporter }
-
+    let logger: Logger
+    let errorReporter: ErrorReporter
     let networkConfiguration: NetworkConfiguration
-    
-    let currentVideoCallInteractor = CurrentVideoCallInteractor()
+    let currentVideoCallInteractor: CurrentVideoCallInteractor
     
     // MARK: Initializer
     
@@ -19,6 +17,10 @@ final class VideoCallContainer {
     ) {
         self.coreContainer = coreContainer
         self.networkConfiguration = networkConfiguration
+        
+        logger = coreContainer.logger
+        errorReporter = coreContainer.errorReporter
+        currentVideoCallInteractor = CurrentVideoCallInteractor()
     }
     
     // MARK: - Private

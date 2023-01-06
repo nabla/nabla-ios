@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -6,116 +7,112 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
 
     init(
         gqlClient: GQLClient,
-        asyncGqlClient: AsyncGQLClient,
         gqlStore: GQLStore
     ) {
         self.gqlClient = gqlClient
-        self.asyncGqlClient = asyncGqlClient
         self.gqlStore = gqlStore
     }
     
     // MARK: - Internal
     
-    func createConversation(
-        message: GQL.SendMessageInput?,
-        title: String?,
-        providerIds: [UUID]?,
-        handler: ResultHandler<RemoteConversation, GQLError>
-    ) -> NablaCancellable {
-        gqlClient.perform(
+    func createConversation(message: GQL.SendMessageInput?, title: String?, providerIds: [UUID]?) async throws -> RemoteConversation {
+        let response = try await gqlClient.perform(
             mutation: GQL.CreateConversationMutation(
                 title: title,
                 providerIds: providerIds,
                 initialMessage: message
-            ),
-            handler: handler.pullback { [weak self] response in
-                let conversation = response.createConversation.conversation.fragments.conversationFragment
-                self?.appendToCache(conversation: conversation)
-                return conversation
-            }
+            )
         )
+        let conversation = response.createConversation.conversation.fragments.conversationFragment
+        try await appendToCache(conversation: conversation)
+        return conversation
     }
     
-    /// - Throws: ``GQLError``
     func setIsTyping(_ isTyping: Bool, conversationId: UUID) async throws {
-        _ = try await asyncGqlClient.perform(
+        _ = try await gqlClient.perform(
             mutation: GQL.SetTypingMutation(conversationId: conversationId, isTyping: isTyping)
         )
     }
     
-    /// - Throws: ``GQLError``
     func markConversationAsSeen(conversationId: UUID) async throws {
-        _ = try await asyncGqlClient.perform(mutation: GQL.MaskAsSeenMutation(conversationId: conversationId))
+        _ = try await gqlClient.perform(mutation: GQL.MaskAsSeenMutation(conversationId: conversationId))
     }
     
-    func watchConversation(
-        _ conversationId: UUID,
-        handler: ResultHandler<RemoteConversation, GQLError>
-    ) -> Watcher {
+    func watchConversation(_ conversationId: UUID) -> AnyPublisher<RemoteConversation, GQLError> {
         gqlClient.watch(
             query: GQL.GetConversationQuery(id: conversationId),
-            cachePolicy: .returnCacheDataAndFetch,
-            handler: handler.pullback { $0.conversation.conversation.fragments.conversationFragment }
+            policy: .returnCacheDataAndFetch
         )
+        .map(\.conversation.conversation.fragments.conversationFragment)
+        .eraseToAnyPublisher()
     }
     
-    func watchConversations(handler: ResultHandler<RemoteConversationList, GQLError>) -> PaginatedWatcher {
-        ConversationListWatcher(
-            gqlClient: gqlClient,
-            gqlStore: gqlStore,
-            numberOfItemsPerPage: Constants.numberOfItemsPerPage,
-            handler: handler
+    func watchConversations() -> AnyPublisher<PaginatedList<RemoteConversation>, GQLError> {
+        let watcher = gqlClient.watch(
+            query: Constants.conversationsRootQuery,
+            policy: .fetchIgnoringCacheData
         )
-    }
-    
-    func subscribeToConversationsEvents(
-        handler: ResultHandler<RemoteConversationsEvent, GQLError>
-    ) -> NablaCancellable {
-        gqlClient.subscribe(
-            subscription: GQL.ConversationsEventsSubscription(),
-            handler: .init { [weak self] result in
-                guard let self = self else {
-                    return
-                }
-                switch result {
-                case let .failure(error):
-                    handler(.failure(error))
-                case let .success(data):
-                    guard let event = data.conversations?.event else {
-                        return
-                    }
-                    self.handleConversationsEvent(event)
-                    handler(.success(event))
-                }
+        
+        let makeLoadMore: (String?) -> () async throws -> Void = { [weak self] cursor in
+            {
+                guard let self = self else { return }
+                let response = try await self.gqlClient.fetch(
+                    query: Constants.conversationsQuery(forCursor: cursor),
+                    policy: .fetchIgnoringCacheCompletely
+                )
+                try await self.handleLoadMoreConversations(data: response)
             }
-        )
+        }
+        
+        return watcher
+            .map { data in
+                let sortedConversations = data.conversations.conversations
+                    .map(\.fragments.conversationFragment)
+                    .nabla.sorted(\.updatedAt, using: >)
+                return PaginatedList(
+                    elements: sortedConversations,
+                    loadMore: data.conversations.hasMore ? makeLoadMore(data.conversations.nextCursor) : nil
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func subscribeToConversationsEvents() -> AnyPublisher<RemoteConversationsEvent, Never> {
+        gqlClient.subscribe(subscription: GQL.ConversationsEventsSubscription())
+            .compactMap { $0.conversations?.event }
+            .handleEvents(receiveOutput: { event in
+                Task { [weak self] in
+                    try await self?.handleConversationsEvent(event)
+                }
+            })
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Private
     
     private enum Constants {
         static let numberOfItemsPerPage = 50
-        static let conversationsRootQuery = GQL.GetConversationsQuery(
-            page: .init(cursor: nil, numberOfItems: numberOfItemsPerPage)
-        )
-    }
-    
-    private let gqlClient: GQLClient
-    private let asyncGqlClient: AsyncGQLClient
-    private let gqlStore: GQLStore
-    
-    private func handleConversationsEvent(_ event: RemoteConversationsEvent) {
-        if let conversationCreatedEvent = event.asConversationCreatedEvent {
-            appendToCache(
-                conversation: conversationCreatedEvent.conversation.fragments.conversationFragment
-            )
-        } else if let conversationDeletedEvent = event.asConversationDeletedEvent {
-            removeFromCache(conversationId: conversationDeletedEvent.conversationId)
+        static let conversationsRootQuery = conversationsQuery(forCursor: nil)
+        static func conversationsQuery(forCursor cursor: String??) -> GQL.GetConversationsQuery {
+            GQL.GetConversationsQuery(page: .init(cursor: cursor, numberOfItems: numberOfItemsPerPage))
         }
     }
     
-    private func appendToCache(conversation: GQL.ConversationFragment) {
-        gqlStore.updateCache(
+    private let gqlClient: GQLClient
+    private let gqlStore: GQLStore
+    
+    private func handleConversationsEvent(_ event: RemoteConversationsEvent) async throws {
+        if let conversationCreatedEvent = event.asConversationCreatedEvent {
+            try await appendToCache(
+                conversation: conversationCreatedEvent.conversation.fragments.conversationFragment
+            )
+        } else if let conversationDeletedEvent = event.asConversationDeletedEvent {
+            try await removeFromCache(conversationId: conversationDeletedEvent.conversationId)
+        }
+    }
+    
+    private func appendToCache(conversation: GQL.ConversationFragment) async throws {
+        try await gqlStore.updateCache(
             for: Constants.conversationsRootQuery,
             onlyIfExists: true,
             body: { cache in
@@ -128,40 +125,29 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
                     return
                 }
                 
-                cache.conversations.conversations.append(.init(unsafeResultMap: conversation.resultMap))
-            },
-            completion: { _ in }
+                cache.conversations.conversations.insert(.init(unsafeResultMap: conversation.resultMap), at: 0)
+            }
         )
     }
     
-    private func removeFromCache(conversationId: UUID) {
-        gqlStore.updateCache(
+    private func removeFromCache(conversationId: UUID) async throws {
+        try await gqlStore.updateCache(
             for: Constants.conversationsRootQuery,
             onlyIfExists: true,
             body: { cache in
                 cache.conversations.conversations.removeAll(where: { $0.fragments.conversationFragment.id == conversationId })
-            },
-            completion: { _ in }
+            }
         )
     }
-}
-
-extension GQL.GetConversationsQuery: PaginatedQuery {
-    public static func getCursor(from data: Data) -> String? {
-        data.conversations.nextCursor
-    }
-}
-
-private class ConversationListWatcher: GQLPaginatedWatcher<GQL.GetConversationsQuery> {
-    // MARK: - Initializer
     
-    override func makeQuery(cursor: String??, numberOfItems: Int) -> GQL.GetConversationsQuery {
-        GQL.GetConversationsQuery(page: .init(cursor: cursor, numberOfItems: numberOfItems))
-    }
-    
-    override func updateCache(_ cache: inout RemoteConversationList, withAdditionalData data: RemoteConversationList) {
-        cache.conversations.conversations.append(contentsOf: data.conversations.conversations)
-        cache.conversations.hasMore = data.conversations.hasMore
-        cache.conversations.nextCursor = data.conversations.nextCursor
+    private func handleLoadMoreConversations(data: RemoteConversationList) async throws {
+        try await gqlStore.updateCache(
+            for: Constants.conversationsRootQuery,
+            onlyIfExists: true
+        ) { (cache: inout RemoteConversationList) in
+            cache.conversations.conversations.append(contentsOf: data.conversations.conversations)
+            cache.conversations.hasMore = data.conversations.hasMore
+            cache.conversations.nextCursor = data.conversations.nextCursor
+        }
     }
 }

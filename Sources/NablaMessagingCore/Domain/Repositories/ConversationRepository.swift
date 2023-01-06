@@ -1,19 +1,20 @@
+import Combine
 import Foundation
 import NablaCore
 
 protocol ConversationRepository {
     func getConversationTransientId(from id: UUID) -> TransientUUID
     
-    func watchConversation(withId conversationId: TransientUUID, handler: ResultHandler<Conversation, NablaError>) -> Watcher
+    func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<Conversation, NablaError>
     
-    func watchConversations(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher
+    func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError>
     
+    /// - Throws: ``NablaError``
     func createConversation(
         message: MessageInput,
         title: String?,
-        providerIds: [UUID]?,
-        handler: ResultHandler<Conversation, NablaError>
-    ) -> NablaCancellable
+        providerIds: [UUID]?
+    ) async throws -> Conversation
     
     func startConversation(
         title: String?,

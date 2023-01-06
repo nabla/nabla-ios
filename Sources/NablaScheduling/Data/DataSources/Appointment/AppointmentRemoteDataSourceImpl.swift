@@ -12,7 +12,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         }
     }
     
-    func subscribeToAppointmentsEvents() -> AnyPublisher<RemoteAppointmentsEvent, GQLError> {
+    func subscribeToAppointmentsEvents() -> AnyPublisher<RemoteAppointmentsEvent, Never> {
         gqlClient.subscribe(subscription: GQL.AppointmentsEventsSubscription())
             .compactMap(\.appointments?.event)
             .handleEvents(receiveOutput: { [weak self] event in
@@ -21,7 +21,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
             .eraseToAnyPublisher()
     }
     
-    /// Throws `GQLError`
+    /// - Throws: ``GQLError``
     func scheduleAppointment(categoryId: UUID, providerId: UUID, date: Date) async throws -> RemoteAppointment {
         let response = try await gqlClient.perform(
             mutation: GQL.ScheduleAppointmentMutation(
@@ -36,7 +36,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         return fragment
     }
     
-    /// Throws `GQLError`
+    /// - Throws: ``GQLError``
     func cancelAppointment(withId appointmentId: UUID) async throws {
         let response = try await gqlClient.perform(mutation: GQL.CancelAppointmentMutation(appointmentId: appointmentId))
         try await remove(appointmentWithId: response.cancelAppointment.appointmentUuid)
@@ -45,8 +45,8 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     // MARK: Init
     
     init(
-        gqlClient: AsyncGQLClient,
-        gqlStore: AsyncGQLStore
+        gqlClient: GQLClient,
+        gqlStore: GQLStore
     ) {
         self.gqlClient = gqlClient
         self.gqlStore = gqlStore
@@ -54,8 +54,8 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     // MARK: - Private
     
-    private let gqlClient: AsyncGQLClient
-    private let gqlStore: AsyncGQLStore
+    private let gqlClient: GQLClient
+    private let gqlStore: GQLStore
     
     private enum Queries {
         // TODO: Refactor backend to use the same query for both and avoid code duplicate
@@ -78,7 +78,8 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     private func watchUpcomingAppointments() -> AnyPublisher<PaginatedList<RemoteAppointment>, GQLError> {
         gqlClient.watch(
-            query: Queries.getUpcomingAppointmentsRootQuery
+            query: Queries.getUpcomingAppointmentsRootQuery,
+            policy: .returnCacheDataAndFetch
         )
         .map { response -> PaginatedList<RemoteAppointment> in
             let data = response.upcomingAppointments.data.map(\.fragments.appointmentFragment)
@@ -101,7 +102,8 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     private func watchFinalizedAppointments() -> AnyPublisher<PaginatedList<RemoteAppointment>, GQLError> {
         gqlClient.watch(
-            query: Queries.getFinalizedAppointmentsRootQuery
+            query: Queries.getFinalizedAppointmentsRootQuery,
+            policy: .returnCacheDataAndFetch
         )
         .map { response -> PaginatedList<RemoteAppointment> in
             let data = response.pastAppointments.data.map(\.fragments.appointmentFragment)
@@ -125,7 +127,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     private func fetchMoreUpcomingAppointments(cursor: String) async throws {
         let response = try await gqlClient.fetch(
             query: Queries.getUpcomingAppointmentsQuery(cursor: cursor),
-            cachePolicy: .fetchIgnoringCacheCompletely
+            policy: .fetchIgnoringCacheCompletely
         )
         
         try await gqlStore.updateCache(
@@ -140,7 +142,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     private func fetchMoreFinalizedAppointments(cursor: String) async throws {
         let response = try await gqlClient.fetch(
             query: Queries.getFinalizedAppointmentsQuery(cursor: cursor),
-            cachePolicy: .fetchIgnoringCacheCompletely
+            policy: .fetchIgnoringCacheCompletely
         )
         
         try await gqlStore.updateCache(

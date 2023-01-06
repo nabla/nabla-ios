@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -23,78 +24,101 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     // MARK: - ConversationItemRepository
     
     func watchConversationItems(
-        ofConversationWithId conversationId: TransientUUID,
-        handler: ResultHandler<ConversationItems, NablaError>
-    ) -> PaginatedWatcher {
-        let merger = ConversationItemsMerger(
-            conversationId: conversationId,
-            remoteDataSource: itemsRemoteDataSource,
-            localDataSource: itemsLocalDataSource,
-            logger: logger,
-            handler: handler.pullbackError(GQLErrorTransformer.transform)
-        )
-        merger.resume()
+        ofConversationWithId conversationId: TransientUUID
+    ) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+        let localData = itemsLocalDataSource
+            .watchConversationItems(ofConversationWithId: conversationId.localId)
+            .setFailureType(to: NablaError.self)
         
-        let holder = PaginatedWatcherAndSubscriptionHolder(watcher: merger)
+        let remoteData = conversationId.observeRemoteId()
+            .map { [itemsRemoteDataSource] remoteConversationId -> AnyPublisher<PaginatedList<RemoteConversationItem>, NablaError> in
+                if let remoteConversationId = remoteConversationId {
+                    return itemsRemoteDataSource
+                        .watchConversationItems(ofConversationWithId: remoteConversationId)
+                        .mapError(GQLErrorTransformer.transform(gqlError:))
+                        .eraseToAnyPublisher()
+                } else {
+                    return Just(PaginatedList<RemoteConversationItem>.empty)
+                        .setFailureType(to: NablaError.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .nabla.switchToLatest()
+            .eraseToAnyPublisher()
         
-        let eventsSubscription = makeOrReuseConversationEventsSubscription(for: conversationId)
-        holder.hold(eventsSubscription)
+        var subscriber: Any? = makeOrReuseConversationEventsSubscription(for: conversationId)
+        assert(subscriber != nil) // Silences "Variable `subscriber` was written to, but never read" warning
         
-        return holder
+        return Publishers.CombineLatest(localData, remoteData)
+            .map { [logger] localData, remoteData -> PaginatedList<ConversationItem> in
+                let items = Self.merge(remoteData.elements, localData, logger: logger)
+                return PaginatedList(
+                    elements: items,
+                    loadMore: remoteData.loadMore
+                )
+            }
+            .handleEvents(receiveCancel: {
+                subscriber = nil
+            })
+            .eraseToAnyPublisher()
     }
     
+    private static func merge(_ remoteItems: [RemoteConversationItem], _ localItems: [LocalConversationItem], logger: Logger) -> [ConversationItem] {
+        var localItemsByClientId = localItems.nabla.toDictionary(\.clientId)
+        let transformer = RemoteConversationItemTransformer(logger: logger)
+        
+        var mergedItems = remoteItems.compactMap { remoteItem -> ConversationItem? in
+            guard let clientId = remoteItem.clientId else {
+                return transformer.transform(remoteItem)
+            }
+            if let localItem = localItemsByClientId[clientId] {
+                localItemsByClientId.removeValue(forKey: localItem.clientId)
+                // Always use the remote item as source of truth.
+                // Come change this when we support editing messages locally.
+                return transformer.transform(remoteItem)
+            }
+            return transformer.transform(remoteItem)
+        }
+        let localTransformer = LocalConversationItemTransformer(existingItems: mergedItems)
+        let localOnlyItems = localItemsByClientId.values.compactMap(localTransformer.transform(_:))
+        mergedItems.append(contentsOf: localOnlyItems)
+        return mergedItems.nabla.sorted(\.date, using: >)
+    }
+    
+    /// - Throws: ``NablaError``
     func sendMessage(
         _ messageInput: MessageInput,
         replyToMessageId: UUID?,
-        inConversationWithId conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable {
+        inConversationWithId conversationId: TransientUUID
+    ) async throws {
         let localMessage = makeLocalConversationMessage(
             for: messageInput,
             replyToMessageId: replyToMessageId,
             inConversationWithId: conversationId.localId
         )
         itemsLocalDataSource.addConversationItem(localMessage)
-        return makeRemoteMessageAndThenSend(
-            localConversationMessage: localMessage,
-            conversationId: conversationId,
-            handler: handler
+        let preparedMessage = try await prepare(localConversationMessage: localMessage)
+        try await sendMessage(
+            existingLocalConversationMessage: preparedMessage,
+            inConversationWithId: conversationId
         )
     }
     
+    /// - Throws: ``NablaError``
     func retrySending(
         itemWithId itemId: UUID,
-        inConversationWithId conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable {
-        guard let localConversationMessage = itemsLocalDataSource.getConversationItem(
+        inConversationWithId conversationId: TransientUUID
+    ) async throws {
+        guard let localMessage = itemsLocalDataSource.getConversationItem(
             withClientId: itemId
         ) as? LocalConversationMessage else {
-            return Failure(handler: handler, error: MessageNotFoundError())
+            throw MessageNotFoundError()
         }
-        
-        if let mediaMessage = localConversationMessage as? LocalMediaConversationMessage,
-           !mediaMessage.isUploaded {
-            return makeRemoteMessageAndThenSend(
-                localConversationMessage: localConversationMessage,
-                conversationId: conversationId,
-                handler: handler
-            )
-        } else {
-            if let remoteId = conversationId.remoteId {
-                return performSend(
-                    localConversationMessage,
-                    inConversationWithId: remoteId,
-                    handler: handler
-                )
-            } else {
-                return performCreateWithInitialMessage(
-                    localConversationMessage,
-                    inConversationWithId: conversationId,
-                    handler: handler
-                )
-            }
-        }
+        let preparedMessage = try await prepare(localConversationMessage: localMessage)
+        try await sendMessage(
+            existingLocalConversationMessage: preparedMessage,
+            inConversationWithId: conversationId
+        )
     }
     
     /// - Throws: ``NablaError``
@@ -121,17 +145,18 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private let logger: Logger
     
     private var conversationEventsSubscriptions = [UUID: Weak<ConversationItemsSubscriber>]()
-    private var conversationsBeingCreated = Set<UUID>()
-    private var toBeSentMessageHandlers = [UUID: ResultHandler<Void, NablaError>]()
-    private var postponedSendMessageActions = [NablaCancellable]()
+    private var conversationsBeingCreated = [UUID: Task<Void, Error>]()
     
-    private func makeOrReuseConversationEventsSubscription(for conversationId: TransientUUID) -> NablaCancellable {
-        // Always store and find subscriptions by `localId` because it immutable and non-null
+    private func makeOrReuseConversationEventsSubscription(for conversationId: TransientUUID) -> Cancellable {
+        // Always store and find subscriptions by `localId` because it is immutable and non-null
         if let subscription = conversationEventsSubscriptions[conversationId.localId]?.value {
             return subscription
         }
         
-        let subscription = ConversationItemsSubscriber(conversationId: conversationId, itemsRemoteDataSource: itemsRemoteDataSource, handler: .void)
+        let subscription = ConversationItemsSubscriber(
+            conversationId: conversationId,
+            itemsRemoteDataSource: itemsRemoteDataSource
+        )
         conversationEventsSubscriptions[conversationId.localId] = .init(value: subscription)
         return subscription
     }
@@ -254,250 +279,194 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         }
     }
     
-    private func updateLocalConversationMessage(
-        _ localConversationMessage: LocalConversationMessage,
-        with remoteMessageInput: RemoteMessageInput
-    ) -> LocalConversationMessage {
-        switch remoteMessageInput {
-        case let .text(content):
-            return LocalTextMessageItem(
-                conversationId: localConversationMessage.conversationId,
-                clientId: localConversationMessage.clientId,
-                date: localConversationMessage.date,
-                sendingState: .toBeSent,
-                replyToUuid: localConversationMessage.replyToUuid,
-                content: content
-            )
-        case let .image(uploadedImage):
-            return LocalImageMessageItem(
-                conversationId: localConversationMessage.conversationId,
-                clientId: localConversationMessage.clientId,
-                date: localConversationMessage.date,
-                sendingState: .toBeSent,
-                replyToUuid: localConversationMessage.replyToUuid,
-                content: .init(media: uploadedImage.media, uploadUuid: uploadedImage.fileUploadUUID)
-            )
-        case let .video(uploadedVideo):
-            return LocalVideoMessageItem(
-                conversationId: localConversationMessage.conversationId,
-                clientId: localConversationMessage.clientId,
-                date: localConversationMessage.date,
-                sendingState: .toBeSent,
-                replyToUuid: localConversationMessage.replyToUuid,
-                content: .init(media: uploadedVideo.media, uploadUuid: uploadedVideo.fileUploadUUID)
-            )
-        case let .document(uploadedDocument):
-            return LocalDocumentMessageItem(
-                conversationId: localConversationMessage.conversationId,
-                clientId: localConversationMessage.clientId,
-                date: localConversationMessage.date,
-                sendingState: .toBeSent,
-                replyToUuid: localConversationMessage.replyToUuid,
-                content: .init(media: uploadedDocument.media, uploadUuid: uploadedDocument.fileUploadUUID)
-            )
-        case let .audio(uploadedAudio):
-            return LocalAudioMessageItem(
-                conversationId: localConversationMessage.conversationId,
-                clientId: localConversationMessage.clientId,
-                date: localConversationMessage.date,
-                sendingState: .toBeSent,
-                replyToUuid: localConversationMessage.replyToUuid,
-                content: .init(media: uploadedAudio.media, uploadUuid: uploadedAudio.fileUploadUUID)
-            )
+    /// - Throws: ``NablaError``
+    private func prepare(
+        localConversationMessage: LocalConversationMessage
+    ) async throws -> LocalConversationMessage {
+        do {
+            let prepared = try await performPrepare(localConversationItem: localConversationMessage)
+            itemsLocalDataSource.updateConversationItem(prepared)
+            return prepared
+        } catch let error as NablaError {
+            var copy = localConversationMessage
+            copy.sendingState = .failed
+            itemsLocalDataSource.updateConversationItem(copy)
+            throw error
+        } catch {
+            var copy = localConversationMessage
+            copy.sendingState = .failed
+            itemsLocalDataSource.updateConversationItem(copy)
+            throw InternalError(underlyingError: error)
         }
     }
     
-    private func makeRemoteMessageAndThenSend(
-        localConversationMessage: LocalConversationMessage,
-        conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> UmbrellaCancellable {
-        let umbrella = UmbrellaCancellable()
-        let task = makeRemoteMessageInput(
-            from: localConversationMessage,
-            handler: .init { [weak self, weak umbrella] result in
-                guard let self = self, let umbrella = umbrella, !umbrella.isCancelled else { return }
-                
-                switch result {
-                case let .success(remoteMessage):
-                    let task = self.sendMessage(
-                        remoteMessage,
-                        existingLocalConversationMessage: localConversationMessage,
-                        inConversationWithId: conversationId,
-                        handler: handler
-                    )
-                    umbrella.add(task)
-                case let .failure(error):
-                    var copy = localConversationMessage
-                    copy.sendingState = .failed
-                    self.itemsLocalDataSource.updateConversationItem(copy)
-                    handler(.failure(error))
-                }
-            }
-        )
-        umbrella.add(task)
-        return umbrella
+    /// - Throws: ``NablaError``
+    private func upload(media: Media) async throws -> UUID {
+        do {
+            return try await fileUploadRemoteDataSource.upload(file: transform(media))
+        } catch let error as FileUploadRemoteDataSourceError {
+            throw Self.transformFileUploadError(error)
+        } catch {
+            throw InternalError(underlyingError: error)
+        }
     }
     
-    private func makeRemoteMessageInput(
-        from localConversationItem: LocalConversationItem,
-        handler: ResultHandler<RemoteMessageInput, NablaError>
-    ) -> NablaCancellable {
+    /// - Throws: ``NablaError``
+    private func performPrepare(
+        localConversationItem: LocalConversationMessage
+    ) async throws -> LocalConversationMessage {
         if let localTextItem = localConversationItem as? LocalTextMessageItem {
-            return Success(handler: handler, value: .text(localTextItem.content))
+            return localTextItem
         } else if let localImageItem = localConversationItem as? LocalImageMessageItem {
-            let media = localImageItem.content.media
-            return fileUploadRemoteDataSource.upload(
-                file: transform(media),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError)
-                    .pullback { .image(.init(fileUploadUUID: $0, media: media)) }
-            )
+            if localImageItem.content.uploadUuid != nil {
+                return localImageItem
+            } else {
+                var copy = localImageItem
+                copy.content.uploadUuid = try await upload(media: copy.content.media)
+                return copy
+            }
         } else if let localDocumentItem = localConversationItem as? LocalDocumentMessageItem {
-            let media = localDocumentItem.content.media
-            return fileUploadRemoteDataSource.upload(
-                file: transform(media),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError)
-                    .pullback { .document(.init(fileUploadUUID: $0, media: media)) }
-            )
+            if localDocumentItem.content.uploadUuid != nil {
+                return localDocumentItem
+            } else {
+                var copy = localDocumentItem
+                copy.content.uploadUuid = try await upload(media: copy.content.media)
+                return copy
+            }
         } else if let localAudioItem = localConversationItem as? LocalAudioMessageItem {
-            let media = localAudioItem.content.media
-            return fileUploadRemoteDataSource.upload(
-                file: transform(media),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError)
-                    .pullback { .audio(.init(fileUploadUUID: $0, media: media)) }
-            )
+            if localAudioItem.content.uploadUuid != nil {
+                return localAudioItem
+            } else {
+                var copy = localAudioItem
+                copy.content.uploadUuid = try await upload(media: copy.content.media)
+                return copy
+            }
         } else if let localVideoItem = localConversationItem as? LocalVideoMessageItem {
-            let media = localVideoItem.content.media
-            return fileUploadRemoteDataSource.upload(
-                file: transform(media),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError)
-                    .pullback { .video(.init(fileUploadUUID: $0, media: media)) }
-            )
+            if localVideoItem.content.uploadUuid != nil {
+                return localVideoItem
+            } else {
+                var copy = localVideoItem
+                copy.content.uploadUuid = try await upload(media: copy.content.media)
+                return copy
+            }
         }
         
         logger.error(message: "Unknown local conversation item", extra: ["type": type(of: localConversationItem)])
-        return Failure(handler: handler, error: InvalidMessageError())
+        throw InvalidMessageError()
     }
     
+    /// - Throws: ``NablaError``
     private func sendMessage(
-        _ remoteMessage: RemoteMessageInput,
         existingLocalConversationMessage localConversationMessage: LocalConversationMessage,
-        inConversationWithId conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable {
-        let updatedLocalConversationMessage = updateLocalConversationMessage(localConversationMessage, with: remoteMessage)
-        itemsLocalDataSource.updateConversationItem(updatedLocalConversationMessage)
+        inConversationWithId conversationId: TransientUUID
+    ) async throws {
+        var copy = localConversationMessage
+        if let creationTask = conversationsBeingCreated[conversationId.localId] {
+            // If conversation is being created, postpone sending the message until it's done.
+            copy.sendingState = .toBeSent
+            itemsLocalDataSource.updateConversationItem(copy)
+            _ = await creationTask.result
+        }
+        
         if let remoteId = conversationId.remoteId {
-            return performSend(
-                updatedLocalConversationMessage,
-                inConversationWithId: remoteId,
-                handler: handler
+            return try await performSend(
+                copy,
+                inConversationWithId: remoteId
             )
         } else {
-            return performCreateWithInitialMessage(
-                updatedLocalConversationMessage,
-                inConversationWithId: conversationId,
-                handler: handler
-            )
+            let initialMessage = copy
+            let creationTask = Task {
+                try await performCreateWithInitialMessage(
+                    initialMessage,
+                    inConversationWithId: conversationId
+                )
+            }
+            conversationsBeingCreated[conversationId.localId] = creationTask
+            switch await creationTask.result {
+            case .success: break
+            case let .failure(error): throw error
+            }
         }
     }
     
+    /// - Throws: ``NablaError``
     private func performSend(
         _ localConversationMessage: LocalConversationMessage,
-        inConversationWithId conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable {
+        inConversationWithId conversationId: UUID
+    ) async throws {
         guard let sendInput = makeSendInput(for: localConversationMessage) else {
-            return Failure(handler: handler, error: InvalidMessageError())
+            throw InvalidMessageError()
         }
         
         var copy = localConversationMessage
         copy.sendingState = .sending
         itemsLocalDataSource.updateConversationItem(copy)
         
-        return itemsRemoteDataSource.send(
-            remoteMessageInput: sendInput,
-            conversationId: conversationId,
-            handler: .init { [weak self] result in
-                switch result {
-                case let .failure(error):
-                    var copy = localConversationMessage
-                    copy.sendingState = .failed
-                    self?.itemsLocalDataSource.updateConversationItem(copy)
-                    
-                    handler(.failure(GQLErrorTransformer.transform(gqlError: error)))
-                case .success:
-                    var copy = localConversationMessage
-                    copy.sendingState = .sent
-                    self?.itemsLocalDataSource.updateConversationItem(copy)
-                    
-                    handler(.success(()))
-                }
-            }
-        )
+        do {
+            try await itemsRemoteDataSource.send(
+                remoteMessageInput: sendInput,
+                conversationId: conversationId
+            )
+            var copy = localConversationMessage
+            copy.sendingState = .sent
+            itemsLocalDataSource.updateConversationItem(copy)
+        } catch let error as GQLError {
+            var copy = localConversationMessage
+            copy.sendingState = .failed
+            itemsLocalDataSource.updateConversationItem(copy)
+            throw GQLErrorTransformer.transform(gqlError: error)
+        } catch {
+            var copy = localConversationMessage
+            copy.sendingState = .failed
+            itemsLocalDataSource.updateConversationItem(copy)
+            throw InternalError(underlyingError: error)
+        }
     }
     
+    /// - Throws: ``NablaError``
     private func performCreateWithInitialMessage(
         _ localConversationMessage: LocalConversationMessage,
-        inConversationWithId conversationId: TransientUUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable {
+        inConversationWithId conversationId: TransientUUID
+    ) async throws {
         guard let sendInput = makeSendInput(for: localConversationMessage) else {
-            return Failure(handler: handler, error: InvalidMessageError())
+            throw InvalidMessageError()
+        }
+        
+        if let remoteId = conversationId.remoteId {
+            // Last minute check in case the conversation has been created since previous checks
+            try await performSend(localConversationMessage, inConversationWithId: remoteId)
         }
         
         var copy = localConversationMessage
-        if conversationsBeingCreated.contains(conversationId.localId) {
-            // If conversation is being created, postpone sending the message until it's done.
-            copy.sendingState = .toBeSent
-            itemsLocalDataSource.updateConversationItem(copy)
-            toBeSentMessageHandlers[copy.clientId] = handler
-            return Success(handler: handler)
-        } else if let remoteId = conversationId.remoteId {
-            // Last minute check in case the conversation has been created since previous checks
-            return performSend(localConversationMessage, inConversationWithId: remoteId, handler: handler)
-        } else {
-            conversationsBeingCreated.insert(conversationId.localId)
-            copy.sendingState = .sending
-            itemsLocalDataSource.updateConversationItem(copy)
-        }
+        copy.sendingState = .sending
+        itemsLocalDataSource.updateConversationItem(copy)
         
         let localConversation = conversationLocalDataSource.getConversation(withId: conversationId.localId)
         if localConversation == nil {
             logger.warning(message: "Will create a conversation with an initial message, but the corresponding local conversation was not found.")
         }
         
-        return conversationRemoteDataSource
-            .createConversation(
-                message: sendInput,
-                title: localConversation?.title,
-                providerIds: localConversation?.providerIds,
-                handler: .init { [weak self] result in
-                    switch result {
-                    case let .failure(error):
-                        self?.conversationsBeingCreated.remove(conversationId.localId)
-                        
-                        self?.markDraftConversationPendingMessagesAsFailed(conversationId: conversationId)
-                        
-                        handler(.failure(GQLErrorTransformer.transform(gqlError: error)))
-                    case let .success(remoteConversation):
-                        self?.conversationsBeingCreated.remove(conversationId.localId)
-                        
-                        var copy = localConversationMessage
-                        copy.sendingState = .sent
-                        self?.itemsLocalDataSource.updateConversationItem(copy)
-                        
-                        self?.updateLocalConversation(conversationId: conversationId, with: remoteConversation)
-                        self?.sendDraftConversationPendingMessages(conversationId: conversationId)
-                        
-                        handler(.success(()))
-                    }
-                }
-            )
+        do {
+            let remoteConversation = try await conversationRemoteDataSource
+                .createConversation(
+                    message: sendInput,
+                    title: localConversation?.title,
+                    providerIds: localConversation?.providerIds
+                )
+            
+            var copy = localConversationMessage
+            copy.sendingState = .sent
+            itemsLocalDataSource.updateConversationItem(copy)
+            
+            updateLocalConversation(conversationId: conversationId, with: remoteConversation)
+        } catch let error as GQLError {
+            markDraftConversationPendingMessagesAsFailed(conversationId: conversationId)
+            throw GQLErrorTransformer.transform(gqlError: error)
+        } catch {
+            markDraftConversationPendingMessagesAsFailed(conversationId: conversationId)
+            throw InternalError(underlyingError: error)
+        }
+        conversationsBeingCreated.removeValue(forKey: conversationId.localId)
     }
     
     private func updateLocalConversation(conversationId: TransientUUID, with remoteConversation: RemoteConversation) {
@@ -519,23 +488,6 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             updatedItems.append(messageItem)
         }
         itemsLocalDataSource.updateConversationItems(updatedItems)
-    }
-    
-    private func sendDraftConversationPendingMessages(conversationId: TransientUUID) {
-        guard let conversationRemoteId = conversationId.remoteId else {
-            logger.error(message: "sendDraftConversationPendingMessages must be called after the conversation has been created.")
-            return
-        }
-        let pendingItems = itemsLocalDataSource.getConversationItems(ofConversationWithId: conversationId.localId)
-        for item in pendingItems {
-            guard
-                let messageItem = item as? LocalConversationMessage,
-                messageItem.sendingState == .toBeSent || messageItem.sendingState == .failed
-            else { continue }
-            let handler = toBeSentMessageHandlers[item.clientId] ?? .void
-            let action = performSend(messageItem, inConversationWithId: conversationRemoteId, handler: handler)
-            postponedSendMessageActions.append(action)
-        }
     }
     
     private static func transformFileUploadError(_ error: FileUploadRemoteDataSourceError) -> NablaError {
@@ -563,20 +515,17 @@ private struct Weak<T: AnyObject> {
     weak var value: T?
 }
 
-private class ConversationItemsSubscriber: NablaCancellable {
+private class ConversationItemsSubscriber: Cancellable {
     func cancel() {
         subscription?.cancel()
-        remoteIdObserver?.cancel()
     }
     
     init(
         conversationId: TransientUUID,
-        itemsRemoteDataSource: ConversationItemRemoteDataSource,
-        handler: ResultHandler<RemoteConversationEvent, GQLError>
+        itemsRemoteDataSource: ConversationItemRemoteDataSource
     ) {
         self.conversationId = conversationId
         self.itemsRemoteDataSource = itemsRemoteDataSource
-        self.handler = handler
         
         beginSubscription()
     }
@@ -587,19 +536,16 @@ private class ConversationItemsSubscriber: NablaCancellable {
     
     private let conversationId: TransientUUID
     private let itemsRemoteDataSource: ConversationItemRemoteDataSource
-    private let handler: ResultHandler<RemoteConversationEvent, GQLError>
     
-    private var remoteIdObserver: NablaCancellable?
-    private var subscription: NablaCancellable?
+    private var subscription: AnyCancellable?
     
     private func beginSubscription() {
-        if let remoteId = conversationId.remoteId {
-            subscription = itemsRemoteDataSource.subscribeToConversationItemsEvents(ofConversationWithId: remoteId, handler: handler)
-        } else {
-            remoteIdObserver = conversationId.observeRemoteId { [weak self] remoteId in
-                guard let self = self else { return }
-                self.subscription = self.itemsRemoteDataSource.subscribeToConversationItemsEvents(ofConversationWithId: remoteId, handler: self.handler)
+        subscription = conversationId.observeRemoteId()
+            .compactMap { $0 }
+            .map { [itemsRemoteDataSource] remoteId -> AnyPublisher<RemoteConversationEvent, Never> in
+                itemsRemoteDataSource.subscribeToConversationItemsEvents(ofConversationWithId: remoteId)
             }
-        }
+            .switchToLatest()
+            .nabla.sink()
     }
 }

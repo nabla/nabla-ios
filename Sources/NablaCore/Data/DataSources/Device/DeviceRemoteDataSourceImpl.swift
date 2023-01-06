@@ -3,12 +3,13 @@ import Foundation
 final class DeviceRemoteDataSourceImpl: DeviceRemoteDataSource {
     // MARK: - Internal
     
-    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<RemoteDevice, GQLError>) -> NablaCancellable {
+    /// - Throws: ``GQLError``
+    func updateOrRegisterDevice(installation: Installation) async throws -> RemoteDevice {
         let input = makeDeviceInput(installation: installation)
-        return gqlClient.perform(
-            mutation: GQL.RegisterOrUpdateDeviceMutation(deviceId: installation.deviceId, input: input),
-            handler: handler.pullback { $0.registerOrUpdateDevice }
+        let response = try await gqlClient.perform(
+            mutation: GQL.RegisterOrUpdateDeviceMutation(deviceId: installation.deviceId, input: input)
         )
+        return response.registerOrUpdateDevice
     }
     
     // MARK: Init

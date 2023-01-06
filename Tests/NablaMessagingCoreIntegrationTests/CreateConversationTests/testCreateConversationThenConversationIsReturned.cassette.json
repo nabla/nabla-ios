@@ -1,88 +1,7 @@
 {
   "interactions" : [
     {
-      "recorded_at" : 1670319831.998673,
       "response" : {
-        "status" : 200,
-        "headers" : {
-          "Content-Length" : "375",
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "x-nabla-cloudregion" : "EU_WEST1",
-          "X-Request-ID" : "324adaba-6543-45ed-b759-16acf2fdb01b",
-          "Vary" : "Origin",
-          "Connection" : "keep-alive",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "Date" : "Tue, 06 Dec 2022 09:43:51 GMT",
-          "Server" : "ktor-server-core\/1.6.2"
-        },
-        "body" : {
-          "data" : {
-            "registerOrUpdateDevice" : {
-              "deviceId" : "8a3d228c-fdf2-43bc-b7a1-4db9ea23b580",
-              "sentry" : {
-                "env" : "dev",
-                "dsn" : "https:\/\/fa2c462be7f24bd7a510258fac2be401@sentry.nabla.com\/11",
-                "__typename" : "Sentry"
-              },
-              "__typename" : "UpdateDeviceOutput"
-            }
-          }
-        },
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
-      },
-      "request" : {
-        "method" : "POST",
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "headers" : {
-          "X-Nabla-SDK-Version" : "1.0.0-alpha26",
-          "Content-Type" : "application\/json",
-          "Accept-Language" : "en",
-          "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "X-APOLLO-OPERATION-NAME" : "registerOrUpdateDevice",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "apollographql-client-version" : "13.3.1-20076",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY3MDMyMDAwMywic2Vzc2lvbl91dWlkIjoiMjllNmU5MjUtZWNlMy00Mjg2LWFiOTAtOTE1OTkyMWY1OGIyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.Zqz342iip8TJY_OGwYik_EEMz73GostQDhA52zyAaGg",
-          "X-Nabla-API-Key" : "test-api-key",
-          "X-Nabla-SDK-Platform" : "ios"
-        },
-        "body" : {
-          "variables" : {
-            "input" : {
-              "codeVersion" : 42,
-              "os" : "IOS",
-              "deviceModel" : "Mocked: Simulator",
-              "osVersion" : "Mocked: iOS13",
-              "sdkModules" : [
-
-              ]
-            },
-            "deviceId" : null
-          },
-          "query" : "mutation registerOrUpdateDevice($deviceId: UUID, $input: DeviceInput!) {\n  registerOrUpdateDevice(deviceId: $deviceId, device: $input) {\n    __typename\n    deviceId\n    sentry {\n      __typename\n      env\n      dsn\n    }\n  }\n}",
-          "operationName" : "registerOrUpdateDevice",
-          "Tests-Request-Index" : 0
-        }
-      }
-    },
-    {
-      "recorded_at" : 1670319832.6586771,
-      "response" : {
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "headers" : {
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "X-Request-ID" : "fe43b5ff-6648-42b1-b55a-0267a4bdfc7e",
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "Connection" : "keep-alive",
-          "Content-Length" : "19652",
-          "x-nabla-cloudregion" : "EU_WEST1",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "Vary" : "Origin",
-          "Date" : "Tue, 06 Dec 2022 09:43:51 GMT",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "Server" : "ktor-server-core\/1.6.2"
-        },
         "body" : {
           "data" : {
             "conversations" : {
@@ -91,492 +10,12 @@
               "conversations" : [
                 {
                   "subtitle" : null,
-                  "id" : "d4f8988f-a156-4261-90f5-7354fcd5c699",
+                  "id" : "ab703c2e-eb26-4ffe-ac9c-51140f36be2c",
                   "inboxPreviewTitle" : "Ask us anything",
                   "title" : null,
                   "isLocked" : false,
                   "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:42:34.613+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "dfe8ff67-2dea-4779-9fac-ec5257cbe982",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:39:47.273+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "3bd1784b-64c1-4c01-95c5-e85479850280",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:36:30.691+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "e8c445ab-2f25-4def-8781-0a68c8da1392",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:36:17.271+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "c8281a75-1098-433a-b1a6-2766692799ee",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:34:28.874+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "f3d54fa5-0ca0-460d-a097-8bdc984e3264",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:32:26.298+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "0fa44224-954a-4abe-9275-2ef3a5abebd6",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:32:06.023+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "d1ab2a55-f78d-409b-b119-60ad2b8aa9db",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:30:20.888+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "97bb1790-386d-4ea9-b250-0f301c3ec1e4",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:57:16.641+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "f0679e93-5234-45d4-b256-e383f079a778",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:56:58.241+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "2e2a7584-1c95-45b5-aeca-668b7d68f5ab",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:56:11.717+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "5de55b0e-f000-4c8b-a7d0-1e4dcfe0b9e3",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:52:26.004+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "e67971df-d3da-408e-a8c6-3935e3f09f35",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:49:43.319+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "f94ab573-161f-4547-88b1-b420210d6129",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:49:27.189+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "0f75cec5-2696-429f-8c08-67f9fd0bf4f9",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:48:58.619+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "6cf322a0-bf15-4b8b-b554-d61195b14849",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:46:14.358+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "5d06cb06-9e08-4aec-9cff-7abb9844dd5a",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:45:31.365+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "548ab494-d511-4405-aaaa-73262aee439e",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:45:00.422+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "2f76828e-158a-4bd3-b49b-40cef00d7704",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:44:10.870+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "72469ac9-5e46-4612-8a64-9731b3b3e883",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:43:11.437+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "1a252f77-ef41-454b-9be7-33ce1cc8e8d2",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:27:20.879+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "aba889ae-8113-410d-b858-b1a293ec13ab",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:26:45.594+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "22ef4176-b4f9-4b91-9801-d441f2b91bf5",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:25:39.930+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "122958a1-8ca7-4067-b31f-1029422e5d72",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:24:02.616+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "7c0676f4-8598-45dc-a53a-f2bd4fa140fb",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:56.952+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "1a869300-1a34-4cba-90fb-aa6f11335472",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:42.503+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "4105f298-23a6-4bd1-aae1-8a755fcbba40",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:37.193+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "7ae49ed0-a55f-4dce-98ba-4b72f411ecd0",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:32.669+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "bbae40fb-c175-4e1a-ba05-a097aa8b70e4",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:22:37.113+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "6370e089-b8b3-4370-93ec-d5fea95d80b2",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:10:07.210+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "fa450ba5-5d69-40d6-9b9d-91ee451eb410",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:09:33.485+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "b54a84a2-699b-45e3-9a82-03b33b841c6d",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:08:46.112+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "74bb4ef9-397d-4fa9-a41a-0f787e1802c1",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:07:56.070+01:00",
+                  "updatedAt" : "2022-12-09T09:51:25.046+01:00",
                   "unreadMessageCount" : 0,
                   "pictureUrl" : null,
                   "__typename" : "Conversation",
@@ -589,23 +28,36 @@
             }
           }
         },
+        "headers" : {
+          "Connection" : "keep-alive",
+          "Content-Length" : "804",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "X-Request-ID" : "d044e0df-92ae-421b-9d81-f3fbda3a5b97",
+          "Vary" : "Origin",
+          "Date" : "Fri, 09 Dec 2022 08:52:49 GMT",
+          "x-nabla-cloudregion" : "EU_WEST1",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Server" : "ktor-server-core\/1.6.2"
+        },
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "status" : 200
       },
       "request" : {
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "headers" : {
-          "X-APOLLO-OPERATION-TYPE" : "query",
-          "Accept-Language" : "en",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "X-APOLLO-OPERATION-NAME" : "GetConversations",
-          "apollographql-client-version" : "13.3.1-20076",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY3MDMyMDAwMywic2Vzc2lvbl91dWlkIjoiMjllNmU5MjUtZWNlMy00Mjg2LWFiOTAtOTE1OTkyMWY1OGIyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.Zqz342iip8TJY_OGwYik_EEMz73GostQDhA52zyAaGg",
-          "X-Nabla-SDK-Version" : "1.0.0-alpha26",
-          "X-Nabla-SDK-Platform" : "ios",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha27",
+          "apollographql-client-version" : "14.1-21501",
           "X-Nabla-API-Key" : "test-api-key",
-          "Content-Type" : "application\/json"
+          "Content-Type" : "application\/json",
+          "X-APOLLO-OPERATION-TYPE" : "query",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2NzA1NzYyMTEsInNlc3Npb25fdXVpZCI6ImNkZTA5NjQ1LTVjMzQtNDJiZC1iZDFhLTMxZjBjMTEwNjMxMyIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.c2YYdntEgABf4OyxNtYepq1bvFVJ0QuYLlsyhsf5v80",
+          "Accept-Language" : "en",
+          "X-Nabla-SDK-Platform" : "ios",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-APOLLO-OPERATION-NAME" : "GetConversations"
         },
-        "method" : "POST",
         "body" : {
           "variables" : {
             "page" : {
@@ -614,53 +66,94 @@
           },
           "query" : "query GetConversations($page: OpaqueCursorPage!) {\n  conversations(page: $page) {\n    __typename\n    conversations {\n      __typename\n      ...ConversationFragment\n    }\n    nextCursor\n    hasMore\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}",
           "operationName" : "GetConversations",
-          "Tests-Request-Index" : 1
-        }
-      }
+          "Tests-Request-Index" : 0
+        },
+        "method" : "POST"
+      },
+      "recorded_at" : 1670575969.681783
     },
     {
       "response" : {
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "status" : 200,
         "body" : {
           "data" : {
-            "createConversation" : {
-              "conversation" : {
-                "subtitle" : null,
-                "id" : "9b168c28-f334-4c7e-a1be-6fa635a11b3a",
-                "inboxPreviewTitle" : "Ask us anything",
-                "title" : null,
-                "isLocked" : false,
-                "lastMessagePreview" : "You: Hello",
-                "updatedAt" : "2022-12-06T10:43:52.757+01:00",
-                "unreadMessageCount" : 0,
-                "pictureUrl" : null,
-                "__typename" : "Conversation",
-                "providers" : [
-
-                ]
+            "registerOrUpdateDevice" : {
+              "deviceId" : "9cb5ec70-e248-4455-b200-df8ead7fd325",
+              "sentry" : {
+                "env" : "dev",
+                "dsn" : "https:\/\/fa2c462be7f24bd7a510258fac2be401@sentry.nabla.com\/11",
+                "__typename" : "Sentry"
               },
-              "__typename" : "CreateConversationOutput"
+              "__typename" : "UpdateDeviceOutput"
             }
           }
         },
+        "status" : 200,
         "headers" : {
           "Vary" : "Origin",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "Content-Length" : "375",
+          "X-Request-ID" : "22122dfb-9eb6-45a3-94aa-b26a21bf1c68",
+          "Date" : "Fri, 09 Dec 2022 08:52:49 GMT",
           "Content-Type" : "application\/json; charset=UTF-8",
-          "X-Request-ID" : "6a24e3c7-3372-4457-98b6-1722bb60db71",
-          "Date" : "Tue, 06 Dec 2022 09:43:52 GMT",
-          "Connection" : "keep-alive",
-          "Content-Length" : "667",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "Server" : "ktor-server-core\/1.6.2",
           "x-nabla-cloudregion" : "EU_WEST1",
-          "X-Nabla-Minimum-Code-Version" : "398"
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Server" : "ktor-server-core\/1.6.2",
+          "Connection" : "keep-alive"
         }
       },
       "request" : {
-        "method" : "POST",
+        "body" : {
+          "Tests-Request-Index" : 0,
+          "query" : "mutation registerOrUpdateDevice($deviceId: UUID, $input: DeviceInput!) {\n  registerOrUpdateDevice(deviceId: $deviceId, device: $input) {\n    __typename\n    deviceId\n    sentry {\n      __typename\n      env\n      dsn\n    }\n  }\n}",
+          "operationName" : "registerOrUpdateDevice",
+          "variables" : {
+            "input" : {
+              "codeVersion" : 42,
+              "os" : "IOS",
+              "deviceModel" : "Mocked: Simulator",
+              "osVersion" : "Mocked: iOS13",
+              "sdkModules" : [
+
+              ]
+            },
+            "deviceId" : null
+          }
+        },
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "headers" : {
+          "X-Nabla-SDK-Platform" : "ios",
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2NzA1NzYyMTEsInNlc3Npb25fdXVpZCI6ImNkZTA5NjQ1LTVjMzQtNDJiZC1iZDFhLTMxZjBjMTEwNjMxMyIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.c2YYdntEgABf4OyxNtYepq1bvFVJ0QuYLlsyhsf5v80",
+          "Accept-Language" : "en",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha27",
+          "X-Nabla-API-Key" : "test-api-key",
+          "X-APOLLO-OPERATION-NAME" : "registerOrUpdateDevice",
+          "Content-Type" : "application\/json",
+          "apollographql-client-version" : "14.1-21501"
+        },
+        "method" : "POST"
+      },
+      "recorded_at" : 1670575969.8823562
+    },
+    {
+      "recorded_at" : 1670575970.0300741,
+      "request" : {
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "headers" : {
+          "X-APOLLO-OPERATION-NAME" : "CreateConversation",
+          "X-Nabla-SDK-Platform" : "ios",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha27",
+          "apollographql-client-version" : "14.1-21501",
+          "X-Nabla-API-Key" : "test-api-key",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2NzA1NzYyMTEsInNlc3Npb25fdXVpZCI6ImNkZTA5NjQ1LTVjMzQtNDJiZC1iZDFhLTMxZjBjMTEwNjMxMyIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.c2YYdntEgABf4OyxNtYepq1bvFVJ0QuYLlsyhsf5v80",
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "Accept-Language" : "en",
+          "Content-Type" : "application\/json"
+        },
         "body" : {
           "variables" : {
             "initialMessage" : {
@@ -676,66 +169,52 @@
           },
           "query" : "mutation CreateConversation($title: String, $providerIds: [UUID!], $initialMessage: SendMessageInput) {\n  createConversation(\n    title: $title\n    providerIds: $providerIds\n    initialMessage: $initialMessage\n  ) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}",
           "operationName" : "CreateConversation",
-          "Tests-Request-Index" : 2
+          "Tests-Request-Index" : 0
         },
-        "headers" : {
-          "Accept-Language" : "en",
-          "X-Nabla-SDK-Platform" : "ios",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "X-Nabla-SDK-Version" : "1.0.0-alpha26",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY3MDMyMDAwMywic2Vzc2lvbl91dWlkIjoiMjllNmU5MjUtZWNlMy00Mjg2LWFiOTAtOTE1OTkyMWY1OGIyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.Zqz342iip8TJY_OGwYik_EEMz73GostQDhA52zyAaGg",
-          "X-Nabla-API-Key" : "test-api-key",
-          "Content-Type" : "application\/json",
-          "X-APOLLO-OPERATION-NAME" : "CreateConversation",
-          "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "apollographql-client-version" : "13.3.1-20076"
-        }
+        "method" : "POST"
       },
-      "recorded_at" : 1670319833.974519
+      "response" : {
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "status" : 200,
+        "headers" : {
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Server" : "ktor-server-core\/1.6.2",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "Content-Length" : "667",
+          "Vary" : "Origin",
+          "x-nabla-cloudregion" : "EU_WEST1",
+          "Connection" : "keep-alive",
+          "X-Request-ID" : "56627a4b-0c1a-4053-92ae-5d4a24815cca",
+          "Date" : "Fri, 09 Dec 2022 08:52:49 GMT",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "Content-Type" : "application\/json; charset=UTF-8"
+        },
+        "body" : {
+          "data" : {
+            "createConversation" : {
+              "conversation" : {
+                "subtitle" : null,
+                "id" : "5ac71474-8005-448a-b86d-c1b321855540",
+                "inboxPreviewTitle" : "Ask us anything",
+                "title" : null,
+                "isLocked" : false,
+                "lastMessagePreview" : "You: Hello",
+                "updatedAt" : "2022-12-09T09:52:49.826+01:00",
+                "unreadMessageCount" : 0,
+                "pictureUrl" : null,
+                "__typename" : "Conversation",
+                "providers" : [
+
+                ]
+              },
+              "__typename" : "CreateConversationOutput"
+            }
+          }
+        }
+      }
     },
     {
-      "request" : {
-        "method" : "POST",
-        "headers" : {
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJpc3MiOiJkZXY6cGF0aWVudDpuYWJsYSIsInR5cCI6IkJlYXJlciIsImV4cCI6MTY3MDMyMDAwMywic2Vzc2lvbl91dWlkIjoiMjllNmU5MjUtZWNlMy00Mjg2LWFiOTAtOTE1OTkyMWY1OGIyIiwib3JnYW5pemF0aW9uU3RyaW5nSWQiOiJuYWJsYSJ9.Zqz342iip8TJY_OGwYik_EEMz73GostQDhA52zyAaGg",
-          "X-Nabla-SDK-Platform" : "ios",
-          "X-Nabla-SDK-Version" : "1.0.0-alpha26",
-          "apollographql-client-version" : "13.3.1-20076",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "X-APOLLO-OPERATION-NAME" : "GetConversations",
-          "Content-Type" : "application\/json",
-          "X-Nabla-API-Key" : "test-api-key",
-          "Accept-Language" : "en",
-          "X-APOLLO-OPERATION-TYPE" : "query"
-        },
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "body" : {
-          "variables" : {
-            "page" : {
-              "numberOfItems" : 50
-            }
-          },
-          "query" : "query GetConversations($page: OpaqueCursorPage!) {\n  conversations(page: $page) {\n    __typename\n    conversations {\n      __typename\n      ...ConversationFragment\n    }\n    nextCursor\n    hasMore\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}",
-          "operationName" : "GetConversations",
-          "Tests-Request-Index" : 3
-        }
-      },
-      "recorded_at" : 1670319836.4896069,
       "response" : {
-        "headers" : {
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "x-nabla-cloudregion" : "EU_WEST1",
-          "X-Request-ID" : "00b26b00-3168-4870-8574-acfa8b4b4b7b",
-          "Connection" : "keep-alive",
-          "Date" : "Tue, 06 Dec 2022 09:43:55 GMT",
-          "Server" : "ktor-server-core\/1.6.2",
-          "Vary" : "Origin",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "Content-Length" : "20241"
-        },
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "body" : {
           "data" : {
             "conversations" : {
@@ -744,12 +223,12 @@
               "conversations" : [
                 {
                   "subtitle" : null,
-                  "id" : "9b168c28-f334-4c7e-a1be-6fa635a11b3a",
+                  "id" : "5ac71474-8005-448a-b86d-c1b321855540",
                   "inboxPreviewTitle" : "Ask us anything",
                   "title" : null,
                   "isLocked" : false,
                   "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:43:52.757+01:00",
+                  "updatedAt" : "2022-12-09T09:52:49.826+01:00",
                   "unreadMessageCount" : 0,
                   "pictureUrl" : null,
                   "__typename" : "Conversation",
@@ -759,492 +238,12 @@
                 },
                 {
                   "subtitle" : null,
-                  "id" : "d4f8988f-a156-4261-90f5-7354fcd5c699",
+                  "id" : "ab703c2e-eb26-4ffe-ac9c-51140f36be2c",
                   "inboxPreviewTitle" : "Ask us anything",
                   "title" : null,
                   "isLocked" : false,
                   "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:42:34.613+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "dfe8ff67-2dea-4779-9fac-ec5257cbe982",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:39:47.273+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "3bd1784b-64c1-4c01-95c5-e85479850280",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:36:30.691+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "e8c445ab-2f25-4def-8781-0a68c8da1392",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:36:17.271+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "c8281a75-1098-433a-b1a6-2766692799ee",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:34:28.874+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "f3d54fa5-0ca0-460d-a097-8bdc984e3264",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:32:26.298+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "0fa44224-954a-4abe-9275-2ef3a5abebd6",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:32:06.023+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "d1ab2a55-f78d-409b-b119-60ad2b8aa9db",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-06T10:30:20.888+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "97bb1790-386d-4ea9-b250-0f301c3ec1e4",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:57:16.641+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "f0679e93-5234-45d4-b256-e383f079a778",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:56:58.241+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "2e2a7584-1c95-45b5-aeca-668b7d68f5ab",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:56:11.717+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "5de55b0e-f000-4c8b-a7d0-1e4dcfe0b9e3",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:52:26.004+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "e67971df-d3da-408e-a8c6-3935e3f09f35",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:49:43.319+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "f94ab573-161f-4547-88b1-b420210d6129",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:49:27.189+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "0f75cec5-2696-429f-8c08-67f9fd0bf4f9",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:48:58.619+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "6cf322a0-bf15-4b8b-b554-d61195b14849",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:46:14.358+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "5d06cb06-9e08-4aec-9cff-7abb9844dd5a",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:45:31.365+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "548ab494-d511-4405-aaaa-73262aee439e",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:45:00.422+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "2f76828e-158a-4bd3-b49b-40cef00d7704",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:44:10.870+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "72469ac9-5e46-4612-8a64-9731b3b3e883",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:43:11.437+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "1a252f77-ef41-454b-9be7-33ce1cc8e8d2",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:27:20.879+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "aba889ae-8113-410d-b858-b1a293ec13ab",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:26:45.594+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "22ef4176-b4f9-4b91-9801-d441f2b91bf5",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:25:39.930+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "122958a1-8ca7-4067-b31f-1029422e5d72",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:24:02.616+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "7c0676f4-8598-45dc-a53a-f2bd4fa140fb",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:56.952+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "1a869300-1a34-4cba-90fb-aa6f11335472",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:42.503+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "4105f298-23a6-4bd1-aae1-8a755fcbba40",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:37.193+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "7ae49ed0-a55f-4dce-98ba-4b72f411ecd0",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:23:32.669+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "bbae40fb-c175-4e1a-ba05-a097aa8b70e4",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:22:37.113+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "6370e089-b8b3-4370-93ec-d5fea95d80b2",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:10:07.210+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "fa450ba5-5d69-40d6-9b9d-91ee451eb410",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:09:33.485+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "b54a84a2-699b-45e3-9a82-03b33b841c6d",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:08:46.112+01:00",
-                  "unreadMessageCount" : 0,
-                  "pictureUrl" : null,
-                  "__typename" : "Conversation",
-                  "providers" : [
-
-                  ]
-                },
-                {
-                  "subtitle" : null,
-                  "id" : "74bb4ef9-397d-4fa9-a41a-0f787e1802c1",
-                  "inboxPreviewTitle" : "Ask us anything",
-                  "title" : null,
-                  "isLocked" : false,
-                  "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2022-12-05T17:07:56.070+01:00",
+                  "updatedAt" : "2022-12-09T09:51:25.046+01:00",
                   "unreadMessageCount" : 0,
                   "pictureUrl" : null,
                   "__typename" : "Conversation",
@@ -1257,8 +256,49 @@
             }
           }
         },
-        "status" : 200
-      }
+        "headers" : {
+          "Server" : "ktor-server-core\/1.6.2",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "Date" : "Fri, 09 Dec 2022 08:52:49 GMT",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "Connection" : "keep-alive",
+          "x-nabla-cloudregion" : "EU_WEST1",
+          "Content-Length" : "1393",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "Vary" : "Origin",
+          "X-Request-ID" : "d0067141-a826-4134-9ec8-0b023ae9a538",
+          "X-Nabla-Minimum-Android-Code-Version" : "0"
+        },
+        "status" : 200,
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
+      },
+      "request" : {
+        "body" : {
+          "variables" : {
+            "page" : {
+              "numberOfItems" : 50
+            }
+          },
+          "query" : "query GetConversations($page: OpaqueCursorPage!) {\n  conversations(page: $page) {\n    __typename\n    conversations {\n      __typename\n      ...ConversationFragment\n    }\n    nextCursor\n    hasMore\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}",
+          "operationName" : "GetConversations",
+          "Tests-Request-Index" : 1
+        },
+        "headers" : {
+          "X-Nabla-API-Key" : "test-api-key",
+          "apollographql-client-version" : "14.1-21501",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "Accept-Language" : "en",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2NzA1NzYyMTEsInNlc3Npb25fdXVpZCI6ImNkZTA5NjQ1LTVjMzQtNDJiZC1iZDFhLTMxZjBjMTEwNjMxMyIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.c2YYdntEgABf4OyxNtYepq1bvFVJ0QuYLlsyhsf5v80",
+          "X-Nabla-SDK-Version" : "1.0.0-alpha27",
+          "X-APOLLO-OPERATION-TYPE" : "query",
+          "X-Nabla-SDK-Platform" : "ios",
+          "X-APOLLO-OPERATION-NAME" : "GetConversations",
+          "Content-Type" : "application\/json"
+        },
+        "method" : "POST",
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
+      },
+      "recorded_at" : 1670575970.263804
     }
   ],
   "name" : "testCreateConversationThenConversationIsReturned.cassette"

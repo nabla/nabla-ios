@@ -26,36 +26,28 @@ class AuthenticatorImpl: Authenticator {
         notifyTokensChanged(oldValue: oldTokens, newValue: nil)
     }
     
-    func getAccessToken(handler: ResultHandler<AuthenticationState, AuthenticationError>) {
+    func getAccessToken() async throws -> AuthenticationState {
         guard let session = session else {
-            handler(.success(.notAuthenticated))
-            return
+            return .notAuthenticated
         }
         
         if let tokens = session.tokens, !tokens.accessToken.isExpired {
-            handler(.success(.authenticated(accessToken: tokens.accessToken.value)))
-            return
+            return .authenticated(accessToken: tokens.accessToken.value)
         }
         
         let task = makeOrReuseRenewSessionTask(session: session)
-        task.addOnComplete { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .success(tokens):
-                let oldTokens = session.tokens
-                session.tokens = tokens
-                self.notifyTokensChanged(oldValue: oldTokens, newValue: tokens)
-                handler(.success(.authenticated(accessToken: tokens.accessToken.value)))
-            case let .failure(error):
-                handler(.failure(error))
+        switch await task.result {
+        case let .failure(error):
+            if let authError = error as? AuthenticationError {
+                throw authError
+            } else {
+                throw UnknownAuthenticationError(undelryingError: error)
             }
-        }
-        task.resume()
-    }
-    
-    func getAccessToken() async throws -> AuthenticationState {
-        try await withCheckedThrowingContinuation { continuation in
-            getAccessToken(handler: .init(continuation.resume(with:)))
+        case let .success(tokens):
+            let oldTokens = session.tokens
+            session.tokens = tokens
+            notifyTokensChanged(oldValue: oldTokens, newValue: tokens)
+            return .authenticated(accessToken: tokens.accessToken.value)
         }
     }
     
@@ -90,17 +82,20 @@ class AuthenticatorImpl: Authenticator {
     private let httpManager: HTTPManager
     
     private var session: Session?
-    private var renewTask: SharedTask<Result<SessionTokens, AuthenticationError>>?
+    private var renewTask: Task<SessionTokens, Error>?
     
-    private func makeOrReuseRenewSessionTask(session: Session) -> SharedTask<Result<SessionTokens, AuthenticationError>> {
+    private func makeOrReuseRenewSessionTask(session: Session) -> Task<SessionTokens, Error> {
         if let existing = renewTask {
             return existing
         }
-        let renewTask = SharedTask<Result<SessionTokens, AuthenticationError>> { [weak self] completion in
-            guard let self = self else { return }
-            self.renewSession(session) { result in
-                completion(result)
+        let renewTask = Task<SessionTokens, Error> {
+            do {
+                let tokens = try await renewSession(session)
                 self.renewTask = nil
+                return tokens
+            } catch {
+                self.renewTask = nil
+                throw error
             }
         }
         self.renewTask = renewTask
@@ -112,64 +107,65 @@ class AuthenticatorImpl: Authenticator {
         notificationCenter.post(name: Constants.tokenChangedNotification, object: nil)
     }
     
-    private func renewSession(_ session: Session, completion: @escaping (Result<SessionTokens, AuthenticationError>) -> Void) {
+    /// - Throws: ``AuthenticationError``
+    private func renewSession(_ session: Session) async throws -> SessionTokens {
         if let tokens = session.tokens, !tokens.refreshToken.isExpired {
-            fetchTokens(refreshToken: tokens.refreshToken, completion: completion)
-            return
+            return try await fetchTokens(refreshToken: tokens.refreshToken)
         }
-        requireTokens(session: session, completion: completion)
+        return try await requireTokens(session: session)
     }
     
-    private func requireTokens(session: Session, completion: @escaping (Result<SessionTokens, AuthenticationError>) -> Void) {
-        session.provider.provideTokens(forUserId: session.userId) { [weak self] authTokens in
-            guard let self = self, let authTokens = authTokens else {
-                return completion(.failure(AuthenticationProviderFailedToProvideTokensError()))
+    /// - Throws: ``AuthenticationError``
+    private func requireTokens(session: Session) async throws -> SessionTokens {
+        let authTokens = await withCheckedContinuation { (continuation: CheckedContinuation<AuthTokens?, Never>) in
+            session.provider.provideTokens(forUserId: session.userId) { authTokens in
+                continuation.resume(returning: authTokens)
             }
+        }
+        guard let authTokens = authTokens else {
+            throw AuthenticationProviderFailedToProvideTokensError()
+        }
+        
+        do {
+            let accessToken = try Self.deserialize(token: authTokens.accessToken)
+            let refreshToken = try Self.deserialize(token: authTokens.refreshToken)
             
-            do {
-                let accessToken = try Self.deserialize(token: authTokens.accessToken)
-                let refreshToken = try Self.deserialize(token: authTokens.refreshToken)
-                
-                if refreshToken.isExpired {
-                    completion(.failure(AuthenticationProviderDidProvideExpiredTokensError()))
-                } else if accessToken.isExpired {
-                    self.fetchTokens(refreshToken: refreshToken, completion: completion)
-                } else {
-                    let tokens = SessionTokens(accessToken: accessToken, refreshToken: refreshToken)
-                    completion(.success(tokens))
-                }
-            } catch let error as AuthenticationError {
-                completion(.failure(error))
-            } catch {
-                completion(.failure(UnknownAuthenticationError(undelryingError: error)))
+            if refreshToken.isExpired {
+                throw AuthenticationProviderDidProvideExpiredTokensError()
+            } else if accessToken.isExpired {
+                return try await fetchTokens(refreshToken: refreshToken)
+            } else {
+                return SessionTokens(accessToken: accessToken, refreshToken: refreshToken)
             }
+        } catch let error as AuthenticationError {
+            throw error
+        } catch {
+            throw UnknownAuthenticationError(undelryingError: error)
         }
     }
     
-    private func fetchTokens(refreshToken: Token, completion: @escaping (Result<SessionTokens, AuthenticationError>) -> Void) {
+    /// - Throws: ``AuthenticationError``
+    private func fetchTokens(refreshToken: Token) async throws -> SessionTokens {
         let request = RefreshTokenEndpoint.request(refreshToken: refreshToken.value)
-        Task {
-            do {
-                let response = try await httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request)
-                
-                let accessToken = try Self.deserialize(token: response.accessToken)
-                let refreshToken = try Self.deserialize(token: response.refreshToken)
-                let tokens = SessionTokens(
-                    accessToken: accessToken,
-                    refreshToken: refreshToken
-                )
-                completion(.success(tokens))
-            } catch let error as HTTPError {
-                if Self.isAuthorizationError(error) {
-                    completion(.failure(AuthorizationDeniedError(reason: error)))
-                } else {
-                    completion(.failure(FailedToRefreshTokensError(reason: error)))
-                }
-            } catch let error as AuthenticationError {
-                completion(.failure(error))
-            } catch {
-                completion(.failure(UnknownAuthenticationError(undelryingError: error)))
+        do {
+            let response = try await httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request)
+            
+            let accessToken = try Self.deserialize(token: response.accessToken)
+            let refreshToken = try Self.deserialize(token: response.refreshToken)
+            return SessionTokens(
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            )
+        } catch let error as HTTPError {
+            if Self.isAuthorizationError(error) {
+                throw AuthorizationDeniedError(reason: error)
+            } else {
+                throw FailedToRefreshTokensError(reason: error)
             }
+        } catch let error as AuthenticationError {
+            throw error
+        } catch {
+            throw UnknownAuthenticationError(undelryingError: error)
         }
     }
     

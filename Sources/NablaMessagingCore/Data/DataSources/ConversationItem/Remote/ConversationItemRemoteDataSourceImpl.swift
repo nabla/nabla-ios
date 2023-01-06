@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -6,82 +7,82 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
 
     init(
         gqlClient: GQLClient,
-        asyncGqlClient: AsyncGQLClient,
         gqlStore: GQLStore,
         logger: Logger
     ) {
         self.gqlClient = gqlClient
-        
         self.gqlStore = gqlStore
-        self.asyncGqlClient = asyncGqlClient
         self.logger = logger
     }
 
     // MARK: - Internal
     
     func watchConversationItems(
-        ofConversationWithId conversationId: UUID,
-        handler: ResultHandler<RemoteConversationItems, GQLError>
-    ) -> PaginatedWatcher {
-        ConversationItemsWatcher(
-            gqlClient: gqlClient,
-            gqlStore: gqlStore,
-            logger: logger,
-            conversationId: conversationId,
-            numberOfItemsPerPage: Constants.numberOfItemsPerPage,
-            handler: handler
+        ofConversationWithId conversationId: UUID
+    ) -> AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError> {
+        let watcher = gqlClient.watch(
+            query: Constants.rootQuery(conversationId: conversationId),
+            policy: .returnCacheDataAndFetch
         )
+        
+        let makeLoadMore: (String?) -> () async throws -> Void = { [weak self] cursor in
+            {
+                guard let self = self else { return }
+                let response = try await self.gqlClient.fetch(
+                    query: Constants.pageQuery(conversationId: conversationId, cursor: cursor),
+                    policy: .fetchIgnoringCacheCompletely
+                )
+                try await self.handleLoadMoreConversationItems(data: response, conversationId: conversationId)
+            }
+        }
+        
+        return watcher
+            .map { data -> PaginatedList<RemoteConversationItem> in
+                let items = data.conversation.conversation.items
+                return PaginatedList(
+                    elements: items.data.compactMap { $0?.fragments.conversationItemFragment },
+                    loadMore: items.hasMore ? makeLoadMore(items.nextCursor) : nil
+                )
+            }
+            .eraseToAnyPublisher()
     }
     
     func send(
         remoteMessageInput: GQL.SendMessageInput,
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> NablaCancellable {
-        gqlClient.perform(
+        conversationId: UUID
+    ) async throws {
+        let response = try await gqlClient.perform(
             mutation: GQL.SendMessageMutation(
                 conversationId: conversationId,
                 input: remoteMessageInput
-            ),
-            handler: handler.pullback { [weak self] response in
-                let item = GQL.ConversationItemFragment(
-                    message: response.sendMessageV2.message.fragments.messageFragment
-                )
-                self?.append(item: item, toCacheOfConversationWithId: conversationId)
-            }
+            )
         )
+        let item = GQL.ConversationItemFragment(
+            message: response.sendMessageV2.message.fragments.messageFragment
+        )
+        try await append(item: item, toCacheOfConversationWithId: conversationId)
     }
 
-    /// - Throws: ``GQLError``
     func delete(messageId: UUID) async throws {
-        _ = try await asyncGqlClient.perform(mutation: GQL.DeleteMessageMutation(messageId: messageId))
+        _ = try await gqlClient.perform(mutation: GQL.DeleteMessageMutation(messageId: messageId))
     }
 
     func subscribeToConversationItemsEvents(
-        ofConversationWithId conversationId: UUID,
-        handler: ResultHandler<RemoteConversationEvent, GQLError>
-    ) -> NablaCancellable {
-        gqlClient.subscribe(subscription: GQL.ConversationEventsSubscription(id: conversationId), handler: .init { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case let .failure(error):
-                handler(.failure(error))
-            case let .success(data):
-                guard let event = data.conversation?.event else {
-                    return
+        ofConversationWithId conversationId: UUID
+    ) -> AnyPublisher<RemoteConversationEvent, Never> {
+        gqlClient.subscribe(subscription: GQL.ConversationEventsSubscription(id: conversationId))
+            .compactMap { $0.conversation?.event }
+            .handleEvents(receiveOutput: { event in
+                Task { [weak self] in
+                    try await self?.handleConversationEvent(event, inConversationWithId: conversationId)
                 }
-                self.handleConversationEvent(event, inConversationWithId: conversationId)
-                handler(.success(event))
-            }
-        })
+            })
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Private
     
     private let gqlClient: GQLClient
-    private let asyncGqlClient: AsyncGQLClient
     private let gqlStore: GQLStore
     private let logger: Logger
     
@@ -89,21 +90,25 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         static let numberOfItemsPerPage = 50
         
         static func rootQuery(conversationId: UUID) -> GQL.GetConversationItemsQuery {
-            .init(id: conversationId, page: .init(cursor: nil, numberOfItems: numberOfItemsPerPage))
+            pageQuery(conversationId: conversationId, cursor: nil)
+        }
+        
+        static func pageQuery(conversationId: UUID, cursor: String??) -> GQL.GetConversationItemsQuery {
+            .init(id: conversationId, page: .init(cursor: cursor, numberOfItems: numberOfItemsPerPage))
         }
     }
     
-    private func handleConversationEvent(_ event: RemoteConversationEvent, inConversationWithId conversationId: UUID) {
+    private func handleConversationEvent(_ event: RemoteConversationEvent, inConversationWithId conversationId: UUID) async throws {
         if let messageCreatedEvent = event.asMessageCreatedEvent {
             let item = GQL.ConversationItemFragment(
                 message: messageCreatedEvent.message.fragments.messageFragment
             )
-            append(
+            try await append(
                 item: item,
                 toCacheOfConversationWithId: conversationId
             )
         } else if let typingEvent = event.asTypingEvent {
-            update(
+            try await update(
                 provider: typingEvent.provider.fragments.providerInConversationFragment,
                 inCacheOfConversationWithId: conversationId
             )
@@ -111,15 +116,15 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
             let item = GQL.ConversationItemFragment(
                 conversationActivity: conversationActivityCreated.activity.fragments.conversationActivityFragment
             )
-            append(
+            try await append(
                 item: item,
                 toCacheOfConversationWithId: conversationId
             )
         }
     }
     
-    private func append(item: GQL.ConversationItemFragment, toCacheOfConversationWithId conversationId: UUID) {
-        gqlStore.updateCache(
+    private func append(item: GQL.ConversationItemFragment, toCacheOfConversationWithId conversationId: UUID) async throws {
+        try await gqlStore.updateCache(
             for: Constants.rootQuery(conversationId: conversationId),
             onlyIfExists: true,
             body: { cache in
@@ -129,13 +134,12 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 if !isAlreadyInConversation {
                     cache.conversation.conversation.items.data.append(.init(unsafeResultMap: item.resultMap))
                 }
-            },
-            completion: { _ in }
+            }
         )
     }
     
-    private func update(provider: GQL.ProviderInConversationFragment, inCacheOfConversationWithId conversationId: UUID) {
-        gqlStore.updateCache(
+    private func update(provider: GQL.ProviderInConversationFragment, inCacheOfConversationWithId conversationId: UUID) async throws {
+        try await gqlStore.updateCache(
             for: GQL.GetConversationQuery(id: conversationId),
             onlyIfExists: true,
             body: { cache in
@@ -144,72 +148,35 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 if !isAlreadyInConversation {
                     cache.conversation.conversation.fragments.conversationFragment.providers.append(.init(unsafeResultMap: provider.resultMap))
                 }
-            },
-            completion: { _ in }
-        )
-    }
-}
-
-extension GQL.GetConversationItemsQuery: PaginatedQuery {
-    public static func getCursor(from data: Data) -> String? {
-        data.conversation.conversation.items.nextCursor
-    }
-}
-
-private class ConversationItemsWatcher: GQLPaginatedWatcher<GQL.GetConversationItemsQuery> {
-    // MARK: - Initializer
-
-    init(
-        gqlClient: GQLClient,
-        gqlStore: GQLStore,
-        logger: Logger,
-        conversationId: UUID,
-        numberOfItemsPerPage: Int,
-        handler: ResultHandler<RemoteConversationItems, GQLError>
-    ) {
-        self.gqlClient = gqlClient
-        self.gqlStore = gqlStore
-        self.logger = logger
-        self.conversationId = conversationId
-        super.init(
-            gqlClient: gqlClient,
-            gqlStore: gqlStore,
-            numberOfItemsPerPage: numberOfItemsPerPage,
-            handler: handler
+            }
         )
     }
     
-    override func makeQuery(cursor: String??, numberOfItems: Int) -> GQL.GetConversationItemsQuery {
-        GQL.GetConversationItemsQuery(id: conversationId, page: .init(cursor: cursor, numberOfItems: numberOfItems))
-    }
-    
-    override func updateCache(_ cache: inout RemoteConversationItems, withAdditionalData data: RemoteConversationItems) {
-        let existingIds = Set(cache.conversation.conversation.items.data.compactMap {
-            $0?.fragments.conversationItemFragment.id
-        })
-        let newItems = data.conversation.conversation.items.data.filter { maybeItem in
-            guard let item = maybeItem else { return false }
-            guard let itemId = item.fragments.conversationItemFragment.id else {
-                logger.warning(message: "Unknown item type", extra: ["type": item.__typename])
-                return false
+    private func handleLoadMoreConversationItems(data: GQL.GetConversationItemsQuery.Data, conversationId: UUID) async throws {
+        try await gqlStore.updateCache(
+            for: Constants.rootQuery(conversationId: conversationId),
+            onlyIfExists: true
+        ) { [logger](cache: inout GQL.GetConversationItemsQuery.Data) in
+            let existingIds = Set(cache.conversation.conversation.items.data.compactMap {
+                $0?.fragments.conversationItemFragment.id
+            })
+            let newItems = data.conversation.conversation.items.data.filter { maybeItem in
+                guard let item = maybeItem else { return false }
+                guard let itemId = item.fragments.conversationItemFragment.id else {
+                    logger.warning(message: "Unknown item type", extra: ["type": item.__typename])
+                    return false
+                }
+                if existingIds.contains(itemId) {
+                    logger.warning(message: "Found duplicated item when loading more", extra: ["item": item])
+                    return false
+                }
+                return true
             }
-            if existingIds.contains(itemId) {
-                logger.warning(message: "Found duplicated item when loading more", extra: ["item": item])
-                return false
-            }
-            return true
+            cache.conversation.conversation.items.data.append(contentsOf: newItems)
+            cache.conversation.conversation.items.hasMore = data.conversation.conversation.items.hasMore
+            cache.conversation.conversation.items.nextCursor = data.conversation.conversation.items.nextCursor
         }
-        cache.conversation.conversation.items.data.append(contentsOf: newItems)
-        cache.conversation.conversation.items.hasMore = data.conversation.conversation.items.hasMore
-        cache.conversation.conversation.items.nextCursor = data.conversation.conversation.items.nextCursor
     }
-    
-    // MARK: - Private
-
-    private let gqlClient: GQLClient
-    private let gqlStore: GQLStore
-    private let logger: Logger
-    private let conversationId: UUID
 }
 
 private extension GQL.ConversationItemFragment {

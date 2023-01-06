@@ -2,9 +2,9 @@ import Foundation
 import NablaCore
 
 protocol RetrySendingMessageInteractor {
+    /// - Throws: ``NablaError``
     func execute(
         itemId: UUID,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable
+        conversationId: UUID
+    ) async throws
 }

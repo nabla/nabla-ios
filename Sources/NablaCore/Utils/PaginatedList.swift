@@ -1,7 +1,7 @@
 import Foundation
 
-public struct PaginatedList<T> {
-    public let elements: [T]
+public struct PaginatedList<Element> {
+    public let elements: [Element]
     public let loadMore: (() async throws -> Void)?
     
     public var hasMore: Bool {
@@ -9,7 +9,7 @@ public struct PaginatedList<T> {
     }
     
     public init(
-        elements: [T],
+        elements: [Element],
         loadMore: (() async throws -> Void)?
     ) {
         self.elements = elements
@@ -18,5 +18,14 @@ public struct PaginatedList<T> {
     
     public static var empty: Self {
         .init(elements: [], loadMore: nil)
+    }
+}
+
+public extension PaginatedList {
+    func map<T>(_ transform: (Element) -> T) -> PaginatedList<T> {
+        .init(
+            elements: elements.map(transform),
+            loadMore: loadMore
+        )
     }
 }

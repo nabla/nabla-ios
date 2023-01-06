@@ -3,7 +3,7 @@ import Foundation
 final class FetchConsentsInteractorImpl: FetchConcentsInteractor {
     // MARK: - Internal
     
-    /// Throws `NablaError`
+    /// - Throws: ``NablaError``
     func execute() async throws -> Consents {
         try await repository.fetchConsents()
     }

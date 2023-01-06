@@ -3,37 +3,36 @@ import Foundation
 
 // sourcery: AutoMockable
 public protocol GQLStore {
+    /// - Throws: ``GQLError/CacheError``
     func createCache<Query: GQLQuery>(
         for query: Query,
-        data: Query.Data,
-        completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
-    )
+        data: Query.Data
+    ) async throws
     
+    /// - Throws: ``GQLError/CacheError``
     func updateCache<Query: GQLQuery>(
         for query: Query,
         onlyIfExists: Bool,
-        body: @escaping (inout Query.Data) throws -> Void,
-        completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
-    )
+        body: @escaping (inout Query.Data) throws -> Void
+    ) async throws
     
+    /// - Throws: ``GQLError/CacheError``
     func updateCache<Fragment: GQLFragment>(
         of fragment: Fragment,
         onlyIfExists: Bool,
-        body: @escaping (inout Fragment) throws -> Void,
-        completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
-    )
+        body: @escaping (inout Fragment) throws -> Void
+    ) async throws
     
+    /// - Throws: ``GQLError/CacheError``
     func cacheExists<Query: GQLQuery>(
-        for query: Query,
-        completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void
-    )
+        for query: Query
+    ) async throws -> Bool
     
+    /// - Throws: ``GQLError/CacheError``
     func cacheExists<Fragment: GQLFragment>(
-        of fragment: Fragment,
-        completion: @escaping (Result<Bool, GQLError.CacheError>) -> Void
-    )
+        of fragment: Fragment
+    ) async throws -> Bool
     
-    func clearCache(
-        completion: @escaping (Result<Void, GQLError.CacheError>) -> Void
-    )
+    /// - Throws: ``GQLError/CacheError``
+    func clearCache() async throws
 }

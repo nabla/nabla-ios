@@ -82,7 +82,9 @@ public class NablaClient {
         container.userRepository.setCurrentUser(User(id: userId))
         container.authenticator.authenticate(userId: userId, provider: provider)
         
-        registerDeviceAction = container.registerDeviceInteractor.execute(userId: userId)
+        Task(priority: .background) {
+            await container.registerDeviceInteractor.execute(userId: userId)
+        }
     }
 
     /// Log the current user out
@@ -116,6 +118,4 @@ public class NablaClient {
     private static func formatApiKey(_ apiKey: String) -> String {
         apiKey.replacingOccurrences(of: "Authorization: Bearer ", with: "")
     }
-    
-    private var registerDeviceAction: NablaCancellable?
 }

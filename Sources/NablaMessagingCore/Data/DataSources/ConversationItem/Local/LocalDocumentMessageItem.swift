@@ -6,7 +6,7 @@ struct LocalDocumentMessageItem: LocalMediaConversationMessage {
     let date: Date
     var sendingState: ConversationMessageSendingState
     let replyToUuid: UUID?
-    let content: LocalMediaMessageItemContent<DocumentFile>
+    var content: LocalMediaMessageItemContent<DocumentFile>
     var isUploaded: Bool {
         content.uploadUuid != nil
     }

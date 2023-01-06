@@ -1,11 +1,11 @@
 import Foundation
 
 protocol DeviceRepository {
-    func updateOrRegisterDevice(userId: String, withModules modules: [Module]) -> NablaCancellable
+    func updateOrRegisterDevice(userId: String, withModules modules: [Module]) async
 }
 
 final class DeviceRepositoryImpl: DeviceRepository {
-    func updateOrRegisterDevice(userId: String, withModules modules: [Module]) -> NablaCancellable {
+    func updateOrRegisterDevice(userId: String, withModules modules: [Module]) async {
         let installation = Installation(
             deviceId: deviceLocalDataSource.getDeviceId(forUserId: userId),
             deviceModel: deviceLocalDataSource.deviceModel,
@@ -13,23 +13,18 @@ final class DeviceRepositoryImpl: DeviceRepository {
             codeVersion: deviceLocalDataSource.codeVersion,
             modules: modules.map(serialize(_:))
         )
-        return deviceRemoteDataSource.updateOrRegisterDevice(
-            installation: installation,
-            handler: .init { [deviceLocalDataSource, logger] result in
-                switch result {
-                case let .failure(error):
-                    logger.error(message: "Failed to register device", extra: ["error": error])
-                case let .success(remoteDevice):
-                    deviceLocalDataSource.setDeviceId(remoteDevice.deviceId, forUserId: userId)
-                    if let sentry = remoteDevice.sentry {
-                        self.errorReporter.enable(dsn: sentry.dsn, env: sentry.env)
-                    } else {
-                        self.errorReporter.disable()
-                    }
-                    logger.info(message: "Registered device", extra: ["id": remoteDevice.deviceId])
-                }
+        do {
+            let remoteDevice = try await deviceRemoteDataSource.updateOrRegisterDevice(installation: installation)
+            deviceLocalDataSource.setDeviceId(remoteDevice.deviceId, forUserId: userId)
+            if let sentry = remoteDevice.sentry {
+                errorReporter.enable(dsn: sentry.dsn, env: sentry.env)
+            } else {
+                errorReporter.disable()
             }
-        )
+            logger.info(message: "Registered device", extra: ["id": remoteDevice.deviceId])
+        } catch {
+            logger.error(message: "Failed to register device", extra: ["error": error])
+        }
     }
 
     // MARK: Init

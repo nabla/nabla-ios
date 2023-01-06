@@ -16,24 +16,23 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
 
     // MARK: - SendMessageInteractor
 
+    /// - Throws: ``NablaError``
     func execute(
         message: MessageInput,
         replyToMessageId: UUID?,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable {
+        conversationId: UUID
+    ) async throws {
         guard isAuthenticated else {
-            return Failure(handler: handler, error: MissingAuthenticationProviderError())
+            throw MissingAuthenticationProviderError()
         }
         guard isMessageValid(message) else {
-            return Failure(handler: handler, error: InvalidMessageError())
+            throw InvalidMessageError()
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
-        return itemsRepository.sendMessage(
+        try await itemsRepository.sendMessage(
             message,
             replyToMessageId: replyToMessageId,
-            inConversationWithId: transientId,
-            handler: handler
+            inConversationWithId: transientId
         )
     }
     

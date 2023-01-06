@@ -6,16 +6,15 @@ final class LogOutInteractorImpl: LogOutInteractor {
     func execute() {
         userRepository.setCurrentUser(nil)
         authenticator.logOut()
-        gqlStore.clearCache { [logger] result in
-            switch result {
-            case .success:
-                break
-            case let .failure(error):
+        scopedKeyValueStore.clear()
+        extraActions.forEach { $0() }
+        Task {
+            do {
+                try await gqlStore.clearCache()
+            } catch {
                 logger.error(message: "Failed to clear cache on logout", extra: ["reason": error])
             }
         }
-        scopedKeyValueStore.clear()
-        extraActions.forEach { $0() }
     }
     
     func addAction(_ action: @escaping () -> Void) {

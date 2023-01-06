@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -6,21 +7,16 @@ protocol ConversationRemoteDataSource {
     func createConversation(
         message: GQL.SendMessageInput?,
         title: String?,
-        providerIds: [UUID]?,
-        handler: ResultHandler<RemoteConversation, GQLError>
-    ) -> NablaCancellable
+        providerIds: [UUID]?
+    ) async throws -> RemoteConversation
     
-    /// - Throws: ``GQLError``
     func setIsTyping(_ isTyping: Bool, conversationId: UUID) async throws
     
-    /// - Throws: ``GQLError``
     func markConversationAsSeen(conversationId: UUID) async throws
     
-    func watchConversation(_ conversationId: UUID, handler: ResultHandler<RemoteConversation, GQLError>) -> Watcher
+    func watchConversation(_ conversationId: UUID) -> AnyPublisher<RemoteConversation, GQLError>
     
-    func watchConversations(handler: ResultHandler<RemoteConversationList, GQLError>) -> PaginatedWatcher
+    func watchConversations() -> AnyPublisher<PaginatedList<RemoteConversation>, GQLError>
     
-    func subscribeToConversationsEvents(
-        handler: ResultHandler<RemoteConversationsEvent, GQLError>
-    ) -> NablaCancellable
+    func subscribeToConversationsEvents() -> AnyPublisher<RemoteConversationsEvent, Never>
 }

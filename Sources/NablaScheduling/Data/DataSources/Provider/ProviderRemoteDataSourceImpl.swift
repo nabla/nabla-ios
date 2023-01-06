@@ -6,17 +6,20 @@ final class ProviderRemoteDataSourceImpl: ProviderRemoteDataSource {
     // MARK: - Internal
 
     func watchProvider(id: UUID) -> AnyPublisher<RemoteProvider, GQLError> {
-        gqlClient.watch(query: GQL.GetProviderQuery(providerId: id))
-            .compactMap { response -> RemoteProvider? in
-                response.provider.provider.fragments.providerFragment
-            }
-            .eraseToAnyPublisher()
+        gqlClient.watch(
+            query: GQL.GetProviderQuery(providerId: id),
+            policy: .returnCacheDataAndFetch
+        )
+        .compactMap { response -> RemoteProvider? in
+            response.provider.provider.fragments.providerFragment
+        }
+        .eraseToAnyPublisher()
     }
     
     // MARK: Init
     
     init(
-        gqlClient: AsyncGQLClient
+        gqlClient: GQLClient
         
     ) {
         self.gqlClient = gqlClient
@@ -24,5 +27,5 @@ final class ProviderRemoteDataSourceImpl: ProviderRemoteDataSource {
     
     // MARK: - Private
     
-    private let gqlClient: AsyncGQLClient
+    private let gqlClient: GQLClient
 }

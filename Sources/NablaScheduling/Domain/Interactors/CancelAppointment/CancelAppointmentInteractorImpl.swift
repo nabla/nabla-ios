@@ -4,7 +4,7 @@ import NablaCore
 final class CancelAppointmentInteractorImpl: CancelAppointmentInteractor {
     // MARK: - Internal
     
-    /// Throws `NablaError`
+    /// - Throws: ``NablaError``
     func execute(appointmentId: UUID) async throws {
         try await repository.cancelAppointment(withId: appointmentId)
     }

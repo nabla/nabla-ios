@@ -1,24 +1,21 @@
+import Combine
 import Foundation
 import NablaCore
 
 // sourcery: AutoMockable
 protocol ConversationItemRemoteDataSource {
     func watchConversationItems(
-        ofConversationWithId conversationId: UUID,
-        handler: ResultHandler<RemoteConversationItems, GQLError>
-    ) -> PaginatedWatcher
+        ofConversationWithId conversationId: UUID
+    ) -> AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError>
     
     func subscribeToConversationItemsEvents(
-        ofConversationWithId conversationId: UUID,
-        handler: ResultHandler<RemoteConversationEvent, GQLError>
-    ) -> NablaCancellable
+        ofConversationWithId conversationId: UUID
+    ) -> AnyPublisher<RemoteConversationEvent, Never>
     
     func send(
         remoteMessageInput: GQL.SendMessageInput,
-        conversationId: UUID,
-        handler: ResultHandler<Void, GQLError>
-    ) -> NablaCancellable
+        conversationId: UUID
+    ) async throws
     
-    /// - Throws: ``GQLError``
     func delete(messageId: UUID) async throws
 }

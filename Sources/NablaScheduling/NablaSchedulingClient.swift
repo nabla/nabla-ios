@@ -23,17 +23,17 @@ public final class NablaSchedulingClient: SchedulingClient {
         container.watchProviderInteractor.execute(providerId: id)
     }
     
-    /// Throws `NablaError`
+    /// - Throws: ``NablaError``
     func scheduleAppointment(categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
         try await container.scheduleAppointmentInteractor.execute(categoryId: categoryId, providerId: providerId, date: date)
     }
     
-    /// Throws `NablaError`
+    /// - Throws: ``NablaError``
     func cancelAppointment(withId appointmentId: UUID) async throws {
         try await container.cancelAppointmentInteractor.execute(appointmentId: appointmentId)
     }
     
-    /// Throws `NablaError`
+    /// - Throws: ``NablaError``
     func fetchConsents() async throws -> Consents {
         try await container.fetchConsentsInteractor.execute()
     }

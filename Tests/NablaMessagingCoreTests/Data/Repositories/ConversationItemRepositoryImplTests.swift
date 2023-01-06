@@ -35,7 +35,7 @@ class ConversationItemRepositoryImplTests: XCTestCase {
         )
     }
 
-    func testFailedUploadMessagesAreSetToFailedState() throws {
+    func testFailedUploadMessagesAreSetToFailedState() async throws {
         // GIVEN
         let input = MessageInput.image(
             content: .init(
@@ -46,7 +46,7 @@ class ConversationItemRepositoryImplTests: XCTestCase {
             )
         )
         let conversationId = TransientUUID(remoteId: .init())
-        let expectation = expectation(description: "")
+        let errorIsThrown = expectation(description: "Error is thrown")
         fileUploadRemoteDataSource.given(.upload(file: .any, willThrow: FileUploadRemoteDataSourceError.cannotReadFileData))
         Matcher.default.register(LocalConversationItem.self) { rhs, lhs in
             guard let rhs = rhs as? LocalImageMessageItem, let lhs = lhs as? LocalImageMessageItem else { return false }
@@ -57,17 +57,18 @@ class ConversationItemRepositoryImplTests: XCTestCase {
         }
         
         // WHEN
-        let cancellable = sut.sendMessage(
-            input,
-            replyToMessageId: nil,
-            inConversationWithId: conversationId,
-            handler: .init { _ in
-                expectation.fulfill()
-            }
-        )
+        do {
+            try await sut.sendMessage(
+                input,
+                replyToMessageId: nil,
+                inConversationWithId: conversationId
+            )
+        } catch {
+            errorIsThrown.fulfill()
+        }
         
         // THEN
-        waitForExpectations(timeout: 0.1)
+        await waitForExpectations(timeout: 0.1)
         itemsLocalDataSource.verify(
             .addConversationItem(
                 .value(
@@ -114,6 +115,5 @@ class ConversationItemRepositoryImplTests: XCTestCase {
             ),
             count: 1
         )
-        XCTAssertNotNil(cancellable)
     }
 }

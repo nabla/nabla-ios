@@ -57,7 +57,7 @@ extension URLSession {
                 } else {
                     continuation.resume(throwing: HTTPError.transportError(.generic(nil)))
                 }
-            }
+            }.resume()
         }
     }
 }

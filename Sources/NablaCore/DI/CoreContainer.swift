@@ -7,102 +7,155 @@ import Foundation
 public class CoreContainer {
     // MARK: - Public
     
-    public var logger: Logger {
-        configuration.logger
-    }
-    
-    public private(set) lazy var logOutInteractor: LogOutInteractor = LogOutInteractorImpl(
-        userRepository: userRepository,
-        authenticator: authenticator,
-        gqlStore: gqlStore,
-        scopedKeyValueStore: scopedKeyValueStore,
-        logger: logger
-    )
-    
-    public private(set) lazy var environment: Environment = EnvironmentImpl(networkConfiguration: networkConfiguration)
-    
-    public private(set) lazy var extraHeaders: ExtraHeaders = ExtraHeadersImpl([
-        HTTPHeaders.Platform: environment.platform,
-        HTTPHeaders.Version: environment.version,
-        HTTPHeaders.AcceptLanguage: environment.languageCode,
-    ])
-
-    public private(set) lazy var authenticator: Authenticator = AuthenticatorImpl(httpManager: httpManager)
-
-    public private(set) lazy var userRepository: UserRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
-
-    public private(set) lazy var httpManager: HTTPManager = .init(
-        baseURLProvider: URLProvider(
-            baseURL: environment.serverUrl
-        ),
-        session: networkConfiguration.session,
-        requestBehavior: headersRequestBehavior
-    )
-    
-    public private(set) lazy var uploadClient: UploadClient = .init(
-        httpManager: httpManager,
-        authenticator: authenticator
-    )
-    
-    public private(set) lazy var gqlClient: GQLClient & AsyncGQLClient = {
-        let client = GQLClientImpl(
-            transport: combinedTransport,
-            store: gqlStore,
-            apolloStore: apolloStore,
-            logger: logger
-        )
-        client.addRefetchTriggers([reachabilityRefetchTrigger])
-        return client
-    }()
-
-    public private(set) lazy var gqlStore: GQLStore & AsyncGQLStore = GQLStoreImpl(apolloStore: apolloStore)
-    
+    public let logger: Logger
+    public let logOutInteractor: LogOutInteractor
+    public let environment: Environment
+    public let extraHeaders: ExtraHeaders
+    public let authenticator: Authenticator
+    public let userRepository: UserRepository
+    public let httpManager: HTTPManager
+    public let uploadClient: UploadClient
+    public let gqlClient: GQLClient
+    public let gqlStore: GQLStore
     public let modules: [Module]
-    
-    public private(set) lazy var messagingClient: MessagingClient? = messagingModule?.makeClient(container: self)
-    
-    public private(set) lazy var videoCallClient: VideoCallClient? = videoCallModule?.makeClient(container: self)
-    
-    public private(set) lazy var schedulingClient: SchedulingClient? = schedulingModule?.makeClient(container: self)
-
-    public private(set) lazy var errorReporter: ErrorReporter = configuration.enableReporting
-        ? SentryErrorReporter(logger: logger)
-        : NoOpErrorReporter()
-
-    public internal(set) lazy var uuidGenerator: UUIDGenerator = FoundationUUIDGenerator()
+    public private(set) var messagingClient: MessagingClient?
+    public private(set) var videoCallClient: VideoCallClient?
+    public private(set) var schedulingClient: SchedulingClient?
+    public let errorReporter: ErrorReporter
+    public let uuidGenerator: UUIDGenerator
     
     // MARK: - Internal
     
-    private(set) lazy var headersRequestBehavior = HeadersRequestBehavior(headers: extraHeaders)
+    let registerDeviceInteractor: RegisterDeviceInteractor
     
-    private(set) lazy var registerDeviceInteractor: RegisterDeviceInteractor = RegisterDeviceInteractorImpl(
-        modules: modules,
-        deviceRepository: deviceRepository
-    )
-    
-    // Mutable for mocking purposes
-    lazy var urlSessionClient: URLSessionClient = .init()
-    
-    // Mutable for mocking purposes
-    lazy var deviceLocalDataSource: DeviceLocalDataSource = DeviceLocalDataSourceImpl(
-        scopedStore: scopedKeyValueStore,
-        unscopedStore: dangerouslyUnscopedKeyValueStore,
-        logger: logger
-    )
+    convenience init(
+        name: String,
+        configuration: Configuration,
+        networkConfiguration: NetworkConfiguration,
+        modules: [Module]
+    ) {
+        self.init(
+            name: name,
+            configuration: configuration,
+            networkConfiguration: networkConfiguration,
+            urlSessionClient: .init(),
+            deviceLocalDataSource: nil,
+            uuidGenerator: FoundationUUIDGenerator(),
+            modules: modules
+        )
+    }
 
+    // For mocking purposes, prefer the `convenience init` instead
     init(
         name: String,
         configuration: Configuration,
         networkConfiguration: NetworkConfiguration,
+        urlSessionClient: URLSessionClient,
+        deviceLocalDataSource: DeviceLocalDataSource?,
+        uuidGenerator: UUIDGenerator,
         modules: [Module]
     ) {
         self.name = name
         self.networkConfiguration = networkConfiguration
         self.configuration = configuration
         self.modules = modules
+        self.uuidGenerator = uuidGenerator
+        
+        logger = configuration.logger
+        environment = EnvironmentImpl(networkConfiguration: networkConfiguration)
+        errorReporter = configuration.enableReporting
+            ? SentryErrorReporter(logger: logger)
+            : NoOpErrorReporter()
+        extraHeaders = ExtraHeadersImpl([
+            HTTPHeaders.Platform: environment.platform,
+            HTTPHeaders.Version: environment.version,
+            HTTPHeaders.AcceptLanguage: environment.languageCode,
+        ])
+        headersRequestBehavior = HeadersRequestBehavior(headers: extraHeaders)
+        scopedKeyValueStore = KeyValueStoreImpl(namespace: name)
+        dangerouslyUnscopedKeyValueStore = KeyValueStoreImpl(namespace: "nablaGlobal")
+        
+        httpManager = .init(
+            baseURLProvider: URLProvider(
+                baseURL: environment.serverUrl
+            ),
+            session: networkConfiguration.session,
+            requestBehavior: headersRequestBehavior
+        )
+        authenticator = AuthenticatorImpl(httpManager: httpManager)
+        apolloStore = Self.makeApolloStore(logger: logger)
+        interceptorProvider = HttpInterceptorProvider(
+            environment: environment,
+            authenticator: authenticator,
+            extraHeaders: extraHeaders,
+            apolloStore: apolloStore,
+            urlSessionClient: urlSessionClient
+        )
+        httpTransport = .init(
+            environment: environment,
+            interceptorProvider: interceptorProvider
+        )
+        webSocketTransport = .init(
+            environment: environment,
+            authenticator: authenticator,
+            apolloStore: apolloStore,
+            logger: logger,
+            extraHeaders: extraHeaders
+        )
+        combinedTransport = .init(
+            httpTransport: httpTransport,
+            webSocketTransport: webSocketTransport
+        )
+        uploadClient = .init(
+            httpManager: httpManager,
+            authenticator: authenticator
+        )
+        gqlClient = GQLClientImpl(
+            transport: combinedTransport,
+            apolloStore: apolloStore,
+            logger: logger
+        )
+        gqlClient.addRefetchTriggers([ReachabilityRefetchTrigger(environment: environment)])
+        gqlStore = GQLStoreImpl(apolloStore: apolloStore)
+        
+        userLocalDataSource = UserLocalDataSourceImpl(
+            logger: logger,
+            store: scopedKeyValueStore
+        )
+        
+        self.deviceLocalDataSource = deviceLocalDataSource ?? DeviceLocalDataSourceImpl(
+            scopedStore: scopedKeyValueStore,
+            unscopedStore: dangerouslyUnscopedKeyValueStore,
+            logger: logger
+        )
+        deviceRemoteDataSource = DeviceRemoteDataSourceImpl(gqlClient: gqlClient)
+        deviceRepository = DeviceRepositoryImpl(
+            deviceLocalDataSource: self.deviceLocalDataSource,
+            deviceRemoteDataSource: deviceRemoteDataSource,
+            logger: logger,
+            errorReporter: errorReporter
+        )
+        
+        userRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
+        
+        logOutInteractor = LogOutInteractorImpl(
+            userRepository: userRepository,
+            authenticator: authenticator,
+            gqlStore: gqlStore,
+            scopedKeyValueStore: scopedKeyValueStore,
+            logger: logger
+        )
+        registerDeviceInteractor = RegisterDeviceInteractorImpl(
+            modules: modules,
+            deviceRepository: deviceRepository
+        )
+        
         messagingModule = modules.first(as: MessagingModule.self)
         videoCallModule = modules.first(as: VideoCallModule.self)
         schedulingModule = modules.first(as: SchedulingModule.self)
+        messagingClient = messagingModule?.makeClient(container: self)
+        videoCallClient = videoCallModule?.makeClient(container: self)
+        schedulingClient = schedulingModule?.makeClient(container: self)
     }
 
     // MARK: - Private
@@ -110,40 +163,25 @@ public class CoreContainer {
     private let name: String
     private let configuration: Configuration
     private let networkConfiguration: NetworkConfiguration
+    private let headersRequestBehavior: HeadersRequestBehavior
     private let messagingModule: MessagingModule?
     private let videoCallModule: VideoCallModule?
     private let schedulingModule: SchedulingModule?
-
-    private lazy var reachabilityRefetchTrigger: ReachabilityRefetchTrigger = .init(environment: environment)
-
-    private lazy var interceptorProvider: InterceptorProvider = HttpInterceptorProvider(
-        environment: environment,
-        authenticator: authenticator,
-        extraHeaders: extraHeaders,
-        apolloStore: apolloStore,
-        urlSessionClient: urlSessionClient
-    )
-
-    private lazy var httpTransport: HttpTransport = .init(
-        environment: environment,
-        interceptorProvider: interceptorProvider
-    )
+    private let interceptorProvider: InterceptorProvider
+    private let httpTransport: HttpTransport
+    private let webSocketTransport: WebSocketTransport
+    private let combinedTransport: CombinedTransport
+    private let apolloStore: ApolloStore
+    private let userLocalDataSource: UserLocalDataSource
+    private let scopedKeyValueStore: KeyValueStore
+    /// This one is not scoped to the Nabla SDK instance meaning it will be shared across multiple instances of the SDK.
+    /// You probably don't want to use it unless you have a very good reason to do so.
+    private let dangerouslyUnscopedKeyValueStore: KeyValueStore
+    private let deviceRemoteDataSource: DeviceRemoteDataSource
+    private let deviceLocalDataSource: DeviceLocalDataSource
+    private let deviceRepository: DeviceRepository
     
-    private lazy var webSocketTransport: WebSocketTransport = .init(
-        environment: environment,
-        store: gqlStore,
-        authenticator: authenticator,
-        apolloStore: apolloStore,
-        logger: logger,
-        extraHeaders: extraHeaders
-    )
-    
-    private lazy var combinedTransport: CombinedTransport = .init(
-        httpTransport: httpTransport,
-        webSocketTransport: webSocketTransport
-    )
-    
-    private lazy var apolloStore: ApolloStore = {
+    private static func makeApolloStore(logger: Logger) -> ApolloStore {
         if let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let documentsURL = URL(fileURLWithPath: documentsPath)
             let sqliteFileURL = documentsURL.appendingPathComponent("nabla_apollo.sqlite")
@@ -154,26 +192,7 @@ public class CoreContainer {
             }
         }
         return .init()
-    }()
-
-    private lazy var userLocalDataSource: UserLocalDataSource = UserLocalDataSourceImpl(
-        logger: logger,
-        store: scopedKeyValueStore
-    )
-
-    private lazy var scopedKeyValueStore: KeyValueStore = KeyValueStoreImpl(namespace: name)
-    /// This one is not scoped to the Nabla SDK instance meaning it will be shared across multiple instances of the SDK.
-    /// You probably don't want to use it unless you have a very good reason to do so.
-    private lazy var dangerouslyUnscopedKeyValueStore: KeyValueStore = KeyValueStoreImpl(namespace: "nablaGlobal")
-    
-    private lazy var deviceRemoteDataSource: DeviceRemoteDataSource = DeviceRemoteDataSourceImpl(gqlClient: gqlClient)
-    
-    private lazy var deviceRepository: DeviceRepository = DeviceRepositoryImpl(
-        deviceLocalDataSource: deviceLocalDataSource,
-        deviceRemoteDataSource: deviceRemoteDataSource,
-        logger: logger,
-        errorReporter: errorReporter
-    )
+    }
 }
 
 private struct URLProvider: BaseURLProvider {

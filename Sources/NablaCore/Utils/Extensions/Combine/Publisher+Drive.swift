@@ -1,16 +1,6 @@
 import Combine
 import Foundation
 
-public extension Publisher {
-    var nabla: NablaPublisherExtension<Self> {
-        NablaPublisherExtension(base: self)
-    }
-}
-
-public struct NablaPublisherExtension<Base: Publisher> {
-    let base: Base
-}
-
 public extension NablaPublisherExtension {
     func sink(
         receiveValue: @escaping (Base.Output) -> Void = { _ in },

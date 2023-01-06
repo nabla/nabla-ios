@@ -4,7 +4,7 @@ import NablaCore
 final class ConsentsRepositoryImpl: ConsentsRepository {
     // MARK: - Internal
 
-    /// Throws: `NablaError`
+    /// - Throws: ``NablaError``
     func fetchConsents() async throws -> Consents {
         do {
             let remoteConsents = try await remoteDataSource.fetchConsents()

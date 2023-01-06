@@ -6,16 +6,20 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
     // MARK: - Internal
     
     func watchCategories() -> AnyPublisher<[RemoteCategory], GQLError> {
-        gqlClient.watch(query: GQL.GetCategoriesQuery())
-            .map { response -> [RemoteCategory] in
-                response.appointmentCategories.categories.map(\.fragments.categoryFragment)
-            }
-            .eraseToAnyPublisher()
+        gqlClient.watch(
+            query: GQL.GetCategoriesQuery(),
+            policy: .fetchIgnoringCacheData
+        )
+        .map { response -> [RemoteCategory] in
+            response.appointmentCategories.categories.map(\.fragments.categoryFragment)
+        }
+        .eraseToAnyPublisher()
     }
     
     func watchAvailabilitySlots(forCategoryWithId categoryId: UUID) -> AnyPublisher<PaginatedList<RemoteAvailabilitySlot>, GQLError> {
         gqlClient.watch(
-            query: Queries.getAvailableSlotsRootQuery(categoryId: categoryId)
+            query: Queries.getAvailableSlotsRootQuery(categoryId: categoryId),
+            policy: .fetchIgnoringCacheData
         )
         .map { response -> PaginatedList<RemoteAvailabilitySlot> in
             let data = response.appointmentCategory.category.availableSlots.slots.map(\.fragments.availabilitySlotFragment)
@@ -39,8 +43,8 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
     // MARK: Init
     
     init(
-        gqlClient: AsyncGQLClient,
-        gqlStore: AsyncGQLStore
+        gqlClient: GQLClient,
+        gqlStore: GQLStore
     ) {
         self.gqlClient = gqlClient
         self.gqlStore = gqlStore
@@ -48,8 +52,8 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
     
     // MARK: - Private
     
-    private let gqlClient: AsyncGQLClient
-    private let gqlStore: AsyncGQLStore
+    private let gqlClient: GQLClient
+    private let gqlStore: GQLStore
     
     private enum Queries {
         static func getAvailableSlotsRootQuery(categoryId: UUID) -> GQL.GetAvailableSlotsQuery {
@@ -64,7 +68,7 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
     private func fetchMoreAvailableSlots(forCategoryWithId categoryId: UUID, cursor: String) async throws {
         let response = try await gqlClient.fetch(
             query: Queries.getAvailableSlotsQuery(categoryId: categoryId, cursor: cursor),
-            cachePolicy: .fetchIgnoringCacheCompletely
+            policy: .fetchIgnoringCacheCompletely
         )
         
         try await gqlStore.updateCache(

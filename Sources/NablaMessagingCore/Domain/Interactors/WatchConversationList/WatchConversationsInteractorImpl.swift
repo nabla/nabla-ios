@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -11,11 +12,11 @@ class WatchConversationsInteractorImpl: AuthenticatedInteractor, WatchConversati
 
     // MARK: - WatchConversationsInteractor
     
-    func execute(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher {
+    func execute() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
         guard isAuthenticated else {
-            return FailurePaginatedWatcher(handler: handler, error: MissingAuthenticationProviderError())
+            return Fail(error: MissingAuthenticationProviderError()).eraseToAnyPublisher()
         }
-        return repository.watchConversations(handler: handler)
+        return repository.watchConversations()
     }
     
     // MARK: - private

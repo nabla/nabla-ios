@@ -1,28 +1,17 @@
+import Combine
 import Foundation
 
 // sourcery: AutoMockable
 public protocol GQLClient {
-    func fetch<Query: GQLQuery>(
-        query: Query,
-        cachePolicy: CachePolicy,
-        handler: ResultHandler<Query.Data, GQLError>
-    ) -> NablaCancellable
+    /// - Throws: ``GQLError``
+    func fetch<Query: GQLQuery>(query: Query, policy: GQLFetchPolicy) async throws -> Query.Data
     
-    func perform<Mutation: GQLMutation>(
-        mutation: Mutation,
-        handler: ResultHandler<Mutation.Data, GQLError>
-    ) -> NablaCancellable
+    /// - Throws: ``GQLError``
+    func perform<Mutation: GQLMutation>(mutation: Mutation) async throws -> Mutation.Data
     
-    func watch<Query: GQLQuery>(
-        query: Query,
-        cachePolicy: CachePolicy,
-        handler: ResultHandler<Query.Data, GQLError>
-    ) -> Watcher
+    func watch<Query: GQLQuery>(query: Query, policy: GQLWatchPolicy) -> AnyPublisher<Query.Data, GQLError>
     
-    func subscribe<Subscription: GQLSubscription>(
-        subscription: Subscription,
-        handler: ResultHandler<Subscription.Data, GQLError>
-    ) -> NablaCancellable
+    func subscribe<Subscription: GQLSubscription>(subscription: Subscription) -> AnyPublisher<Subscription.Data, Never>
     
     func addRefetchTriggers(_ triggers: [RefetchTrigger])
 }

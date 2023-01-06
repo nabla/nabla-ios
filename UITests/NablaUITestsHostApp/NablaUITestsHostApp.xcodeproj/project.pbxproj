@@ -28,8 +28,6 @@
 		FF8049EF283E16CB0076EFF8 /* LaunchArgument.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8049EC283E16790076EFF8 /* LaunchArgument.swift */; };
 		FF8049F2283E186B0076EFF8 /* XCUIElement+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8049F0283E186B0076EFF8 /* XCUIElement+Helpers.swift */; };
 		FF8049F6283E1FD10076EFF8 /* LoggerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8049F5283E1FD10076EFF8 /* LoggerMock.swift */; };
-		FF8049F8283E1FF00076EFF8 /* CancellableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8049F7283E1FF00076EFF8 /* CancellableMock.swift */; };
-		FF8049FA283E200E0076EFF8 /* PaginatedWatcherMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8049F9283E200E0076EFF8 /* PaginatedWatcherMock.swift */; };
 		FF8352BB283E76A600BB5065 /* NablaMessagingProtocolMock+testSendMessageAndDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8352BA283E76A600BB5065 /* NablaMessagingProtocolMock+testSendMessageAndDelete.swift */; };
 		FF8352BD283E79CA00BB5065 /* NablaMessagingProtocolMock+testSendMediaMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8352BC283E79CA00BB5065 /* NablaMessagingProtocolMock+testSendMediaMessage.swift */; };
 		FF8352BF283E7DAF00BB5065 /* NablaMessagingProtocolMock+testTypingIndicatorAppears.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8352BE283E7DAF00BB5065 /* NablaMessagingProtocolMock+testTypingIndicatorAppears.swift */; };
@@ -67,8 +65,6 @@
 		FF8049EC283E16790076EFF8 /* LaunchArgument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchArgument.swift; sourceTree = "<group>"; };
 		FF8049F0283E186B0076EFF8 /* XCUIElement+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIElement+Helpers.swift"; sourceTree = "<group>"; };
 		FF8049F5283E1FD10076EFF8 /* LoggerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerMock.swift; sourceTree = "<group>"; };
-		FF8049F7283E1FF00076EFF8 /* CancellableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellableMock.swift; sourceTree = "<group>"; };
-		FF8049F9283E200E0076EFF8 /* PaginatedWatcherMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedWatcherMock.swift; sourceTree = "<group>"; };
 		FF8352BA283E76A600BB5065 /* NablaMessagingProtocolMock+testSendMessageAndDelete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NablaMessagingProtocolMock+testSendMessageAndDelete.swift"; sourceTree = "<group>"; };
 		FF8352BC283E79CA00BB5065 /* NablaMessagingProtocolMock+testSendMediaMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NablaMessagingProtocolMock+testSendMediaMessage.swift"; sourceTree = "<group>"; };
 		FF8352BE283E7DAF00BB5065 /* NablaMessagingProtocolMock+testTypingIndicatorAppears.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NablaMessagingProtocolMock+testTypingIndicatorAppears.swift"; sourceTree = "<group>"; };
@@ -184,8 +180,6 @@
 				FF4F6356283E4D4A00CDEF86 /* ConversationListViewUITests */,
 				FF8049E7283D227A0076EFF8 /* NablaMessagingProtocolMock.swift */,
 				FF8049F5283E1FD10076EFF8 /* LoggerMock.swift */,
-				FF8049F7283E1FF00076EFF8 /* CancellableMock.swift */,
-				FF8049F9283E200E0076EFF8 /* PaginatedWatcherMock.swift */,
 				FF4F6357283E531D00CDEF86 /* Conversation+Mock.swift */,
 			);
 			path = Mocks;
@@ -296,8 +290,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF8049F8283E1FF00076EFF8 /* CancellableMock.swift in Sources */,
-				FF8049FA283E200E0076EFF8 /* PaginatedWatcherMock.swift in Sources */,
 				FF8049EB283E12A40076EFF8 /* NablaMessagingProtocolMock+testCreateConversation.swift in Sources */,
 				E4CD91722819D29E00562EC5 /* ViewController.swift in Sources */,
 				FF4F6361283E657C00CDEF86 /* NablaMessagingProtocolMock+testFailSendMessageAndRetry.swift in Sources */,

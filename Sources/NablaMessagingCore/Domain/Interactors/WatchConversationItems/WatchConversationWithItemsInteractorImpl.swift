@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -16,15 +17,12 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
 
     // MARK: - Internal
     
-    func execute(
-        conversationId: UUID,
-        handler: ResultHandler<ConversationItems, NablaError>
-    ) -> PaginatedWatcher {
+    func execute(conversationId: UUID) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
         guard isAuthenticated else {
-            return FailurePaginatedWatcher(handler: handler, error: MissingAuthenticationProviderError())
+            return Fail(error: MissingAuthenticationProviderError()).eraseToAnyPublisher()
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
-        return itemsRepository.watchConversationItems(ofConversationWithId: transientId, handler: handler)
+        return itemsRepository.watchConversationItems(ofConversationWithId: transientId)
     }
     
     // MARK: - Private

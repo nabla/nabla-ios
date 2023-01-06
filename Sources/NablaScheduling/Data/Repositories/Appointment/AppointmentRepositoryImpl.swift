@@ -18,7 +18,7 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
             .eraseToAnyPublisher()
     }
     
-    /// Throws `NablaError`
+    /// - Throws: ``NablaError``
     func scheduleAppointment(categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
         do {
             let appointment = try await remoteDataSource.scheduleAppointment(categoryId: categoryId, providerId: providerId, date: date)
@@ -30,7 +30,7 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
         }
     }
     
-    /// Throws `NablaError`
+    /// - Throws: ``NablaError``
     func cancelAppointment(withId appointmentId: UUID) async throws {
         do {
             try await remoteDataSource.cancelAppointment(withId: appointmentId)
@@ -62,9 +62,6 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
     private func subscribeToAppointmentsEvents() {
         appointmentsEventsSubscriber = remoteDataSource
             .subscribeToAppointmentsEvents()
-            .nabla.sink(receiveError: { [weak self, logger] error in
-                logger.error(message: "Appointments subscription failed", extra: ["reason": error])
-                self?.subscribeToAppointmentsEvents()
-            })
+            .nabla.sink()
     }
 }

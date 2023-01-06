@@ -15,17 +15,17 @@ final class RetrySendingMessageInteractorImpl: AuthenticatedInteractor, RetrySen
     }
 
     // MARK: - RetrySendingMessageInteractor
-
+    
+    /// - Throws: ``NablaError``
     func execute(
         itemId: UUID,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable {
+        conversationId: UUID
+    ) async throws {
         guard isAuthenticated else {
-            return Failure(handler: handler, error: MissingAuthenticationProviderError())
+            throw MissingAuthenticationProviderError()
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
-        return itemsRepository.retrySending(itemWithId: itemId, inConversationWithId: transientId, handler: handler)
+        try await itemsRepository.retrySending(itemWithId: itemId, inConversationWithId: transientId)
     }
     
     // MARK: - Private

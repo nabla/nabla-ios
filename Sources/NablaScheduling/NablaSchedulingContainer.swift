@@ -4,27 +4,17 @@ import NablaCore
 final class NablaSchedulingContainer {
     // MARK: - Internal
     
-    var logger: Logger { coreContainer.logger }
-    
-    var gqlClient: AsyncGQLClient {
-        coreContainer.gqlClient
-    }
-    
-    var gqlStore: AsyncGQLStore {
-        coreContainer.gqlStore
-    }
-    
-    var videoCallClient: VideoCallClient? {
-        coreContainer.videoCallClient
-    }
-    
-    private(set) lazy var watchAppointmentsInteractor: WatchAppointmentsInteractor = WatchAppointmentsInteractorImpl(repository: appointmentRepository)
-    private(set) lazy var watchCategoriesInteractor: WatchCategoriesInteractor = WatchCategoriesInteractorImpl(repository: availabilitySlotRepository)
-    private(set) lazy var watchAvailabilitySlotsInteractor: WatchAvailabilitySlotsInteractor = WatchAvailabilitySlotsInteractorImpl(repository: availabilitySlotRepository)
-    private(set) lazy var scheduleAppointmentInteractor: ScheduleAppointmentInteractor = ScheduleAppointmentInteractorImpl(repository: appointmentRepository)
-    private(set) lazy var cancelAppointmentInteractor: CancelAppointmentInteractor = CancelAppointmentInteractorImpl(repository: appointmentRepository)
-    private(set) lazy var watchProviderInteractor: WatchProviderInteractor = WatchProviderInteractorImpl(repository: providerRepository)
-    private(set) lazy var fetchConsentsInteractor: FetchConcentsInteractor = FetchConsentsInteractorImpl(repository: consentsRepository)
+    let logger: Logger
+    let gqlClient: GQLClient
+    let gqlStore: GQLStore
+    let videoCallClient: VideoCallClient?
+    let watchAppointmentsInteractor: WatchAppointmentsInteractor
+    let watchCategoriesInteractor: WatchCategoriesInteractor
+    let watchAvailabilitySlotsInteractor: WatchAvailabilitySlotsInteractor
+    let scheduleAppointmentInteractor: ScheduleAppointmentInteractor
+    let cancelAppointmentInteractor: CancelAppointmentInteractor
+    let watchProviderInteractor: WatchProviderInteractor
+    let fetchConsentsInteractor: FetchConcentsInteractor
 
     // MARK: Initializer
     
@@ -32,42 +22,59 @@ final class NablaSchedulingContainer {
         coreContainer: CoreContainer
     ) {
         self.coreContainer = coreContainer
+        
+        logger = coreContainer.logger
+        gqlClient = coreContainer.gqlClient
+        gqlStore = coreContainer.gqlStore
+        videoCallClient = coreContainer.videoCallClient
+        
+        consentsRemoteDataSource = ConsentsRemoteDataSourceImpl(
+            gqlClient: gqlClient
+        )
+        consentsRepository = ConsentsRepositoryImpl(
+            remoteDataSource: consentsRemoteDataSource
+        )
+        
+        providerRemoteDataSource = ProviderRemoteDataSourceImpl(
+            gqlClient: gqlClient
+        )
+        providerRepository = ProviderRepositoryImpl(
+            remoteDataSource: providerRemoteDataSource
+        )
+        
+        appointmentRemoteDataSource = AppointmentRemoteDataSourceImpl(
+            gqlClient: gqlClient,
+            gqlStore: gqlStore
+        )
+        appointmentRepository = AppointmentRepositoryImpl(
+            logger: logger,
+            remoteDataSource: appointmentRemoteDataSource
+        )
+        
+        availabilitySlotRemoteDataSource = AvailabilitySlotRemoteDataSourceImpl(
+            gqlClient: gqlClient,
+            gqlStore: gqlStore
+        )
+        availabilitySlotRepository = AvailabilitySlotRepositoryImpl(remoteDataSource: availabilitySlotRemoteDataSource)
+        
+        watchAppointmentsInteractor = WatchAppointmentsInteractorImpl(repository: appointmentRepository)
+        watchCategoriesInteractor = WatchCategoriesInteractorImpl(repository: availabilitySlotRepository)
+        watchAvailabilitySlotsInteractor = WatchAvailabilitySlotsInteractorImpl(repository: availabilitySlotRepository)
+        scheduleAppointmentInteractor = ScheduleAppointmentInteractorImpl(repository: appointmentRepository)
+        cancelAppointmentInteractor = CancelAppointmentInteractorImpl(repository: appointmentRepository)
+        watchProviderInteractor = WatchProviderInteractorImpl(repository: providerRepository)
+        fetchConsentsInteractor = FetchConsentsInteractorImpl(repository: consentsRepository)
     }
     
     // MARK: - Private
     
     private let coreContainer: CoreContainer
-    
-    private lazy var availabilitySlotRepository: AvailabilitySlotRepository = AvailabilitySlotRepositoryImpl(remoteDataSource: availabilitySlotRemoteDataSource)
-    
-    private lazy var availabilitySlotRemoteDataSource: AvailabilitySlotRemoteDataSource = AvailabilitySlotRemoteDataSourceImpl(
-        gqlClient: gqlClient,
-        gqlStore: gqlStore
-    )
-    
-    private lazy var appointmentRepository: AppointmentRepository = AppointmentRepositoryImpl(
-        logger: logger,
-        remoteDataSource: appointmentRemoteDataSource
-    )
-    
-    private lazy var appointmentRemoteDataSource: AppointmentRemoteDataSource = AppointmentRemoteDataSourceImpl(
-        gqlClient: gqlClient,
-        gqlStore: gqlStore
-    )
-
-    private lazy var providerRepository: ProviderRepository = ProviderRepositoryImpl(
-        remoteDataSource: providerRemoteDataSource
-    )
-
-    private lazy var providerRemoteDataSource: ProviderRemoteDataSource = ProviderRemoteDataSourceImpl(
-        gqlClient: gqlClient
-    )
-    
-    private lazy var consentsRepository: ConsentsRepository = ConsentsRepositoryImpl(
-        remoteDataSource: consentsRemoteDataSource
-    )
-    
-    private lazy var consentsRemoteDataSource: ConsentsRemoteDataSource = ConsentsRemoteDataSourceImpl(
-        gqlClient: gqlClient
-    )
+    private let availabilitySlotRepository: AvailabilitySlotRepository
+    private let availabilitySlotRemoteDataSource: AvailabilitySlotRemoteDataSource
+    private let appointmentRepository: AppointmentRepository
+    private let appointmentRemoteDataSource: AppointmentRemoteDataSource
+    private let providerRepository: ProviderRepository
+    private let providerRemoteDataSource: ProviderRemoteDataSource
+    private let consentsRepository: ConsentsRepository
+    private let consentsRemoteDataSource: ConsentsRemoteDataSource
 }

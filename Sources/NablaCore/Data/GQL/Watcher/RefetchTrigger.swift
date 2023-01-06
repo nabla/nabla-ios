@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 open class RefetchTrigger {
@@ -8,10 +9,14 @@ open class RefetchTrigger {
     }
     
     public func trigger() {
-        NotificationCenter.default.post(name: Self.refetchWatchersNotifiationName, object: nil, userInfo: nil)
+        Self.refetchSubject.send()
     }
     
     // MARK: - Internal
     
-    static let refetchWatchersNotifiationName = Notification.Name(rawValue: "com.nabla.refetchWatchersNotifiation")
+    static let refetchPublisher = refetchSubject.eraseToAnyPublisher()
+    
+    // MARK: - Private
+    
+    private static let refetchSubject = PassthroughSubject<Void, Never>()
 }

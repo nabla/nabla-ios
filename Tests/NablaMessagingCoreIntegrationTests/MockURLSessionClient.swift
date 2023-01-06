@@ -13,7 +13,12 @@ class MockURLSessionClient: URLSessionClient {
     }
     
     private let mockSession: DVR.Session
-    private var requestCount = 0
+    private var requestCounts = [String: Int]()
+    private let queue = DispatchQueue(label: "com.nabla.MockURLSessionClient", qos: .userInteractive)
+    
+    private enum Constants {
+        static let unknownOperationName = "unknown"
+    }
     
     override func sendRequest(_ request: URLRequest, rawTaskCompletionHandler _: URLSessionClient.RawCompletion? = nil, completion: @escaping URLSessionClient.Completion) -> URLSessionTask {
         let stampedRequest = stamp(request)
@@ -24,7 +29,6 @@ class MockURLSessionClient: URLSessionClient {
             if let data = data, let response = response as? HTTPURLResponse {
                 return completion(.success((data, response)))
             }
-            print(type(of: response))
             completion(.failure(TestError.unexpectedResponse))
         }
         task.resume()
@@ -32,16 +36,20 @@ class MockURLSessionClient: URLSessionClient {
     }
     
     private func stamp(_ request: URLRequest) -> URLRequest {
-        do {
-            guard let bodyData = request.httpBody else { return request }
-            guard var body = try JSONSerialization.jsonObject(with: bodyData) as? [String: Any] else { return request }
-            body["Tests-Request-Index"] = requestCount
-            var copy = request
-            copy.httpBody = try JSONSerialization.data(withJSONObject: body)
-            requestCount += 1
-            return copy
-        } catch {
-            return request
+        queue.sync {
+            do {
+                let operationName = request.allHTTPHeaderFields?["X-APOLLO-OPERATION-NAME"] ?? Constants.unknownOperationName
+                guard let bodyData = request.httpBody else { return request }
+                guard var body = try JSONSerialization.jsonObject(with: bodyData) as? [String: Any] else { return request }
+                let requestCount = requestCounts[operationName, default: 0]
+                body["Tests-Request-Index"] = requestCount
+                var copy = request
+                copy.httpBody = try JSONSerialization.data(withJSONObject: body)
+                requestCounts[operationName] = requestCount + 1
+                return copy
+            } catch {
+                return request
+            }
         }
     }
 }

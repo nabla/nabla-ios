@@ -2,10 +2,10 @@ import Foundation
 import NablaCore
 
 protocol SendMessageInteractor {
+    /// - Throws: ``NablaError``
     func execute(
         message: MessageInput,
         replyToMessageId: UUID?,
-        conversationId: UUID,
-        handler: ResultHandler<Void, NablaError>
-    ) -> NablaCancellable
+        conversationId: UUID
+    ) async throws
 }

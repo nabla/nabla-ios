@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -26,94 +27,77 @@ class ConversationRepositoryImpl: ConversationRepository {
         }
     }
     
-    func watchConversation(
-        withId conversationId: TransientUUID,
-        handler: ResultHandler<Conversation, NablaError>
-    ) -> Watcher {
-        ConversationWatcher(
-            conversationId: conversationId,
-            localDataSource: localDataSource,
-            remoteDataSource: remoteDataSource,
-            handler: .init { [weak self] result in
-                switch result {
-                case let .failure(error):
-                    handler(.failure(GQLErrorTransformer.transform(gqlError: error)))
-                case let .success(conversation):
-                    if conversation.providers.contains(where: \.isTyping) {
-                        self?.remoteTypingDebouncer.execute {
-                            handler(.success(conversation))
-                        }
-                    } else {
-                        self?.remoteTypingDebouncer.cancel()
-                    }
-                    handler(.success(conversation))
+    func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<Conversation, NablaError> {
+        let localConversation = localDataSource.watchConversation(conversationId.localId)
+            .setFailureType(to: NablaError.self)
+        
+        let remoteConversation = conversationId.observeRemoteId()
+            .map { [remoteDataSource] remoteId -> AnyPublisher<RemoteConversation?, NablaError> in
+                if let remoteId = remoteId {
+                    return remoteDataSource.watchConversation(remoteId)
+                        .nabla.asOptional()
+                        .mapError(GQLErrorTransformer.transform(gqlError:))
+                        .eraseToAnyPublisher()
+                } else {
+                    return Just(nil)
+                        .setFailureType(to: NablaError.self)
+                        .eraseToAnyPublisher()
                 }
             }
-        )
-    }
-    
-    func watchConversations(handler: ResultHandler<ConversationList, NablaError>) -> PaginatedWatcher {
-        let watcher = remoteDataSource.watchConversations(handler: .init { result in
-            switch result {
-            case let .failure(error):
-                handler(.failure(GQLErrorTransformer.transform(gqlError: error)))
-            case let .success(data):
-                let model = ConversationList(
-                    conversations: ConversationTransformer.transform(data: data),
-                    hasMore: data.conversations.hasMore
-                )
-                handler(.success(model))
+            .nabla.switchToLatest()
+        
+        return Publishers.CombineLatest(localConversation, remoteConversation)
+            .map { localConversation, remoteConversation -> Conversation? in
+                if let remoteConversation = remoteConversation {
+                    return ConversationTransformer.transform(fragment: remoteConversation)
+                } else if let localConversation = localConversation {
+                    return ConversationTransformer.transform(conversation: localConversation)
+                } else {
+                    return nil
+                }
             }
-        })
-
-        let holder = PaginatedWatcherAndSubscriptionHolder(watcher: watcher)
-        
-        let eventsSubscription = makeOrReuseConversationEventsSubscription()
-        holder.hold(eventsSubscription)
-        
-        return holder
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
     }
     
+    func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
+        let watcher = remoteDataSource.watchConversations()
+            .mapError(GQLErrorTransformer.transform(gqlError:))
+            .map { $0.map(ConversationTransformer.transform(fragment:)) }
+            .eraseToAnyPublisher()
+        
+        var subscription: AnyCancellable? = makeOrReuseConversationEventsSubscription()
+        assert(subscription != nil) // Silences "Variable 'subscription' was written to, but never read" warning
+        
+        return watcher
+            .handleEvents(receiveCancel: {
+                subscription = nil
+            })
+            .eraseToAnyPublisher()
+    }
+    
+    /// - Throws: ``NablaError``
     func createConversation(
         message: MessageInput,
         title: String?,
-        providerIds: [UUID]?,
-        handler: ResultHandler<Conversation, NablaError>
-    ) -> NablaCancellable {
-        let umbrella = UmbrellaCancellable()
-        
-        let prepareTask = prepareInitialMessage(
-            message,
-            handler: .init { [weak umbrella, remoteDataSource] result in
-                guard let umbrella = umbrella, !umbrella.isCancelled else { return }
-                
-                switch result {
-                case let .failure(error):
-                    handler(.failure(error))
-                case let .success(messageInput):
-                    let createTask = remoteDataSource.createConversation(
-                        message: messageInput,
-                        title: title,
-                        providerIds: providerIds,
-                        handler: handler
-                            .pullbackError { error in
-                                switch error {
-                                case let .entityNotFound(message):
-                                    return ProviderNotFoundError(message: message)
-                                case let .permissionRequired(message):
-                                    return ProviderMissingPermissionError(message: message)
-                                default:
-                                    return GQLErrorTransformer.transform(gqlError: error)
-                                }
-                            }
-                            .pullback(ConversationTransformer.transform)
-                    )
-                    umbrella.add(createTask)
-                }
+        providerIds: [UUID]?
+    ) async throws -> Conversation {
+        let input = try await prepareInitialMessage(message)
+        do {
+            let conversation = try await remoteDataSource.createConversation(message: input, title: title, providerIds: providerIds)
+            return ConversationTransformer.transform(fragment: conversation)
+        } catch let error as GQLError {
+            switch error {
+            case let .entityNotFound(message):
+                throw ProviderNotFoundError(message: message)
+            case let .permissionRequired(message):
+                throw ProviderMissingPermissionError(message: message)
+            default:
+                throw GQLErrorTransformer.transform(gqlError: error)
             }
-        )
-        umbrella.add(prepareTask)
-        return umbrella
+        } catch {
+            throw InternalError(underlyingError: error)
+        }
     }
     
     func startConversation(
@@ -157,63 +141,65 @@ class ConversationRepositoryImpl: ConversationRepository {
     private let localDataSource: ConversationLocalDataSource
     private let fileUploadDataSource: FileUploadRemoteDataSource
 
-    private weak var conversationsEventsSubscription: NablaCancellable?
-    private let remoteTypingDebouncer: Debouncer = .init(
-        delay: ProviderInConversation.Constants.typingTimeWindowTimeInterval,
-        queue: .global(qos: .userInitiated)
-    )
+    private weak var conversationsEventsSubscription: AnyCancellable?
     
-    private func makeOrReuseConversationEventsSubscription() -> NablaCancellable {
+    private func makeOrReuseConversationEventsSubscription() -> AnyCancellable {
         if let subscription = conversationsEventsSubscription {
             return subscription
         }
         
-        let subscription = remoteDataSource.subscribeToConversationsEvents(handler: .void)
+        let subscription = remoteDataSource.subscribeToConversationsEvents()
+            .nabla.sink()
         conversationsEventsSubscription = subscription
         return subscription
     }
     
+    /// - Throws: ``NablaError``
     private func prepareInitialMessage(
-        _ message: MessageInput?,
-        handler: ResultHandler<GQL.SendMessageInput?, NablaError>
-    ) -> NablaCancellable {
-        guard let message = message else {
-            return Success(handler: handler, value: nil)
-        }
-        
+        _ message: MessageInput
+    ) async throws -> GQL.SendMessageInput {
         let clientId = uuidGenerator.generate()
         switch message {
         case let .text(content):
-            let input = GQL.SendMessageInput(content: .init(textInput: .init(text: content)), clientId: clientId)
-            return Success(handler: handler, value: input)
+            return GQL.SendMessageInput(
+                content: .init(textInput: .init(text: content)),
+                clientId: clientId
+            )
         case let .image(content):
-            return fileUploadDataSource.upload(
-                file: transform(content),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(imageInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
+            let uuid = try await upload(media: content)
+            return .init(
+                content: .init(imageInput: .init(upload: .init(uuid: uuid))),
+                clientId: clientId
             )
         case let .video(content):
-            return fileUploadDataSource.upload(
-                file: transform(content),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(videoInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
+            let uuid = try await upload(media: content)
+            return .init(
+                content: .init(videoInput: .init(upload: .init(uuid: uuid))),
+                clientId: clientId
             )
         case let .document(content):
-            return fileUploadDataSource.upload(
-                file: transform(content),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(documentInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
+            let uuid = try await upload(media: content)
+            return .init(
+                content: .init(documentInput: .init(upload: .init(uuid: uuid))),
+                clientId: clientId
             )
         case let .audio(content):
-            return fileUploadDataSource.upload(
-                file: transform(content),
-                handler: handler
-                    .pullbackError(Self.transformFileUploadError(_:))
-                    .pullback { .init(content: .init(audioInput: .init(upload: .init(uuid: $0))), clientId: clientId) }
+            let uuid = try await upload(media: content)
+            return .init(
+                content: .init(audioInput: .init(upload: .init(uuid: uuid))),
+                clientId: clientId
             )
+        }
+    }
+    
+    /// - Throws: ``NablaError``
+    private func upload(media: Media) async throws -> UUID {
+        do {
+            return try await fileUploadDataSource.upload(file: transform(media))
+        } catch let error as FileUploadRemoteDataSourceError {
+            throw Self.transformFileUploadError(error)
+        } catch {
+            throw InternalError(underlyingError: error)
         }
     }
     

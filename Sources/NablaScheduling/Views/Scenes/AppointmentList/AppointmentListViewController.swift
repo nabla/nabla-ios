@@ -69,21 +69,12 @@ final class AppointmentListViewController: UIViewController {
     }()
     
     private lazy var segmentedControl: UISegmentedControl = {
-        let upcomingAction = UIAction(
-            title: L10n.appointmentsScreenSelectorUpcomingLabel,
-            identifier: .init(rawValue: "Upcoming"),
-            handler: { [weak self] _ in
-                self?.viewModel.selectedSelector = .upcoming
-            }
-        )
-        let finalizedAction = UIAction(
-            title: L10n.appointmentsScreenSelectorFinalizedLabel,
-            identifier: .init(rawValue: "Finalized"),
-            handler: { [weak self] _ in
-                self?.viewModel.selectedSelector = .finalized
-            }
-        )
-        return UISegmentedControl(items: [upcomingAction, finalizedAction])
+        let control = UISegmentedControl(items: [
+            L10n.appointmentsScreenSelectorUpcomingLabel,
+            L10n.appointmentsScreenSelectorFinalizedLabel,
+        ])
+        control.addTarget(self, action: #selector(segmentedControlValueChangedHandler), for: .valueChanged)
+        return control
     }()
     
     private lazy var tableView: UITableView = {
@@ -156,6 +147,19 @@ final class AppointmentListViewController: UIViewController {
         
         bottomContainer.addSubview(actionButton)
         actionButton.nabla.pinToSuperView(insets: .nabla.all(16))
+    }
+    
+    // MARK: Handlers
+    
+    @objc private func segmentedControlValueChangedHandler(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0: viewModel.selectedSelector = .upcoming
+        case 1: viewModel.selectedSelector = .finalized
+        default: logger.error(
+                message: "Unknown selectedSegmentIndex",
+                extra: ["selectedSegmentIndex": sender.selectedSegmentIndex]
+            )
+        }
     }
     
     // MARK: DataSource

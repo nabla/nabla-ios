@@ -1,6 +1,6 @@
 import Foundation
 
 protocol ConsentsRemoteDataSource {
-    /// Throws: `GQLError`
+    /// - Throws: ``GQLError``
     func fetchConsents() async throws -> RemoteConsents
 }

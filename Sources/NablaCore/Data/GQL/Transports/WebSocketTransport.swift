@@ -19,14 +19,12 @@ class WebSocketTransport {
     
     init(
         environment: Environment,
-        store: GQLStore,
         authenticator: Authenticator,
         apolloStore: ApolloStore,
         logger: Logger,
         extraHeaders: ExtraHeaders
     ) {
         self.environment = environment
-        self.store = store
         self.authenticator = authenticator
         self.logger = logger
         self.apolloStore = apolloStore
@@ -46,7 +44,6 @@ class WebSocketTransport {
     // MARK: - Private
 
     private let environment: Environment
-    private let store: GQLStore
     private let apolloStore: ApolloStore
     private let authenticator: Authenticator
     private let logger: Logger
@@ -78,25 +75,21 @@ class WebSocketTransport {
     }
     
     @objc private func updateAuthenticationHeader() {
-        authenticator.getAccessToken(
-            handler: .init { [weak self] result in
-                guard let self = self else {
-                    return
-                }
-                switch result {
-                case .failure:
+        Task {
+            do {
+                let state = try await authenticator.getAccessToken()
+                switch state {
+                case .notAuthenticated:
+                    // We don't support any unauthenticated subscription
                     self.apollo.closeConnection()
-                case let .success(authenticationState):
-                    switch authenticationState {
-                    case .notAuthenticated:
-                        // We don't support any unauthenticated subscription
-                        self.apollo.closeConnection()
-                    case let .authenticated(accessToken):
-                        self.apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"])
-                        self.apollo.resumeWebSocketConnection(autoReconnect: true)
-                    }
+                case let .authenticated(accessToken):
+                    self.apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"])
+                    self.apollo.resumeWebSocketConnection(autoReconnect: true)
                 }
-            })
+            } catch {
+                apollo.closeConnection()
+            }
+        }
     }
 }
 

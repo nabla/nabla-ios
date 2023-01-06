@@ -11,20 +11,19 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
 
     // MARK: - Internal
     
+    /// - Throws: ``NablaError``
     func execute(
         message: MessageInput,
         title: String?,
-        providerIds: [UUID]?,
-        handler: ResultHandler<Conversation, NablaError>
-    ) -> NablaCancellable {
+        providerIds: [UUID]?
+    ) async throws -> Conversation {
         guard isAuthenticated else {
-            return Failure(handler: handler, error: MissingAuthenticationProviderError())
+            throw MissingAuthenticationProviderError()
         }
-        return repository.createConversation(
+        return try await repository.createConversation(
             message: message,
             title: title,
-            providerIds: providerIds,
-            handler: handler
+            providerIds: providerIds
         )
     }
     

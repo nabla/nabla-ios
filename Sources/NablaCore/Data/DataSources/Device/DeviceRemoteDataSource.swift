@@ -9,5 +9,6 @@ struct Installation {
 }
 
 protocol DeviceRemoteDataSource {
-    func updateOrRegisterDevice(installation: Installation, handler: ResultHandler<RemoteDevice, GQLError>) -> NablaCancellable
+    /// - Throws: ``GQLError``
+    func updateOrRegisterDevice(installation: Installation) async throws -> RemoteDevice
 }
