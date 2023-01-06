@@ -17,7 +17,9 @@ final class DeviceRepositoryImpl: DeviceRepository {
             let remoteDevice = try await deviceRemoteDataSource.updateOrRegisterDevice(installation: installation)
             deviceLocalDataSource.setDeviceId(remoteDevice.deviceId, forUserId: userId)
             if let sentry = remoteDevice.sentry {
-                errorReporter.enable(dsn: sentry.dsn, env: sentry.env)
+                await MainActor.run {
+                    errorReporter.enable(dsn: sentry.dsn, env: sentry.env)
+                }
             } else {
                 errorReporter.disable()
             }
