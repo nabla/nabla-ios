@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import NablaCore
 
+// sourcery: AutoMockable
 protocol ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId: TransientUUID

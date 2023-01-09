@@ -81,7 +81,9 @@ public class MessagingContainer {
         watchConversationItemsInteractor = WatchConversationItemsInteractorImpl(
             authenticator: coreContainer.authenticator,
             itemsRepository: conversationItemRepository,
-            conversationsRepository: conversationRepository
+            conversationsRepository: conversationRepository,
+            gateKeepers: gateKeepers,
+            logger: logger
         )
         sendMessageInteractor = SendMessageInteractorImpl(
             authenticator: coreContainer.authenticator,

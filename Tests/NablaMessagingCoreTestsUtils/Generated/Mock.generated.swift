@@ -649,6 +649,308 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
     }
 }
 
+// MARK: - ConversationItemRepository
+
+open class ConversationItemRepositoryMock: ConversationItemRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func watchConversationItems(ofConversationWithId: TransientUUID) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+        addInvocation(.m_watchConversationItems__ofConversationWithId_ofConversationWithId(Parameter<TransientUUID>.value(`ofConversationWithId`)))
+		let perform = methodPerformValue(.m_watchConversationItems__ofConversationWithId_ofConversationWithId(Parameter<TransientUUID>.value(`ofConversationWithId`))) as? (TransientUUID) -> Void
+		perform?(`ofConversationWithId`)
+		var __value: AnyPublisher<PaginatedList<ConversationItem>, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchConversationItems__ofConversationWithId_ofConversationWithId(Parameter<TransientUUID>.value(`ofConversationWithId`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchConversationItems(ofConversationWithId: TransientUUID). Use given")
+			Failure("Stub return value not specified for watchConversationItems(ofConversationWithId: TransientUUID). Use given")
+		}
+		return __value
+    }
+
+    open func sendMessage(_ message: MessageInput, replyToMessageId: UUID?, inConversationWithId: TransientUUID) throws {
+        addInvocation(.m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(Parameter<MessageInput>.value(`message`), Parameter<UUID?>.value(`replyToMessageId`), Parameter<TransientUUID>.value(`inConversationWithId`)))
+		let perform = methodPerformValue(.m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(Parameter<MessageInput>.value(`message`), Parameter<UUID?>.value(`replyToMessageId`), Parameter<TransientUUID>.value(`inConversationWithId`))) as? (MessageInput, UUID?, TransientUUID) -> Void
+		perform?(`message`, `replyToMessageId`, `inConversationWithId`)
+		do {
+		    _ = try methodReturnValue(.m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(Parameter<MessageInput>.value(`message`), Parameter<UUID?>.value(`replyToMessageId`), Parameter<TransientUUID>.value(`inConversationWithId`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func retrySending(itemWithId itemId: UUID, inConversationWithId: TransientUUID) throws {
+        addInvocation(.m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(Parameter<UUID>.value(`itemId`), Parameter<TransientUUID>.value(`inConversationWithId`)))
+		let perform = methodPerformValue(.m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(Parameter<UUID>.value(`itemId`), Parameter<TransientUUID>.value(`inConversationWithId`))) as? (UUID, TransientUUID) -> Void
+		perform?(`itemId`, `inConversationWithId`)
+		do {
+		    _ = try methodReturnValue(.m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(Parameter<UUID>.value(`itemId`), Parameter<TransientUUID>.value(`inConversationWithId`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func deleteMessage(withId messageId: UUID, conversationId: TransientUUID) throws {
+        addInvocation(.m_deleteMessage__withId_messageIdconversationId_conversationId(Parameter<UUID>.value(`messageId`), Parameter<TransientUUID>.value(`conversationId`)))
+		let perform = methodPerformValue(.m_deleteMessage__withId_messageIdconversationId_conversationId(Parameter<UUID>.value(`messageId`), Parameter<TransientUUID>.value(`conversationId`))) as? (UUID, TransientUUID) -> Void
+		perform?(`messageId`, `conversationId`)
+		do {
+		    _ = try methodReturnValue(.m_deleteMessage__withId_messageIdconversationId_conversationId(Parameter<UUID>.value(`messageId`), Parameter<TransientUUID>.value(`conversationId`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+
+    fileprivate enum MethodType {
+        case m_watchConversationItems__ofConversationWithId_ofConversationWithId(Parameter<TransientUUID>)
+        case m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(Parameter<MessageInput>, Parameter<UUID?>, Parameter<TransientUUID>)
+        case m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(Parameter<UUID>, Parameter<TransientUUID>)
+        case m_deleteMessage__withId_messageIdconversationId_conversationId(Parameter<UUID>, Parameter<TransientUUID>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_watchConversationItems__ofConversationWithId_ofConversationWithId(let lhsOfconversationwithid), .m_watchConversationItems__ofConversationWithId_ofConversationWithId(let rhsOfconversationwithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsOfconversationwithid, rhs: rhsOfconversationwithid, with: matcher), lhsOfconversationwithid, rhsOfconversationwithid, "ofConversationWithId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(let lhsMessage, let lhsReplytomessageid, let lhsInconversationwithid), .m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(let rhsMessage, let rhsReplytomessageid, let rhsInconversationwithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "_ message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsReplytomessageid, rhs: rhsReplytomessageid, with: matcher), lhsReplytomessageid, rhsReplytomessageid, "replyToMessageId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsInconversationwithid, rhs: rhsInconversationwithid, with: matcher), lhsInconversationwithid, rhsInconversationwithid, "inConversationWithId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(let lhsItemid, let lhsInconversationwithid), .m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(let rhsItemid, let rhsInconversationwithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsItemid, rhs: rhsItemid, with: matcher), lhsItemid, rhsItemid, "itemWithId itemId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsInconversationwithid, rhs: rhsInconversationwithid, with: matcher), lhsInconversationwithid, rhsInconversationwithid, "inConversationWithId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_deleteMessage__withId_messageIdconversationId_conversationId(let lhsMessageid, let lhsConversationid), .m_deleteMessage__withId_messageIdconversationId_conversationId(let rhsMessageid, let rhsConversationid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessageid, rhs: rhsMessageid, with: matcher), lhsMessageid, rhsMessageid, "withId messageId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "conversationId"))
+				return Matcher.ComparisonResult(results)
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_watchConversationItems__ofConversationWithId_ofConversationWithId(p0): return p0.intValue
+            case let .m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(p0, p1): return p0.intValue + p1.intValue
+            case let .m_deleteMessage__withId_messageIdconversationId_conversationId(p0, p1): return p0.intValue + p1.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_watchConversationItems__ofConversationWithId_ofConversationWithId: return ".watchConversationItems(ofConversationWithId:)"
+            case .m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId: return ".sendMessage(_:replyToMessageId:inConversationWithId:)"
+            case .m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId: return ".retrySending(itemWithId:inConversationWithId:)"
+            case .m_deleteMessage__withId_messageIdconversationId_conversationId: return ".deleteMessage(withId:conversationId:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>, willReturn: AnyPublisher<PaginatedList<ConversationItem>, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchConversationItems__ofConversationWithId_ofConversationWithId(`ofConversationWithId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>, willProduce: (Stubber<AnyPublisher<PaginatedList<ConversationItem>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<PaginatedList<ConversationItem>, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchConversationItems__ofConversationWithId_ofConversationWithId(`ofConversationWithId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<PaginatedList<ConversationItem>, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyToMessageId: Parameter<UUID?>, inConversationWithId: Parameter<TransientUUID>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(`message`, `replyToMessageId`, `inConversationWithId`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyToMessageId: Parameter<UUID?>, inConversationWithId: Parameter<TransientUUID>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(`message`, `replyToMessageId`, `inConversationWithId`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId: Parameter<TransientUUID>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(`itemId`, `inConversationWithId`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId: Parameter<TransientUUID>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(`itemId`, `inConversationWithId`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<TransientUUID>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteMessage__withId_messageIdconversationId_conversationId(`messageId`, `conversationId`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<TransientUUID>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_deleteMessage__withId_messageIdconversationId_conversationId(`messageId`, `conversationId`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>) -> Verify { return Verify(method: .m_watchConversationItems__ofConversationWithId_ofConversationWithId(`ofConversationWithId`))}
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyToMessageId: Parameter<UUID?>, inConversationWithId: Parameter<TransientUUID>) -> Verify { return Verify(method: .m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(`message`, `replyToMessageId`, `inConversationWithId`))}
+        public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId: Parameter<TransientUUID>) -> Verify { return Verify(method: .m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(`itemId`, `inConversationWithId`))}
+        public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<TransientUUID>) -> Verify { return Verify(method: .m_deleteMessage__withId_messageIdconversationId_conversationId(`messageId`, `conversationId`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>, perform: @escaping (TransientUUID) -> Void) -> Perform {
+            return Perform(method: .m_watchConversationItems__ofConversationWithId_ofConversationWithId(`ofConversationWithId`), performs: perform)
+        }
+        public static func sendMessage(_ message: Parameter<MessageInput>, replyToMessageId: Parameter<UUID?>, inConversationWithId: Parameter<TransientUUID>, perform: @escaping (MessageInput, UUID?, TransientUUID) -> Void) -> Perform {
+            return Perform(method: .m_sendMessage__messagereplyToMessageId_replyToMessageIdinConversationWithId_inConversationWithId(`message`, `replyToMessageId`, `inConversationWithId`), performs: perform)
+        }
+        public static func retrySending(itemWithId itemId: Parameter<UUID>, inConversationWithId: Parameter<TransientUUID>, perform: @escaping (UUID, TransientUUID) -> Void) -> Perform {
+            return Perform(method: .m_retrySending__itemWithId_itemIdinConversationWithId_inConversationWithId(`itemId`, `inConversationWithId`), performs: perform)
+        }
+        public static func deleteMessage(withId messageId: Parameter<UUID>, conversationId: Parameter<TransientUUID>, perform: @escaping (UUID, TransientUUID) -> Void) -> Perform {
+            return Perform(method: .m_deleteMessage__withId_messageIdconversationId_conversationId(`messageId`, `conversationId`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
 // MARK: - ConversationLocalDataSource
 
 open class ConversationLocalDataSourceMock: ConversationLocalDataSource, Mock {
@@ -1229,6 +1531,419 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
         }
         public static func subscribeToConversationsEvents(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_subscribeToConversationsEvents, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - ConversationRepository
+
+open class ConversationRepositoryMock: ConversationRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func getConversationTransientId(from id: UUID) -> TransientUUID {
+        addInvocation(.m_getConversationTransientId__from_id(Parameter<UUID>.value(`id`)))
+		let perform = methodPerformValue(.m_getConversationTransientId__from_id(Parameter<UUID>.value(`id`))) as? (UUID) -> Void
+		perform?(`id`)
+		var __value: TransientUUID
+		do {
+		    __value = try methodReturnValue(.m_getConversationTransientId__from_id(Parameter<UUID>.value(`id`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for getConversationTransientId(from id: UUID). Use given")
+			Failure("Stub return value not specified for getConversationTransientId(from id: UUID). Use given")
+		}
+		return __value
+    }
+
+    open func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<Conversation, NablaError> {
+        addInvocation(.m_watchConversation__withId_conversationId(Parameter<TransientUUID>.value(`conversationId`)))
+		let perform = methodPerformValue(.m_watchConversation__withId_conversationId(Parameter<TransientUUID>.value(`conversationId`))) as? (TransientUUID) -> Void
+		perform?(`conversationId`)
+		var __value: AnyPublisher<Conversation, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchConversation__withId_conversationId(Parameter<TransientUUID>.value(`conversationId`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchConversation(withId conversationId: TransientUUID). Use given")
+			Failure("Stub return value not specified for watchConversation(withId conversationId: TransientUUID). Use given")
+		}
+		return __value
+    }
+
+    open func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
+        addInvocation(.m_watchConversations)
+		let perform = methodPerformValue(.m_watchConversations) as? () -> Void
+		perform?()
+		var __value: AnyPublisher<PaginatedList<Conversation>, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchConversations).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchConversations(). Use given")
+			Failure("Stub return value not specified for watchConversations(). Use given")
+		}
+		return __value
+    }
+
+    open func createConversation(message: MessageInput, title: String?, providerIds: [UUID]?) throws -> Conversation {
+        addInvocation(.m_createConversation__message_messagetitle_titleproviderIds_providerIds(Parameter<MessageInput>.value(`message`), Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`)))
+		let perform = methodPerformValue(.m_createConversation__message_messagetitle_titleproviderIds_providerIds(Parameter<MessageInput>.value(`message`), Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))) as? (MessageInput, String?, [UUID]?) -> Void
+		perform?(`message`, `title`, `providerIds`)
+		var __value: Conversation
+		do {
+		    __value = try methodReturnValue(.m_createConversation__message_messagetitle_titleproviderIds_providerIds(Parameter<MessageInput>.value(`message`), Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for createConversation(message: MessageInput, title: String?, providerIds: [UUID]?). Use given")
+			Failure("Stub return value not specified for createConversation(message: MessageInput, title: String?, providerIds: [UUID]?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func startConversation(title: String?, providerIds: [UUID]?) -> Conversation {
+        addInvocation(.m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`)))
+		let perform = methodPerformValue(.m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))) as? (String?, [UUID]?) -> Void
+		perform?(`title`, `providerIds`)
+		var __value: Conversation
+		do {
+		    __value = try methodReturnValue(.m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>.value(`title`), Parameter<[UUID]?>.value(`providerIds`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for startConversation(title: String?, providerIds: [UUID]?). Use given")
+			Failure("Stub return value not specified for startConversation(title: String?, providerIds: [UUID]?). Use given")
+		}
+		return __value
+    }
+
+    open func setIsTyping(_ isTyping: Bool, conversationId: TransientUUID) throws {
+        addInvocation(.m_setIsTyping__isTypingconversationId_conversationId(Parameter<Bool>.value(`isTyping`), Parameter<TransientUUID>.value(`conversationId`)))
+		let perform = methodPerformValue(.m_setIsTyping__isTypingconversationId_conversationId(Parameter<Bool>.value(`isTyping`), Parameter<TransientUUID>.value(`conversationId`))) as? (Bool, TransientUUID) -> Void
+		perform?(`isTyping`, `conversationId`)
+		do {
+		    _ = try methodReturnValue(.m_setIsTyping__isTypingconversationId_conversationId(Parameter<Bool>.value(`isTyping`), Parameter<TransientUUID>.value(`conversationId`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func markConversationAsSeen(conversationId: TransientUUID) throws {
+        addInvocation(.m_markConversationAsSeen__conversationId_conversationId(Parameter<TransientUUID>.value(`conversationId`)))
+		let perform = methodPerformValue(.m_markConversationAsSeen__conversationId_conversationId(Parameter<TransientUUID>.value(`conversationId`))) as? (TransientUUID) -> Void
+		perform?(`conversationId`)
+		do {
+		    _ = try methodReturnValue(.m_markConversationAsSeen__conversationId_conversationId(Parameter<TransientUUID>.value(`conversationId`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+
+    fileprivate enum MethodType {
+        case m_getConversationTransientId__from_id(Parameter<UUID>)
+        case m_watchConversation__withId_conversationId(Parameter<TransientUUID>)
+        case m_watchConversations
+        case m_createConversation__message_messagetitle_titleproviderIds_providerIds(Parameter<MessageInput>, Parameter<String?>, Parameter<[UUID]?>)
+        case m_startConversation__title_titleproviderIds_providerIds(Parameter<String?>, Parameter<[UUID]?>)
+        case m_setIsTyping__isTypingconversationId_conversationId(Parameter<Bool>, Parameter<TransientUUID>)
+        case m_markConversationAsSeen__conversationId_conversationId(Parameter<TransientUUID>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_getConversationTransientId__from_id(let lhsId), .m_getConversationTransientId__from_id(let rhsId)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsId, rhs: rhsId, with: matcher), lhsId, rhsId, "from id"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_watchConversation__withId_conversationId(let lhsConversationid), .m_watchConversation__withId_conversationId(let rhsConversationid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "withId conversationId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_watchConversations, .m_watchConversations): return .match
+
+            case (.m_createConversation__message_messagetitle_titleproviderIds_providerIds(let lhsMessage, let lhsTitle, let lhsProviderids), .m_createConversation__message_messagetitle_titleproviderIds_providerIds(let rhsMessage, let rhsTitle, let rhsProviderids)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher), lhsTitle, rhsTitle, "title"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsProviderids, rhs: rhsProviderids, with: matcher), lhsProviderids, rhsProviderids, "providerIds"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_startConversation__title_titleproviderIds_providerIds(let lhsTitle, let lhsProviderids), .m_startConversation__title_titleproviderIds_providerIds(let rhsTitle, let rhsProviderids)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher), lhsTitle, rhsTitle, "title"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsProviderids, rhs: rhsProviderids, with: matcher), lhsProviderids, rhsProviderids, "providerIds"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_setIsTyping__isTypingconversationId_conversationId(let lhsIstyping, let lhsConversationid), .m_setIsTyping__isTypingconversationId_conversationId(let rhsIstyping, let rhsConversationid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsIstyping, rhs: rhsIstyping, with: matcher), lhsIstyping, rhsIstyping, "_ isTyping"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "conversationId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_markConversationAsSeen__conversationId_conversationId(let lhsConversationid), .m_markConversationAsSeen__conversationId_conversationId(let rhsConversationid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConversationid, rhs: rhsConversationid, with: matcher), lhsConversationid, rhsConversationid, "conversationId"))
+				return Matcher.ComparisonResult(results)
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_getConversationTransientId__from_id(p0): return p0.intValue
+            case let .m_watchConversation__withId_conversationId(p0): return p0.intValue
+            case .m_watchConversations: return 0
+            case let .m_createConversation__message_messagetitle_titleproviderIds_providerIds(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_startConversation__title_titleproviderIds_providerIds(p0, p1): return p0.intValue + p1.intValue
+            case let .m_setIsTyping__isTypingconversationId_conversationId(p0, p1): return p0.intValue + p1.intValue
+            case let .m_markConversationAsSeen__conversationId_conversationId(p0): return p0.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_getConversationTransientId__from_id: return ".getConversationTransientId(from:)"
+            case .m_watchConversation__withId_conversationId: return ".watchConversation(withId:)"
+            case .m_watchConversations: return ".watchConversations()"
+            case .m_createConversation__message_messagetitle_titleproviderIds_providerIds: return ".createConversation(message:title:providerIds:)"
+            case .m_startConversation__title_titleproviderIds_providerIds: return ".startConversation(title:providerIds:)"
+            case .m_setIsTyping__isTypingconversationId_conversationId: return ".setIsTyping(_:conversationId:)"
+            case .m_markConversationAsSeen__conversationId_conversationId: return ".markConversationAsSeen(conversationId:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func getConversationTransientId(from id: Parameter<UUID>, willReturn: TransientUUID...) -> MethodStub {
+            return Given(method: .m_getConversationTransientId__from_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchConversation(withId conversationId: Parameter<TransientUUID>, willReturn: AnyPublisher<Conversation, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchConversation__withId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchConversations(willReturn: AnyPublisher<PaginatedList<Conversation>, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createConversation(message: Parameter<MessageInput>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willReturn: Conversation...) -> MethodStub {
+            return Given(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIds(`message`, `title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willReturn: Conversation...) -> MethodStub {
+            return Given(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getConversationTransientId(from id: Parameter<UUID>, willProduce: (Stubber<TransientUUID>) -> Void) -> MethodStub {
+            let willReturn: [TransientUUID] = []
+			let given: Given = { return Given(method: .m_getConversationTransientId__from_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (TransientUUID).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func watchConversation(withId conversationId: Parameter<TransientUUID>, willProduce: (Stubber<AnyPublisher<Conversation, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Conversation, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchConversation__withId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Conversation, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func watchConversations(willProduce: (Stubber<AnyPublisher<PaginatedList<Conversation>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<PaginatedList<Conversation>, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<PaginatedList<Conversation>, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willProduce: (Stubber<Conversation>) -> Void) -> MethodStub {
+            let willReturn: [Conversation] = []
+			let given: Given = { return Given(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Conversation).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func createConversation(message: Parameter<MessageInput>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIds(`message`, `title`, `providerIds`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createConversation(message: Parameter<MessageInput>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willProduce: (StubberThrows<Conversation>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIds(`message`, `title`, `providerIds`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Conversation).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<TransientUUID>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_setIsTyping__isTypingconversationId_conversationId(`isTyping`, `conversationId`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<TransientUUID>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_setIsTyping__isTypingconversationId_conversationId(`isTyping`, `conversationId`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func markConversationAsSeen(conversationId: Parameter<TransientUUID>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_markConversationAsSeen__conversationId_conversationId(`conversationId`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func markConversationAsSeen(conversationId: Parameter<TransientUUID>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_markConversationAsSeen__conversationId_conversationId(`conversationId`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func getConversationTransientId(from id: Parameter<UUID>) -> Verify { return Verify(method: .m_getConversationTransientId__from_id(`id`))}
+        public static func watchConversation(withId conversationId: Parameter<TransientUUID>) -> Verify { return Verify(method: .m_watchConversation__withId_conversationId(`conversationId`))}
+        public static func watchConversations() -> Verify { return Verify(method: .m_watchConversations)}
+        public static func createConversation(message: Parameter<MessageInput>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>) -> Verify { return Verify(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIds(`message`, `title`, `providerIds`))}
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>) -> Verify { return Verify(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`))}
+        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<TransientUUID>) -> Verify { return Verify(method: .m_setIsTyping__isTypingconversationId_conversationId(`isTyping`, `conversationId`))}
+        public static func markConversationAsSeen(conversationId: Parameter<TransientUUID>) -> Verify { return Verify(method: .m_markConversationAsSeen__conversationId_conversationId(`conversationId`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func getConversationTransientId(from id: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_getConversationTransientId__from_id(`id`), performs: perform)
+        }
+        public static func watchConversation(withId conversationId: Parameter<TransientUUID>, perform: @escaping (TransientUUID) -> Void) -> Perform {
+            return Perform(method: .m_watchConversation__withId_conversationId(`conversationId`), performs: perform)
+        }
+        public static func watchConversations(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchConversations, performs: perform)
+        }
+        public static func createConversation(message: Parameter<MessageInput>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, perform: @escaping (MessageInput, String?, [UUID]?) -> Void) -> Perform {
+            return Perform(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIds(`message`, `title`, `providerIds`), performs: perform)
+        }
+        public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, perform: @escaping (String?, [UUID]?) -> Void) -> Perform {
+            return Perform(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), performs: perform)
+        }
+        public static func setIsTyping(_ isTyping: Parameter<Bool>, conversationId: Parameter<TransientUUID>, perform: @escaping (Bool, TransientUUID) -> Void) -> Perform {
+            return Perform(method: .m_setIsTyping__isTypingconversationId_conversationId(`isTyping`, `conversationId`), performs: perform)
+        }
+        public static func markConversationAsSeen(conversationId: Parameter<TransientUUID>, perform: @escaping (TransientUUID) -> Void) -> Perform {
+            return Perform(method: .m_markConversationAsSeen__conversationId_conversationId(`conversationId`), performs: perform)
         }
     }
 

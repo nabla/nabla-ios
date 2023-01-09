@@ -12,6 +12,7 @@ class ConversationItemRepositoryImplTests: XCTestCase {
     private var conversationLocalDataSource: ConversationLocalDataSourceMock!
     private var conversationRemoteDataSource: ConversationRemoteDataSourceMock!
     private var logger: LoggerMock!
+    private var gateKeepers: GateKeepers!
     
     private var sut: ConversationItemRepositoryImpl!
     

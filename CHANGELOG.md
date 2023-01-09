@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixes a crash when opening a conversation with a video call interactive message while `NablaVideoCallModule` is not set up.
 - Messaging UI: Fixed load more items animation in the conversation list view.
 
 ## [1.0.0-alpha29] - 2022-12-21

@@ -5,6 +5,7 @@ public enum AuthenticationState {
     case authenticated(accessToken: String)
 }
 
+// sourcery: AutoMockable
 public protocol Authenticator {
     func authenticate(
         userId: String,
