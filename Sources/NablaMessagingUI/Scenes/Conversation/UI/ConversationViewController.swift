@@ -220,6 +220,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         collectionView.delegate = self
         collectionView.backgroundColor = NablaTheme.Conversation.backgroundColor
         providers.forEach { $0.prepare(collectionView: collectionView) }
+        collectionView.nabla.register(InvisibleCell.self)
         return collectionView
     }
     
@@ -230,10 +231,10 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     }
     
     private func provideCell(
-        collectionView _: UICollectionView,
+        collectionView: UICollectionView,
         indexPath: IndexPath,
         item: ConversationViewItem
-    ) -> UICollectionViewCell? {
+    ) -> UICollectionViewCell {
         for provider in providers { // TODO: @ams Switch to [type:plugin] dictionary
             if let cell = provider.provideCell(
                 collectionView: collectionView,
@@ -245,8 +246,10 @@ final class ConversationViewController: UIViewController, ConversationViewContra
                 return cell
             }
         }
-        logger.warning(message: "No plugin provided a cell for item", extra: ["type": type(of: item)])
-        return nil
+        let message = "No plugin provided a cell for item"
+        logger.error(message: message, extra: ["type": type(of: item)])
+        assertionFailure(message)
+        return collectionView.nabla.dequeueReusableCell(ofClass: InvisibleCell.self, for: indexPath)
     }
     
     // The view controller has 3 possible layouts
