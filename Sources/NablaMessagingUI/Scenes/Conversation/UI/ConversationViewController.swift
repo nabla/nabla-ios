@@ -304,7 +304,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         var seen = Set<UUID>()
         let items = items.compactMap { item -> DiffableConversationViewItem? in
             guard !seen.contains(item.id) else {
-                logger.error(message: "Found duplicated item", extra: ["id": item.id])
+                logger.error(message: "Found duplicated item in Conversation items", extra: ["id": item.id])
                 return nil
             }
             seen.insert(item.id)

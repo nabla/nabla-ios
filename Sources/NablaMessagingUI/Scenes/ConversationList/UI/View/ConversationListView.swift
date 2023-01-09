@@ -4,39 +4,38 @@ import UIKit
 
 public class ConversationListView: UIView, ConversationListViewContract {
     // MARK: - Public
-    
+
     var presenter: ConversationListPresenter?
-    
+
     // MARK: - Initializer
-    
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
+
+    init(logger: Logger) {
+        self.logger = logger
+        super.init(frame: .zero)
         setUp()
     }
-    
+
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Lifecycle
-    
+
     override public func didMoveToSuperview() {
         super.didMoveToSuperview()
-        
+
         if superview != nil {
             presenter?.start()
         }
     }
-    
+
     // MARK: - ConversationListViewContract
-    
+
     func configure(with state: ConversationListViewState) {
         switch state {
         case let .loaded(viewModel):
-            let animated = !self.viewModel.items.isEmpty
-            self.viewModel = viewModel
-            tableView.nabla.reload(animated: animated)
+            updateItems(viewModel: viewModel)
             loadingIndicator.isHidden = true
             errorView.isHidden = true
             if viewModel.items.isEmpty {
@@ -59,27 +58,36 @@ public class ConversationListView: UIView, ConversationListViewContract {
             emptyView.isHidden = true
         }
     }
-    
+
     func displayLoadingMore() {
         tableView.tableFooterView = loadingFooterView
         let bottomOffset = CGPoint(x: 0, y: tableView.contentSize.height - tableView.bounds.size.height)
         tableView.setContentOffset(bottomOffset, animated: true)
     }
-    
+
     func hideLoadingMore() {
         tableView.tableFooterView = nil
     }
-    
+
     // MARK: - Private
-    
+
+    private enum Section {
+        case main
+    }
+
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, ConversationListItemViewModel>
+    private typealias DataSource = UITableViewDiffableDataSource<Section, ConversationListItemViewModel>
+
     private lazy var tableView: UITableView = createTableView()
+    private lazy var dataSource = makeDataSource()
     private lazy var emptyView = EmptyView()
     private lazy var loadingIndicator: UIActivityIndicatorView = createLoadingIndicator()
     private lazy var errorView: ErrorView = createErrorView()
     private lazy var loadingFooterView: LoadingFooterView = createLoadingFooterView()
-    
+
+    private let logger: Logger
     private var viewModel: ConversationListViewModel = .empty
-    
+
     private func setUp() {
         backgroundColor = NablaTheme.ConversationPreview.backgroundColor
         addSubview(tableView)
@@ -91,60 +99,110 @@ public class ConversationListView: UIView, ConversationListViewContract {
         addSubview(errorView)
         errorView.nabla.pinToSuperView()
     }
-    
+
     private func createTableView() -> UITableView {
         let tableView = UITableView()
-        tableView.dataSource = self
         tableView.delegate = self
         tableView.nabla.register(ConversationListItemCell.self)
         tableView.separatorInset = .nabla.only(left: 70)
         tableView.backgroundColor = NablaTheme.ConversationPreview.backgroundColor
         return tableView
     }
-    
+
     private func createLoadingIndicator() -> UIActivityIndicatorView {
         let view = UIActivityIndicatorView(style: .large)
         view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.startAnimating()
         return view
     }
-    
+
     private func createErrorView() -> ErrorView {
         let view = ErrorView()
         view.delegate = self
         return view
     }
-    
+
     private func createLoadingFooterView() -> LoadingFooterView {
         let footerView = LoadingFooterView()
         footerView.sizeToFit()
         return footerView
     }
-}
 
-extension ConversationListView: UITableViewDataSource {
-    // MARK: - UITableViewDataSource
-    
-    public func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        viewModel.items.count
+    private func makeDataSource() -> DataSource {
+        DataSource(tableView: tableView) { tableView, indexPath, item in
+            let cell = tableView.nabla.dequeueReusableCell(ofClass: ConversationListItemCell.self, for: indexPath)
+            cell.configure(with: item)
+            return cell
+        }
     }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.nabla.dequeueReusableCell(ofClass: ConversationListItemCell.self, for: indexPath)
-        cell.configure(with: viewModel.items[indexPath.row])
-        return cell
+
+    private func updateItems(viewModel: ConversationListViewModel) {
+        let oldItems = self.viewModel.items
+        let animated = !oldItems.isEmpty
+        self.viewModel = viewModel
+        let snapshot = applySnapshot(
+            items: viewModel.items,
+            animatingDifferences: animated,
+            completion: { self.hideLoadingMore() }
+        )
+        reconfigureItems(
+            snapshot: snapshot,
+            oldItems: oldItems,
+            newItems: self.viewModel.items,
+            animatingDifferences: animated
+        )
+    }
+
+    private func reconfigureItems(
+        snapshot: Snapshot,
+        oldItems: [ConversationListItemViewModel],
+        newItems: [ConversationListItemViewModel],
+        animatingDifferences: Bool
+    ) {
+        var snapshot = snapshot
+        let oldItemsMap = Dictionary(grouping: oldItems, by: { $0.id })
+        let itemsToReload = newItems.compactMap { newItem -> ConversationListItemViewModel? in
+            guard let oldItem = oldItemsMap[newItem.id]?.first else { return nil }
+            guard oldItem.hasChanged(otherItem: newItem) else { return nil }
+            return newItem
+        }
+        snapshot.reloadItems(itemsToReload)
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+    }
+
+    private func applySnapshot(
+        items: [ConversationListItemViewModel],
+        animatingDifferences: Bool,
+        completion: @escaping (() -> Void)
+    ) -> Snapshot {
+        var seen = Set<UUID>()
+        let items = items.compactMap { item -> ConversationListItemViewModel? in
+            guard !seen.contains(item.id) else {
+                logger.error(message: "Found duplicated item in Conversation list items", extra: ["id": item.id])
+                return nil
+            }
+            seen.insert(item.id)
+            return item
+        }
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(items)
+
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences, completion: completion)
+
+        return snapshot
     }
 }
 
 extension ConversationListView: UITableViewDelegate {
     // MARK: - UITableViewDelegate
-    
+
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // Notify presenter
         presenter?.didSelectConversation(at: indexPath)
     }
-    
+
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y + scrollView.frame.size.height > scrollView.contentSize.height * 0.9 {
             presenter?.didScrollToBottom()
@@ -154,7 +212,7 @@ extension ConversationListView: UITableViewDelegate {
 
 extension ConversationListView: ErrorViewDelegate {
     // MARK: - ErrorViewDelegate
-    
+
     func errorViewDidTapButton(_: ErrorView) {
         presenter?.didTapRetry()
     }

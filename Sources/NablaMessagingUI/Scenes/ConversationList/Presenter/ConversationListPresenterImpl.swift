@@ -55,8 +55,6 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         didSet {
             if isLoading {
                 displayLoading()
-            } else {
-                hideLoading()
             }
         }
     }
@@ -98,12 +96,6 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
     private func displayLoadingMore() -> Void? {
         DispatchQueue.main.async {
             self.viewContract?.displayLoadingMore()
-        }
-    }
-
-    private func hideLoading() {
-        DispatchQueue.main.async {
-            self.viewContract?.hideLoadingMore()
         }
     }
 

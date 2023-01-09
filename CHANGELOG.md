@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Messaging UI: Fixed load more items animation in the conversation list view.
 
 ## [1.0.0-alpha29] - 2022-12-21
 
@@ -30,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed spacings between cards in the apointment list, apointment category list and time slot list.
+- Changed spacings between cards in the appointment list, appointment category list and time slot list.
 
 ### Fixed
 

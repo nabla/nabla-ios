@@ -12,7 +12,7 @@ final class InboxViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         sut = InboxViewController()
-        let conversationListView = ConversationListView()
+        let conversationListView = ConversationListView(logger: LoggerMock())
         conversationListView.configure(with: .loaded(viewModel: .empty))
         sut.setContentView(conversationListView)
         navigationController = UINavigationController(rootViewController: sut)

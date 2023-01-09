@@ -9,7 +9,7 @@ public class NablaMessagingViewFactory {
     public func createConversationListView(
         delegate: ConversationListDelegate
     ) -> ConversationListView {
-        let view = ConversationListView(frame: .zero)
+        let view = ConversationListView(logger: logger)
         let presenter = ConversationListPresenterImpl(
             logger: logger,
             viewContract: view,

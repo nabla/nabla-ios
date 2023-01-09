@@ -7,6 +7,7 @@ struct ConversationListViewModelTransformer {
     
     func transform(conversation: Conversation) -> ConversationListItemViewModel {
         ConversationListItemViewModel(
+            id: conversation.id,
             avatar: AvatarViewModelTransformer.avatar(for: conversation),
             title: conversation.inboxPreviewTitle,
             subtitle: conversation.lastMessagePreview ?? conversation.subtitle,

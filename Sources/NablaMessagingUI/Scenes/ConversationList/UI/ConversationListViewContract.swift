@@ -9,5 +9,4 @@ enum ConversationListViewState {
 protocol ConversationListViewContract: AnyObject {
     func configure(with state: ConversationListViewState)
     func displayLoadingMore()
-    func hideLoadingMore()
 }

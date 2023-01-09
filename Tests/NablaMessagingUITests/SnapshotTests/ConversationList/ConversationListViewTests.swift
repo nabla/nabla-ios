@@ -6,6 +6,7 @@ import XCTest
 
 final class ConversationListViewTests: XCTestCase {
     private let item: ConversationListItemViewModel = .init(
+        id: .init(),
         avatar: .init(url: nil, text: "JD"),
         title: "Dr John Doe",
         subtitle: "How are you?",
@@ -16,7 +17,7 @@ final class ConversationListViewTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = ConversationListView(frame: .zero)
+        sut = ConversationListView(logger: LoggerMock())
     }
 
     func testConversationLVConfigureWithLoading() {

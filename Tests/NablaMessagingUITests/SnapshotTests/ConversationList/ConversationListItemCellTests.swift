@@ -19,6 +19,7 @@ final class ConversationListItemCellTests: XCTestCase {
         // WHEN
         sut.configure(
             with: .init(
+                id: .init(),
                 avatar: .init(url: nil, text: .initialsStub),
                 title: .authorStub,
                 subtitle: nil,
@@ -35,6 +36,7 @@ final class ConversationListItemCellTests: XCTestCase {
         // WHEN
         sut.configure(
             with: .init(
+                id: .init(),
                 avatar: .init(url: .urlStubImage, text: nil),
                 title: .authorStub,
                 subtitle: "Last message preview as a subtitle",
@@ -51,6 +53,7 @@ final class ConversationListItemCellTests: XCTestCase {
         // WHEN
         sut.configure(
             with: .init(
+                id: .init(),
                 avatar: .init(url: nil, text: .initialsStub),
                 title: "Chief Doctor John Doe",
                 subtitle: nil,

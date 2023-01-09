@@ -1,6 +1,6 @@
 import Foundation
 
-public struct AvatarViewModel {
+public struct AvatarViewModel: Hashable {
     public let url: String?
     public let text: String?
     
