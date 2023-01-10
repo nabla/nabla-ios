@@ -18,14 +18,15 @@ final class InboxViewControllerTests: XCTestCase {
         navigationController = UINavigationController(rootViewController: sut)
     }
 
-    func testInboxViewControllerEmpty() {
+    func testInboxViewControllerEmptyConversationList() {
         // GIVEN
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 
-    func testInboxViewControllerWithErrorMessage() {
+    // FIXME: The presented AlertViewController is not captured in the snapshot
+    func xtestInboxViewControllerWithErrorMessage() {
         // GIVEN
         // WHEN
         sut.display(error: "Error message")
@@ -33,7 +34,7 @@ final class InboxViewControllerTests: XCTestCase {
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 
-    func testInboxViewControllerLoading() {
+    func testInboxViewControllerEmptyListCreatingConversation() {
         // GIVEN
         // WHEN
         sut.set(loading: true)

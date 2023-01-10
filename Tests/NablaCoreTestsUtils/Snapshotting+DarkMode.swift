@@ -16,8 +16,8 @@ public extension Dictionary where Key == String, Value == Snapshotting<UIView, U
             "light": Snapshotting.wait(
                 for: time,
                 on: .image(
-                    precision: 0.995,
-                    perceptualPrecision: 0.95,
+                    precision: 0.998,
+                    perceptualPrecision: 0.98,
                     size: size,
                     traits: UITraitCollection(userInterfaceStyle: .light)
                 )
@@ -25,8 +25,8 @@ public extension Dictionary where Key == String, Value == Snapshotting<UIView, U
             "dark": Snapshotting.wait(
                 for: time,
                 on: .image(
-                    precision: 0.995,
-                    perceptualPrecision: 0.95,
+                    precision: 0.998,
+                    perceptualPrecision: 0.98,
                     size: size,
                     traits: UITraitCollection(userInterfaceStyle: .dark)
                 )
@@ -44,7 +44,7 @@ public extension Dictionary where Key == String, Value == Snapshotting<UIViewCon
             "light": Snapshotting.wait(
                 for: time,
                 on: .image(
-                    precision: 0.995,
+                    precision: 0.998,
                     perceptualPrecision: 0.98,
                     size: size,
                     traits: UITraitCollection(userInterfaceStyle: .light)
@@ -53,7 +53,7 @@ public extension Dictionary where Key == String, Value == Snapshotting<UIViewCon
             "dark": Snapshotting.wait(
                 for: time,
                 on: .image(
-                    precision: 0.995,
+                    precision: 0.998,
                     perceptualPrecision: 0.98,
                     size: size,
                     traits: UITraitCollection(userInterfaceStyle: .dark)
