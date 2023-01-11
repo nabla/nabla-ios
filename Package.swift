@@ -80,6 +80,7 @@ let package = Package(
             ],
             resources: [
                 .process("SnapshotTests/PrimaryButton/__Snapshots__"),
+                .process("SnapshotTests/AvatarView/__Snapshots__"),
             ]
         ),
         .target(

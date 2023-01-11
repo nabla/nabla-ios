@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Avatar view will now display a default icon image when no picture or initials are available.
+- Avatar view is now exposing more customizable theme properties.
+  - `NablaTheme.AvatarView.backgroundColor`: used for the background color when someone doesn't have a profile picture.
+  - `NablaTheme.AvatarView.tintColor`: used to tint the initials or the default icon of someone who doesn't have a profile picture.
+  - `NablaTheme.AvatarView.defaultIcon`: displayed when we don't have the profile picture nor the initials
+
 ### Fixed
 
 - Fixes a crash when opening a conversation with a video call interactive message while `NablaVideoCallModule` is not set up.

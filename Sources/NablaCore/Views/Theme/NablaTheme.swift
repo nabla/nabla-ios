@@ -76,11 +76,19 @@ public enum NablaTheme {
         )
     }
 
+    public enum AvatarView {
+        /// Background color used to display the avatar of someone who doesn't have a profile picture.
+        public static var backgroundColor = Colors.Fill.base
+
+        /// Color used to tint the initials or the default icon in the avatar of someone who doesn't have a profile picture.
+        public static var tintColor = Colors.Text.subdued
+
+        /// Default image used in the avatar view when we don't have a profile picture nor the initials.
+        public static var defaultIcon = UIImage(systemName: "person")
+    }
+
     public enum Shared {
         /// Tint color used for the loading indicator.
         public static var loadingViewIndicatorTintColor = Colors.Stroke.accent
-
-        /// Background color used to display the avatar of someone who doesn't have a profile picture.
-        public static var avatarViewBackgroundColor = Colors.Fill.accent
     }
 }

@@ -24,7 +24,7 @@ public extension NablaViews {
         
         private lazy var imageAvatarView: ImageView = createImageAvatarView()
         private lazy var initialsAvatarView: UILabel = createInitialsAvatarView()
-        private lazy var deletedAvatarView: UIView = createDeletedAvatarView()
+        private lazy var defaultAvatarView: UIView = createDefaultAvatarView()
         
         private func createImageAvatarView() -> ImageView {
             let view = ImageView()
@@ -37,14 +37,17 @@ public extension NablaViews {
             let view = UILabel()
             view.backgroundColor = .clear
             view.textAlignment = .center
-            view.textColor = .white
+            view.textColor = NablaTheme.AvatarView.tintColor
             return view
         }
         
-        private func createDeletedAvatarView() -> UIView {
-            let view = UIView()
-            view.backgroundColor = .clear
-            return view
+        private func createDefaultAvatarView() -> UIView {
+            let imageView = UIImageView()
+            imageView.backgroundColor = .clear
+            imageView.image = NablaTheme.AvatarView.defaultIcon
+            imageView.tintColor = NablaTheme.AvatarView.tintColor
+            imageView.contentMode = .scaleAspectFill
+            return imageView
         }
         
         private var backgroundLayer: CALayer? {
@@ -65,8 +68,8 @@ public extension NablaViews {
             addSubview(initialsAvatarView)
             initialsAvatarView.nabla.pinToSuperView()
             
-            addSubview(deletedAvatarView)
-            deletedAvatarView.nabla.pinToSuperView()
+            addSubview(defaultAvatarView)
+            defaultAvatarView.nabla.constraintToCenterInSuperView()
         }
 
         // MARK: Lifecycle
@@ -77,7 +80,7 @@ public extension NablaViews {
         }
         
         private func configure(with viewModel: AvatarViewModel) {
-            backgroundColor = NablaTheme.Shared.avatarViewBackgroundColor
+            backgroundColor = NablaTheme.AvatarView.backgroundColor
             if let url = URL(string: viewModel.url) {
                 backgroundColor = .clear
                 imageAvatarView.source = .url(url)
@@ -86,7 +89,7 @@ public extension NablaViews {
                 initialsAvatarView.text = text
                 setVisible(subview: initialsAvatarView)
             } else {
-                setVisible(subview: deletedAvatarView)
+                setVisible(subview: defaultAvatarView)
             }
         }
         
@@ -98,10 +101,16 @@ public extension NablaViews {
             
             let fontSize = min(frame.height, frame.width) / 2.2
             initialsAvatarView.font = .nabla.regular(fontSize)
+
+            defaultAvatarView.nabla.constraintToSize(
+                CGSize(
+                    width: min(frame.height, frame.width) / 2,
+                    height: min(frame.height, frame.width) / 2
+                ))
         }
         
         private func setVisible(subview: UIView) {
-            [imageAvatarView, initialsAvatarView, deletedAvatarView].forEach { $0.isHidden = $0 != subview }
+            [imageAvatarView, initialsAvatarView, defaultAvatarView].forEach { $0.isHidden = $0 != subview }
         }
     }
 }
