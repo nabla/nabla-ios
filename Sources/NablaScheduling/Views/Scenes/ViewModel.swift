@@ -11,7 +11,6 @@ extension ViewModel where Self: ObservableObject {
         objectWillChange
             .map { _ in }
             .receive(on: DispatchQueue.main)
-            .merge(with: Just(()))
             .eraseToAnyPublisher()
     }
     
@@ -19,7 +18,6 @@ extension ViewModel where Self: ObservableObject {
         objectWillChange
             .map { _ in }
             .throttle(for: throttle, scheduler: DispatchQueue.main, latest: true)
-            .merge(with: Just(()))
             .eraseToAnyPublisher()
     }
 }
@@ -30,7 +28,11 @@ class ObservedViewModel<T> {
     
     @discardableResult
     func onChange(_ execute: @escaping (T) -> Void) -> AnyCancellable {
-        guard let viewModel = wrappedValue as? ViewModel else { return AnyCancellable {} }
+        guard let viewModel = wrappedValue as? ViewModel else {
+            assertionFailure("\(type(of: wrappedValue)) must conform to `ViewModel` protocol")
+            return AnyCancellable {}
+        }
+        execute(wrappedValue)
         let cancellable = viewModel.onChange()
             .sink { [weak self] in
                 guard let self = self else { return }
@@ -42,7 +44,11 @@ class ObservedViewModel<T> {
     
     @discardableResult
     func onChange(throttle: DispatchQueue.SchedulerTimeType.Stride, _ execute: @escaping (T) -> Void) -> AnyCancellable {
-        guard let viewModel = wrappedValue as? ViewModel else { return AnyCancellable {} }
+        guard let viewModel = wrappedValue as? ViewModel else {
+            assertionFailure("\(type(of: wrappedValue)) must conform to `ViewModel` protocol")
+            return AnyCancellable {}
+        }
+        execute(wrappedValue)
         let cancellable = viewModel.onChange(throttle: throttle)
             .sink { [weak self] in
                 guard let self = self else { return }
