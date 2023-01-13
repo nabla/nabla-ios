@@ -75,7 +75,7 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
             receiveError: { [weak self] error in
                 guard let self = self else { return }
                 self.isLoading = false
-                self.logger.warning(message: "Failed to watch conversations", extra: ["reason": error])
+                self.logger.warning(message: "Failed to watch conversations", error: error)
                 let viewModel = ErrorViewModel(
                     message: L10n.conversationListLoadErrorLabel,
                     buttonTitle: L10n.conversationListButtonRetry

@@ -29,7 +29,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 do {
                     try await client.sendMessage(input, inConversationWithId: conversationId)
                 } catch {
-                    logger.warning(message: "Failed to send a media", extra: ["type": type(of: media), "reason": error])
+                    logger.warning(message: "Failed to send a media", error: error, extra: ["type": type(of: media)])
                 }
             }
         }
@@ -42,7 +42,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     inConversationWithId: conversationId
                 )
             } catch {
-                logger.warning(message: "Failed to send text", extra: ["reason": error])
+                logger.warning(message: "Failed to send text", error: error)
             }
         }
     }
@@ -64,7 +64,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     inConversationWithId: conversationId
                 )
             } catch {
-                logger.warning(message: "Failed to send text", extra: ["reason": error])
+                logger.warning(message: "Failed to send text", error: error)
             }
         }
     }
@@ -106,7 +106,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             do {
                 try await loadMore()
             } catch {
-                logger.warning(message: "Failed to load more items", extra: ["reason": error])
+                logger.warning(message: "Failed to load more items", error: error)
                 view?.showErrorAlert(
                     viewModel: .init(
                         title: L10n.conversationLoadMoreErrorTitle,
@@ -124,7 +124,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             do {
                 try await client.deleteMessage(withId: messageId, conversationId: conversationId)
             } catch {
-                logger.warning(message: "Failed to delete message", extra: ["reason": error])
+                logger.warning(message: "Failed to delete message", error: error)
                 view?.showErrorAlert(
                     viewModel: .init(
                         title: L10n.conversationDeleteMessageErrorTitle,
@@ -231,7 +231,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self.updateConversationItems()
             }, receiveError: { [weak self] error in
                 guard let self = self else { return }
-                self.logger.warning(message: "Failed to watch conversation", extra: ["reason": error])
+                self.logger.warning(message: "Failed to watch conversation", error: error)
                 self.state = .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry))
             })
         
@@ -243,7 +243,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self.markConversationAsSeen()
             }, receiveError: { [weak self] error in
                 guard let self = self else { return }
-                self.logger.warning(message: "Failed to watch messages", extra: ["reason": error])
+                self.logger.warning(message: "Failed to watch messages", error: error)
                 self.state = .error(viewModel: .init(message: L10n.conversationLoadErrorLabel, buttonTitle: L10n.conversationListButtonRetry))
             })
     }
@@ -253,7 +253,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             do {
                 try await self.client.markConversationAsSeen(conversationId)
             } catch {
-                logger.warning(message: "Failed to mark conversation as seen", extra: ["error": error])
+                logger.warning(message: "Failed to mark conversation as seen", error: error)
             }
         }
     }
@@ -267,7 +267,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
                     do {
                         try await self.client.setIsTyping(isTyping, inConversationWithId: self.conversationId)
                     } catch {
-                        self.logger.warning(message: "Failed to set is typing", extra: ["error": error])
+                        self.logger.warning(message: "Failed to set is typing", error: error)
                     }
                 }
             }

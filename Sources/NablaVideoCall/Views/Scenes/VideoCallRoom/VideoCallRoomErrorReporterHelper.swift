@@ -18,7 +18,7 @@ final class VideoCallRoomErrorReporterHelper {
     private func logState(_ stateDesc: String, roomId: String?) {
         errorReporter.log(
             message: "RoomState=\(stateDesc)",
-            metadata: ["roomId": roomId ?? "null"],
+            extra: ["roomId": roomId ?? "null"],
             domain: "video-call"
         )
     }
@@ -26,7 +26,7 @@ final class VideoCallRoomErrorReporterHelper {
     private func logEvent(_ eventDesc: String, roomId: String?) {
         errorReporter.log(
             message: "RoomEvent=\(eventDesc)",
-            metadata: ["roomId": roomId ?? "null"],
+            extra: ["roomId": roomId ?? "null"],
             domain: "video-call"
         )
     }
@@ -43,16 +43,12 @@ extension VideoCallRoomErrorReporterHelper: RoomDelegate {
 
     func room(_ room: Room, didFailToConnect error: Error) {
         logEvent("FailedToConnect", roomId: room.name)
-        errorReporter.reportError(error)
+        errorReporter.reportError(message: "FailedToConnect", error: error)
     }
 
     func room(_ room: Room, didDisconnect error: Error?) {
         logEvent("Disconnected", roomId: room.name)
-        if let error = error {
-            errorReporter.reportError(error)
-        } else {
-            errorReporter.reportEvent(message: "Call ended unexpectedly without error")
-        }
+        errorReporter.reportError(message: "Call ended unexpectedly", error: error)
     }
 
     func room(_ room: Room, didUpdate connectionState: ConnectionState, oldValue _: ConnectionState) {
@@ -62,14 +58,7 @@ extension VideoCallRoomErrorReporterHelper: RoomDelegate {
             case .user:
                 errorReporter.reportEvent(message: "Call ended from user")
             case let .networkError(error):
-                switch error as? NetworkError {
-                case let .disconnected(message, _),
-                     let .response(message):
-                    logEvent("Disconnected(NetworkErrorMessage=\(message ?? "nil"))", roomId: room.name)
-                default:
-                    break
-                }
-                errorReporter.reportError(error)
+                errorReporter.reportError(message: "Disconnected with network error", error: error)
             case .none:
                 errorReporter.reportEvent(message: "Call ended without error")
             }
@@ -129,8 +118,7 @@ extension VideoCallRoomErrorReporterHelper: RoomDelegate {
     }
 
     func room(_ room: Room, participant: RemoteParticipant, didFailToSubscribe _: String, error: Error) {
-        logEvent("TrackSubscriptionFailed(Participant=\(participant.asLog()))", roomId: room.name)
-        errorReporter.reportError(error)
+        logEvent("TrackSubscriptionFailed(Participant=\(participant.asLog()), error=\(error))", roomId: room.name)
     }
 
     func room(_ room: Room, participant: RemoteParticipant, didUnsubscribe _: RemoteTrackPublication, track _: Track) {

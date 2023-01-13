@@ -86,7 +86,7 @@ class GQLClientImpl: GQLClient {
             let result = Self.parseApolloResponse(response, logger: logger)
             switch result {
             case let .failure(error):
-                logger.warning(message: "Received subscription error", extra: ["error": error])
+                logger.warning(message: "Received subscription error", error: error)
             case let .success(data):
                 subject.send(data)
             }
@@ -199,7 +199,7 @@ class GQLClientImpl: GQLClient {
             default: break
             }
         }
-        logger.warning(message: "Unhandled error type", extra: ["error": error, "type": type(of: error)])
+        logger.warning(message: "Unhandled error type", error: error, extra: ["type": type(of: error)])
         return .unknownError
     }
 }

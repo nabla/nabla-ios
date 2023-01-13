@@ -18,14 +18,14 @@ final class DeviceRepositoryImpl: DeviceRepository {
             deviceLocalDataSource.setDeviceId(remoteDevice.deviceId, forUserId: userId)
             if let sentry = remoteDevice.sentry {
                 await MainActor.run {
-                    errorReporter.enable(dsn: sentry.dsn, env: sentry.env)
+                    errorReporter.enable(dsn: sentry.dsn, env: sentry.env, sdkVersion: environment.version)
                 }
             } else {
                 errorReporter.disable()
             }
             logger.info(message: "Registered device", extra: ["id": remoteDevice.deviceId])
         } catch {
-            logger.error(message: "Failed to register device", extra: ["error": error])
+            logger.error(message: "Failed to register device", error: error)
         }
     }
 
@@ -35,16 +35,19 @@ final class DeviceRepositoryImpl: DeviceRepository {
         deviceLocalDataSource: DeviceLocalDataSource,
         deviceRemoteDataSource: DeviceRemoteDataSource,
         logger: Logger,
-        errorReporter: ErrorReporter
+        errorReporter: ErrorReporter,
+        environment: Environment
     ) {
         self.deviceLocalDataSource = deviceLocalDataSource
         self.deviceRemoteDataSource = deviceRemoteDataSource
         self.logger = logger
         self.errorReporter = errorReporter
+        self.environment = environment
     }
 
     // MARK: - Private
 
+    private let environment: Environment
     private let deviceLocalDataSource: DeviceLocalDataSource
     private let deviceRemoteDataSource: DeviceRemoteDataSource
     private let logger: Logger

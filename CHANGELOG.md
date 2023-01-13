@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `NablaTheme.AvatarView.backgroundColor`: used for the background color when someone doesn't have a profile picture.
   - `NablaTheme.AvatarView.tintColor`: used to tint the initials or the default icon of someone who doesn't have a profile picture.
   - `NablaTheme.AvatarView.defaultIcon`: displayed when we don't have the profile picture nor the initials
+- Core: The `Logger` interface now has an nullable `error` property for each log level. If you implemented your own custom logger you'll have to change the methods signature to migrate.
 
 ### Fixed
 

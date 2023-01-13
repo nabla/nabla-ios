@@ -40,7 +40,7 @@ class AudioRecorderComposerPresenterImpl: AudioRecorderComposerPresenter {
                     self.delegate?.audioRecorderComposerPresenterCanNotStartRecording(self)
                 }
             case let .failure(error):
-                self.logger.warning(message: "Unable to start recording audio message", extra: ["reason": error])
+                self.logger.warning(message: "Unable to start recording audio message", error: error)
                 self.delegate?.audioRecorderComposerPresenterCanNotStartRecording(self)
             }
         }

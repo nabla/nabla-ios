@@ -81,7 +81,7 @@ final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
             
             return intValue
         } catch {
-            logger.error(message: "Failed to read code version", extra: ["error": error])
+            logger.error(message: "Failed to read code version", error: error)
             return 0
         }
     }

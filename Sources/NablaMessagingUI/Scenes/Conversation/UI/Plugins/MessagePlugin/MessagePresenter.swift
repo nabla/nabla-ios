@@ -69,7 +69,7 @@ class MessagePresenter<
     func didFailContentConfig(underlyingError: Error) {
         logger.error(
             message: "Cell content configuration failed (itemType: \(type(of: item)))",
-            extra: ["reason": InternalError(underlyingError: underlyingError)]
+            error: InternalError(underlyingError: underlyingError)
         )
     }
 
@@ -129,7 +129,7 @@ class MessagePresenter<
             do {
                 try await client.retrySending(itemWithId: item.id, inConversationWithId: conversationId)
             } catch {
-                logger.warning(message: "Failed send retry", extra: ["reason": error])
+                logger.warning(message: "Failed send retry", error: error)
             }
         }
     }

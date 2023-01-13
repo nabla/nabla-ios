@@ -38,7 +38,7 @@ class AudioPlayer {
         } catch {
             logger.error(
                 message: "Could not load audio asset from audio file",
-                extra: ["reason": InternalError(underlyingError: error)]
+                error: InternalError(underlyingError: error)
             )
         }
     }
@@ -69,7 +69,7 @@ class AudioPlayer {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
         } catch {
-            logger.error(message: "Cannot activate audio", extra: ["reason": error])
+            logger.error(message: "Cannot activate audio", error: error)
         }
     }
 

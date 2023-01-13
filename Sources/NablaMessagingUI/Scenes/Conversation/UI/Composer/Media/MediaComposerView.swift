@@ -87,7 +87,7 @@ extension MediaComposerView: UICollectionViewDataSource {
         } catch {
             logger.error(
                 message: "Could not configure the media in the composer (indexPath: \(indexPath.item), type: \(viewModel.type)",
-                extra: ["reason": InternalError(underlyingError: error)]
+                error: InternalError(underlyingError: error)
             )
         }
         cell.delegate = self

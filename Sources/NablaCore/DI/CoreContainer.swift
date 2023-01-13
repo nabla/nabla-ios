@@ -61,19 +61,37 @@ public class CoreContainer {
         self.modules = modules
         self.uuidGenerator = uuidGenerator
         
-        logger = configuration.logger
         environment = EnvironmentImpl(networkConfiguration: networkConfiguration)
+
+        let compositeLogger = MutableCompositeLogger(configuration.logger)
+        logger = compositeLogger
         errorReporter = configuration.enableReporting
             ? SentryErrorReporter(logger: logger)
             : NoOpErrorReporter()
+        
+        scopedKeyValueStore = KeyValueStoreImpl(namespace: name)
+        dangerouslyUnscopedKeyValueStore = KeyValueStoreImpl(namespace: "nablaGlobal")
+        
+        self.deviceLocalDataSource = deviceLocalDataSource ?? DeviceLocalDataSourceImpl(
+            scopedStore: scopedKeyValueStore,
+            unscopedStore: dangerouslyUnscopedKeyValueStore,
+            logger: logger
+        )
+        
+        compositeLogger.addLogger(logger: ErrorReporterLogger(
+            errorReporter: errorReporter,
+            publicApiKey: configuration.apiKey,
+            sdkVersion: environment.version,
+            deviceName: self.deviceLocalDataSource.deviceModel,
+            OSVersion: self.deviceLocalDataSource.deviceOSVersion
+        ))
+        
         extraHeaders = ExtraHeadersImpl([
             HTTPHeaders.Platform: environment.platform,
             HTTPHeaders.Version: environment.version,
             HTTPHeaders.AcceptLanguage: environment.languageCode,
         ])
         headersRequestBehavior = HeadersRequestBehavior(headers: extraHeaders)
-        scopedKeyValueStore = KeyValueStoreImpl(namespace: name)
-        dangerouslyUnscopedKeyValueStore = KeyValueStoreImpl(namespace: "nablaGlobal")
         
         httpManager = .init(
             baseURLProvider: URLProvider(
@@ -123,17 +141,13 @@ public class CoreContainer {
             store: scopedKeyValueStore
         )
         
-        self.deviceLocalDataSource = deviceLocalDataSource ?? DeviceLocalDataSourceImpl(
-            scopedStore: scopedKeyValueStore,
-            unscopedStore: dangerouslyUnscopedKeyValueStore,
-            logger: logger
-        )
         deviceRemoteDataSource = DeviceRemoteDataSourceImpl(gqlClient: gqlClient)
         deviceRepository = DeviceRepositoryImpl(
             deviceLocalDataSource: self.deviceLocalDataSource,
             deviceRemoteDataSource: deviceRemoteDataSource,
             logger: logger,
-            errorReporter: errorReporter
+            errorReporter: errorReporter,
+            environment: environment
         )
         
         userRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)

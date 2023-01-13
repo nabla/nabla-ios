@@ -12,7 +12,7 @@ final class LogOutInteractorImpl: LogOutInteractor {
             do {
                 try await gqlStore.clearCache()
             } catch {
-                logger.error(message: "Failed to clear cache on logout", extra: ["reason": error])
+                logger.error(message: "Failed to clear cache on logout", error: error)
             }
         }
     }
