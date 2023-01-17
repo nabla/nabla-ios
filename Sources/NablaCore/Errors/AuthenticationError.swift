@@ -2,6 +2,14 @@ import Foundation
 
 public class AuthenticationError: NablaError {}
 
+public class AuthenticationInternalError: NablaError {
+    public let message: String
+    
+    init(message: String) {
+        self.message = message
+    }
+}
+
 public class MissingAuthenticationProviderError: AuthenticationError {}
 
 public class AuthenticationProviderFailedToProvideTokensError: AuthenticationError {}

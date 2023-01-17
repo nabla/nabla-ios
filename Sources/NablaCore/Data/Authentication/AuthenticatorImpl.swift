@@ -35,7 +35,7 @@ class AuthenticatorImpl: Authenticator {
             return .authenticated(accessToken: tokens.accessToken.value)
         }
         
-        let task = makeOrReuseRenewSessionTask(session: session)
+        let task = await makeOrReuseRenewSessionTask(session: session)
         switch await task.result {
         case let .failure(error):
             if let authError = error as? AuthenticationError {
@@ -82,24 +82,18 @@ class AuthenticatorImpl: Authenticator {
     private let httpManager: HTTPManager
     
     private var session: Session?
-    private var renewTask: Task<SessionTokens, Error>?
+    private var renewTaskHolder = TaskHolder<SessionTokens>()
     
-    private func makeOrReuseRenewSessionTask(session: Session) -> Task<SessionTokens, Error> {
-        if let existing = renewTask {
+    private func makeOrReuseRenewSessionTask(session: Session) async -> Task<SessionTokens, Error> {
+        let taskId = session.tokens?.refreshToken.value ?? "nil-session-task-id"
+        if let existing = await renewTaskHolder.getTask(withId: taskId) {
             return existing
         }
-        let renewTask = Task<SessionTokens, Error> {
-            do {
-                let tokens = try await renewSession(session)
-                self.renewTask = nil
-                return tokens
-            } catch {
-                self.renewTask = nil
-                throw error
-            }
+        return await renewTaskHolder.start(id: taskId, priority: .userInitiated) { [weak self] in
+            guard let self = self else { throw AuthenticationInternalError(message: "`self` deallocated too early") }
+            let tokens = try await self.renewSession(session)
+            return tokens
         }
-        self.renewTask = renewTask
-        return renewTask
     }
     
     private func notifyTokensChanged(oldValue: SessionTokens?, newValue: SessionTokens?) {
@@ -191,4 +185,31 @@ class AuthenticatorImpl: Authenticator {
             throw AuthenticationProviderDidProvideInvalidTokensError(reason: error)
         }
     }
+}
+
+/// Shares a single `Task` for a given identifier, even after completion.
+/// If the task fails, it is released and the resut if not shared.
+private actor TaskHolder<T> {
+    // MARK: - Internal
+    
+    func getTask(withId id: String) -> Task<T, Error>? {
+        tasks[id]
+    }
+    
+    func start(id: String, priority: TaskPriority? = nil, operation: @escaping @Sendable () async throws -> T) -> Task<T, Error> {
+        let task = Task<T, Error>(priority: priority) {
+            do {
+                return try await operation()
+            } catch {
+                tasks.removeValue(forKey: id)
+                throw error
+            }
+        }
+        tasks[id] = task
+        return task
+    }
+    
+    // MARK: - Private
+    
+    private var tasks = [String: Task<T, Error>]()
 }
