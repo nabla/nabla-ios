@@ -100,7 +100,10 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
         vstack.nabla.pinToSuperView(insets: .nabla.all(16))
         
         contentView.addSubview(containerView)
-        containerView.nabla.pinToSuperView(insets: .init(top: 12, leading: 16, bottom: 0, trailing: 16), priority: .defaultHigh)
+        containerView.nabla.pinToSuperView(
+            insets: .init(top: 12, leading: 16, bottom: 0, trailing: 16),
+            priority: .nabla.cellContentPriority
+        )
     }
     
     private func setUpViewModel() {

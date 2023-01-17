@@ -5,7 +5,7 @@ import SnapshotTesting
 import XCTest
 
 class CategoryCellTests: XCTestCase {
-    private let size = CGSize(width: 320, height: 51)
+    private let size = CGSize(width: 320, height: 56)
     private var sut: CategoryCell!
 
     override func setUp() {

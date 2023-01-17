@@ -94,7 +94,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         guard contentView.subviews.isEmpty else { return }
         
         contentView.addSubview(contentStackView)
-        contentStackView.nabla.pinToSuperView(insets: .nabla.horizontal(8), priority: .defaultHigh)
+        contentStackView.nabla.pinToSuperView(insets: .nabla.horizontal(8), priority: .nabla.cellContentPriority)
 
         contentView.addSubview(replyView)
         replyView.nabla.constraintToCenterInSuperView(along: .vertical)

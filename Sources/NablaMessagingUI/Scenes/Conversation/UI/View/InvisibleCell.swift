@@ -25,7 +25,7 @@ final class InvisibleCell: UICollectionViewCell, Reusable {
     private func setUp() {
         backgroundColor = .clear
         contentView.heightAnchor.constraint(equalToConstant: 0)
-            .nabla.with(priority: .defaultHigh)
+            .nabla.with(priority: .nabla.cellContentPriority)
             .isActive = true
     }
 }
