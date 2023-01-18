@@ -57,6 +57,9 @@ public extension NablaTheme {
             public static var onAccentSubdued: UIColor = .nabla.dynamic(lightMode: Palette.rgb007AFF, darkMode: Palette.rgbFFFFFF)
             public static var onAccentSubduedHighlighted: UIColor = .nabla.dynamic(lightMode: Palette.rgb007AFF, darkMode: Palette.rgbFFFFFF)
             public static var onAccentSubduedDisabled: UIColor = .nabla.dynamic(lightMode: Palette.rgb007AFF, darkMode: Palette.rgbFFFFFF)
+            public static var danger: UIColor = .nabla.dynamic(lightMode: Palette.rgbFF3A30, darkMode: Palette.rgbC5221F)
+            public static var dangerHighlighted: UIColor = .nabla.dynamic(lightMode: Palette.rgbFF3A30, darkMode: Palette.rgbC5221F)
+            public static var dangerDisabled: UIColor = .nabla.dynamic(lightMode: Palette.rgbFF3A30, darkMode: Palette.rgbC5221F)
         }
         
         // MARK: -

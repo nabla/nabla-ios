@@ -3,7 +3,7 @@ import Foundation
 import NablaCore
 
 protocol AppointmentCellViewModelDelegate: AnyObject {
-    func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapJoinVideoCall room: Appointment.VideoCallRoom)
+    func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapJoinVideoCall room: Location.RemoteLocation.VideoCallRoom)
     func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapSecondaryActionsButtonFor appointment: Appointment)
 }
 
@@ -14,7 +14,7 @@ protocol AppointmentCellViewModel: ViewModel {
     var subtitle: String { get }
     var enabled: Bool { get }
     var primaryActionTitle: String? { get }
-    var showSecondaryActionsButton: Bool { get }
+    var showDisclosureIndicator: Bool { get }
     
     func userDidTapPrimaryActionButton()
     func userDidTapSecondaryActionsButton()
@@ -51,12 +51,15 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
         }
     }
     
-    var showSecondaryActionsButton: Bool {
-        appointment.start.nabla.isFuture && !isAppointmentAboutToStart
+    var showDisclosureIndicator: Bool {
+        appointment.state == .upcoming
     }
     
     func userDidTapPrimaryActionButton() {
-        guard let videoCallRoom = appointment.videoCallRoom else { return }
+        guard
+            let remoteLocation = appointment.location.asRemote,
+            let videoCallRoom = remoteLocation.videoCallRoom
+        else { return }
         delegate?.appointmentCellViewModel(self, didTapJoinVideoCall: videoCallRoom)
     }
     
@@ -84,7 +87,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     private var currentVideoCallWatcher: AnyCancellable?
     
     @Published private var currentVideoCallToken: String?
-    @Published private var joinableVideoCallRoom: Appointment.VideoCallRoom?
+    @Published private var joinableVideoCallRoom: Location.RemoteLocation.VideoCallRoom?
     
     private var isAppointmentAboutToStart: Bool {
         appointment.start.nabla.isFuture && appointment.start.nabla.timeIntervalSinceNow < 10 * 60
@@ -107,7 +110,14 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     
     private func updateTimeConstraintedProperties() {
         subtitle = format(appointment.start)
-        joinableVideoCallRoom = (isAppointmentAboutToStart || appointment.start.nabla.isPast) ? appointment.videoCallRoom : nil
+        if
+            let remoteLocation = appointment.location.asRemote,
+            appointment.state != .finalized,
+            isAppointmentAboutToStart || appointment.start.nabla.isPast {
+            joinableVideoCallRoom = remoteLocation.videoCallRoom
+        } else {
+            joinableVideoCallRoom = nil
+        }
     }
     
     private func format(_ date: Date) -> String {

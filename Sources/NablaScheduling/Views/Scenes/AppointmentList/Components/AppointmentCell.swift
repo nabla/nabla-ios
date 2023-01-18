@@ -15,12 +15,20 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setUpSubviews()
         update()
+        selectionStyle = .none
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setUpSubviews()
         update()
+        selectionStyle = .none
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        UIView.animate(withDuration: animated ? 0 : 0.25) { [containerView] in
+            containerView.alpha = highlighted ? 0.5 : 1
+        }
     }
     
     // MARK: - Private
@@ -60,7 +68,7 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
     
     private(set) lazy var secondaryActionsButton: UIButton = {
         let view = UIButton()
-        view.setImage(.nabla.symbol(.ellipsis), for: .normal)
+        view.setImage(.nabla.symbol(.chevronRight), for: .normal)
         view.tintColor = NablaTheme.AppointmentListViewTheme.CellTheme.moreButtonColor
         view.addTarget(self, action: #selector(secondaryButtonHandler), for: .touchUpInside)
         return view
@@ -121,6 +129,7 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
         avatarView.avatar = viewModel.avatar
         titleLabel.text = viewModel.title
         subtitleLabel.text = viewModel.subtitle
+        secondaryActionsButton.isHidden = !viewModel.showDisclosureIndicator
         
         if let primaryActionTitle = viewModel.primaryActionTitle {
             setPrimaryButtonHidden(false)
@@ -136,8 +145,6 @@ final class AppointmentCell: DynamicHeightCell, Reusable {
             titleLabel.textColor = NablaTheme.AppointmentListViewTheme.CellTheme.titleDisabledColor
             subtitleLabel.textColor = NablaTheme.AppointmentListViewTheme.CellTheme.subtitleDisabledColor
         }
-        
-        secondaryActionsButton.isHidden = !viewModel.showSecondaryActionsButton
     }
     
     private func setPrimaryButtonHidden(_ hidden: Bool) {

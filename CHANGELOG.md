@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added an extra step in the "schedule appointment" flow to choose between remote and physical appointments.
+- Added an appointment detail view accessible from the list of appointments. For physical appointments, this view displays the address of the appointment.
+- You can now register your own `UniversalLinkGenerator` on `NablaClient.shared.scheduling.universalLinkGenerators` to let users open addresses in other apps installed on their phone.
+
 ### Changed
 
 - Avatar view will now display a default icon image when no picture or initials are available.
@@ -16,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `NablaTheme.AvatarView.tintColor`: used to tint the initials or the default icon of someone who doesn't have a profile picture.
   - `NablaTheme.AvatarView.defaultIcon`: displayed when we don't have the profile picture nor the initials
 - Core: The `Logger` interface now has an nullable `error` property for each log level. If you implemented your own custom logger you'll have to change the methods signature to migrate.
+- Removed the default navigation from `NablaScheduling` views. Exposed `AppointmentListDelegate` and `AppointmentDetailsDelegate` instead so you can build the most adequate navigation for your app.
 
 ### Fixed
 
@@ -258,6 +263,7 @@ To know more about `NablaTheme`, please visit our documentation: https://docs.na
 ### Changed
 
 - Messaging Core `VideoCallActionRequest` struct has been renamed to `VideoCallRoomInteractiveMessage`.
+- Renamed `NablaSchedulingViewFactory.presentScheduleAppointmentViewController` to `NablaSchedulingViewFactory.presentScheduleAppointmentNavigationController`.
 
 ### Fixed
 

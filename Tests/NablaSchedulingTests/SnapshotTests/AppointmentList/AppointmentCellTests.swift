@@ -24,7 +24,7 @@ class AppointmentCellTests: XCTestCase {
         viewModel.given(.subtitle(getter: "Subtitle"))
         viewModel.given(.enabled(getter: true))
         viewModel.given(.primaryActionTitle(getter: nil))
-        viewModel.given(.showSecondaryActionsButton(getter: false))
+        viewModel.given(.showDisclosureIndicator(getter: false))
     }
 
     func testAppointmentCellDefaultThemeWithoutAction() {
@@ -63,19 +63,19 @@ class AppointmentCellTests: XCTestCase {
         assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 152)))
     }
     
-    func testAppointmentCellDefaultThemeWithSecondaryActions() {
+    func testAppointmentCellDefaultThemeWithDisclosureIndicator() {
         // GIVEN
-        viewModel.given(.showSecondaryActionsButton(getter: true))
+        viewModel.given(.showDisclosureIndicator(getter: true))
         // WHEN
         sut.viewModel = viewModel
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(size: CGSize(width: 320, height: 84)))
     }
-    
-    func testAppointmentCellDefaultThemeWithPrimaryAndSecondaryActions() {
+
+    func testAppointmentCellDefaultThemeWithPrimaryAndDisclosureIndicator() {
         // GIVEN
         viewModel.given(.primaryActionTitle(getter: "Action"))
-        viewModel.given(.showSecondaryActionsButton(getter: true))
+        viewModel.given(.showDisclosureIndicator(getter: true))
         // WHEN
         sut.viewModel = viewModel
         // THEN
@@ -87,7 +87,7 @@ class AppointmentCellTests: XCTestCase {
         viewModel.given(.title(getter: "Some very long title that needs more than one line"))
         viewModel.given(.subtitle(getter: "The subtitle can alos be very long but with an elipsis"))
         viewModel.given(.primaryActionTitle(getter: "Action"))
-        viewModel.given(.showSecondaryActionsButton(getter: true))
+        viewModel.given(.showDisclosureIndicator(getter: true))
         // WHEN
         sut.viewModel = viewModel
         // THEN

@@ -91,10 +91,12 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     // MARK: Init
     
     init(
+        location: LocationType,
         category: Category,
         client: NablaSchedulingClient,
         delegate: TimeSlotPickerViewModelDelegate
     ) {
+        self.location = location
         self.category = category
         self.client = client
         self.delegate = delegate
@@ -103,6 +105,7 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     
     // MARK: - Private
     
+    private let location: LocationType
     private let category: Category
     private let client: NablaSchedulingClient
     
@@ -124,7 +127,7 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     private func watchAvailabilitySlots() {
         isLoading = true
         
-        modelWatcher = client.watchAvailabilitySlots(forCategoryWithId: category.id)
+        modelWatcher = client.watchAvailabilitySlots(forCategoryWithId: category.id, location: location)
             .nabla.drive(
                 receiveValue: { [weak self] list in
                     self?.slots = Self.group(list.data)

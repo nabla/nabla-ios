@@ -4,8 +4,8 @@ final class FetchConsentsInteractorImpl: FetchConcentsInteractor {
     // MARK: - Internal
     
     /// - Throws: ``NablaError``
-    func execute() async throws -> Consents {
-        try await repository.fetchConsents()
+    func execute(location: LocationType) async throws -> Consents {
+        try await repository.fetchConsents(location: location)
     }
     
     // MARK: Init

@@ -1,10 +1,10 @@
 import Foundation
 
-struct Provider: Hashable {
-    let id: UUID
-    let prefix: String?
-    let firstName: String
-    let lastName: String
-    let title: String?
-    let avatarUrl: URL?
+public struct Provider: Hashable {
+    public let id: UUID
+    public let prefix: String?
+    public let firstName: String
+    public let lastName: String
+    public let title: String?
+    public let avatarUrl: URL?
 }

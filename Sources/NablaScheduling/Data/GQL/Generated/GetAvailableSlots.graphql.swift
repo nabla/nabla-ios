@@ -10,13 +10,13 @@ import Foundation
     /// The raw GraphQL definition of this operation.
      let operationDefinition: String =
       """
-      query GetAvailableSlots($categoryId: UUID!, $page: OpaqueCursorPage!) {
+      query GetAvailableSlots($isPhysical: Boolean!, $categoryId: UUID!, $page: OpaqueCursorPage!) {
         appointmentCategory(id: $categoryId) {
           __typename
           category {
             __typename
             id
-            availableSlots(page: $page) {
+            availableSlotsV2(isPhysical: $isPhysical, page: $page) {
               __typename
               hasMore
               nextCursor
@@ -35,19 +35,22 @@ import Foundation
      var queryDocument: String {
       var document: String = operationDefinition
       document.append("\n" + AvailabilitySlotFragment.fragmentDefinition)
+      document.append("\n" + AddressFragment.fragmentDefinition)
       return document
     }
 
+     var isPhysical: Bool
      var categoryId: GQL.UUID
      var page: OpaqueCursorPage
 
-     init(categoryId: GQL.UUID, page: OpaqueCursorPage) {
+     init(isPhysical: Bool, categoryId: GQL.UUID, page: OpaqueCursorPage) {
+      self.isPhysical = isPhysical
       self.categoryId = categoryId
       self.page = page
     }
 
      var variables: GraphQLMap? {
-      return ["categoryId": categoryId, "page": page]
+      return ["isPhysical": isPhysical, "categoryId": categoryId, "page": page]
     }
 
      struct Data: GraphQLSelectionSet {
@@ -123,7 +126,7 @@ import Foundation
             return [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
               GraphQLField("id", type: .nonNull(.scalar(GQL.UUID.self))),
-              GraphQLField("availableSlots", arguments: ["page": GraphQLVariable("page")], type: .nonNull(.object(AvailableSlot.selections))),
+              GraphQLField("availableSlotsV2", arguments: ["isPhysical": GraphQLVariable("isPhysical"), "page": GraphQLVariable("page")], type: .nonNull(.object(AvailableSlotsV2.selections))),
             ]
           }
 
@@ -133,8 +136,8 @@ import Foundation
             self.resultMap = unsafeResultMap
           }
 
-           init(id: GQL.UUID, availableSlots: AvailableSlot) {
-            self.init(unsafeResultMap: ["__typename": "AppointmentCategory", "id": id, "availableSlots": availableSlots.resultMap])
+           init(id: GQL.UUID, availableSlotsV2: AvailableSlotsV2) {
+            self.init(unsafeResultMap: ["__typename": "AppointmentCategory", "id": id, "availableSlotsV2": availableSlotsV2.resultMap])
           }
 
            var __typename: String {
@@ -155,16 +158,16 @@ import Foundation
             }
           }
 
-           var availableSlots: AvailableSlot {
+           var availableSlotsV2: AvailableSlotsV2 {
             get {
-              return AvailableSlot(unsafeResultMap: resultMap["availableSlots"]! as! ResultMap)
+              return AvailableSlotsV2(unsafeResultMap: resultMap["availableSlotsV2"]! as! ResultMap)
             }
             set {
-              resultMap.updateValue(newValue.resultMap, forKey: "availableSlots")
+              resultMap.updateValue(newValue.resultMap, forKey: "availableSlotsV2")
             }
           }
 
-           struct AvailableSlot: GraphQLSelectionSet {
+           struct AvailableSlotsV2: GraphQLSelectionSet {
              static let possibleTypes: [String] = ["AvailableSlotsPage"]
 
              static var selections: [GraphQLSelection] {

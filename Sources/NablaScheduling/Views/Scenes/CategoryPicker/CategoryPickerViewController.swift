@@ -47,6 +47,7 @@ final class CategoryPickerViewController: UIViewController {
     
     private lazy var refreshControl: UIRefreshControl = {
         let view = UIRefreshControl()
+        view.tintColor = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.addTarget(self, action: #selector(refreshControlHandler), for: .valueChanged)
         return view
     }()

@@ -15,6 +15,8 @@ import Foundation
           __typename
           firstConsentHtml
           secondConsentHtml
+          physicalFirstConsentHtml
+          physicalSecondConsentHtml
         }
       }
       """
@@ -60,6 +62,8 @@ import Foundation
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("firstConsentHtml", type: .nonNull(.scalar(String.self))),
             GraphQLField("secondConsentHtml", type: .nonNull(.scalar(String.self))),
+            GraphQLField("physicalFirstConsentHtml", type: .nonNull(.scalar(String.self))),
+            GraphQLField("physicalSecondConsentHtml", type: .nonNull(.scalar(String.self))),
           ]
         }
 
@@ -69,8 +73,8 @@ import Foundation
           self.resultMap = unsafeResultMap
         }
 
-         init(firstConsentHtml: String, secondConsentHtml: String) {
-          self.init(unsafeResultMap: ["__typename": "AppointmentConfirmationConsentsOutput", "firstConsentHtml": firstConsentHtml, "secondConsentHtml": secondConsentHtml])
+         init(firstConsentHtml: String, secondConsentHtml: String, physicalFirstConsentHtml: String, physicalSecondConsentHtml: String) {
+          self.init(unsafeResultMap: ["__typename": "AppointmentConfirmationConsentsOutput", "firstConsentHtml": firstConsentHtml, "secondConsentHtml": secondConsentHtml, "physicalFirstConsentHtml": physicalFirstConsentHtml, "physicalSecondConsentHtml": physicalSecondConsentHtml])
         }
 
          var __typename: String {
@@ -97,6 +101,24 @@ import Foundation
           }
           set {
             resultMap.updateValue(newValue, forKey: "secondConsentHtml")
+          }
+        }
+
+         var physicalFirstConsentHtml: String {
+          get {
+            return resultMap["physicalFirstConsentHtml"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "physicalFirstConsentHtml")
+          }
+        }
+
+         var physicalSecondConsentHtml: String {
+          get {
+            return resultMap["physicalSecondConsentHtml"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "physicalSecondConsentHtml")
           }
         }
       }

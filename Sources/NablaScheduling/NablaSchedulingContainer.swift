@@ -8,6 +8,8 @@ final class NablaSchedulingContainer {
     let gqlClient: GQLClient
     let gqlStore: GQLStore
     let videoCallClient: VideoCallClient?
+    let addressFormatter: AddressFormatter
+    let universalLinkGenerator: CompositeUniversalLinkGenerator
     let watchAppointmentsInteractor: WatchAppointmentsInteractor
     let watchCategoriesInteractor: WatchCategoriesInteractor
     let watchAvailabilitySlotsInteractor: WatchAvailabilitySlotsInteractor
@@ -15,6 +17,7 @@ final class NablaSchedulingContainer {
     let cancelAppointmentInteractor: CancelAppointmentInteractor
     let watchProviderInteractor: WatchProviderInteractor
     let fetchConsentsInteractor: FetchConcentsInteractor
+    let getAvailableLocationsInteractor: GetAvailableLocationsInteractor
 
     // MARK: Initializer
     
@@ -27,6 +30,13 @@ final class NablaSchedulingContainer {
         gqlClient = coreContainer.gqlClient
         gqlStore = coreContainer.gqlStore
         videoCallClient = coreContainer.videoCallClient
+        
+        addressFormatter = FoundationAddressFormatter()
+        
+        universalLinkGenerator = CompositeUniversalLinkGenerator(generators: [
+            GoogleMapsUniversalLinkGenerator(allowOpeningInWebBrower: false, formatter: addressFormatter),
+            AppleMapsUniversalLinkGenerator(formatter: addressFormatter),
+        ])
         
         consentsRemoteDataSource = ConsentsRemoteDataSourceImpl(
             gqlClient: gqlClient
@@ -64,6 +74,7 @@ final class NablaSchedulingContainer {
         cancelAppointmentInteractor = CancelAppointmentInteractorImpl(repository: appointmentRepository)
         watchProviderInteractor = WatchProviderInteractorImpl(repository: providerRepository)
         fetchConsentsInteractor = FetchConsentsInteractorImpl(repository: consentsRepository)
+        getAvailableLocationsInteractor = GetAvailableLocationsInteractorImpl(repository: appointmentRepository)
     }
     
     // MARK: - Private

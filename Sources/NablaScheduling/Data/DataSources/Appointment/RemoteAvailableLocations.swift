@@ -1,0 +1,3 @@
+import Foundation
+
+typealias RemoteAvailableLocations = GQL.GetAvailableLocationsQuery.Data.AppointmentAvailableLocation

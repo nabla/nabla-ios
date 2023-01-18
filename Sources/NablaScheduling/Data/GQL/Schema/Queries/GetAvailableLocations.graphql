@@ -1,0 +1,6 @@
+query GetAvailableLocations {
+    appointmentAvailableLocations {
+        hasPhysicalAvailabilities
+        hasRemoteAvailabilities
+    }
+}

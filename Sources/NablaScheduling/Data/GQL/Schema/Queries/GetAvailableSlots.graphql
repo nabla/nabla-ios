@@ -1,8 +1,8 @@
-query GetAvailableSlots($categoryId: UUID!, $page: OpaqueCursorPage!) {
+query GetAvailableSlots($isPhysical: Boolean!, $categoryId: UUID!, $page: OpaqueCursorPage!) {
     appointmentCategory(id: $categoryId) {
         category {
             id
-            availableSlots(page: $page) {
+            availableSlotsV2(isPhysical: $isPhysical, page: $page) {
                 hasMore
                 nextCursor
                 slots {

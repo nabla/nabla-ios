@@ -30,19 +30,21 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
                     title: "Description",
                     avatarUrl: nil
                 )))
-        viewModel.given(.appointmentDate(getter: .init(timeIntervalSince1970: 0)))
+        viewModel.given(.caption(getter: "Consultation planned on 1 January 1970 at 01:00"))
+        viewModel.given(.captionIcon(getter: .video))
+        viewModel.given(.isLoadingConsents(getter: false))
+        viewModel.given(.consentsLoadingError(getter: nil))
+        viewModel.given(.consents(getter: defaultConsents))
+        viewModel.given(.agreesWithFirstConsent(getter: false))
+        viewModel.given(.agreesWithSecondConsent(getter: false))
+        viewModel.given(.canConfirm(getter: false))
+        viewModel.given(.isConfirming(getter: false))
+        viewModel.given(.modal(getter: nil))
     }
     
     func testAppointmentConfirmationViewControllerLoadingConsents() {
         // GIVEN
         viewModel.given(.isLoadingConsents(getter: true))
-        viewModel.given(.consentsLoadingError(getter: nil))
-        viewModel.given(.consents(getter: nil))
-        viewModel.given(.agreesWithFirstConsent(getter: false))
-        viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -50,17 +52,10 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerErrorLoadingConsents() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
         viewModel.given(.consentsLoadingError(getter: ConsentsErrorViewModel(
             message: "An error occurred",
             handler: {}
         )))
-        viewModel.given(.consents(getter: nil))
-        viewModel.given(.agreesWithFirstConsent(getter: false))
-        viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -68,19 +63,12 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerOnlyFirstConsent() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: ConsentsViewModel(
             firstConsentHtml: NSAttributedString(string: "Only 1"),
             firstConsentContainsLink: false,
             secondConsentHtml: nil,
             secondConsentContainsLink: false
         )))
-        viewModel.given(.agreesWithFirstConsent(getter: false))
-        viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -88,19 +76,12 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerOnlySecondConsent() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: ConsentsViewModel(
             firstConsentHtml: nil,
             firstConsentContainsLink: false,
             secondConsentHtml: NSAttributedString(string: "Only 2"),
             secondConsentContainsLink: false
         )))
-        viewModel.given(.agreesWithFirstConsent(getter: false))
-        viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -108,8 +89,6 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerWithLinks() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: ConsentsViewModel(
             firstConsentHtml: try? NSAttributedString(
                 data: Data("This is a consent with a <a href=\"https://www.google.com/\">link</a>".utf8),
@@ -133,8 +112,6 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
         viewModel.given(.agreesWithFirstConsent(getter: true))
         viewModel.given(.agreesWithSecondConsent(getter: true))
         viewModel.given(.canConfirm(getter: true))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -142,8 +119,6 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerWithSpecialCharacters() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: ConsentsViewModel(
             firstConsentHtml: try? NSAttributedString(
                 data: Data("<p>This is a consent with <b>bold</b> and a <a href=\"https://www.google.com/\">link</a> and an 🤷‍♂️</p>".utf8),
@@ -164,11 +139,6 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
             ),
             secondConsentContainsLink: true
         )))
-        viewModel.given(.agreesWithFirstConsent(getter: false))
-        viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -176,14 +146,9 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
 
     func testAppointmentConfirmationViewControllerUnchecked() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: defaultConsents))
         viewModel.given(.agreesWithFirstConsent(getter: false))
         viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -191,14 +156,9 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerPartialyChecked() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: defaultConsents))
         viewModel.given(.agreesWithFirstConsent(getter: true))
         viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -206,14 +166,10 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerChecked() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: defaultConsents))
         viewModel.given(.agreesWithFirstConsent(getter: true))
         viewModel.given(.agreesWithSecondConsent(getter: true))
         viewModel.given(.canConfirm(getter: true))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -221,14 +177,11 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
     
     func testAppointmentConfirmationViewControllerConfirmLoading() {
         // GIVEN
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: defaultConsents))
         viewModel.given(.agreesWithFirstConsent(getter: true))
         viewModel.given(.agreesWithSecondConsent(getter: true))
         viewModel.given(.canConfirm(getter: true))
         viewModel.given(.isConfirming(getter: true))
-        viewModel.given(.error(getter: nil))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -246,14 +199,25 @@ class AppointmentConfirmationViewControllerTests: XCTestCase {
                     title: nil,
                     avatarUrl: nil
                 )))
-        viewModel.given(.isLoadingConsents(getter: false))
-        viewModel.given(.consentsLoadingError(getter: nil))
-        viewModel.given(.consents(getter: defaultConsents))
-        viewModel.given(.agreesWithFirstConsent(getter: false))
-        viewModel.given(.agreesWithSecondConsent(getter: false))
-        viewModel.given(.canConfirm(getter: false))
-        viewModel.given(.isConfirming(getter: false))
-        viewModel.given(.error(getter: nil))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testAppointmentConfirmationViewControllerForPhysicalLocation() {
+        // GIVEN
+        viewModel.given(.captionIcon(getter: .house))
+        viewModel.given(.details1(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testAppointmentConfirmationViewControllerForPhysicalLocationWithExtra() {
+        // GIVEN
+        viewModel.given(.captionIcon(getter: .house))
+        viewModel.given(.details1(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
+        viewModel.given(.details2(getter: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())

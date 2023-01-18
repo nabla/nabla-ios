@@ -1,7 +1,5 @@
 fragment UpcomingAppointmentFragment on UpcomingAppointment {
-    livekitRoom {
-        ...LivekitRoomFragment
-    }
+    __typename
 }
 
 fragment FinalizedAppointmentFragment on FinalizedAppointment {
@@ -21,5 +19,8 @@ fragment AppointmentFragment on Appointment {
         ... on FinalizedAppointment {
             ...FinalizedAppointmentFragment
         }
+    }
+    location {
+        ...LocationFragment
     }
 }

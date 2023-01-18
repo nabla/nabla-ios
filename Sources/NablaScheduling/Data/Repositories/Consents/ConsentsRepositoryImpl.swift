@@ -5,10 +5,10 @@ final class ConsentsRepositoryImpl: ConsentsRepository {
     // MARK: - Internal
 
     /// - Throws: ``NablaError``
-    func fetchConsents() async throws -> Consents {
+    func fetchConsents(location: LocationType) async throws -> Consents {
         do {
             let remoteConsents = try await remoteDataSource.fetchConsents()
-            return RemoteConsentsTransformer.transform(remoteConsents)
+            return RemoteConsentsTransformer.transform(remoteConsents, location: location)
         } catch let gqlError as GQLError {
             throw GQLErrorTransformer.transform(gqlError: gqlError)
         } catch {

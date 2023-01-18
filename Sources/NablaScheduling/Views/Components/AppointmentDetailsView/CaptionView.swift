@@ -1,41 +1,50 @@
 import NablaCore
 import UIKit
 
-extension AppointmentConfirmationViewController {
+public extension AppointmentDetailsView {
     final class CaptionView: UIView {
         // MARK: - Internal
+        
+        var theme: Theme {
+            didSet { updateTheme() }
+        }
         
         var text: String? {
             get { label.text }
             set { label.text = newValue }
         }
         
-        // MARK: Init
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            setUp()
-            updateAppearance()
+        var image: UIImage? {
+            get { imageView.image }
+            set { imageView.image = newValue }
         }
         
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
+        // MARK: Init
+        
+        init(frame: CGRect, theme: Theme) {
+            self.theme = theme
+            super.init(frame: frame)
             setUp()
-            updateAppearance()
+            updateTheme()
+        }
+        
+        @available(*, unavailable)
+        required init?(coder _: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
         
         // MARK: - Private
         
         // MARK: Life cycle
         
-        override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             updateCaptionShape()
         }
         
-        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
-            updateAppearance()
+            updateTheme()
         }
         
         // MARK: Subviews
@@ -44,13 +53,11 @@ extension AppointmentConfirmationViewController {
             let view = UIView()
             // `borderColor` managed in `updateAppearance()`
             view.layer.borderWidth = 1
-            view.backgroundColor = NablaTheme.AppointmentConfirmationTheme.captionBackgroundColor
             return view
         }()
         
         private lazy var imageView: UIImageView = {
-            let view = UIImageView(image: .nabla.symbol(.video))
-            view.tintColor = NablaTheme.AppointmentConfirmationTheme.captionTextColor
+            let view = UIImageView()
             view.contentMode = .scaleAspectFit
             view.nabla.constraintToSize(16)
             return view
@@ -59,8 +66,6 @@ extension AppointmentConfirmationViewController {
         private lazy var label: UILabel = {
             let view = UILabel()
             view.numberOfLines = 0
-            view.textColor = NablaTheme.AppointmentConfirmationTheme.captionTextColor
-            view.font = NablaTheme.AppointmentConfirmationTheme.captionFont
             view.setContentCompressionResistancePriority(.required, for: .horizontal)
             view.textAlignment = .center
             return view
@@ -80,13 +85,20 @@ extension AppointmentConfirmationViewController {
             backgroundView.nabla.pinToSuperView()
         }
         
-        private func updateAppearance() {
-            backgroundView.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionBorderColor.cgColor
+        private func updateTheme() {
+            backgroundView.layer.borderColor = theme.borderColor.cgColor
+            backgroundView.backgroundColor = theme.backgroundColor
+            
+            label.textColor = theme.textColor
+            label.font = theme.font
+            
+            imageView.tintColor = theme.textColor
+            
             updateCaptionShape()
         }
         
         private func updateCaptionShape() {
-            switch NablaTheme.AppointmentConfirmationTheme.captionShape {
+            switch theme.shape {
             case .capsule:
                 backgroundView.layer.cornerRadius = min(frame.height, frame.width) / 2
             case let .rounderRect(cornerRadius):

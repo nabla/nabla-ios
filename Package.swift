@@ -196,6 +196,7 @@ let package = Package(
                 .process("SnapshotTests/CategoryPicker/__Snapshots__"),
                 .process("SnapshotTests/TimeSlotPicker/__Snapshots__"),
                 .process("SnapshotTests/AppointmentConfirmation/__Snapshots__"),
+                .process("SnapshotTests/AppointmentDetails/__Snapshots__"),
             ]
         ),
         .target(name: "NablaDocumentScanner"),

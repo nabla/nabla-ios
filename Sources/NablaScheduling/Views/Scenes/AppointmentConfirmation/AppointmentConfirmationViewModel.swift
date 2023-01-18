@@ -6,10 +6,18 @@ protocol AppointmentConfirmationViewModelDelegate: AnyObject {
     func appointmentConfirmationViewModel(_ viewModel: AppointmentConfirmationViewModel, didConfirm: Appointment)
 }
 
+enum AppointmentConfirmationModal {
+    case alert(AlertViewModel)
+    case detailSheet(SheetViewModel<Void>)
+}
+
 // sourcery: AutoMockable
 protocol AppointmentConfirmationViewModel: ViewModel {
     var provider: Provider? { get }
-    var appointmentDate: Date { get }
+    var caption: String { get }
+    var captionIcon: AppointmentDetailsView.CaptionIcon { get }
+    var details1: String? { get }
+    var details2: String? { get }
     var agreesWithFirstConsent: Bool { get set }
     var agreesWithSecondConsent: Bool { get set }
     var canConfirm: Bool { get }
@@ -17,8 +25,9 @@ protocol AppointmentConfirmationViewModel: ViewModel {
     var isLoadingConsents: Bool { get }
     var consents: ConsentsViewModel? { get }
     var consentsLoadingError: ConsentsErrorViewModel? { get }
-    var error: AlertViewModel? { get set }
-
+    var modal: AppointmentConfirmationModal? { get set }
+    
+    func userDidTapAppointmentDetails()
     func userDidTapConfirmButton()
 }
 
@@ -34,14 +43,55 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     @Published private(set) var consentsLoadingError: ConsentsErrorViewModel?
     @Published private(set) var consents: ConsentsViewModel?
     @Published private(set) var provider: Provider?
-    @Published var error: AlertViewModel?
+    @Published var modal: AppointmentConfirmationModal?
 
-    var appointmentDate: Date {
-        timeSlot.start
+    var caption: String {
+        if timeSlot.start.nabla.isToday {
+            return L10n.confirmationScreenCaptionFormatToday(formatTime(date: timeSlot.start))
+        } else {
+            return L10n.confirmationScreenCaptionFormat(formatTimeAndDate(date: timeSlot.start))
+        }
+    }
+    
+    var captionIcon: AppointmentDetailsView.CaptionIcon {
+        switch location {
+        case .remote: return .video
+        case .physical: return .house
+        }
+    }
+    
+    var details1: String? {
+        switch timeSlot.location {
+        case .remote, .unknown: return nil
+        case let .physical(physicalLocation):
+            return addressFormatter.format(physicalLocation.address)
+        }
+    }
+    
+    var details2: String? {
+        switch timeSlot.location {
+        case .remote, .unknown: return nil
+        case let .physical(physicalLocation): return physicalLocation.address.extraDetails
+        }
     }
 
     var canConfirm: Bool {
         agreesWithFirstConsent && agreesWithSecondConsent
+    }
+    
+    func userDidTapAppointmentDetails() {
+        guard let physicalLocation = timeSlot.location.asPhysical else { return }
+        
+        let actions = universalLinkGenerator.makeUniversalLinks(forAdress: physicalLocation.address)
+            .compactMap { universalLink -> SheetViewModel<Void>.Action? in
+                .default(
+                    title: universalLink.displayName,
+                    handler: universalLink.open
+                )
+            }
+        
+        if actions.isEmpty { return }
+        modal = .detailSheet(.init(actions: actions))
     }
 
     func userDidTapConfirmButton() {
@@ -56,20 +106,25 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         }
     }
 
-    private var providerWatcher: AnyCancellable?
-
     // MARK: Init
 
     init(
         category: Category,
         timeSlot: AvailabilitySlot,
+        location: LocationType,
         client: NablaSchedulingClient,
+        addressFormatter: AddressFormatter,
+        universalLinkGenerator: UniversalLinkGenerator,
         delegate: AppointmentConfirmationViewModelDelegate
     ) {
         self.category = category
         self.timeSlot = timeSlot
+        self.location = location
         self.client = client
+        self.addressFormatter = addressFormatter
+        self.universalLinkGenerator = universalLinkGenerator
         self.delegate = delegate
+        
         watchProvider()
         Task(priority: .userInitiated) { [weak self] in
             await self?.fetchConsents()
@@ -80,7 +135,12 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
 
     private let category: Category
     private let timeSlot: AvailabilitySlot
+    private let location: LocationType
     private let client: NablaSchedulingClient
+    private let addressFormatter: AddressFormatter
+    private let universalLinkGenerator: UniversalLinkGenerator
+    
+    private var providerWatcher: AnyCancellable?
 
     private func confirmAppointment() async {
         guard canConfirm, !isConfirming else {
@@ -89,6 +149,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         isConfirming = true
         do {
             let appointment = try await client.scheduleAppointment(
+                location: location,
                 categoryId: category.id,
                 providerId: timeSlot.providerId,
                 date: timeSlot.start
@@ -97,11 +158,11 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
                 delegate?.appointmentConfirmationViewModel(self, didConfirm: appointment)
             }
         } catch {
-            self.error = .error(
+            modal = .alert(.error(
                 title: L10n.confirmationScreenErrorTitle,
                 error: error,
                 fallbackMessage: L10n.confirmationScreenErrorMessage
-            )
+            ))
         }
         isConfirming = false
     }
@@ -116,11 +177,11 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
                     self?.provider = provider
                 },
                 receiveError: { [weak self] error in
-                    self?.error = .error(
+                    self?.modal = .alert(.error(
                         title: L10n.confirmationScreenErrorTitle,
                         error: error,
                         fallbackMessage: ""
-                    )
+                    ))
                 }
             )
     }
@@ -132,7 +193,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         
         isLoadingConsents = true
         do {
-            let consents = try await client.fetchConsents()
+            let consents = try await client.fetchConsents(location: location)
             
             agreesWithFirstConsent = consents.firstConsentHtml == nil
             agreesWithSecondConsent = consents.secondConsentHtml == nil
@@ -194,6 +255,20 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         }
         
         return containsLink
+    }
+    
+    private func formatTime(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+    
+    private func formatTimeAndDate(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
 }
 

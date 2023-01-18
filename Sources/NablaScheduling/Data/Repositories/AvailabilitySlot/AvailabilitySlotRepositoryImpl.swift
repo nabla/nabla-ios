@@ -14,8 +14,8 @@ final class AvailabilitySlotRepositoryImpl: AvailabilitySlotRepository {
             .eraseToAnyPublisher()
     }
     
-    func watchAvailabilitySlots(forCategoryWithId categoryId: UUID) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
-        remoteDataSource.watchAvailabilitySlots(forCategoryWithId: categoryId)
+    func watchAvailabilitySlots(forCategoryWithId categoryId: UUID, location: LocationType) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
+        remoteDataSource.watchAvailabilitySlots(forCategoryWithId: categoryId, isPhysical: location == .physical)
             .map { remoteList -> PaginatedList<AvailabilitySlot> in
                 PaginatedList(
                     data: remoteList.data.map(RemoteAvailabilitySlotsTransformer.transform),

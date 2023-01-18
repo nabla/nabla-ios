@@ -15,7 +15,10 @@ final class ScrollableContainerView: UIView {
     
     var contentInset: UIEdgeInsets {
         get { scrollView.contentInset }
-        set { scrollView.contentInset = newValue }
+        set {
+            scrollView.contentInset = newValue
+            setNeedsUpdateConstraints()
+        }
     }
     
     // MARK: Init
@@ -47,6 +50,9 @@ final class ScrollableContainerView: UIView {
         return view
     }()
     
+    private lazy var containerHeightConstraint = containerView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor)
+    private lazy var containerWidthConstraint = containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+    
     private func setUp() {
         addSubview(scrollView)
         scrollView.nabla.pinToSuperView()
@@ -54,8 +60,8 @@ final class ScrollableContainerView: UIView {
         scrollView.addSubview(containerView)
         containerView.nabla.pin(to: scrollView.contentLayoutGuide)
         NSLayoutConstraint.activate([
-            containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            containerView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor),
+            containerHeightConstraint,
+            containerWidthConstraint,
         ])
         
         containerView.addSubview(contentView)
@@ -70,5 +76,11 @@ final class ScrollableContainerView: UIView {
             contentView.nabla.pinToSuperView(edges: [.leading, .trailing])
             contentView.nabla.constraintToCenterInSuperView()
         }
+    }
+    
+    override func updateConstraints() {
+        super.updateConstraints()
+        containerHeightConstraint.constant = -contentInset.nabla.vertical
+        containerWidthConstraint.constant = -contentInset.nabla.horizontal
     }
 }

@@ -1,3 +1,8 @@
+// ----- Map universal links
+
+"universal_link_google_maps" = "Google Maps";
+"universal_link_apple_maps" = "Apple Maps";
+
 // ----- Appointment list screen
 
 "appointments_screen_title" = "Appointments";
@@ -14,16 +19,32 @@
 "appointments_screen_load_list_error_title" = "Something went wrong";
 "appointments_screen_load_list_error_message" = "Failed to load the appointments. Please try again.";
 
-"appointments_screen_secondary_actions_sheet_close_button" = "Cancel";
-"appointments_screen_secondary_actions_sheet_cancel_appointment_button" = "Cancel appointment";
+// ----- Appointment details screen
 
-"appointments_screen_cancel_appointment_modal_title" = "Cancel appointment";
-"appointments_screen_cancel_appointment_modal_message" = "The appointment will be canceled.";
-"appointments_screen_cancel_appointment_modal_confirm_button" = "Confirm cancellation";
-"appointments_screen_cancel_appointment_modal_close_button" = "Keep appointment";
+"appointment_details_screen_title" = "Appointment";
+"appointment_details_screen_caption_format_today" = "Consultation planned today at %@";
+"appointment_details_screen_caption_format" = "Consultation planned on %@";
+"appointment_details_screen_action_button_label" = "Cancel appointment";
 
-"appointments_screen_cancel_appointment_error_title" = "Something went wrong";
-"appointments_screen_cancel_appointment_error_message" = "Failed to cancel the appointment. Please try again.";
+"appointment_details_screen_cancel_appointment_modal_title" = "Cancel appointment";
+"appointment_details_screen_cancel_appointment_modal_message" = "The appointment will be canceled.";
+"appointment_details_screen_cancel_appointment_modal_confirm_button" = "Confirm cancellation";
+"appointment_details_screen_cancel_appointment_modal_close_button" = "Keep appointment";
+
+"appointment_details_screen_cancel_appointment_error_title" = "Something went wrong";
+"appointment_details_screen_cancel_appointment_error_message" = "Failed to cancel the appointment. Please try again.";
+
+// ----- Location picker screen
+
+"location_picker_screen_title" = "Select a location";
+
+"location_picker_remote_location_name" = "Remote";
+"location_picker_physical_location_name" = "Physical";
+
+"location_picker_screen_empty_label" = "No locations available";
+
+"location_picker_screen_error_title" = "Something went wrong";
+"location_picker_screen_error_message" = "Failed to display the locations. Please try again.";
 
 // ----- Category picker screen
 

@@ -2,5 +2,5 @@ import Foundation
 
 protocol ConsentsRepository {
     /// - Throws: ``NablaError``
-    func fetchConsents() async throws -> Consents
+    func fetchConsents(location: LocationType) async throws -> Consents
 }

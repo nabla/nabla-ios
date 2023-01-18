@@ -1,3 +1,8 @@
+// ----- Map universal links
+
+"universal_link_google_maps" = "Google Maps";
+"universal_link_apple_maps" = "Plans";
+
 // ----- Appointment list screen
 
 "appointments_screen_title" = "Rendez-vous";
@@ -14,16 +19,32 @@
 "appointments_screen_load_list_error_title" = "Une erreur est survenue";
 "appointments_screen_load_list_error_message" = "Impossible d'afficher vos rendez-vous. Réessayez.";
 
-"appointments_screen_secondary_actions_sheet_close_button" = "Revenir";
-"appointments_screen_secondary_actions_sheet_cancel_appointment_button" = "Annuler le rendez-vous";
+// ----- Appointment details screen
 
-"appointments_screen_cancel_appointment_modal_title" = "Annuler le rendez-vous";
-"appointments_screen_cancel_appointment_modal_message" = "Ceci annulera le rendez-vous que vous avez prévu.";
-"appointments_screen_cancel_appointment_modal_confirm_button" = "Confirmer l’annulation";
-"appointments_screen_cancel_appointment_modal_close_button" = "Conserver le rendez-vous";
+"appointment_details_screen_title" = "Rendez-vous";
+"appointment_details_screen_caption_format_today" = "Rendez-vous prévu aujourd'hui à %@";
+"appointment_details_screen_caption_format" = "Rendez-vous prévu le %@";
+"appointment_details_screen_action_button_label" = "Annuler le rendez-vous";
 
-"appointments_screen_cancel_appointment_error_title" = "Une erreur est survenue";
-"appointments_screen_cancel_appointment_error_message" = "Impossible d'annuler le rendez-vous. Réessayez.";
+"appointment_details_screen_cancel_appointment_modal_title" = "Annuler le rendez-vous";
+"appointment_details_screen_cancel_appointment_modal_message" = "Ceci annulera le rendez-vous que vous avez prévu.";
+"appointment_details_screen_cancel_appointment_modal_confirm_button" = "Confirmer l’annulation";
+"appointment_details_screen_cancel_appointment_modal_close_button" = "Conserver le rendez-vous";
+
+"appointment_details_screen_cancel_appointment_error_title" = "Une erreur est survenue";
+"appointment_details_screen_cancel_appointment_error_message" = "Impossible d'annuler le rendez-vous. Réessayez.";
+
+// ----- Location picker screen
+
+"location_picker_screen_title" = "Choisissez le mode de rendez-vous";
+
+"location_picker_remote_location_name" = "Téléconsultation";
+"location_picker_physical_location_name" = "Rendez-vous physique";
+
+"location_picker_screen_empty_label" = "Aucun mode de rendez-vous disponible";
+
+"location_picker_screen_error_title" = "Une erreur est survenue";
+"location_picker_screen_error_message" = "Impossible d'afficher les modes de rendez-vous. Réessayez.";
 
 // ----- Category picker screen
 

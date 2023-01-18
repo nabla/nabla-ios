@@ -49,10 +49,12 @@ import Foundation
       document.append("\n" + AppointmentFragment.fragmentDefinition)
       document.append("\n" + ProviderFragment.fragmentDefinition)
       document.append("\n" + UpcomingAppointmentFragment.fragmentDefinition)
+      document.append("\n" + FinalizedAppointmentFragment.fragmentDefinition)
+      document.append("\n" + LocationFragment.fragmentDefinition)
+      document.append("\n" + AddressFragment.fragmentDefinition)
       document.append("\n" + LivekitRoomFragment.fragmentDefinition)
       document.append("\n" + LivekitRoomOpenStatusFragment.fragmentDefinition)
       document.append("\n" + LivekitRoomClosedStatusFragment.fragmentDefinition)
-      document.append("\n" + FinalizedAppointmentFragment.fragmentDefinition)
       return document
     }
 

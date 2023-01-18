@@ -12,10 +12,6 @@ import Foundation
       """
       fragment UpcomingAppointmentFragment on UpcomingAppointment {
         __typename
-        livekitRoom {
-          __typename
-          ...LivekitRoomFragment
-        }
       }
       """
 
@@ -24,7 +20,6 @@ import Foundation
      static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("livekitRoom", type: .object(LivekitRoom.selections)),
       ]
     }
 
@@ -34,8 +29,8 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(livekitRoom: LivekitRoom? = nil) {
-      self.init(unsafeResultMap: ["__typename": "UpcomingAppointment", "livekitRoom": livekitRoom.flatMap { (value: LivekitRoom) -> ResultMap in value.resultMap }])
+     init() {
+      self.init(unsafeResultMap: ["__typename": "UpcomingAppointment"])
     }
 
      var __typename: String {
@@ -44,67 +39,6 @@ import Foundation
       }
       set {
         resultMap.updateValue(newValue, forKey: "__typename")
-      }
-    }
-
-     var livekitRoom: LivekitRoom? {
-      get {
-        return (resultMap["livekitRoom"] as? ResultMap).flatMap { LivekitRoom(unsafeResultMap: $0) }
-      }
-      set {
-        resultMap.updateValue(newValue?.resultMap, forKey: "livekitRoom")
-      }
-    }
-
-     struct LivekitRoom: GraphQLSelectionSet {
-       static let possibleTypes: [String] = ["LivekitRoom"]
-
-       static var selections: [GraphQLSelection] {
-        return [
-          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLFragmentSpread(LivekitRoomFragment.self),
-        ]
-      }
-
-       private(set) var resultMap: ResultMap
-
-       init(unsafeResultMap: ResultMap) {
-        self.resultMap = unsafeResultMap
-      }
-
-       var __typename: String {
-        get {
-          return resultMap["__typename"]! as! String
-        }
-        set {
-          resultMap.updateValue(newValue, forKey: "__typename")
-        }
-      }
-
-       var fragments: Fragments {
-        get {
-          return Fragments(unsafeResultMap: resultMap)
-        }
-        set {
-          resultMap += newValue.resultMap
-        }
-      }
-
-       struct Fragments {
-         private(set) var resultMap: ResultMap
-
-         init(unsafeResultMap: ResultMap) {
-          self.resultMap = unsafeResultMap
-        }
-
-         var livekitRoomFragment: LivekitRoomFragment {
-          get {
-            return LivekitRoomFragment(unsafeResultMap: resultMap)
-          }
-          set {
-            resultMap += newValue.resultMap
-          }
-        }
       }
     }
   }
@@ -180,6 +114,10 @@ import Foundation
             ...FinalizedAppointmentFragment
           }
         }
+        location {
+          __typename
+          ...LocationFragment
+        }
       }
       """
 
@@ -192,6 +130,7 @@ import Foundation
         GraphQLField("scheduledAt", type: .nonNull(.scalar(GQL.DateTime.self))),
         GraphQLField("provider", type: .nonNull(.object(Provider.selections))),
         GraphQLField("state", type: .nonNull(.object(State.selections))),
+        GraphQLField("location", type: .nonNull(.object(Location.selections))),
       ]
     }
 
@@ -201,8 +140,8 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(id: GQL.UUID, scheduledAt: GQL.DateTime, provider: Provider, state: State) {
-      self.init(unsafeResultMap: ["__typename": "Appointment", "id": id, "scheduledAt": scheduledAt, "provider": provider.resultMap, "state": state.resultMap])
+     init(id: GQL.UUID, scheduledAt: GQL.DateTime, provider: Provider, state: State, location: Location) {
+      self.init(unsafeResultMap: ["__typename": "Appointment", "id": id, "scheduledAt": scheduledAt, "provider": provider.resultMap, "state": state.resultMap, "location": location.resultMap])
     }
 
      var __typename: String {
@@ -247,6 +186,15 @@ import Foundation
       }
       set {
         resultMap.updateValue(newValue.resultMap, forKey: "state")
+      }
+    }
+
+     var location: Location {
+      get {
+        return Location(unsafeResultMap: resultMap["location"]! as! ResultMap)
+      }
+      set {
+        resultMap.updateValue(newValue.resultMap, forKey: "location")
       }
     }
 
@@ -322,6 +270,10 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
+       static func makeUpcomingAppointment() -> State {
+        return State(unsafeResultMap: ["__typename": "UpcomingAppointment"])
+      }
+
        static func makeFinalizedAppointment(`_`: EmptyObject) -> State {
         return State(unsafeResultMap: ["__typename": "FinalizedAppointment", "_": `_`])
       }
@@ -361,6 +313,10 @@ import Foundation
 
          init(unsafeResultMap: ResultMap) {
           self.resultMap = unsafeResultMap
+        }
+
+         init() {
+          self.init(unsafeResultMap: ["__typename": "UpcomingAppointment"])
         }
 
          var __typename: String {
@@ -463,6 +419,58 @@ import Foundation
             set {
               resultMap += newValue.resultMap
             }
+          }
+        }
+      }
+    }
+
+     struct Location: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["PhysicalAppointmentLocation", "RemoteAppointmentLocation"]
+
+       static var selections: [GraphQLSelection] {
+        return [
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLFragmentSpread(LocationFragment.self),
+        ]
+      }
+
+       private(set) var resultMap: ResultMap
+
+       init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
+      }
+
+       var __typename: String {
+        get {
+          return resultMap["__typename"]! as! String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+       var fragments: Fragments {
+        get {
+          return Fragments(unsafeResultMap: resultMap)
+        }
+        set {
+          resultMap += newValue.resultMap
+        }
+      }
+
+       struct Fragments {
+         private(set) var resultMap: ResultMap
+
+         init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+         var locationFragment: LocationFragment {
+          get {
+            return LocationFragment(unsafeResultMap: resultMap)
+          }
+          set {
+            resultMap += newValue.resultMap
           }
         }
       }

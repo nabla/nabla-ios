@@ -6,10 +6,11 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
     // MARK: - Internal
     
     func watchAppointments(state: Appointment.State) -> AnyPublisher<PaginatedList<Appointment>, NablaError> {
-        remoteDataSource.watchAppointments(state: RemoteAppointmentTransformer.transform(state))
+        let transformer = RemoteAppointmentTransformer(logger: logger)
+        return remoteDataSource.watchAppointments(state: transformer.transform(state))
             .map { remote in
                 PaginatedList<Appointment>(
-                    data: remote.data.map(RemoteAppointmentTransformer.transform),
+                    data: remote.data.map(transformer.transform),
                     hasMore: remote.hasMore,
                     loadMore: remote.loadMore
                 )
@@ -19,10 +20,16 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
     }
     
     /// - Throws: ``NablaError``
-    func scheduleAppointment(categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
+    func scheduleAppointment(location: LocationType, categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
         do {
-            let appointment = try await remoteDataSource.scheduleAppointment(categoryId: categoryId, providerId: providerId, date: date)
-            return RemoteAppointmentTransformer.transform(appointment)
+            let appointment = try await remoteDataSource.scheduleAppointment(
+                isPhysical: location == .physical,
+                categoryId: categoryId,
+                providerId: providerId,
+                date: date
+            )
+            let transformer = RemoteAppointmentTransformer(logger: logger)
+            return transformer.transform(appointment)
         } catch let gqlError as GQLError {
             throw GQLErrorTransformer.transform(gqlError: gqlError)
         } catch {
@@ -34,6 +41,25 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
     func cancelAppointment(withId appointmentId: UUID) async throws {
         do {
             try await remoteDataSource.cancelAppointment(withId: appointmentId)
+        } catch let gqlError as GQLError {
+            throw GQLErrorTransformer.transform(gqlError: gqlError)
+        } catch {
+            throw InternalError(underlyingError: error)
+        }
+    }
+    
+    /// - Throws: ``NablaError``
+    func getAvailableAppointmentLocations() async throws -> Set<LocationType> {
+        do {
+            let response = try await remoteDataSource.getAvailableLocations()
+            var availableLocations = Set<LocationType>()
+            if response.hasPhysicalAvailabilities {
+                availableLocations.insert(.physical)
+            }
+            if response.hasRemoteAvailabilities {
+                availableLocations.insert(.remote)
+            }
+            return availableLocations
         } catch let gqlError as GQLError {
             throw GQLErrorTransformer.transform(gqlError: gqlError)
         } catch {

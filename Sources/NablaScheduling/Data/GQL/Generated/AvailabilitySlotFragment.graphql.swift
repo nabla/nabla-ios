@@ -18,6 +18,20 @@ import Foundation
           __typename
           id
         }
+        location {
+          __typename
+          ... on PhysicalAvailabilitySlotLocation {
+            __typename
+            address {
+              __typename
+              ...AddressFragment
+            }
+          }
+          ... on RemoteAvailabilitySlotLocation {
+            __typename
+            _
+          }
+        }
       }
       """
 
@@ -29,6 +43,7 @@ import Foundation
         GraphQLField("startAt", type: .nonNull(.scalar(GQL.DateTime.self))),
         GraphQLField("endAt", type: .nonNull(.scalar(GQL.DateTime.self))),
         GraphQLField("provider", type: .nonNull(.object(Provider.selections))),
+        GraphQLField("location", type: .nonNull(.object(Location.selections))),
       ]
     }
 
@@ -38,8 +53,8 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(startAt: GQL.DateTime, endAt: GQL.DateTime, provider: Provider) {
-      self.init(unsafeResultMap: ["__typename": "AvailabilitySlot", "startAt": startAt, "endAt": endAt, "provider": provider.resultMap])
+     init(startAt: GQL.DateTime, endAt: GQL.DateTime, provider: Provider, location: Location) {
+      self.init(unsafeResultMap: ["__typename": "AvailabilitySlot", "startAt": startAt, "endAt": endAt, "provider": provider.resultMap, "location": location.resultMap])
     }
 
      var __typename: String {
@@ -78,6 +93,15 @@ import Foundation
       }
     }
 
+     var location: Location {
+      get {
+        return Location(unsafeResultMap: resultMap["location"]! as! ResultMap)
+      }
+      set {
+        resultMap.updateValue(newValue.resultMap, forKey: "location")
+      }
+    }
+
      struct Provider: GraphQLSelectionSet {
        static let possibleTypes: [String] = ["Provider"]
 
@@ -113,6 +137,202 @@ import Foundation
         }
         set {
           resultMap.updateValue(newValue, forKey: "id")
+        }
+      }
+    }
+
+     struct Location: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["PhysicalAvailabilitySlotLocation", "RemoteAvailabilitySlotLocation"]
+
+       static var selections: [GraphQLSelection] {
+        return [
+          GraphQLTypeCase(
+            variants: ["PhysicalAvailabilitySlotLocation": AsPhysicalAvailabilitySlotLocation.selections, "RemoteAvailabilitySlotLocation": AsRemoteAvailabilitySlotLocation.selections],
+            default: [
+              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            ]
+          )
+        ]
+      }
+
+       private(set) var resultMap: ResultMap
+
+       init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
+      }
+
+       static func makePhysicalAvailabilitySlotLocation(address: AsPhysicalAvailabilitySlotLocation.Address) -> Location {
+        return Location(unsafeResultMap: ["__typename": "PhysicalAvailabilitySlotLocation", "address": address.resultMap])
+      }
+
+       static func makeRemoteAvailabilitySlotLocation(`_`: EmptyObject) -> Location {
+        return Location(unsafeResultMap: ["__typename": "RemoteAvailabilitySlotLocation", "_": `_`])
+      }
+
+       var __typename: String {
+        get {
+          return resultMap["__typename"]! as! String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+       var asPhysicalAvailabilitySlotLocation: AsPhysicalAvailabilitySlotLocation? {
+        get {
+          if !AsPhysicalAvailabilitySlotLocation.possibleTypes.contains(__typename) { return nil }
+          return AsPhysicalAvailabilitySlotLocation(unsafeResultMap: resultMap)
+        }
+        set {
+          guard let newValue = newValue else { return }
+          resultMap = newValue.resultMap
+        }
+      }
+
+       struct AsPhysicalAvailabilitySlotLocation: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["PhysicalAvailabilitySlotLocation"]
+
+         static var selections: [GraphQLSelection] {
+          return [
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("address", type: .nonNull(.object(Address.selections))),
+          ]
+        }
+
+         private(set) var resultMap: ResultMap
+
+         init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+         init(address: Address) {
+          self.init(unsafeResultMap: ["__typename": "PhysicalAvailabilitySlotLocation", "address": address.resultMap])
+        }
+
+         var __typename: String {
+          get {
+            return resultMap["__typename"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+         var address: Address {
+          get {
+            return Address(unsafeResultMap: resultMap["address"]! as! ResultMap)
+          }
+          set {
+            resultMap.updateValue(newValue.resultMap, forKey: "address")
+          }
+        }
+
+         struct Address: GraphQLSelectionSet {
+           static let possibleTypes: [String] = ["Address"]
+
+           static var selections: [GraphQLSelection] {
+            return [
+              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+              GraphQLFragmentSpread(AddressFragment.self),
+            ]
+          }
+
+           private(set) var resultMap: ResultMap
+
+           init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
+          }
+
+           init(id: GQL.UUID, address: String, zipCode: String, city: String, state: String? = nil, country: String? = nil, extraDetails: String? = nil) {
+            self.init(unsafeResultMap: ["__typename": "Address", "id": id, "address": address, "zipCode": zipCode, "city": city, "state": state, "country": country, "extraDetails": extraDetails])
+          }
+
+           var __typename: String {
+            get {
+              return resultMap["__typename"]! as! String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "__typename")
+            }
+          }
+
+           var fragments: Fragments {
+            get {
+              return Fragments(unsafeResultMap: resultMap)
+            }
+            set {
+              resultMap += newValue.resultMap
+            }
+          }
+
+           struct Fragments {
+             private(set) var resultMap: ResultMap
+
+             init(unsafeResultMap: ResultMap) {
+              self.resultMap = unsafeResultMap
+            }
+
+             var addressFragment: AddressFragment {
+              get {
+                return AddressFragment(unsafeResultMap: resultMap)
+              }
+              set {
+                resultMap += newValue.resultMap
+              }
+            }
+          }
+        }
+      }
+
+       var asRemoteAvailabilitySlotLocation: AsRemoteAvailabilitySlotLocation? {
+        get {
+          if !AsRemoteAvailabilitySlotLocation.possibleTypes.contains(__typename) { return nil }
+          return AsRemoteAvailabilitySlotLocation(unsafeResultMap: resultMap)
+        }
+        set {
+          guard let newValue = newValue else { return }
+          resultMap = newValue.resultMap
+        }
+      }
+
+       struct AsRemoteAvailabilitySlotLocation: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["RemoteAvailabilitySlotLocation"]
+
+         static var selections: [GraphQLSelection] {
+          return [
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("_", type: .nonNull(.scalar(EmptyObject.self))),
+          ]
+        }
+
+         private(set) var resultMap: ResultMap
+
+         init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+         init(`_`: EmptyObject) {
+          self.init(unsafeResultMap: ["__typename": "RemoteAvailabilitySlotLocation", "_": `_`])
+        }
+
+         var __typename: String {
+          get {
+            return resultMap["__typename"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+         var `_`: EmptyObject {
+          get {
+            return resultMap["_"]! as! EmptyObject
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "_")
+          }
         }
       }
     }

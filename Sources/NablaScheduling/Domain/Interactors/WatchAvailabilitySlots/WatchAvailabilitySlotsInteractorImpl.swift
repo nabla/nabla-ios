@@ -5,8 +5,8 @@ import NablaCore
 final class WatchAvailabilitySlotsInteractorImpl: WatchAvailabilitySlotsInteractor {
     // MARK: - Internal
     
-    func execute(categoryId: UUID) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
-        repository.watchAvailabilitySlots(forCategoryWithId: categoryId)
+    func execute(categoryId: UUID, location: LocationType) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
+        repository.watchAvailabilitySlots(forCategoryWithId: categoryId, location: location)
     }
     
     // MARK: Init

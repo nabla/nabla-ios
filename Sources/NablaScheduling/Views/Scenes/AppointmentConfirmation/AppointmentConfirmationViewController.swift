@@ -38,11 +38,17 @@ final class AppointmentConfirmationViewController: UIViewController {
     
     // MARK: Subviews
     
-    private let headerView: HeaderView = {
-        let view = HeaderView()
+    private lazy var headerView: AppointmentDetailsView = {
+        let view = AppointmentDetailsView(
+            frame: .zero,
+            theme: NablaTheme.AppointmentConfirmationTheme.header
+        )
         view.title = ""
         view.subtitle = ""
         view.caption = ""
+        view.onDetailsTapped = { [viewModel] in
+            viewModel.userDidTapAppointmentDetails()
+        }
         return view
     }()
     
@@ -131,11 +137,10 @@ final class AppointmentConfirmationViewController: UIViewController {
             guard let self = self else { return }
             self.updateProvider()
             
-            if viewModel.appointmentDate.nabla.isToday {
-                self.headerView.caption = L10n.confirmationScreenCaptionFormatToday(self.formatTime(date: viewModel.appointmentDate))
-            } else {
-                self.headerView.caption = L10n.confirmationScreenCaptionFormat(self.formatTimeAndDate(date: viewModel.appointmentDate))
-            }
+            self.headerView.caption = viewModel.caption
+            self.headerView.captionIcon = viewModel.captionIcon
+            self.headerView.details1 = viewModel.details1
+            self.headerView.details2 = viewModel.details2
             
             if viewModel.isLoadingConsents {
                 self.actionButton.isHidden = true
@@ -215,24 +220,18 @@ final class AppointmentConfirmationViewController: UIViewController {
     }
     
     private func updateError() {
-        guard presentedViewController == nil, let error = viewModel.error else { return }
-        let controller = nabla.makeController(for: error)
-        present(controller, animated: true) { [viewModel] in
-            viewModel.error = nil
+        guard presentedViewController == nil, let modal = viewModel.modal else { return }
+        switch modal {
+        case let .alert(alert):
+            let controller = nabla.makeController(for: alert)
+            present(controller, animated: true) { [viewModel] in
+                viewModel.modal = nil
+            }
+        case let .detailSheet(sheet):
+            let controller = nabla.makeController(for: sheet, sourceView: headerView)
+            present(controller, animated: true) { [viewModel] in
+                viewModel.modal = nil
+            }
         }
-    }
-    
-    private func formatTime(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
-    }
-    
-    private func formatTimeAndDate(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
     }
 }

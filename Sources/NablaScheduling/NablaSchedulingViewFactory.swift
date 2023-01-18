@@ -2,16 +2,23 @@ import NablaCore
 import UIKit
 
 public protocol NablaSchedulingViewFactory: SchedulingViewFactory {
-    func createAppointmentListViewController() -> UIViewController
-    func presentScheduleAppointmentViewController(from presentingViewController: UIViewController)
+    func createAppointmentListViewController(delegate: AppointmentListDelegate) -> UIViewController
+    func presentScheduleAppointmentNavigationController(from presentingViewController: UIViewController)
+    func createAppointmentDetailsViewController(appointment: Appointment, delegate: AppointmentDetailsDelegate) -> UIViewController
 }
 
 // sourcery: AutoMockable
 // sourcery: typealias = "Category = NablaScheduling.Category"
 protocol InternalSchedulingViewFactory {
+    func createLocationPickerViewController(delegate: LocationPickerViewModelDelegate) -> UIViewController
     func createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate) -> UIViewController
-    func createTimeSlotPickerViewController(category: Category, delegate: TimeSlotPickerViewModelDelegate) -> UIViewController
+    func createTimeSlotPickerViewController(
+        location: LocationType,
+        category: Category,
+        delegate: TimeSlotPickerViewModelDelegate
+    ) -> UIViewController
     func createAppointmentConfirmationViewController(
+        location: LocationType,
         category: Category,
         timeSlot: AvailabilitySlot,
         delegate: AppointmentConfirmationViewModelDelegate
@@ -23,32 +30,58 @@ protocol InternalSchedulingViewFactory {
 public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, InternalSchedulingViewFactory {
     // MARK: - Public
     
-    public func createAppointmentListViewController() -> UIViewController {
-        let viewModel = AppointmentListViewModelImpl(client: client)
+    public func createAppointmentListViewController(delegate: AppointmentListDelegate) -> UIViewController {
+        let viewModel = AppointmentListViewModelImpl(
+            delegate: delegate,
+            client: client,
+            logger: client.container.logger
+        )
         let viewController = AppointmentListViewController(
             viewModel: viewModel,
             factory: self,
             logger: client.container.logger,
             videoCallClient: client.container.videoCallClient
         )
-        viewModel.delegate = viewController // The navigation is currently handled by the root view controller him self
         return viewController
     }
 
-    public func presentScheduleAppointmentViewController(from presentingViewController: UIViewController) {
-        let viewController = ScheduleAppointmentViewController(factory: self)
+    public func presentScheduleAppointmentNavigationController(from presentingViewController: UIViewController) {
+        let viewController = ScheduleAppointmentNavigationController(factory: self)
         presentingViewController.present(viewController, animated: true)
+    }
+    
+    public func createAppointmentDetailsViewController(appointment: Appointment, delegate: AppointmentDetailsDelegate) -> UIViewController {
+        let viewModel = AppointmentDetailsViewModelImpl(
+            appointment: appointment,
+            delegate: delegate,
+            client: client,
+            addressFormatter: client.container.addressFormatter,
+            universalLinkGenerator: client.container.universalLinkGenerator
+        )
+        let viewController = AppointmentDetailsViewController(viewModel: viewModel)
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        return viewController
     }
 
     // MARK: - Internal
+    
+    func createLocationPickerViewController(delegate: LocationPickerViewModelDelegate) -> UIViewController {
+        let viewModel = LocationPickerViewModelImpl(delegate: delegate, client: client)
+        return LocationPickerViewController(viewModel: viewModel)
+    }
     
     func createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate) -> UIViewController {
         let viewModel = CategoryPickerViewModelImpl(client: client, delegate: delegate)
         return CategoryPickerViewController(viewModel: viewModel)
     }
     
-    func createTimeSlotPickerViewController(category: Category, delegate: TimeSlotPickerViewModelDelegate) -> UIViewController {
+    func createTimeSlotPickerViewController(
+        location: LocationType,
+        category: Category,
+        delegate: TimeSlotPickerViewModelDelegate
+    ) -> UIViewController {
         let viewModel = TimeSlotPickerViewModelImpl(
+            location: location,
             category: category,
             client: client,
             delegate: delegate
@@ -57,6 +90,7 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
     }
     
     func createAppointmentConfirmationViewController(
+        location: LocationType,
         category: Category,
         timeSlot: AvailabilitySlot,
         delegate: AppointmentConfirmationViewModelDelegate
@@ -64,7 +98,10 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
         let viewModel = AppointmentConfirmationViewModelImpl(
             category: category,
             timeSlot: timeSlot,
+            location: location,
             client: client,
+            addressFormatter: client.container.addressFormatter,
+            universalLinkGenerator: client.container.universalLinkGenerator,
             delegate: delegate
         )
         return AppointmentConfirmationViewController(viewModel: viewModel)

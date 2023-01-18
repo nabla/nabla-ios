@@ -3,6 +3,10 @@ import UIKit
 public extension NablaExtension where Base: UIViewController {
     // MARK: - Public
     
+    func makeController<Source>(for sheet: SheetViewModel<Source>, sourceView: UIView) -> UIAlertController {
+        makeController(for: sheet, sourceViewProvider: { _ in sourceView })
+    }
+    
     func makeController<Source>(for sheet: SheetViewModel<Source>, sourceViewProvider: (Source) -> UIView?) -> UIAlertController {
         let style: UIAlertController.Style
         let sourceView: UIView?

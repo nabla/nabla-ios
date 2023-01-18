@@ -10,10 +10,7 @@ final class ConsentsRemoteDataSourceImpl: ConsentsRemoteDataSource {
             query: GQL.GetAppointmentConfirmationConsentsQuery(),
             policy: .returnCacheDataElseFetch
         )
-        return RemoteConsents(
-            firstConsentHtml: response.appointmentConfirmationConsents.firstConsentHtml,
-            secondConsentHtml: response.appointmentConfirmationConsents.secondConsentHtml
-        )
+        return response.appointmentConfirmationConsents
     }
     
     // MARK: Init

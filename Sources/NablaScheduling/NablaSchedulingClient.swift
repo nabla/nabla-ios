@@ -5,6 +5,11 @@ import NablaCore
 public final class NablaSchedulingClient: SchedulingClient {
     // MARK: - Public
     
+    public var universalLinkGenerators: [UniversalLinkGenerator] {
+        get { container.universalLinkGenerator.generators }
+        set { container.universalLinkGenerator.generators = newValue }
+    }
+    
     // MARK: - Internal
     
     func watchAppointments(state: Appointment.State) -> AnyPublisher<PaginatedList<Appointment>, NablaError> {
@@ -15,8 +20,8 @@ public final class NablaSchedulingClient: SchedulingClient {
         container.watchCategoriesInteractor.execute()
     }
     
-    func watchAvailabilitySlots(forCategoryWithId categoryId: UUID) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
-        container.watchAvailabilitySlotsInteractor.execute(categoryId: categoryId)
+    func watchAvailabilitySlots(forCategoryWithId categoryId: UUID, location: LocationType) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
+        container.watchAvailabilitySlotsInteractor.execute(categoryId: categoryId, location: location)
     }
 
     func watchProvider(id: UUID) -> AnyPublisher<Provider, NablaError> {
@@ -24,8 +29,18 @@ public final class NablaSchedulingClient: SchedulingClient {
     }
     
     /// - Throws: ``NablaError``
-    func scheduleAppointment(categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
-        try await container.scheduleAppointmentInteractor.execute(categoryId: categoryId, providerId: providerId, date: date)
+    func scheduleAppointment(
+        location: LocationType,
+        categoryId: UUID,
+        providerId: UUID,
+        date: Date
+    ) async throws -> Appointment {
+        try await container.scheduleAppointmentInteractor.execute(
+            location: location,
+            categoryId: categoryId,
+            providerId: providerId,
+            date: date
+        )
     }
     
     /// - Throws: ``NablaError``
@@ -34,8 +49,13 @@ public final class NablaSchedulingClient: SchedulingClient {
     }
     
     /// - Throws: ``NablaError``
-    func fetchConsents() async throws -> Consents {
-        try await container.fetchConsentsInteractor.execute()
+    func fetchConsents(location: LocationType) async throws -> Consents {
+        try await container.fetchConsentsInteractor.execute(location: location)
+    }
+    
+    /// - Throws: ``NablaError``
+    func getAvailableLocations() async throws -> Set<LocationType> {
+        try await container.getAvailableLocationsInteractor.execute()
     }
     
     // MARK: Initializer

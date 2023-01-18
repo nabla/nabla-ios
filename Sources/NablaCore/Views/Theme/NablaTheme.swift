@@ -60,6 +60,17 @@ public enum NablaTheme {
             font: Fonts.subtitleMedium,
             cornerRadius: 8
         )
+        
+        public static var danger = NablaViews.PrimaryButton.Theme(
+            backgroundColor: .clear,
+            highlightedBackgroundColor: .clear,
+            disabledBackgroundColor: .clear,
+            textColor: Colors.ButtonText.danger,
+            highlightedTextColor: Colors.ButtonText.dangerHighlighted,
+            disabledTextColor: Colors.ButtonText.dangerDisabled,
+            font: Fonts.subtitleMedium,
+            cornerRadius: 8
+        )
     }
     
     public enum Checkbox {

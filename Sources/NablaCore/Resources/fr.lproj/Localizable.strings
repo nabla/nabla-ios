@@ -1,3 +1,7 @@
+// ----- Defaults
+
+"default_cancel_button" = "Annuler";
+
 // ----- Errors
 
 "error_default_close_button" = "Ok";

@@ -10,5 +10,5 @@ struct PaginatedList<T> {
 
 protocol AvailabilitySlotRemoteDataSource {
     func watchCategories() -> AnyPublisher<[RemoteCategory], GQLError>
-    func watchAvailabilitySlots(forCategoryWithId: UUID) -> AnyPublisher<PaginatedList<RemoteAvailabilitySlot>, GQLError>
+    func watchAvailabilitySlots(forCategoryWithId: UUID, isPhysical: Bool) -> AnyPublisher<PaginatedList<RemoteAvailabilitySlot>, GQLError>
 }

@@ -1,12 +1,14 @@
 mutation scheduleAppointment(
+    $isPhysical: Boolean!,
     $categoryId: UUID!,
     $providerId: UUID!,
     $timeSlot: DateTime!,
     $timeZone: TimeZone!
 ) {
-    scheduleAppointment(
+    scheduleAppointmentV2(
         categoryId: $categoryId,
         providerId: $providerId,
+        isPhysical: $isPhysical,
         slot: $timeSlot,
         timeZone: $timeZone
     ) {

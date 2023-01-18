@@ -8,6 +8,13 @@ public struct SheetViewModel<Source> {
     
     public init(
         source: Source,
+        actions: [Action]
+    ) {
+        self.init(source: source, actions: actions, cancel: L10n.defaultCancelButton)
+    }
+    
+    public init(
+        source: Source,
         actions: [Action],
         cancel: String
     ) {
@@ -33,5 +40,27 @@ public struct SheetViewModel<Source> {
         public static func destructive(title: String, handler: @escaping () -> Void) -> Action {
             Action(title: title, style: .destructive, handler: handler)
         }
+    }
+}
+
+public extension SheetViewModel where Source == Void {
+    init(
+        actions: [Action],
+        cancel: String
+    ) {
+        self.init(
+            source: (),
+            actions: actions,
+            cancel: cancel
+        )
+    }
+    
+    init(
+        actions: [Action]
+    ) {
+        self.init(
+            actions: actions,
+            cancel: L10n.defaultCancelButton
+        )
     }
 }

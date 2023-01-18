@@ -29,7 +29,7 @@ class AppointmentlistViewControllerTests: XCTestCase {
         
         viewModel.given(.onChange(willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.onChange(throttle: .any, willReturn: Just(()).eraseToAnyPublisher()))
-        viewModel.given(.modal(getter: nil))
+        viewModel.given(.alert(getter: nil))
     }
 
     func testAppointmentlistViewControllerUpcomingTabWithImminentAppointments() {
@@ -84,10 +84,9 @@ class AppointmentlistViewControllerTests: XCTestCase {
                 title: "GP",
                 avatarUrl: nil
             ),
-            videoCallRoom: state == .finalized ? nil : .init(
-                url: "",
-                token: ""
-            )
+            location: .remote(.init(
+                videoCallRoom: state == .finalized ? nil : .init(url: "", token: "")
+            ))
         )
     }
 }
@@ -99,11 +98,15 @@ private class MockFactory: InternalSchedulingViewFactoryMock {
 }
 
 extension MockFactory: NablaSchedulingViewFactory {
-    func createAppointmentListViewController() -> UIViewController {
+    func createAppointmentListViewController(delegate _: NablaScheduling.AppointmentListDelegate) -> UIViewController {
         fatalError()
     }
     
-    func presentScheduleAppointmentViewController(from _: UIViewController) {
+    func presentScheduleAppointmentNavigationController(from _: UIViewController) {
+        fatalError()
+    }
+    
+    func createAppointmentDetailsViewController(appointment _: NablaScheduling.Appointment, delegate _: NablaScheduling.AppointmentDetailsDelegate) -> UIViewController {
         fatalError()
     }
 }

@@ -2,5 +2,5 @@ import Foundation
 
 protocol FetchConcentsInteractor {
     /// - Throws: ``NablaError``
-    func execute() async throws -> Consents
+    func execute(location: LocationType) async throws -> Consents
 }

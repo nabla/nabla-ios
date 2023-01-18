@@ -13,6 +13,198 @@ import Combine
 @testable import NablaScheduling
 
 
+// MARK: - AddressFormatter
+
+open class AddressFormatterMock: AddressFormatter, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func format(_ address: Address) -> String {
+        addInvocation(.m_format__address(Parameter<Address>.value(`address`)))
+		let perform = methodPerformValue(.m_format__address(Parameter<Address>.value(`address`))) as? (Address) -> Void
+		perform?(`address`)
+		var __value: String
+		do {
+		    __value = try methodReturnValue(.m_format__address(Parameter<Address>.value(`address`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for format(_ address: Address). Use given")
+			Failure("Stub return value not specified for format(_ address: Address). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_format__address(Parameter<Address>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_format__address(let lhsAddress), .m_format__address(let rhsAddress)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsAddress, rhs: rhsAddress, with: matcher), lhsAddress, rhsAddress, "_ address"))
+				return Matcher.ComparisonResult(results)
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_format__address(p0): return p0.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_format__address: return ".format(_:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func format(_ address: Parameter<Address>, willReturn: String...) -> MethodStub {
+            return Given(method: .m_format__address(`address`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func format(_ address: Parameter<Address>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+            let willReturn: [String] = []
+			let given: Given = { return Given(method: .m_format__address(`address`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (String).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func format(_ address: Parameter<Address>) -> Verify { return Verify(method: .m_format__address(`address`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func format(_ address: Parameter<Address>, perform: @escaping (Address) -> Void) -> Perform {
+            return Perform(method: .m_format__address(`address`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
 // MARK: - AppointmentCellViewModel
 
 open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
@@ -78,10 +270,10 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
 	}
 	private var __p_primaryActionTitle: (String)?
 
-    public var showSecondaryActionsButton: Bool {
-		get {	invocations.append(.p_showSecondaryActionsButton_get); return __p_showSecondaryActionsButton ?? givenGetterValue(.p_showSecondaryActionsButton_get, "AppointmentCellViewModelMock - stub value for showSecondaryActionsButton was not defined") }
+    public var showDisclosureIndicator: Bool {
+		get {	invocations.append(.p_showDisclosureIndicator_get); return __p_showDisclosureIndicator ?? givenGetterValue(.p_showDisclosureIndicator_get, "AppointmentCellViewModelMock - stub value for showDisclosureIndicator was not defined") }
 	}
-	private var __p_showSecondaryActionsButton: (Bool)?
+	private var __p_showDisclosureIndicator: (Bool)?
 
 
 
@@ -138,7 +330,7 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
         case p_subtitle_get
         case p_enabled_get
         case p_primaryActionTitle_get
-        case p_showSecondaryActionsButton_get
+        case p_showDisclosureIndicator_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -157,7 +349,7 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
             case (.p_subtitle_get,.p_subtitle_get): return Matcher.ComparisonResult.match
             case (.p_enabled_get,.p_enabled_get): return Matcher.ComparisonResult.match
             case (.p_primaryActionTitle_get,.p_primaryActionTitle_get): return Matcher.ComparisonResult.match
-            case (.p_showSecondaryActionsButton_get,.p_showSecondaryActionsButton_get): return Matcher.ComparisonResult.match
+            case (.p_showDisclosureIndicator_get,.p_showDisclosureIndicator_get): return Matcher.ComparisonResult.match
             default: return .none
             }
         }
@@ -173,7 +365,7 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
             case .p_subtitle_get: return 0
             case .p_enabled_get: return 0
             case .p_primaryActionTitle_get: return 0
-            case .p_showSecondaryActionsButton_get: return 0
+            case .p_showDisclosureIndicator_get: return 0
             }
         }
         func assertionName() -> String {
@@ -187,7 +379,7 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
             case .p_subtitle_get: return "[get] .subtitle"
             case .p_enabled_get: return "[get] .enabled"
             case .p_primaryActionTitle_get: return "[get] .primaryActionTitle"
-            case .p_showSecondaryActionsButton_get: return "[get] .showSecondaryActionsButton"
+            case .p_showDisclosureIndicator_get: return "[get] .showDisclosureIndicator"
             }
         }
     }
@@ -215,8 +407,8 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
         public static func primaryActionTitle(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_primaryActionTitle_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func showSecondaryActionsButton(getter defaultValue: Bool...) -> PropertyStub {
-            return Given(method: .p_showSecondaryActionsButton_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func showDisclosureIndicator(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_showDisclosureIndicator_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func onChange(willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
@@ -253,7 +445,7 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
         public static var subtitle: Verify { return Verify(method: .p_subtitle_get) }
         public static var enabled: Verify { return Verify(method: .p_enabled_get) }
         public static var primaryActionTitle: Verify { return Verify(method: .p_primaryActionTitle_get) }
-        public static var showSecondaryActionsButton: Verify { return Verify(method: .p_showSecondaryActionsButton_get) }
+        public static var showDisclosureIndicator: Verify { return Verify(method: .p_showDisclosureIndicator_get) }
     }
 
     public struct Perform {
@@ -392,10 +584,25 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 	}
 	private var __p_provider: (Provider)?
 
-    public var appointmentDate: Date {
-		get {	invocations.append(.p_appointmentDate_get); return __p_appointmentDate ?? givenGetterValue(.p_appointmentDate_get, "AppointmentConfirmationViewModelMock - stub value for appointmentDate was not defined") }
+    public var caption: String {
+		get {	invocations.append(.p_caption_get); return __p_caption ?? givenGetterValue(.p_caption_get, "AppointmentConfirmationViewModelMock - stub value for caption was not defined") }
 	}
-	private var __p_appointmentDate: (Date)?
+	private var __p_caption: (String)?
+
+    public var captionIcon: AppointmentDetailsView.CaptionIcon {
+		get {	invocations.append(.p_captionIcon_get); return __p_captionIcon ?? givenGetterValue(.p_captionIcon_get, "AppointmentConfirmationViewModelMock - stub value for captionIcon was not defined") }
+	}
+	private var __p_captionIcon: (AppointmentDetailsView.CaptionIcon)?
+
+    public var details1: String? {
+		get {	invocations.append(.p_details1_get); return __p_details1 ?? optionalGivenGetterValue(.p_details1_get, "AppointmentConfirmationViewModelMock - stub value for details1 was not defined") }
+	}
+	private var __p_details1: (String)?
+
+    public var details2: String? {
+		get {	invocations.append(.p_details2_get); return __p_details2 ?? optionalGivenGetterValue(.p_details2_get, "AppointmentConfirmationViewModelMock - stub value for details2 was not defined") }
+	}
+	private var __p_details2: (String)?
 
     public var agreesWithFirstConsent: Bool {
 		get {	invocations.append(.p_agreesWithFirstConsent_get); return __p_agreesWithFirstConsent ?? givenGetterValue(.p_agreesWithFirstConsent_get, "AppointmentConfirmationViewModelMock - stub value for agreesWithFirstConsent was not defined") }
@@ -434,15 +641,21 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 	}
 	private var __p_consentsLoadingError: (ConsentsErrorViewModel)?
 
-    public var error: AlertViewModel? {
-		get {	invocations.append(.p_error_get); return __p_error ?? optionalGivenGetterValue(.p_error_get, "AppointmentConfirmationViewModelMock - stub value for error was not defined") }
-		set {	invocations.append(.p_error_set(.value(newValue))); __p_error = newValue }
+    public var modal: AppointmentConfirmationModal? {
+		get {	invocations.append(.p_modal_get); return __p_modal ?? optionalGivenGetterValue(.p_modal_get, "AppointmentConfirmationViewModelMock - stub value for modal was not defined") }
+		set {	invocations.append(.p_modal_set(.value(newValue))); __p_modal = newValue }
 	}
-	private var __p_error: (AlertViewModel)?
+	private var __p_modal: (AppointmentConfirmationModal)?
 
 
 
 
+
+    open func userDidTapAppointmentDetails() {
+        addInvocation(.m_userDidTapAppointmentDetails)
+		let perform = methodPerformValue(.m_userDidTapAppointmentDetails) as? () -> Void
+		perform?()
+    }
 
     open func userDidTapConfirmButton() {
         addInvocation(.m_userDidTapConfirmButton)
@@ -480,11 +693,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 
 
     fileprivate enum MethodType {
+        case m_userDidTapAppointmentDetails
         case m_userDidTapConfirmButton
         case m_onChange
         case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
         case p_provider_get
-        case p_appointmentDate_get
+        case p_caption_get
+        case p_captionIcon_get
+        case p_details1_get
+        case p_details2_get
         case p_agreesWithFirstConsent_get
 		case p_agreesWithFirstConsent_set(Parameter<Bool>)
         case p_agreesWithSecondConsent_get
@@ -494,11 +711,13 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         case p_isLoadingConsents_get
         case p_consents_get
         case p_consentsLoadingError_get
-        case p_error_get
-		case p_error_set(Parameter<AlertViewModel?>)
+        case p_modal_get
+		case p_modal_set(Parameter<AppointmentConfirmationModal?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
+            case (.m_userDidTapAppointmentDetails, .m_userDidTapAppointmentDetails): return .match
+
             case (.m_userDidTapConfirmButton, .m_userDidTapConfirmButton): return .match
 
             case (.m_onChange, .m_onChange): return .match
@@ -508,7 +727,10 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsThrottle, rhs: rhsThrottle, with: matcher), lhsThrottle, rhsThrottle, "throttle"))
 				return Matcher.ComparisonResult(results)
             case (.p_provider_get,.p_provider_get): return Matcher.ComparisonResult.match
-            case (.p_appointmentDate_get,.p_appointmentDate_get): return Matcher.ComparisonResult.match
+            case (.p_caption_get,.p_caption_get): return Matcher.ComparisonResult.match
+            case (.p_captionIcon_get,.p_captionIcon_get): return Matcher.ComparisonResult.match
+            case (.p_details1_get,.p_details1_get): return Matcher.ComparisonResult.match
+            case (.p_details2_get,.p_details2_get): return Matcher.ComparisonResult.match
             case (.p_agreesWithFirstConsent_get,.p_agreesWithFirstConsent_get): return Matcher.ComparisonResult.match
 			case (.p_agreesWithFirstConsent_set(let left),.p_agreesWithFirstConsent_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_agreesWithSecondConsent_get,.p_agreesWithSecondConsent_get): return Matcher.ComparisonResult.match
@@ -518,19 +740,23 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
             case (.p_isLoadingConsents_get,.p_isLoadingConsents_get): return Matcher.ComparisonResult.match
             case (.p_consents_get,.p_consents_get): return Matcher.ComparisonResult.match
             case (.p_consentsLoadingError_get,.p_consentsLoadingError_get): return Matcher.ComparisonResult.match
-            case (.p_error_get,.p_error_get): return Matcher.ComparisonResult.match
-			case (.p_error_set(let left),.p_error_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_modal_get,.p_modal_get): return Matcher.ComparisonResult.match
+			case (.p_modal_set(let left),.p_modal_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AppointmentConfirmationModal?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             default: return .none
             }
         }
 
         func intValue() -> Int {
             switch self {
+            case .m_userDidTapAppointmentDetails: return 0
             case .m_userDidTapConfirmButton: return 0
             case .m_onChange: return 0
             case let .m_onChange__throttle_throttle(p0): return p0.intValue
             case .p_provider_get: return 0
-            case .p_appointmentDate_get: return 0
+            case .p_caption_get: return 0
+            case .p_captionIcon_get: return 0
+            case .p_details1_get: return 0
+            case .p_details2_get: return 0
             case .p_agreesWithFirstConsent_get: return 0
 			case .p_agreesWithFirstConsent_set(let newValue): return newValue.intValue
             case .p_agreesWithSecondConsent_get: return 0
@@ -540,17 +766,21 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
             case .p_isLoadingConsents_get: return 0
             case .p_consents_get: return 0
             case .p_consentsLoadingError_get: return 0
-            case .p_error_get: return 0
-			case .p_error_set(let newValue): return newValue.intValue
+            case .p_modal_get: return 0
+			case .p_modal_set(let newValue): return newValue.intValue
             }
         }
         func assertionName() -> String {
             switch self {
+            case .m_userDidTapAppointmentDetails: return ".userDidTapAppointmentDetails()"
             case .m_userDidTapConfirmButton: return ".userDidTapConfirmButton()"
             case .m_onChange: return ".onChange()"
             case .m_onChange__throttle_throttle: return ".onChange(throttle:)"
             case .p_provider_get: return "[get] .provider"
-            case .p_appointmentDate_get: return "[get] .appointmentDate"
+            case .p_caption_get: return "[get] .caption"
+            case .p_captionIcon_get: return "[get] .captionIcon"
+            case .p_details1_get: return "[get] .details1"
+            case .p_details2_get: return "[get] .details2"
             case .p_agreesWithFirstConsent_get: return "[get] .agreesWithFirstConsent"
 			case .p_agreesWithFirstConsent_set: return "[set] .agreesWithFirstConsent"
             case .p_agreesWithSecondConsent_get: return "[get] .agreesWithSecondConsent"
@@ -560,8 +790,8 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
             case .p_isLoadingConsents_get: return "[get] .isLoadingConsents"
             case .p_consents_get: return "[get] .consents"
             case .p_consentsLoadingError_get: return "[get] .consentsLoadingError"
-            case .p_error_get: return "[get] .error"
-			case .p_error_set: return "[set] .error"
+            case .p_modal_get: return "[get] .modal"
+			case .p_modal_set: return "[set] .modal"
             }
         }
     }
@@ -577,8 +807,17 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         public static func provider(getter defaultValue: Provider?...) -> PropertyStub {
             return Given(method: .p_provider_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func appointmentDate(getter defaultValue: Date...) -> PropertyStub {
-            return Given(method: .p_appointmentDate_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func caption(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_caption_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func captionIcon(getter defaultValue: AppointmentDetailsView.CaptionIcon...) -> PropertyStub {
+            return Given(method: .p_captionIcon_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func details1(getter defaultValue: String?...) -> PropertyStub {
+            return Given(method: .p_details1_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func details2(getter defaultValue: String?...) -> PropertyStub {
+            return Given(method: .p_details2_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func agreesWithFirstConsent(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_agreesWithFirstConsent_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -601,8 +840,8 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         public static func consentsLoadingError(getter defaultValue: ConsentsErrorViewModel?...) -> PropertyStub {
             return Given(method: .p_consentsLoadingError_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
-            return Given(method: .p_error_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func modal(getter defaultValue: AppointmentConfirmationModal?...) -> PropertyStub {
+            return Given(method: .p_modal_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func onChange(willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
@@ -630,11 +869,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func userDidTapAppointmentDetails() -> Verify { return Verify(method: .m_userDidTapAppointmentDetails)}
         public static func userDidTapConfirmButton() -> Verify { return Verify(method: .m_userDidTapConfirmButton)}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var provider: Verify { return Verify(method: .p_provider_get) }
-        public static var appointmentDate: Verify { return Verify(method: .p_appointmentDate_get) }
+        public static var caption: Verify { return Verify(method: .p_caption_get) }
+        public static var captionIcon: Verify { return Verify(method: .p_captionIcon_get) }
+        public static var details1: Verify { return Verify(method: .p_details1_get) }
+        public static var details2: Verify { return Verify(method: .p_details2_get) }
         public static var agreesWithFirstConsent: Verify { return Verify(method: .p_agreesWithFirstConsent_get) }
 		public static func agreesWithFirstConsent(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_agreesWithFirstConsent_set(newValue)) }
         public static var agreesWithSecondConsent: Verify { return Verify(method: .p_agreesWithSecondConsent_get) }
@@ -644,16 +887,372 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         public static var isLoadingConsents: Verify { return Verify(method: .p_isLoadingConsents_get) }
         public static var consents: Verify { return Verify(method: .p_consents_get) }
         public static var consentsLoadingError: Verify { return Verify(method: .p_consentsLoadingError_get) }
-        public static var error: Verify { return Verify(method: .p_error_get) }
-		public static func error(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_error_set(newValue)) }
+        public static var modal: Verify { return Verify(method: .p_modal_get) }
+		public static func modal(set newValue: Parameter<AppointmentConfirmationModal?>) -> Verify { return Verify(method: .p_modal_set(newValue)) }
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func userDidTapAppointmentDetails(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_userDidTapAppointmentDetails, performs: perform)
+        }
         public static func userDidTapConfirmButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapConfirmButton, performs: perform)
+        }
+        public static func onChange(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_onChange, performs: perform)
+        }
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>, perform: @escaping (DispatchQueue.SchedulerTimeType.Stride) -> Void) -> Perform {
+            return Perform(method: .m_onChange__throttle_throttle(`throttle`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - AppointmentDetailsViewModel
+
+open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+    public var modal: AppointmentDetailsModal? {
+		get {	invocations.append(.p_modal_get); return __p_modal ?? optionalGivenGetterValue(.p_modal_get, "AppointmentDetailsViewModelMock - stub value for modal was not defined") }
+		set {	invocations.append(.p_modal_set(.value(newValue))); __p_modal = newValue }
+	}
+	private var __p_modal: (AppointmentDetailsModal)?
+
+    public var provider: Provider {
+		get {	invocations.append(.p_provider_get); return __p_provider ?? givenGetterValue(.p_provider_get, "AppointmentDetailsViewModelMock - stub value for provider was not defined") }
+	}
+	private var __p_provider: (Provider)?
+
+    public var caption: String {
+		get {	invocations.append(.p_caption_get); return __p_caption ?? givenGetterValue(.p_caption_get, "AppointmentDetailsViewModelMock - stub value for caption was not defined") }
+	}
+	private var __p_caption: (String)?
+
+    public var captionIcon: AppointmentDetailsView.CaptionIcon {
+		get {	invocations.append(.p_captionIcon_get); return __p_captionIcon ?? givenGetterValue(.p_captionIcon_get, "AppointmentDetailsViewModelMock - stub value for captionIcon was not defined") }
+	}
+	private var __p_captionIcon: (AppointmentDetailsView.CaptionIcon)?
+
+    public var details1: String? {
+		get {	invocations.append(.p_details1_get); return __p_details1 ?? optionalGivenGetterValue(.p_details1_get, "AppointmentDetailsViewModelMock - stub value for details1 was not defined") }
+	}
+	private var __p_details1: (String)?
+
+    public var details2: String? {
+		get {	invocations.append(.p_details2_get); return __p_details2 ?? optionalGivenGetterValue(.p_details2_get, "AppointmentDetailsViewModelMock - stub value for details2 was not defined") }
+	}
+	private var __p_details2: (String)?
+
+    public var showCancelButton: Bool {
+		get {	invocations.append(.p_showCancelButton_get); return __p_showCancelButton ?? givenGetterValue(.p_showCancelButton_get, "AppointmentDetailsViewModelMock - stub value for showCancelButton was not defined") }
+	}
+	private var __p_showCancelButton: (Bool)?
+
+
+
+
+
+    open func userDidTapAppointmentDetails() {
+        addInvocation(.m_userDidTapAppointmentDetails)
+		let perform = methodPerformValue(.m_userDidTapAppointmentDetails) as? () -> Void
+		perform?()
+    }
+
+    open func userDidTapCancelButton() {
+        addInvocation(.m_userDidTapCancelButton)
+		let perform = methodPerformValue(.m_userDidTapCancelButton) as? () -> Void
+		perform?()
+    }
+
+    open func onChange() -> AnyPublisher<Void, Never> {
+        addInvocation(.m_onChange)
+		let perform = methodPerformValue(.m_onChange) as? () -> Void
+		perform?()
+		var __value: AnyPublisher<Void, Never>
+		do {
+		    __value = try methodReturnValue(.m_onChange).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for onChange(). Use given")
+			Failure("Stub return value not specified for onChange(). Use given")
+		}
+		return __value
+    }
+
+    open func onChange(throttle: DispatchQueue.SchedulerTimeType.Stride) -> AnyPublisher<Void, Never> {
+        addInvocation(.m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>.value(`throttle`)))
+		let perform = methodPerformValue(.m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>.value(`throttle`))) as? (DispatchQueue.SchedulerTimeType.Stride) -> Void
+		perform?(`throttle`)
+		var __value: AnyPublisher<Void, Never>
+		do {
+		    __value = try methodReturnValue(.m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>.value(`throttle`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for onChange(throttle: DispatchQueue.SchedulerTimeType.Stride). Use given")
+			Failure("Stub return value not specified for onChange(throttle: DispatchQueue.SchedulerTimeType.Stride). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_userDidTapAppointmentDetails
+        case m_userDidTapCancelButton
+        case m_onChange
+        case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
+        case p_modal_get
+		case p_modal_set(Parameter<AppointmentDetailsModal?>)
+        case p_provider_get
+        case p_caption_get
+        case p_captionIcon_get
+        case p_details1_get
+        case p_details2_get
+        case p_showCancelButton_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_userDidTapAppointmentDetails, .m_userDidTapAppointmentDetails): return .match
+
+            case (.m_userDidTapCancelButton, .m_userDidTapCancelButton): return .match
+
+            case (.m_onChange, .m_onChange): return .match
+
+            case (.m_onChange__throttle_throttle(let lhsThrottle), .m_onChange__throttle_throttle(let rhsThrottle)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsThrottle, rhs: rhsThrottle, with: matcher), lhsThrottle, rhsThrottle, "throttle"))
+				return Matcher.ComparisonResult(results)
+            case (.p_modal_get,.p_modal_get): return Matcher.ComparisonResult.match
+			case (.p_modal_set(let left),.p_modal_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AppointmentDetailsModal?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_provider_get,.p_provider_get): return Matcher.ComparisonResult.match
+            case (.p_caption_get,.p_caption_get): return Matcher.ComparisonResult.match
+            case (.p_captionIcon_get,.p_captionIcon_get): return Matcher.ComparisonResult.match
+            case (.p_details1_get,.p_details1_get): return Matcher.ComparisonResult.match
+            case (.p_details2_get,.p_details2_get): return Matcher.ComparisonResult.match
+            case (.p_showCancelButton_get,.p_showCancelButton_get): return Matcher.ComparisonResult.match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_userDidTapAppointmentDetails: return 0
+            case .m_userDidTapCancelButton: return 0
+            case .m_onChange: return 0
+            case let .m_onChange__throttle_throttle(p0): return p0.intValue
+            case .p_modal_get: return 0
+			case .p_modal_set(let newValue): return newValue.intValue
+            case .p_provider_get: return 0
+            case .p_caption_get: return 0
+            case .p_captionIcon_get: return 0
+            case .p_details1_get: return 0
+            case .p_details2_get: return 0
+            case .p_showCancelButton_get: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_userDidTapAppointmentDetails: return ".userDidTapAppointmentDetails()"
+            case .m_userDidTapCancelButton: return ".userDidTapCancelButton()"
+            case .m_onChange: return ".onChange()"
+            case .m_onChange__throttle_throttle: return ".onChange(throttle:)"
+            case .p_modal_get: return "[get] .modal"
+			case .p_modal_set: return "[set] .modal"
+            case .p_provider_get: return "[get] .provider"
+            case .p_caption_get: return "[get] .caption"
+            case .p_captionIcon_get: return "[get] .captionIcon"
+            case .p_details1_get: return "[get] .details1"
+            case .p_details2_get: return "[get] .details2"
+            case .p_showCancelButton_get: return "[get] .showCancelButton"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func modal(getter defaultValue: AppointmentDetailsModal?...) -> PropertyStub {
+            return Given(method: .p_modal_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func provider(getter defaultValue: Provider...) -> PropertyStub {
+            return Given(method: .p_provider_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func caption(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_caption_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func captionIcon(getter defaultValue: AppointmentDetailsView.CaptionIcon...) -> PropertyStub {
+            return Given(method: .p_captionIcon_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func details1(getter defaultValue: String?...) -> PropertyStub {
+            return Given(method: .p_details1_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func details2(getter defaultValue: String?...) -> PropertyStub {
+            return Given(method: .p_details2_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func showCancelButton(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_showCancelButton_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func onChange(willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
+            return Given(method: .m_onChange, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>, willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
+            return Given(method: .m_onChange__throttle_throttle(`throttle`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func onChange(willProduce: (Stubber<AnyPublisher<Void, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Void, Never>] = []
+			let given: Given = { return Given(method: .m_onChange, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Void, Never>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>, willProduce: (Stubber<AnyPublisher<Void, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Void, Never>] = []
+			let given: Given = { return Given(method: .m_onChange__throttle_throttle(`throttle`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Void, Never>).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func userDidTapAppointmentDetails() -> Verify { return Verify(method: .m_userDidTapAppointmentDetails)}
+        public static func userDidTapCancelButton() -> Verify { return Verify(method: .m_userDidTapCancelButton)}
+        public static func onChange() -> Verify { return Verify(method: .m_onChange)}
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
+        public static var modal: Verify { return Verify(method: .p_modal_get) }
+		public static func modal(set newValue: Parameter<AppointmentDetailsModal?>) -> Verify { return Verify(method: .p_modal_set(newValue)) }
+        public static var provider: Verify { return Verify(method: .p_provider_get) }
+        public static var caption: Verify { return Verify(method: .p_caption_get) }
+        public static var captionIcon: Verify { return Verify(method: .p_captionIcon_get) }
+        public static var details1: Verify { return Verify(method: .p_details1_get) }
+        public static var details2: Verify { return Verify(method: .p_details2_get) }
+        public static var showCancelButton: Verify { return Verify(method: .p_showCancelButton_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func userDidTapAppointmentDetails(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_userDidTapAppointmentDetails, performs: perform)
+        }
+        public static func userDidTapCancelButton(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_userDidTapCancelButton, performs: perform)
         }
         public static func onChange(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_onChange, performs: perform)
@@ -792,11 +1391,16 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 	}
 	private var __p_isLoading: (Bool)?
 
-    public var modal: AppointmentsViewModal? {
-		get {	invocations.append(.p_modal_get); return __p_modal ?? optionalGivenGetterValue(.p_modal_get, "AppointmentListViewModelMock - stub value for modal was not defined") }
-		set {	invocations.append(.p_modal_set(.value(newValue))); __p_modal = newValue }
+    public var alert: AlertViewModel? {
+		get {	invocations.append(.p_alert_get); return __p_alert ?? optionalGivenGetterValue(.p_alert_get, "AppointmentListViewModelMock - stub value for alert was not defined") }
+		set {	invocations.append(.p_alert_set(.value(newValue))); __p_alert = newValue }
 	}
-	private var __p_modal: (AppointmentsViewModal)?
+	private var __p_alert: (AlertViewModel)?
+
+    public var videoCallRoom: Location.RemoteLocation.VideoCallRoom? {
+		get {	invocations.append(.p_videoCallRoom_get); return __p_videoCallRoom ?? optionalGivenGetterValue(.p_videoCallRoom_get, "AppointmentListViewModelMock - stub value for videoCallRoom was not defined") }
+	}
+	private var __p_videoCallRoom: (Location.RemoteLocation.VideoCallRoom)?
 
 
 
@@ -814,9 +1418,15 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 		perform?()
     }
 
-    open func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapJoinVideoCall room: Appointment.VideoCallRoom) {
-        addInvocation(.m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<Appointment.VideoCallRoom>.value(`room`)))
-		let perform = methodPerformValue(.m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<Appointment.VideoCallRoom>.value(`room`))) as? (AppointmentCellViewModel, Appointment.VideoCallRoom) -> Void
+    open func userDidSelectAppointment(atIndex index: Int) {
+        addInvocation(.m_userDidSelectAppointment__atIndex_index(Parameter<Int>.value(`index`)))
+		let perform = methodPerformValue(.m_userDidSelectAppointment__atIndex_index(Parameter<Int>.value(`index`))) as? (Int) -> Void
+		perform?(`index`)
+    }
+
+    open func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapJoinVideoCall room: Location.RemoteLocation.VideoCallRoom) {
+        addInvocation(.m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<Location.RemoteLocation.VideoCallRoom>.value(`room`)))
+		let perform = methodPerformValue(.m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<Location.RemoteLocation.VideoCallRoom>.value(`room`))) as? (AppointmentCellViewModel, Location.RemoteLocation.VideoCallRoom) -> Void
 		perform?(`viewModel`, `room`)
     }
 
@@ -858,7 +1468,8 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
     fileprivate enum MethodType {
         case m_userDidReachEndOfList
         case m_userDidTapCreateAppointmentButton
-        case m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>, Parameter<Appointment.VideoCallRoom>)
+        case m_userDidSelectAppointment__atIndex_index(Parameter<Int>)
+        case m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>, Parameter<Location.RemoteLocation.VideoCallRoom>)
         case m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(Parameter<AppointmentCellViewModel>, Parameter<Appointment>)
         case m_onChange
         case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
@@ -866,14 +1477,20 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 		case p_selectedSelector_set(Parameter<AppointmentsSelector>)
         case p_appointments_get
         case p_isLoading_get
-        case p_modal_get
-		case p_modal_set(Parameter<AppointmentsViewModal?>)
+        case p_alert_get
+		case p_alert_set(Parameter<AlertViewModel?>)
+        case p_videoCallRoom_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
             case (.m_userDidReachEndOfList, .m_userDidReachEndOfList): return .match
 
             case (.m_userDidTapCreateAppointmentButton, .m_userDidTapCreateAppointmentButton): return .match
+
+            case (.m_userDidSelectAppointment__atIndex_index(let lhsIndex), .m_userDidSelectAppointment__atIndex_index(let rhsIndex)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsIndex, rhs: rhsIndex, with: matcher), lhsIndex, rhsIndex, "atIndex index"))
+				return Matcher.ComparisonResult(results)
 
             case (.m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(let lhsViewmodel, let lhsRoom), .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(let rhsViewmodel, let rhsRoom)):
 				var results: [Matcher.ParameterComparisonResult] = []
@@ -897,8 +1514,9 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 			case (.p_selectedSelector_set(let left),.p_selectedSelector_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AppointmentsSelector>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_appointments_get,.p_appointments_get): return Matcher.ComparisonResult.match
             case (.p_isLoading_get,.p_isLoading_get): return Matcher.ComparisonResult.match
-            case (.p_modal_get,.p_modal_get): return Matcher.ComparisonResult.match
-			case (.p_modal_set(let left),.p_modal_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AppointmentsViewModal?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_alert_get,.p_alert_get): return Matcher.ComparisonResult.match
+			case (.p_alert_set(let left),.p_alert_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            case (.p_videoCallRoom_get,.p_videoCallRoom_get): return Matcher.ComparisonResult.match
             default: return .none
             }
         }
@@ -907,6 +1525,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             switch self {
             case .m_userDidReachEndOfList: return 0
             case .m_userDidTapCreateAppointmentButton: return 0
+            case let .m_userDidSelectAppointment__atIndex_index(p0): return p0.intValue
             case let .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(p0, p1): return p0.intValue + p1.intValue
             case let .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(p0, p1): return p0.intValue + p1.intValue
             case .m_onChange: return 0
@@ -915,14 +1534,16 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 			case .p_selectedSelector_set(let newValue): return newValue.intValue
             case .p_appointments_get: return 0
             case .p_isLoading_get: return 0
-            case .p_modal_get: return 0
-			case .p_modal_set(let newValue): return newValue.intValue
+            case .p_alert_get: return 0
+			case .p_alert_set(let newValue): return newValue.intValue
+            case .p_videoCallRoom_get: return 0
             }
         }
         func assertionName() -> String {
             switch self {
             case .m_userDidReachEndOfList: return ".userDidReachEndOfList()"
             case .m_userDidTapCreateAppointmentButton: return ".userDidTapCreateAppointmentButton()"
+            case .m_userDidSelectAppointment__atIndex_index: return ".userDidSelectAppointment(atIndex:)"
             case .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room: return ".appointmentCellViewModel(_:didTapJoinVideoCall:)"
             case .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment: return ".appointmentCellViewModel(_:didTapSecondaryActionsButtonFor:)"
             case .m_onChange: return ".onChange()"
@@ -931,8 +1552,9 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 			case .p_selectedSelector_set: return "[set] .selectedSelector"
             case .p_appointments_get: return "[get] .appointments"
             case .p_isLoading_get: return "[get] .isLoading"
-            case .p_modal_get: return "[get] .modal"
-			case .p_modal_set: return "[set] .modal"
+            case .p_alert_get: return "[get] .alert"
+			case .p_alert_set: return "[set] .alert"
+            case .p_videoCallRoom_get: return "[get] .videoCallRoom"
             }
         }
     }
@@ -954,8 +1576,11 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func modal(getter defaultValue: AppointmentsViewModal?...) -> PropertyStub {
-            return Given(method: .p_modal_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func alert(getter defaultValue: AlertViewModel?...) -> PropertyStub {
+            return Given(method: .p_alert_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func videoCallRoom(getter defaultValue: Location.RemoteLocation.VideoCallRoom?...) -> PropertyStub {
+            return Given(method: .p_videoCallRoom_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func onChange(willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
@@ -985,7 +1610,8 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 
         public static func userDidReachEndOfList() -> Verify { return Verify(method: .m_userDidReachEndOfList)}
         public static func userDidTapCreateAppointmentButton() -> Verify { return Verify(method: .m_userDidTapCreateAppointmentButton)}
-        public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Appointment.VideoCallRoom>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(`viewModel`, `room`))}
+        public static func userDidSelectAppointment(atIndex index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelectAppointment__atIndex_index(`index`))}
+        public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Location.RemoteLocation.VideoCallRoom>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(`viewModel`, `room`))}
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapSecondaryActionsButtonFor appointment: Parameter<Appointment>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(`viewModel`, `appointment`))}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
@@ -993,8 +1619,9 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 		public static func selectedSelector(set newValue: Parameter<AppointmentsSelector>) -> Verify { return Verify(method: .p_selectedSelector_set(newValue)) }
         public static var appointments: Verify { return Verify(method: .p_appointments_get) }
         public static var isLoading: Verify { return Verify(method: .p_isLoading_get) }
-        public static var modal: Verify { return Verify(method: .p_modal_get) }
-		public static func modal(set newValue: Parameter<AppointmentsViewModal?>) -> Verify { return Verify(method: .p_modal_set(newValue)) }
+        public static var alert: Verify { return Verify(method: .p_alert_get) }
+		public static func alert(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_alert_set(newValue)) }
+        public static var videoCallRoom: Verify { return Verify(method: .p_videoCallRoom_get) }
     }
 
     public struct Perform {
@@ -1007,7 +1634,10 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         public static func userDidTapCreateAppointmentButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapCreateAppointmentButton, performs: perform)
         }
-        public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Appointment.VideoCallRoom>, perform: @escaping (AppointmentCellViewModel, Appointment.VideoCallRoom) -> Void) -> Perform {
+        public static func userDidSelectAppointment(atIndex index: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
+            return Perform(method: .m_userDidSelectAppointment__atIndex_index(`index`), performs: perform)
+        }
+        public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Location.RemoteLocation.VideoCallRoom>, perform: @escaping (AppointmentCellViewModel, Location.RemoteLocation.VideoCallRoom) -> Void) -> Perform {
             return Perform(method: .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(`viewModel`, `room`), performs: perform)
         }
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapSecondaryActionsButtonFor appointment: Parameter<Appointment>, perform: @escaping (AppointmentCellViewModel, Appointment) -> Void) -> Perform {
@@ -1399,6 +2029,200 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
     }
 }
 
+// MARK: - ConsentsRemoteDataSource
+
+open class ConsentsRemoteDataSourceMock: ConsentsRemoteDataSource, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func fetchConsents() throws -> RemoteConsents {
+        addInvocation(.m_fetchConsents)
+		let perform = methodPerformValue(.m_fetchConsents) as? () -> Void
+		perform?()
+		var __value: RemoteConsents
+		do {
+		    __value = try methodReturnValue(.m_fetchConsents).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for fetchConsents(). Use given")
+			Failure("Stub return value not specified for fetchConsents(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_fetchConsents
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_fetchConsents, .m_fetchConsents): return .match
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_fetchConsents: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_fetchConsents: return ".fetchConsents()"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func fetchConsents(willReturn: RemoteConsents...) -> MethodStub {
+            return Given(method: .m_fetchConsents, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func fetchConsents(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_fetchConsents, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func fetchConsents(willProduce: (StubberThrows<RemoteConsents>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_fetchConsents, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (RemoteConsents).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func fetchConsents() -> Verify { return Verify(method: .m_fetchConsents)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func fetchConsents(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_fetchConsents, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
 // MARK: - InternalSchedulingViewFactory
 
 open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Mock {
@@ -1444,6 +2268,20 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 
 
 
+    open func createLocationPickerViewController(delegate: LocationPickerViewModelDelegate) -> UIViewController {
+        addInvocation(.m_createLocationPickerViewController__delegate_delegate(Parameter<LocationPickerViewModelDelegate>.value(`delegate`)))
+		let perform = methodPerformValue(.m_createLocationPickerViewController__delegate_delegate(Parameter<LocationPickerViewModelDelegate>.value(`delegate`))) as? (LocationPickerViewModelDelegate) -> Void
+		perform?(`delegate`)
+		var __value: UIViewController
+		do {
+		    __value = try methodReturnValue(.m_createLocationPickerViewController__delegate_delegate(Parameter<LocationPickerViewModelDelegate>.value(`delegate`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for createLocationPickerViewController(delegate: LocationPickerViewModelDelegate). Use given")
+			Failure("Stub return value not specified for createLocationPickerViewController(delegate: LocationPickerViewModelDelegate). Use given")
+		}
+		return __value
+    }
+
     open func createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate) -> UIViewController {
         addInvocation(.m_createCategoryPickerViewController__delegate_delegate(Parameter<CategoryPickerViewModelDelegate>.value(`delegate`)))
 		let perform = methodPerformValue(.m_createCategoryPickerViewController__delegate_delegate(Parameter<CategoryPickerViewModelDelegate>.value(`delegate`))) as? (CategoryPickerViewModelDelegate) -> Void
@@ -1458,30 +2296,30 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 		return __value
     }
 
-    open func createTimeSlotPickerViewController(category: Category, delegate: TimeSlotPickerViewModelDelegate) -> UIViewController {
-        addInvocation(.m_createTimeSlotPickerViewController__category_categorydelegate_delegate(Parameter<Category>.value(`category`), Parameter<TimeSlotPickerViewModelDelegate>.value(`delegate`)))
-		let perform = methodPerformValue(.m_createTimeSlotPickerViewController__category_categorydelegate_delegate(Parameter<Category>.value(`category`), Parameter<TimeSlotPickerViewModelDelegate>.value(`delegate`))) as? (Category, TimeSlotPickerViewModelDelegate) -> Void
-		perform?(`category`, `delegate`)
+    open func createTimeSlotPickerViewController(location: LocationType, category: Category, delegate: TimeSlotPickerViewModelDelegate) -> UIViewController {
+        addInvocation(.m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(Parameter<LocationType>.value(`location`), Parameter<Category>.value(`category`), Parameter<TimeSlotPickerViewModelDelegate>.value(`delegate`)))
+		let perform = methodPerformValue(.m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(Parameter<LocationType>.value(`location`), Parameter<Category>.value(`category`), Parameter<TimeSlotPickerViewModelDelegate>.value(`delegate`))) as? (LocationType, Category, TimeSlotPickerViewModelDelegate) -> Void
+		perform?(`location`, `category`, `delegate`)
 		var __value: UIViewController
 		do {
-		    __value = try methodReturnValue(.m_createTimeSlotPickerViewController__category_categorydelegate_delegate(Parameter<Category>.value(`category`), Parameter<TimeSlotPickerViewModelDelegate>.value(`delegate`))).casted()
+		    __value = try methodReturnValue(.m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(Parameter<LocationType>.value(`location`), Parameter<Category>.value(`category`), Parameter<TimeSlotPickerViewModelDelegate>.value(`delegate`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for createTimeSlotPickerViewController(category: Category, delegate: TimeSlotPickerViewModelDelegate). Use given")
-			Failure("Stub return value not specified for createTimeSlotPickerViewController(category: Category, delegate: TimeSlotPickerViewModelDelegate). Use given")
+			onFatalFailure("Stub return value not specified for createTimeSlotPickerViewController(location: LocationType, category: Category, delegate: TimeSlotPickerViewModelDelegate). Use given")
+			Failure("Stub return value not specified for createTimeSlotPickerViewController(location: LocationType, category: Category, delegate: TimeSlotPickerViewModelDelegate). Use given")
 		}
 		return __value
     }
 
-    open func createAppointmentConfirmationViewController(category: Category, timeSlot: AvailabilitySlot, delegate: AppointmentConfirmationViewModelDelegate) -> UIViewController {
-        addInvocation(.m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(Parameter<Category>.value(`category`), Parameter<AvailabilitySlot>.value(`timeSlot`), Parameter<AppointmentConfirmationViewModelDelegate>.value(`delegate`)))
-		let perform = methodPerformValue(.m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(Parameter<Category>.value(`category`), Parameter<AvailabilitySlot>.value(`timeSlot`), Parameter<AppointmentConfirmationViewModelDelegate>.value(`delegate`))) as? (Category, AvailabilitySlot, AppointmentConfirmationViewModelDelegate) -> Void
-		perform?(`category`, `timeSlot`, `delegate`)
+    open func createAppointmentConfirmationViewController(location: LocationType, category: Category, timeSlot: AvailabilitySlot, delegate: AppointmentConfirmationViewModelDelegate) -> UIViewController {
+        addInvocation(.m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(Parameter<LocationType>.value(`location`), Parameter<Category>.value(`category`), Parameter<AvailabilitySlot>.value(`timeSlot`), Parameter<AppointmentConfirmationViewModelDelegate>.value(`delegate`)))
+		let perform = methodPerformValue(.m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(Parameter<LocationType>.value(`location`), Parameter<Category>.value(`category`), Parameter<AvailabilitySlot>.value(`timeSlot`), Parameter<AppointmentConfirmationViewModelDelegate>.value(`delegate`))) as? (LocationType, Category, AvailabilitySlot, AppointmentConfirmationViewModelDelegate) -> Void
+		perform?(`location`, `category`, `timeSlot`, `delegate`)
 		var __value: UIViewController
 		do {
-		    __value = try methodReturnValue(.m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(Parameter<Category>.value(`category`), Parameter<AvailabilitySlot>.value(`timeSlot`), Parameter<AppointmentConfirmationViewModelDelegate>.value(`delegate`))).casted()
+		    __value = try methodReturnValue(.m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(Parameter<LocationType>.value(`location`), Parameter<Category>.value(`category`), Parameter<AvailabilitySlot>.value(`timeSlot`), Parameter<AppointmentConfirmationViewModelDelegate>.value(`delegate`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for createAppointmentConfirmationViewController(category: Category, timeSlot: AvailabilitySlot, delegate: AppointmentConfirmationViewModelDelegate). Use given")
-			Failure("Stub return value not specified for createAppointmentConfirmationViewController(category: Category, timeSlot: AvailabilitySlot, delegate: AppointmentConfirmationViewModelDelegate). Use given")
+			onFatalFailure("Stub return value not specified for createAppointmentConfirmationViewController(location: LocationType, category: Category, timeSlot: AvailabilitySlot, delegate: AppointmentConfirmationViewModelDelegate). Use given")
+			Failure("Stub return value not specified for createAppointmentConfirmationViewController(location: LocationType, category: Category, timeSlot: AvailabilitySlot, delegate: AppointmentConfirmationViewModelDelegate). Use given")
 		}
 		return __value
     }
@@ -1502,26 +2340,34 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 
 
     fileprivate enum MethodType {
+        case m_createLocationPickerViewController__delegate_delegate(Parameter<LocationPickerViewModelDelegate>)
         case m_createCategoryPickerViewController__delegate_delegate(Parameter<CategoryPickerViewModelDelegate>)
-        case m_createTimeSlotPickerViewController__category_categorydelegate_delegate(Parameter<Category>, Parameter<TimeSlotPickerViewModelDelegate>)
-        case m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(Parameter<Category>, Parameter<AvailabilitySlot>, Parameter<AppointmentConfirmationViewModelDelegate>)
+        case m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(Parameter<LocationType>, Parameter<Category>, Parameter<TimeSlotPickerViewModelDelegate>)
+        case m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(Parameter<LocationType>, Parameter<Category>, Parameter<AvailabilitySlot>, Parameter<AppointmentConfirmationViewModelDelegate>)
         case m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(Parameter<Appointment>, Parameter<AppointmentCellViewModelDelegate>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
+            case (.m_createLocationPickerViewController__delegate_delegate(let lhsDelegate), .m_createLocationPickerViewController__delegate_delegate(let rhsDelegate)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
+				return Matcher.ComparisonResult(results)
+
             case (.m_createCategoryPickerViewController__delegate_delegate(let lhsDelegate), .m_createCategoryPickerViewController__delegate_delegate(let rhsDelegate)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_createTimeSlotPickerViewController__category_categorydelegate_delegate(let lhsCategory, let lhsDelegate), .m_createTimeSlotPickerViewController__category_categorydelegate_delegate(let rhsCategory, let rhsDelegate)):
+            case (.m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(let lhsLocation, let lhsCategory, let lhsDelegate), .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(let rhsLocation, let rhsCategory, let rhsDelegate)):
 				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsLocation, rhs: rhsLocation, with: matcher), lhsLocation, rhsLocation, "location"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCategory, rhs: rhsCategory, with: matcher), lhsCategory, rhsCategory, "category"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(let lhsCategory, let lhsTimeslot, let lhsDelegate), .m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(let rhsCategory, let rhsTimeslot, let rhsDelegate)):
+            case (.m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(let lhsLocation, let lhsCategory, let lhsTimeslot, let lhsDelegate), .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(let rhsLocation, let rhsCategory, let rhsTimeslot, let rhsDelegate)):
 				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsLocation, rhs: rhsLocation, with: matcher), lhsLocation, rhsLocation, "location"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCategory, rhs: rhsCategory, with: matcher), lhsCategory, rhsCategory, "category"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsTimeslot, rhs: rhsTimeslot, with: matcher), lhsTimeslot, rhsTimeslot, "timeSlot"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
@@ -1538,17 +2384,19 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 
         func intValue() -> Int {
             switch self {
+            case let .m_createLocationPickerViewController__delegate_delegate(p0): return p0.intValue
             case let .m_createCategoryPickerViewController__delegate_delegate(p0): return p0.intValue
-            case let .m_createTimeSlotPickerViewController__category_categorydelegate_delegate(p0, p1): return p0.intValue + p1.intValue
-            case let .m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(p0, p1): return p0.intValue + p1.intValue
             }
         }
         func assertionName() -> String {
             switch self {
+            case .m_createLocationPickerViewController__delegate_delegate: return ".createLocationPickerViewController(delegate:)"
             case .m_createCategoryPickerViewController__delegate_delegate: return ".createCategoryPickerViewController(delegate:)"
-            case .m_createTimeSlotPickerViewController__category_categorydelegate_delegate: return ".createTimeSlotPickerViewController(category:delegate:)"
-            case .m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate: return ".createAppointmentConfirmationViewController(category:timeSlot:delegate:)"
+            case .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate: return ".createTimeSlotPickerViewController(location:category:delegate:)"
+            case .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate: return ".createAppointmentConfirmationViewController(location:category:timeSlot:delegate:)"
             case .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate: return ".createAppointmentCellViewModel(appointment:delegate:)"
             }
         }
@@ -1563,17 +2411,27 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         }
 
 
+        public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
+            return Given(method: .m_createLocationPickerViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
             return Given(method: .m_createCategoryPickerViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createTimeSlotPickerViewController(category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
-            return Given(method: .m_createTimeSlotPickerViewController__category_categorydelegate_delegate(`category`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
+            return Given(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createAppointmentConfirmationViewController(category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
-            return Given(method: .m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(`category`, `timeSlot`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
+            return Given(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, willReturn: AppointmentCellViewModel...) -> MethodStub {
             return Given(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
+            let willReturn: [UIViewController] = []
+			let given: Given = { return Given(method: .m_createLocationPickerViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UIViewController).self)
+			willProduce(stubber)
+			return given
         }
         public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
             let willReturn: [UIViewController] = []
@@ -1582,16 +2440,16 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 			willProduce(stubber)
 			return given
         }
-        public static func createTimeSlotPickerViewController(category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
+        public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
             let willReturn: [UIViewController] = []
-			let given: Given = { return Given(method: .m_createTimeSlotPickerViewController__category_categorydelegate_delegate(`category`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (UIViewController).self)
 			willProduce(stubber)
 			return given
         }
-        public static func createAppointmentConfirmationViewController(category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
+        public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
             let willReturn: [UIViewController] = []
-			let given: Given = { return Given(method: .m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(`category`, `timeSlot`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (UIViewController).self)
 			willProduce(stubber)
 			return given
@@ -1608,9 +2466,10 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createLocationPickerViewController__delegate_delegate(`delegate`))}
         public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createCategoryPickerViewController__delegate_delegate(`delegate`))}
-        public static func createTimeSlotPickerViewController(category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createTimeSlotPickerViewController__category_categorydelegate_delegate(`category`, `delegate`))}
-        public static func createAppointmentConfirmationViewController(category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(`category`, `timeSlot`, `delegate`))}
+        public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`))}
+        public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`))}
         public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`))}
     }
 
@@ -1618,17 +2477,340 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>, perform: @escaping (LocationPickerViewModelDelegate) -> Void) -> Perform {
+            return Perform(method: .m_createLocationPickerViewController__delegate_delegate(`delegate`), performs: perform)
+        }
         public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>, perform: @escaping (CategoryPickerViewModelDelegate) -> Void) -> Perform {
             return Perform(method: .m_createCategoryPickerViewController__delegate_delegate(`delegate`), performs: perform)
         }
-        public static func createTimeSlotPickerViewController(category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, perform: @escaping (Category, TimeSlotPickerViewModelDelegate) -> Void) -> Perform {
-            return Perform(method: .m_createTimeSlotPickerViewController__category_categorydelegate_delegate(`category`, `delegate`), performs: perform)
+        public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, perform: @escaping (LocationType, Category, TimeSlotPickerViewModelDelegate) -> Void) -> Perform {
+            return Perform(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`), performs: perform)
         }
-        public static func createAppointmentConfirmationViewController(category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, perform: @escaping (Category, AvailabilitySlot, AppointmentConfirmationViewModelDelegate) -> Void) -> Perform {
-            return Perform(method: .m_createAppointmentConfirmationViewController__category_categorytimeSlot_timeSlotdelegate_delegate(`category`, `timeSlot`, `delegate`), performs: perform)
+        public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, perform: @escaping (LocationType, Category, AvailabilitySlot, AppointmentConfirmationViewModelDelegate) -> Void) -> Perform {
+            return Perform(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`), performs: perform)
         }
         public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, perform: @escaping (Appointment, AppointmentCellViewModelDelegate) -> Void) -> Perform {
             return Perform(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - LocationPickerViewModel
+
+open class LocationPickerViewModelMock: LocationPickerViewModel, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+    public var isLoading: Bool {
+		get {	invocations.append(.p_isLoading_get); return __p_isLoading ?? givenGetterValue(.p_isLoading_get, "LocationPickerViewModelMock - stub value for isLoading was not defined") }
+	}
+	private var __p_isLoading: (Bool)?
+
+    public var items: [LocationViewItem] {
+		get {	invocations.append(.p_items_get); return __p_items ?? givenGetterValue(.p_items_get, "LocationPickerViewModelMock - stub value for items was not defined") }
+	}
+	private var __p_items: ([LocationViewItem])?
+
+    public var error: AlertViewModel? {
+		get {	invocations.append(.p_error_get); return __p_error ?? optionalGivenGetterValue(.p_error_get, "LocationPickerViewModelMock - stub value for error was not defined") }
+		set {	invocations.append(.p_error_set(.value(newValue))); __p_error = newValue }
+	}
+	private var __p_error: (AlertViewModel)?
+
+
+
+
+
+    open func start() {
+        addInvocation(.m_start)
+		let perform = methodPerformValue(.m_start) as? () -> Void
+		perform?()
+    }
+
+    open func userDidPullToRefresh() {
+        addInvocation(.m_userDidPullToRefresh)
+		let perform = methodPerformValue(.m_userDidPullToRefresh) as? () -> Void
+		perform?()
+    }
+
+    open func userDidSelect(location: LocationViewItem, at index: Int) {
+        addInvocation(.m_userDidSelect__location_locationat_index(Parameter<LocationViewItem>.value(`location`), Parameter<Int>.value(`index`)))
+		let perform = methodPerformValue(.m_userDidSelect__location_locationat_index(Parameter<LocationViewItem>.value(`location`), Parameter<Int>.value(`index`))) as? (LocationViewItem, Int) -> Void
+		perform?(`location`, `index`)
+    }
+
+    open func onChange() -> AnyPublisher<Void, Never> {
+        addInvocation(.m_onChange)
+		let perform = methodPerformValue(.m_onChange) as? () -> Void
+		perform?()
+		var __value: AnyPublisher<Void, Never>
+		do {
+		    __value = try methodReturnValue(.m_onChange).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for onChange(). Use given")
+			Failure("Stub return value not specified for onChange(). Use given")
+		}
+		return __value
+    }
+
+    open func onChange(throttle: DispatchQueue.SchedulerTimeType.Stride) -> AnyPublisher<Void, Never> {
+        addInvocation(.m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>.value(`throttle`)))
+		let perform = methodPerformValue(.m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>.value(`throttle`))) as? (DispatchQueue.SchedulerTimeType.Stride) -> Void
+		perform?(`throttle`)
+		var __value: AnyPublisher<Void, Never>
+		do {
+		    __value = try methodReturnValue(.m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>.value(`throttle`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for onChange(throttle: DispatchQueue.SchedulerTimeType.Stride). Use given")
+			Failure("Stub return value not specified for onChange(throttle: DispatchQueue.SchedulerTimeType.Stride). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_start
+        case m_userDidPullToRefresh
+        case m_userDidSelect__location_locationat_index(Parameter<LocationViewItem>, Parameter<Int>)
+        case m_onChange
+        case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
+        case p_isLoading_get
+        case p_items_get
+        case p_error_get
+		case p_error_set(Parameter<AlertViewModel?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_start, .m_start): return .match
+
+            case (.m_userDidPullToRefresh, .m_userDidPullToRefresh): return .match
+
+            case (.m_userDidSelect__location_locationat_index(let lhsLocation, let lhsIndex), .m_userDidSelect__location_locationat_index(let rhsLocation, let rhsIndex)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsLocation, rhs: rhsLocation, with: matcher), lhsLocation, rhsLocation, "location"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsIndex, rhs: rhsIndex, with: matcher), lhsIndex, rhsIndex, "at index"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_onChange, .m_onChange): return .match
+
+            case (.m_onChange__throttle_throttle(let lhsThrottle), .m_onChange__throttle_throttle(let rhsThrottle)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsThrottle, rhs: rhsThrottle, with: matcher), lhsThrottle, rhsThrottle, "throttle"))
+				return Matcher.ComparisonResult(results)
+            case (.p_isLoading_get,.p_isLoading_get): return Matcher.ComparisonResult.match
+            case (.p_items_get,.p_items_get): return Matcher.ComparisonResult.match
+            case (.p_error_get,.p_error_get): return Matcher.ComparisonResult.match
+			case (.p_error_set(let left),.p_error_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_start: return 0
+            case .m_userDidPullToRefresh: return 0
+            case let .m_userDidSelect__location_locationat_index(p0, p1): return p0.intValue + p1.intValue
+            case .m_onChange: return 0
+            case let .m_onChange__throttle_throttle(p0): return p0.intValue
+            case .p_isLoading_get: return 0
+            case .p_items_get: return 0
+            case .p_error_get: return 0
+			case .p_error_set(let newValue): return newValue.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_start: return ".start()"
+            case .m_userDidPullToRefresh: return ".userDidPullToRefresh()"
+            case .m_userDidSelect__location_locationat_index: return ".userDidSelect(location:at:)"
+            case .m_onChange: return ".onChange()"
+            case .m_onChange__throttle_throttle: return ".onChange(throttle:)"
+            case .p_isLoading_get: return "[get] .isLoading"
+            case .p_items_get: return "[get] .items"
+            case .p_error_get: return "[get] .error"
+			case .p_error_set: return "[set] .error"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func items(getter defaultValue: [LocationViewItem]...) -> PropertyStub {
+            return Given(method: .p_items_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
+            return Given(method: .p_error_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func onChange(willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
+            return Given(method: .m_onChange, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>, willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
+            return Given(method: .m_onChange__throttle_throttle(`throttle`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func onChange(willProduce: (Stubber<AnyPublisher<Void, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Void, Never>] = []
+			let given: Given = { return Given(method: .m_onChange, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Void, Never>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>, willProduce: (Stubber<AnyPublisher<Void, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Void, Never>] = []
+			let given: Given = { return Given(method: .m_onChange__throttle_throttle(`throttle`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Void, Never>).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func start() -> Verify { return Verify(method: .m_start)}
+        public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
+        public static func userDidSelect(location: Parameter<LocationViewItem>, at index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelect__location_locationat_index(`location`, `index`))}
+        public static func onChange() -> Verify { return Verify(method: .m_onChange)}
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
+        public static var isLoading: Verify { return Verify(method: .p_isLoading_get) }
+        public static var items: Verify { return Verify(method: .p_items_get) }
+        public static var error: Verify { return Verify(method: .p_error_get) }
+		public static func error(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_error_set(newValue)) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func start(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_start, performs: perform)
+        }
+        public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_userDidPullToRefresh, performs: perform)
+        }
+        public static func userDidSelect(location: Parameter<LocationViewItem>, at index: Parameter<Int>, perform: @escaping (LocationViewItem, Int) -> Void) -> Perform {
+            return Perform(method: .m_userDidSelect__location_locationat_index(`location`, `index`), performs: perform)
+        }
+        public static func onChange(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_onChange, performs: perform)
+        }
+        public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>, perform: @escaping (DispatchQueue.SchedulerTimeType.Stride) -> Void) -> Perform {
+            return Perform(method: .m_onChange__throttle_throttle(`throttle`), performs: perform)
         }
     }
 

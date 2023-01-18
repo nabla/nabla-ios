@@ -4,4 +4,14 @@ fragment AvailabilitySlotFragment on AvailabilitySlot {
     provider {
         id
     }
+    location {
+        ... on PhysicalAvailabilitySlotLocation {
+            address {
+                ...AddressFragment
+            }
+        }
+        ... on RemoteAvailabilitySlotLocation {
+            _
+        }
+    }
 }

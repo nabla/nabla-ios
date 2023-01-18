@@ -33,9 +33,6 @@ final class AppointmentListViewController: UIViewController {
     
     @ObservedViewModel private var viewModel: AppointmentListViewModel
     
-    /// For navigation purposes only.
-    private var selectedCategory: Category?
-    
     private enum Constants {
         static let headerHeight = CGFloat(47)
     }
@@ -82,7 +79,7 @@ final class AppointmentListViewController: UIViewController {
         view.nabla.register(AppointmentCell.self)
         view.delegate = self
         view.separatorStyle = .none
-        view.allowsSelection = false
+        view.allowsSelection = true
         view.backgroundColor = .clear
         view.estimatedRowHeight = 78
         view.rowHeight = UITableView.automaticDimension
@@ -182,7 +179,8 @@ final class AppointmentListViewController: UIViewController {
             self.updateAppointmentList()
             self.updateIsLoading()
             self.updateSelector()
-            self.updateModal()
+            self.updateAlert()
+            self.updateVideoCallRoom()
         }
     }
     
@@ -217,26 +215,21 @@ final class AppointmentListViewController: UIViewController {
         loadingView.isHidden = !viewModel.isLoading
     }
     
-    private func updateModal() {
-        guard presentedViewController == nil, let modal = viewModel.modal else { return }
-        let controller = makeController(modal: modal)
+    private func updateAlert() {
+        guard presentedViewController == nil, let alert = viewModel.alert else { return }
+        let controller = nabla.makeController(for: alert)
         present(controller, animated: true) { [viewModel] in
-            viewModel.modal = nil
+            viewModel.alert = nil
         }
     }
     
-    // MARK: Modals
-    
-    private func makeController(modal: AppointmentsViewModal) -> UIViewController {
-        switch modal {
-        case let .alert(alert):
-            return nabla.makeController(for: alert)
-        case let .sheet(sheet):
-            return nabla.makeController(for: sheet) { [weak self] itemIndex in
-                guard let cell = self?.tableView.cellForRow(at: IndexPath(row: itemIndex, section: 0)) as? AppointmentCell else { return nil }
-                return cell.secondaryActionsButton
-            }
+    private func updateVideoCallRoom() {
+        guard let room = viewModel.videoCallRoom else { return }
+        guard let videoCallClient = videoCallClient else {
+            logger.error(message: "Missing `NablaVideoCallModule`.")
+            return
         }
+        videoCallClient.openVideoCallRoom(url: room.url, token: room.token, from: self)
     }
 }
 
@@ -246,28 +239,19 @@ extension AppointmentListViewController: UITableViewDelegate {
             viewModel.userDidReachEndOfList()
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.userDidSelectAppointment(atIndex: indexPath.row)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
 
 extension Appointment: Hashable {
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
-    static func == (lhs: Appointment, rhs: Appointment) -> Bool {
+
+    public static func == (lhs: Appointment, rhs: Appointment) -> Bool {
         lhs.id == rhs.id
-    }
-}
-
-extension AppointmentListViewController: AppointmentListViewModelDelegate {
-    func appointmentListViewModel(_: AppointmentListViewModel, didJoinVideoCall room: Appointment.VideoCallRoom) {
-        guard let videoCallClient = videoCallClient else {
-            logger.error(message: "Missing `NablaVideoCallModule`.")
-            return
-        }
-        videoCallClient.openVideoCallRoom(url: room.url, token: room.token, from: self)
-    }
-
-    func appointmentListViewModelDidSelectNewAppointment(_: AppointmentListViewModel) {
-        factory.presentScheduleAppointmentViewController(from: self)
     }
 }

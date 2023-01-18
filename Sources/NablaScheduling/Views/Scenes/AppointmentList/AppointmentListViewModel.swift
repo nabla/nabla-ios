@@ -2,9 +2,9 @@ import Combine
 import Foundation
 import NablaCore
 
-protocol AppointmentListViewModelDelegate: AnyObject {
-    func appointmentListViewModel(_ viewModel: AppointmentListViewModel, didJoinVideoCall room: Appointment.VideoCallRoom)
-    func appointmentListViewModelDidSelectNewAppointment(_ viewModel: AppointmentListViewModel)
+public protocol AppointmentListDelegate: AnyObject {
+    func appointmentListDidSelectAppointment(_ appointment: Appointment)
+    func appointmentListDidSelectNewAppointment()
 }
 
 enum AppointmentsSelector: Int {
@@ -27,29 +27,27 @@ struct AppointmentViewItem {
     }
 }
 
-enum AppointmentsViewModal {
-    case alert(AlertViewModel)
-    case sheet(SheetViewModel<Int>)
-}
-
 // sourcery: AutoMockable
 protocol AppointmentListViewModel: ViewModel, AppointmentCellViewModelDelegate {
     var selectedSelector: AppointmentsSelector { get set }
     var appointments: [Appointment] { get }
     var isLoading: Bool { get }
-    var modal: AppointmentsViewModal? { get set }
+    var alert: AlertViewModel? { get set }
+    var videoCallRoom: Location.RemoteLocation.VideoCallRoom? { get }
     
     func userDidReachEndOfList()
     func userDidTapCreateAppointmentButton()
+    func userDidSelectAppointment(atIndex index: Int)
 }
 
 final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableObject {
     // MARK: - Internal
     
-    weak var delegate: AppointmentListViewModelDelegate?
+    weak var delegate: AppointmentListDelegate?
     
     @Published var selectedSelector: AppointmentsSelector = .upcoming
-    @Published var modal: AppointmentsViewModal?
+    @Published var alert: AlertViewModel?
+    @Published var videoCallRoom: Location.RemoteLocation.VideoCallRoom?
     
     var isLoading: Bool {
         switch selectedSelector {
@@ -72,25 +70,32 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     }
     
     func userDidTapCreateAppointmentButton() {
-        delegate?.appointmentListViewModelDidSelectNewAppointment(self)
+        delegate?.appointmentListDidSelectNewAppointment()
     }
     
-    func userDidTapCancelAppointment(_ appointment: Appointment) {
-        displayCancelAppointmentConfirmation(appointment)
-    }
-    
-    func userDidConfirmCancelAppointment(_ appointment: Appointment) {
-        Task { [weak self] in
-            try await self?.cancelAppointment(appointment)
+    func userDidSelectAppointment(atIndex index: Int) {
+        let appointment: Appointment?
+        switch selectedSelector {
+        case .upcoming: appointment = upcomingAppointments.data.nabla.element(at: index)
+        case .finalized: appointment = finalizedAppointments.data.nabla.element(at: index)
         }
+        guard let selectedAppointment = appointment else {
+            logger.error(message: "Appointment at index not found", extra: ["index": index])
+            return
+        }
+        delegate?.appointmentListDidSelectAppointment(selectedAppointment)
     }
     
     // MARK: Init
     
     init(
-        client: NablaSchedulingClient
+        delegate: AppointmentListDelegate,
+        client: NablaSchedulingClient,
+        logger: Logger
     ) {
+        self.delegate = delegate
         self.client = client
+        self.logger = logger
         watchUpcomingAppointments()
         watchFinalizedAppointments()
     }
@@ -102,6 +107,7 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     }
     
     private let client: NablaSchedulingClient
+    private let logger: Logger
     
     @Published private var upcomingAppointments: PaginatedList<Appointment> = .init(data: [], hasMore: false, loadMore: nil)
     @Published private var finalizedAppointments: PaginatedList<Appointment> = .init(data: [], hasMore: false, loadMore: nil)
@@ -124,11 +130,11 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
                     self?.isLoadingUpcomingAppointments = false
                 },
                 receiveError: { [weak self] error in
-                    self?.modal = .alert(.error(
+                    self?.alert = .error(
                         title: L10n.appointmentsScreenLoadListErrorTitle,
                         error: error,
                         fallbackMessage: L10n.appointmentsScreenLoadListErrorMessage
-                    ))
+                    )
                     self?.isLoadingUpcomingAppointments = false
                 }
             )
@@ -144,11 +150,11 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
                     self?.isLoadingFinalizedAppointments = false
                 },
                 receiveError: { [weak self] error in
-                    self?.modal = .alert(.error(
+                    self?.alert = .error(
                         title: L10n.appointmentsScreenLoadListErrorTitle,
                         error: error,
                         fallbackMessage: L10n.appointmentsScreenLoadListErrorMessage
-                    ))
+                    )
                     self?.isLoadingFinalizedAppointments = false
                 }
             )
@@ -167,11 +173,11 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
                 try await finalizedAppointments.loadMore?()
             }
         } catch {
-            modal = .alert(.error(
+            alert = .error(
                 title: L10n.appointmentsScreenLoadListErrorTitle,
                 error: error,
                 fallbackMessage: L10n.appointmentsScreenLoadListErrorMessage
-            ))
+            )
         }
         switch selectedSelector {
         case .upcoming:
@@ -180,62 +186,14 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
             isLoadingMoreFinalizedAppointments = false
         }
     }
-    
-    private func cancelAppointment(_ appointment: Appointment) async throws {
-        do {
-            try await client.cancelAppointment(withId: appointment.id)
-        } catch {
-            modal = .alert(.error(
-                title: L10n.appointmentsScreenCancelAppointmentErrorTitle,
-                error: ServerError(underlyingError: nil, message: nil),
-                fallbackMessage: L10n.appointmentsScreenCancelAppointmentErrorMessage
-            ))
-        }
-    }
-    
-    private func displayAppointmentSecondaryActions(_ appointment: Appointment) {
-        guard let index = appointments.firstIndex(where: { $0.id == appointment.id }) else { return }
-        modal = .sheet(.init(
-            source: index,
-            actions: [
-                .destructive(title: L10n.appointmentsScreenSecondaryActionsSheetCancelAppointmentButton) { [weak self] in
-                    self?.userDidTapCancelAppointment(appointment)
-                },
-            ],
-            cancel: L10n.appointmentsScreenSecondaryActionsSheetCloseButton
-        ))
-    }
-    
-    private func displayCancelAppointmentConfirmation(_ appointment: Appointment) {
-        modal = .alert(.init(
-            title: L10n.appointmentsScreenCancelAppointmentModalTitle,
-            message: L10n.appointmentsScreenCancelAppointmentModalMessage,
-            actions: [
-                .destructive(title: L10n.appointmentsScreenCancelAppointmentModalConfirmButton) { [weak self] in
-                    self?.userDidConfirmCancelAppointment(appointment)
-                },
-                .cancel(title: L10n.appointmentsScreenCancelAppointmentModalCloseButton),
-            ]
-        ))
-    }
-    
-    private static func format(_ error: Error, fallback: String) -> String {
-        if let serverError = error as? ServerError {
-            return serverError.message ?? fallback
-        }
-        if let networkError = error as? NetworkError {
-            return networkError.message ?? fallback
-        }
-        return fallback
-    }
 }
 
 extension AppointmentListViewModelImpl: AppointmentCellViewModelDelegate {
-    func appointmentCellViewModel(_: AppointmentCellViewModel, didTapJoinVideoCall room: Appointment.VideoCallRoom) {
-        delegate?.appointmentListViewModel(self, didJoinVideoCall: room)
+    func appointmentCellViewModel(_: AppointmentCellViewModel, didTapJoinVideoCall room: Location.RemoteLocation.VideoCallRoom) {
+        videoCallRoom = room
     }
     
     func appointmentCellViewModel(_: AppointmentCellViewModel, didTapSecondaryActionsButtonFor appointment: Appointment) {
-        displayAppointmentSecondaryActions(appointment)
+        delegate?.appointmentListDidSelectAppointment(appointment)
     }
 }

@@ -3,5 +3,5 @@ import Foundation
 import NablaCore
 
 protocol WatchAvailabilitySlotsInteractor {
-    func execute(categoryId: UUID) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError>
+    func execute(categoryId: UUID, location: LocationType) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError>
 }

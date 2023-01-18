@@ -1,0 +1,12 @@
+fragment LocationFragment on AppointmentLocation {
+    ... on PhysicalAppointmentLocation {
+        address {
+            ...AddressFragment
+        }
+    }
+    ... on RemoteAppointmentLocation {
+        livekitRoom {
+            ...LivekitRoomFragment
+        }
+    }
+}

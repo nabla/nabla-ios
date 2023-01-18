@@ -22,16 +22,17 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     }
     
     /// - Throws: ``GQLError``
-    func scheduleAppointment(categoryId: UUID, providerId: UUID, date: Date) async throws -> RemoteAppointment {
+    func scheduleAppointment(isPhysical: Bool, categoryId: UUID, providerId: UUID, date: Date) async throws -> RemoteAppointment {
         let response = try await gqlClient.perform(
             mutation: GQL.ScheduleAppointmentMutation(
+                isPhysical: isPhysical,
                 categoryId: categoryId,
                 providerId: providerId,
                 timeSlot: date,
                 timeZone: TimeZone.current.identifier
             )
         )
-        let fragment = response.scheduleAppointment.appointment.fragments.appointmentFragment
+        let fragment = response.scheduleAppointmentV2.appointment.fragments.appointmentFragment
         try await insert(fragment)
         return fragment
     }
@@ -40,6 +41,15 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     func cancelAppointment(withId appointmentId: UUID) async throws {
         let response = try await gqlClient.perform(mutation: GQL.CancelAppointmentMutation(appointmentId: appointmentId))
         try await remove(appointmentWithId: response.cancelAppointment.appointmentUuid)
+    }
+    
+    /// - Throws: ``GQLError``
+    func getAvailableLocations() async throws -> RemoteAvailableLocations {
+        let response = try await gqlClient.fetch(
+            query: GQL.GetAvailableLocationsQuery(),
+            policy: .fetchIgnoringCacheData
+        )
+        return response.appointmentAvailableLocations
     }
     
     // MARK: Init

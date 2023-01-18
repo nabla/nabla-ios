@@ -2,5 +2,7 @@ query GetAppointmentConfirmationConsents {
     appointmentConfirmationConsents {
         firstConsentHtml
         secondConsentHtml
+        physicalFirstConsentHtml
+        physicalSecondConsentHtml
     }
 }
