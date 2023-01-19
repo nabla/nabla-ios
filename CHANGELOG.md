@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.0.0-alpha30] - 2023-01-19
+
+### Added
+
 - Added an extra step in the "schedule appointment" flow to choose between remote and physical appointments.
 - Added an appointment detail view accessible from the list of appointments. For physical appointments, this view displays the address of the appointment.
 - You can now register your own `UniversalLinkGenerator` on `NablaClient.shared.scheduling.universalLinkGenerators` to let users open addresses in other apps installed on their phone.
