@@ -57,7 +57,7 @@
               "deviceId" : "be5d136d-ac6c-4da8-9566-ed8650601d80",
               "sentry" : {
                 "env" : "dev",
-                "dsn" : "https:\/\/fa2c462be7f24bd7a510258fac2be401@sentry.nabla.com\/11",
+                "dsn" : "https:\/\/077cdf8f56664d2d89f5de3b58d4a4b7@sentry-relay.nabla.com\/4504525115293696",
                 "__typename" : "Sentry"
               },
               "__typename" : "UpdateDeviceOutput"
