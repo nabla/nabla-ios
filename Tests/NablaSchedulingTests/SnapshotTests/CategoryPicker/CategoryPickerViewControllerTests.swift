@@ -20,6 +20,7 @@ class CategoryPickerViewControllerTests: XCTestCase {
         
         viewModel.given(.onChange(willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.onChange(throttle: .any, willReturn: Just(()).eraseToAnyPublisher()))
+        viewModel.given(.disclaimer(getter: nil))
     }
 
     func testCategoryPickerViewControllerWithItems() {
@@ -28,6 +29,18 @@ class CategoryPickerViewControllerTests: XCTestCase {
         viewModel.given(.items(getter: (0 ... 20).map { index in
             .init(id: .init(), title: "Category \(index)")
         }))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testCategoryPickerViewControllerWithItemsAndDisclaimer() {
+        // GIVEN
+        viewModel.given(.isLoading(getter: false))
+        viewModel.given(.items(getter: (0 ... 20).map { index in
+            .init(id: .init(), title: "Category \(index)")
+        }))
+        viewModel.given(.disclaimer(getter: "This is a disclaimer"))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())

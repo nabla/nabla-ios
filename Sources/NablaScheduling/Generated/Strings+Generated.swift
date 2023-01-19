@@ -60,6 +60,10 @@ internal enum L10n {
   internal static let categoryPickerScreenErrorMessage = L10n.tr("Localizable", "category_picker_screen_error_message")
   /// Something went wrong
   internal static let categoryPickerScreenErrorTitle = L10n.tr("Localizable", "category_picker_screen_error_title")
+  /// The appointment will take place in-person.
+  internal static let categoryPickerScreenPhysicalLocationDisclaimer = L10n.tr("Localizable", "category_picker_screen_physical_location_disclaimer")
+  /// The appointment will take place remotely.
+  internal static let categoryPickerScreenRemoteLocationDisclaimer = L10n.tr("Localizable", "category_picker_screen_remote_location_disclaimer")
   /// Select a category
   internal static let categoryPickerScreenTitle = L10n.tr("Localizable", "category_picker_screen_title")
   /// Confirm the appointment
@@ -84,7 +88,7 @@ internal enum L10n {
   internal static let confirmationScreenErrorTitle = L10n.tr("Localizable", "confirmation_screen_error_title")
   /// Confirm your appointment
   internal static let confirmationScreenTitle = L10n.tr("Localizable", "confirmation_screen_title")
-  /// Physical
+  /// In-person
   internal static let locationPickerPhysicalLocationName = L10n.tr("Localizable", "location_picker_physical_location_name")
   /// Remote
   internal static let locationPickerRemoteLocationName = L10n.tr("Localizable", "location_picker_remote_location_name")

@@ -6,6 +6,11 @@ public extension NablaTheme {
         /// Background color for the category picker view.
         public static var backgroundColor: UIColor = Colors.Background.underCard
         
+        /// Color of the text displayed when the user did not select a location because there is only one available.
+        public static var preselectedLocationDisclaimerTextColor: UIColor = Colors.Text.subdued
+        /// Font of the text displayed when the user did not select a location because there is only one available.
+        public static var preselectedLocationDisclaimerFont: UIFont = Fonts.bodyMedium
+        
         /// Color of the text displayed when there are no categories available.
         public static var emptyViewTextColor: UIColor = Colors.Text.base
         /// Font of the text displayed when there are no categories available.

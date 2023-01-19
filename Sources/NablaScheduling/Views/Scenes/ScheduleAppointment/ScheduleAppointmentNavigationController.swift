@@ -18,24 +18,24 @@ final class ScheduleAppointmentNavigationController: NavigationController {
     private var selectedLocation: LocationType?
     private var selectedCategory: Category?
     
-    private func replaceTopViewController(with viewController: UIViewController, animated _: Bool) {
+    private func replaceTopViewController(with viewController: UIViewController, animated: Bool) {
         var viewControllers = viewControllers
         viewControllers.removeLast()
         viewControllers.append(viewController)
-        setViewControllers(viewControllers, animated: true)
+        setViewControllers(viewControllers, animated: animated)
     }
 }
 
 extension ScheduleAppointmentNavigationController: LocationPickerViewModelDelegate {
     func locationPickerViewModel(_: LocationPickerViewModel, didSkipStepWithSingleLocation location: LocationType) {
         selectedLocation = location
-        let destination = factory.createCategoryPickerViewController(delegate: self)
-        replaceTopViewController(with: destination, animated: true)
+        let destination = factory.createCategoryPickerViewController(preselectedLocation: location, delegate: self)
+        replaceTopViewController(with: destination, animated: false)
     }
     
     func locationPickerViewModel(_: LocationPickerViewModel, didSelect location: LocationType) {
         selectedLocation = location
-        let destination = factory.createCategoryPickerViewController(delegate: self)
+        let destination = factory.createCategoryPickerViewController(preselectedLocation: nil, delegate: self)
         pushViewController(destination, animated: true)
     }
 }

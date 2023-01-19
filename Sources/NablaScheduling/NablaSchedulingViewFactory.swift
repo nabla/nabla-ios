@@ -11,7 +11,10 @@ public protocol NablaSchedulingViewFactory: SchedulingViewFactory {
 // sourcery: typealias = "Category = NablaScheduling.Category"
 protocol InternalSchedulingViewFactory {
     func createLocationPickerViewController(delegate: LocationPickerViewModelDelegate) -> UIViewController
-    func createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate) -> UIViewController
+    func createCategoryPickerViewController(
+        preselectedLocation: LocationType?,
+        delegate: CategoryPickerViewModelDelegate
+    ) -> UIViewController
     func createTimeSlotPickerViewController(
         location: LocationType,
         category: Category,
@@ -70,8 +73,15 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
         return LocationPickerViewController(viewModel: viewModel)
     }
     
-    func createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate) -> UIViewController {
-        let viewModel = CategoryPickerViewModelImpl(client: client, delegate: delegate)
+    func createCategoryPickerViewController(
+        preselectedLocation: LocationType?,
+        delegate: CategoryPickerViewModelDelegate
+    ) -> UIViewController {
+        let viewModel = CategoryPickerViewModelImpl(
+            preselectedLocation: preselectedLocation,
+            client: client,
+            delegate: delegate
+        )
         return CategoryPickerViewController(viewModel: viewModel)
     }
     

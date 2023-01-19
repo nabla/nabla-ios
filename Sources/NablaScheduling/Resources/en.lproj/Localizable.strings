@@ -39,7 +39,7 @@
 "location_picker_screen_title" = "Select a location";
 
 "location_picker_remote_location_name" = "Remote";
-"location_picker_physical_location_name" = "Physical";
+"location_picker_physical_location_name" = "In-person";
 
 "location_picker_screen_empty_label" = "No locations available";
 
@@ -49,6 +49,9 @@
 // ----- Category picker screen
 
 "category_picker_screen_title" = "Select a category";
+
+"category_picker_screen_remote_location_disclaimer" = "The appointment will take place remotely.";
+"category_picker_screen_physical_location_disclaimer" = "The appointment will take place in-person.";
 
 "category_picker_screen_empty_label" = "No categories available";
 

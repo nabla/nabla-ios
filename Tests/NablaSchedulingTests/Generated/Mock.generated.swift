@@ -1769,6 +1769,11 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
 	}
 	private var __p_isLoading: (Bool)?
 
+    public var disclaimer: String? {
+		get {	invocations.append(.p_disclaimer_get); return __p_disclaimer ?? optionalGivenGetterValue(.p_disclaimer_get, "CategoryPickerViewModelMock - stub value for disclaimer was not defined") }
+	}
+	private var __p_disclaimer: (String)?
+
     public var items: [CategoryViewItem] {
 		get {	invocations.append(.p_items_get); return __p_items ?? givenGetterValue(.p_items_get, "CategoryPickerViewModelMock - stub value for items was not defined") }
 	}
@@ -1831,6 +1836,7 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
         case m_onChange
         case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
         case p_isLoading_get
+        case p_disclaimer_get
         case p_items_get
         case p_error_get
 		case p_error_set(Parameter<AlertViewModel?>)
@@ -1852,6 +1858,7 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsThrottle, rhs: rhsThrottle, with: matcher), lhsThrottle, rhsThrottle, "throttle"))
 				return Matcher.ComparisonResult(results)
             case (.p_isLoading_get,.p_isLoading_get): return Matcher.ComparisonResult.match
+            case (.p_disclaimer_get,.p_disclaimer_get): return Matcher.ComparisonResult.match
             case (.p_items_get,.p_items_get): return Matcher.ComparisonResult.match
             case (.p_error_get,.p_error_get): return Matcher.ComparisonResult.match
 			case (.p_error_set(let left),.p_error_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
@@ -1866,6 +1873,7 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
             case .m_onChange: return 0
             case let .m_onChange__throttle_throttle(p0): return p0.intValue
             case .p_isLoading_get: return 0
+            case .p_disclaimer_get: return 0
             case .p_items_get: return 0
             case .p_error_get: return 0
 			case .p_error_set(let newValue): return newValue.intValue
@@ -1878,6 +1886,7 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
             case .m_onChange: return ".onChange()"
             case .m_onChange__throttle_throttle: return ".onChange(throttle:)"
             case .p_isLoading_get: return "[get] .isLoading"
+            case .p_disclaimer_get: return "[get] .disclaimer"
             case .p_items_get: return "[get] .items"
             case .p_error_get: return "[get] .error"
 			case .p_error_set: return "[set] .error"
@@ -1895,6 +1904,9 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
 
         public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func disclaimer(getter defaultValue: String?...) -> PropertyStub {
+            return Given(method: .p_disclaimer_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func items(getter defaultValue: [CategoryViewItem]...) -> PropertyStub {
             return Given(method: .p_items_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -1933,6 +1945,7 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var isLoading: Verify { return Verify(method: .p_isLoading_get) }
+        public static var disclaimer: Verify { return Verify(method: .p_disclaimer_get) }
         public static var items: Verify { return Verify(method: .p_items_get) }
         public static var error: Verify { return Verify(method: .p_error_get) }
 		public static func error(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_error_set(newValue)) }
@@ -2282,16 +2295,16 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 		return __value
     }
 
-    open func createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate) -> UIViewController {
-        addInvocation(.m_createCategoryPickerViewController__delegate_delegate(Parameter<CategoryPickerViewModelDelegate>.value(`delegate`)))
-		let perform = methodPerformValue(.m_createCategoryPickerViewController__delegate_delegate(Parameter<CategoryPickerViewModelDelegate>.value(`delegate`))) as? (CategoryPickerViewModelDelegate) -> Void
-		perform?(`delegate`)
+    open func createCategoryPickerViewController(preselectedLocation: LocationType?, delegate: CategoryPickerViewModelDelegate) -> UIViewController {
+        addInvocation(.m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(Parameter<LocationType?>.value(`preselectedLocation`), Parameter<CategoryPickerViewModelDelegate>.value(`delegate`)))
+		let perform = methodPerformValue(.m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(Parameter<LocationType?>.value(`preselectedLocation`), Parameter<CategoryPickerViewModelDelegate>.value(`delegate`))) as? (LocationType?, CategoryPickerViewModelDelegate) -> Void
+		perform?(`preselectedLocation`, `delegate`)
 		var __value: UIViewController
 		do {
-		    __value = try methodReturnValue(.m_createCategoryPickerViewController__delegate_delegate(Parameter<CategoryPickerViewModelDelegate>.value(`delegate`))).casted()
+		    __value = try methodReturnValue(.m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(Parameter<LocationType?>.value(`preselectedLocation`), Parameter<CategoryPickerViewModelDelegate>.value(`delegate`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate). Use given")
-			Failure("Stub return value not specified for createCategoryPickerViewController(delegate: CategoryPickerViewModelDelegate). Use given")
+			onFatalFailure("Stub return value not specified for createCategoryPickerViewController(preselectedLocation: LocationType?, delegate: CategoryPickerViewModelDelegate). Use given")
+			Failure("Stub return value not specified for createCategoryPickerViewController(preselectedLocation: LocationType?, delegate: CategoryPickerViewModelDelegate). Use given")
 		}
 		return __value
     }
@@ -2341,7 +2354,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 
     fileprivate enum MethodType {
         case m_createLocationPickerViewController__delegate_delegate(Parameter<LocationPickerViewModelDelegate>)
-        case m_createCategoryPickerViewController__delegate_delegate(Parameter<CategoryPickerViewModelDelegate>)
+        case m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(Parameter<LocationType?>, Parameter<CategoryPickerViewModelDelegate>)
         case m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(Parameter<LocationType>, Parameter<Category>, Parameter<TimeSlotPickerViewModelDelegate>)
         case m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(Parameter<LocationType>, Parameter<Category>, Parameter<AvailabilitySlot>, Parameter<AppointmentConfirmationViewModelDelegate>)
         case m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(Parameter<Appointment>, Parameter<AppointmentCellViewModelDelegate>)
@@ -2353,8 +2366,9 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_createCategoryPickerViewController__delegate_delegate(let lhsDelegate), .m_createCategoryPickerViewController__delegate_delegate(let rhsDelegate)):
+            case (.m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(let lhsPreselectedlocation, let lhsDelegate), .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(let rhsPreselectedlocation, let rhsDelegate)):
 				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsPreselectedlocation, rhs: rhsPreselectedlocation, with: matcher), lhsPreselectedlocation, rhsPreselectedlocation, "preselectedLocation"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
 				return Matcher.ComparisonResult(results)
 
@@ -2385,7 +2399,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         func intValue() -> Int {
             switch self {
             case let .m_createLocationPickerViewController__delegate_delegate(p0): return p0.intValue
-            case let .m_createCategoryPickerViewController__delegate_delegate(p0): return p0.intValue
+            case let .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(p0, p1): return p0.intValue + p1.intValue
             case let .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(p0, p1): return p0.intValue + p1.intValue
@@ -2394,7 +2408,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         func assertionName() -> String {
             switch self {
             case .m_createLocationPickerViewController__delegate_delegate: return ".createLocationPickerViewController(delegate:)"
-            case .m_createCategoryPickerViewController__delegate_delegate: return ".createCategoryPickerViewController(delegate:)"
+            case .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate: return ".createCategoryPickerViewController(preselectedLocation:delegate:)"
             case .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate: return ".createTimeSlotPickerViewController(location:category:delegate:)"
             case .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate: return ".createAppointmentConfirmationViewController(location:category:timeSlot:delegate:)"
             case .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate: return ".createAppointmentCellViewModel(appointment:delegate:)"
@@ -2414,8 +2428,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
             return Given(method: .m_createLocationPickerViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
-            return Given(method: .m_createCategoryPickerViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func createCategoryPickerViewController(preselectedLocation: Parameter<LocationType?>, delegate: Parameter<CategoryPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
+            return Given(method: .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(`preselectedLocation`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
             return Given(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -2433,9 +2447,9 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 			willProduce(stubber)
 			return given
         }
-        public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
+        public static func createCategoryPickerViewController(preselectedLocation: Parameter<LocationType?>, delegate: Parameter<CategoryPickerViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
             let willReturn: [UIViewController] = []
-			let given: Given = { return Given(method: .m_createCategoryPickerViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(`preselectedLocation`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (UIViewController).self)
 			willProduce(stubber)
 			return given
@@ -2467,7 +2481,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         fileprivate var method: MethodType
 
         public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createLocationPickerViewController__delegate_delegate(`delegate`))}
-        public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createCategoryPickerViewController__delegate_delegate(`delegate`))}
+        public static func createCategoryPickerViewController(preselectedLocation: Parameter<LocationType?>, delegate: Parameter<CategoryPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(`preselectedLocation`, `delegate`))}
         public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`))}
         public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`))}
         public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`))}
@@ -2480,8 +2494,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>, perform: @escaping (LocationPickerViewModelDelegate) -> Void) -> Perform {
             return Perform(method: .m_createLocationPickerViewController__delegate_delegate(`delegate`), performs: perform)
         }
-        public static func createCategoryPickerViewController(delegate: Parameter<CategoryPickerViewModelDelegate>, perform: @escaping (CategoryPickerViewModelDelegate) -> Void) -> Perform {
-            return Perform(method: .m_createCategoryPickerViewController__delegate_delegate(`delegate`), performs: perform)
+        public static func createCategoryPickerViewController(preselectedLocation: Parameter<LocationType?>, delegate: Parameter<CategoryPickerViewModelDelegate>, perform: @escaping (LocationType?, CategoryPickerViewModelDelegate) -> Void) -> Perform {
+            return Perform(method: .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(`preselectedLocation`, `delegate`), performs: perform)
         }
         public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>, perform: @escaping (LocationType, Category, TimeSlotPickerViewModelDelegate) -> Void) -> Perform {
             return Perform(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`), performs: perform)

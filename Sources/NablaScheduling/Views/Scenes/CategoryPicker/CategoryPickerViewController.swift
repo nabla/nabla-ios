@@ -42,6 +42,7 @@ final class CategoryPickerViewController: UIViewController {
         view.refreshControl = refreshControl
         view.delegate = self
         view.nabla.register(CategoryCell.self)
+        view.nabla.register(DisclaimerCell.self)
         return view
     }()
     
@@ -74,11 +75,28 @@ final class CategoryPickerViewController: UIViewController {
     
     // MARK: DataSource
     
-    private lazy var dataSource: UITableViewDiffableDataSource<Int, CategoryViewItem> = {
-        let dataSource = UITableViewDiffableDataSource<Int, CategoryViewItem>(tableView: tableView) { tableView, indexPath, item in
-            let cell = tableView.nabla.dequeueReusableCell(ofClass: CategoryCell.self, for: indexPath)
-            Self.configure(cell: cell, for: item)
-            return cell
+    private enum Section: Int {
+        case disclaimer
+        case items
+    }
+    
+    fileprivate enum Item {
+        case disclaimer(String)
+        case category(CategoryViewItem)
+    }
+    
+    private lazy var dataSource: UITableViewDiffableDataSource<Section, Item> = {
+        let dataSource = UITableViewDiffableDataSource<Section, Item>(tableView: tableView) { [viewModel] tableView, indexPath, item in
+            switch item {
+            case let .disclaimer(disclaimer):
+                let cell = tableView.nabla.dequeueReusableCell(ofClass: DisclaimerCell.self, for: indexPath)
+                cell.text = disclaimer
+                return cell
+            case let .category(category):
+                let cell = tableView.nabla.dequeueReusableCell(ofClass: CategoryCell.self, for: indexPath)
+                Self.configure(cell: cell, for: category)
+                return cell
+            }
         }
         dataSource.defaultRowAnimation = .fade
         return dataSource
@@ -102,9 +120,13 @@ final class CategoryPickerViewController: UIViewController {
     private func updateItems() {
         emptyView.isHidden = !viewModel.items.isEmpty || viewModel.isLoading
         
-        var snapshot = NSDiffableDataSourceSnapshot<Int, CategoryViewItem>()
-        snapshot.appendSections([0, 1])
-        snapshot.appendItems(viewModel.items, toSection: 0)
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        if let disclaimer = viewModel.disclaimer {
+            snapshot.appendSections([.disclaimer])
+            snapshot.appendItems([.disclaimer(disclaimer)], toSection: .disclaimer)
+        }
+        snapshot.appendSections([.items])
+        snapshot.appendItems(viewModel.items.map { .category($0) }, toSection: .items)
         dataSource.apply(snapshot, animatingDifferences: false, completion: nil)
     }
     
@@ -135,7 +157,29 @@ final class CategoryPickerViewController: UIViewController {
 extension CategoryPickerViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
-        viewModel.userDidSelect(category: item, at: indexPath.row)
+        switch item {
+        case .disclaimer: return
+        case let .category(category): viewModel.userDidSelect(category: category, at: indexPath.row)
+        }
+    }
+}
+
+extension CategoryPickerViewController.Item: Hashable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case let (.disclaimer(lhs), .disclaimer(rhs)): return lhs == rhs
+        case let (.category(lhs), .category(rhs)): return lhs == rhs
+        default: return false
+        }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case let .disclaimer(disclaimer):
+            hasher.combine(disclaimer)
+        case let .category(category):
+            category.hash(into: &hasher)
+        }
     }
 }
 

@@ -14,6 +14,7 @@ struct CategoryViewItem {
 // sourcery: AutoMockable
 protocol CategoryPickerViewModel: ViewModel {
     var isLoading: Bool { get }
+    var disclaimer: String? { get }
     var items: [CategoryViewItem] { get }
     var error: AlertViewModel? { get set }
     
@@ -28,6 +29,14 @@ final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObje
     
     @Published private(set) var isLoading: Bool = false
     @Published var error: AlertViewModel?
+    
+    var disclaimer: String? {
+        switch preselectedLocation {
+        case .none: return nil
+        case .remote: return L10n.categoryPickerScreenRemoteLocationDisclaimer
+        case .physical: return L10n.categoryPickerScreenPhysicalLocationDisclaimer
+        }
+    }
     
     var items: [CategoryViewItem] {
         categories.map(Self.transform(_:))
@@ -45,9 +54,11 @@ final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObje
     // MARK: Init
     
     init(
+        preselectedLocation: LocationType?,
         client: NablaSchedulingClient,
         delegate: CategoryPickerViewModelDelegate
     ) {
+        self.preselectedLocation = preselectedLocation
         self.client = client
         self.delegate = delegate
         watchCategories()
@@ -55,6 +66,7 @@ final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObje
     
     // MARK: - Private
     
+    private let preselectedLocation: LocationType?
     private let client: NablaSchedulingClient
     
     private var categoriesWatcher: AnyCancellable?

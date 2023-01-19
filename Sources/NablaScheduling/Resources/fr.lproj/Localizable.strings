@@ -50,6 +50,9 @@
 
 "category_picker_screen_title" = "Choisissez la catégorie";
 
+"category_picker_screen_remote_location_disclaimer" = "Il s’agit de téléconsultations par appel vidéo.";
+"category_picker_screen_physical_location_disclaimer" = "Il s’agit de consultations physiques.";
+
 "category_picker_screen_empty_label" = "Pas de catégories disponibles";
 
 "category_picker_screen_error_title" = "Une erreur est survenue";
