@@ -10,6 +10,30 @@ class AppointmentDetailsViewControllerTests: XCTestCase {
     private var viewModel: AppointmentDetailsViewModelMock!
     private var navigationController: UINavigationController!
     
+    private func makeReadyItem(
+        caption: String = "Consultation planned on 1 January 1970 at 01:00",
+        captionIcon: AppointmentDetailsView.CaptionIcon = .video,
+        details1: String? = nil,
+        details2: String? = nil,
+        showCancelButton: Bool = true
+    ) -> AppointmentsDetailsViewItem {
+        .init(
+            provider: Provider(
+                id: .init(),
+                prefix: "Mr",
+                firstName: "John",
+                lastName: "Doe",
+                title: "Description",
+                avatarUrl: nil
+            ),
+            caption: caption,
+            captionIcon: captionIcon,
+            details1: details1,
+            details2: details2,
+            showCancelButton: showCancelButton
+        )
+    }
+    
     override func setUp() {
         super.setUp()
         viewModel = .init()
@@ -19,25 +43,21 @@ class AppointmentDetailsViewControllerTests: XCTestCase {
         
         viewModel.given(.onChange(willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.onChange(throttle: .any, willReturn: Just(()).eraseToAnyPublisher()))
-        
-        viewModel.given(
-            .provider(getter:
-                Provider(
-                    id: .init(),
-                    prefix: "Mr",
-                    firstName: "John",
-                    lastName: "Doe",
-                    title: "Description",
-                    avatarUrl: nil
-                )))
-        viewModel.given(.caption(getter: "Consultation planned on 1 January 1970 at 01:00"))
-        viewModel.given(.captionIcon(getter: .video))
-        viewModel.given(.showCancelButton(getter: true))
+    }
+    
+    func testAppointmentDetailsViewControllerLoading() {
+        // GIVEN
+        viewModel.given(.state(getter: .loading))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
 
     func testAppointmentDetailsViewControllerForRemoteLocation() {
         // GIVEN
-        viewModel.given(.captionIcon(getter: .video))
+        viewModel.given(.state(getter: .ready(makeReadyItem(
+            captionIcon: .house
+        ))))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -45,8 +65,10 @@ class AppointmentDetailsViewControllerTests: XCTestCase {
     
     func testAppointmentDetailsViewControllerForPhysicalLocation() {
         // GIVEN
-        viewModel.given(.captionIcon(getter: .house))
-        viewModel.given(.details1(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
+        viewModel.given(.state(getter: .ready(makeReadyItem(
+            captionIcon: .house,
+            details1: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"
+        ))))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -54,9 +76,11 @@ class AppointmentDetailsViewControllerTests: XCTestCase {
     
     func testAppointmentDetailsViewControllerForPhysicalLocationWithExtra() {
         // GIVEN
-        viewModel.given(.captionIcon(getter: .house))
-        viewModel.given(.details1(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
-        viewModel.given(.details2(getter: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"))
+        viewModel.given(.state(getter: .ready(makeReadyItem(
+            captionIcon: .house,
+            details1: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France",
+            details2: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"
+        ))))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -64,7 +88,9 @@ class AppointmentDetailsViewControllerTests: XCTestCase {
     
     func testAppointmentDetailsViewControllerWithoutCancelButton() {
         // GIVEN
-        viewModel.given(.showCancelButton(getter: false))
+        viewModel.given(.state(getter: .ready(makeReadyItem(
+            showCancelButton: false
+        ))))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())

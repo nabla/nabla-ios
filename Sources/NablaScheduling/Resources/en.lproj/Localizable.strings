@@ -31,6 +31,9 @@
 "appointment_details_screen_cancel_appointment_modal_confirm_button" = "Confirm cancellation";
 "appointment_details_screen_cancel_appointment_modal_close_button" = "Keep appointment";
 
+"appointment_details_screen_watch_appointment_error_title" = "Something went wrong";
+"appointment_details_screen_watch_appointment_error_message" = "Failed to load the appointment. Please try again.";
+
 "appointment_details_screen_cancel_appointment_error_title" = "Something went wrong";
 "appointment_details_screen_cancel_appointment_error_message" = "Failed to cancel the appointment. Please try again.";
 

@@ -1,0 +1,7 @@
+query GetAppointment($id: UUID!) {
+    appointment(id: $id) {
+        appointment {
+            ...AppointmentFragment
+        }
+    }
+}

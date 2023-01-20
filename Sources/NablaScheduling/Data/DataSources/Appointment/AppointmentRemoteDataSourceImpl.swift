@@ -12,6 +12,15 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         }
     }
     
+    func watchAppointment(withId id: UUID) -> AnyPublisher<RemoteAppointment, GQLError> {
+        gqlClient.watch(
+            query: GQL.GetAppointmentQuery(id: id),
+            policy: .returnCacheDataAndFetch
+        )
+        .map(\.appointment.appointment.fragments.appointmentFragment)
+        .eraseToAnyPublisher()
+    }
+    
     func subscribeToAppointmentsEvents() -> AnyPublisher<RemoteAppointmentsEvent, Never> {
         gqlClient.subscribe(subscription: GQL.AppointmentsEventsSubscription())
             .compactMap(\.appointments?.event)

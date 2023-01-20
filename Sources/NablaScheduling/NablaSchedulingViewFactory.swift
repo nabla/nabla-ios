@@ -4,6 +4,7 @@ import UIKit
 public protocol NablaSchedulingViewFactory: SchedulingViewFactory {
     func createAppointmentListViewController(delegate: AppointmentListDelegate) -> UIViewController
     func presentScheduleAppointmentNavigationController(from presentingViewController: UIViewController)
+    func createAppointmentDetailsViewController(appointmentId: UUID, delegate: AppointmentDetailsDelegate) -> UIViewController
     func createAppointmentDetailsViewController(appointment: Appointment, delegate: AppointmentDetailsDelegate) -> UIViewController
 }
 
@@ -51,6 +52,19 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
     public func presentScheduleAppointmentNavigationController(from presentingViewController: UIViewController) {
         let viewController = ScheduleAppointmentNavigationController(factory: self)
         presentingViewController.present(viewController, animated: true)
+    }
+    
+    public func createAppointmentDetailsViewController(appointmentId: UUID, delegate: AppointmentDetailsDelegate) -> UIViewController {
+        let viewModel = AppointmentDetailsViewModelImpl(
+            appointmentId: appointmentId,
+            delegate: delegate,
+            client: client,
+            addressFormatter: client.container.addressFormatter,
+            universalLinkGenerator: client.container.universalLinkGenerator
+        )
+        let viewController = AppointmentDetailsViewController(viewModel: viewModel)
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        return viewController
     }
     
     public func createAppointmentDetailsViewController(appointment: Appointment, delegate: AppointmentDetailsDelegate) -> UIViewController {

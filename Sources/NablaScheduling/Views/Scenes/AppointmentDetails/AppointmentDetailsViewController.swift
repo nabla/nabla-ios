@@ -39,6 +39,13 @@ final class AppointmentDetailsViewController: UIViewController {
     
     // MARK: Subviews
     
+    private lazy var loadingView: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView()
+        view.color = NablaTheme.Shared.loadingViewIndicatorTintColor
+        view.startAnimating()
+        return view
+    }()
+    
     private lazy var headerView: AppointmentDetailsView = {
         let view = AppointmentDetailsView(
             frame: .zero,
@@ -95,6 +102,9 @@ final class AppointmentDetailsViewController: UIViewController {
         
         view.addSubview(bottomContainer)
         bottomContainer.nabla.pin(to: view.safeAreaLayoutGuide, edges: [.leading, .bottom, .trailing])
+        
+        view.addSubview(loadingView)
+        loadingView.nabla.constraintToCenterInSuperView()
     }
     
     // MARK: ViewModel
@@ -102,13 +112,21 @@ final class AppointmentDetailsViewController: UIViewController {
     private func observeViewModel() {
         _viewModel.onChange { [weak self] viewModel in
             guard let self = self else { return }
-            self.updateDetails()
-            self.update(provider: viewModel.provider)
             self.updateModal()
+            switch viewModel.state {
+            case .loading:
+                self.loadingView.isHidden = false
+                self.scrollableContainer.isHidden = true
+            case let .ready(viewModel):
+                self.loadingView.isHidden = true
+                self.scrollableContainer.isHidden = false
+                self.updateDetails(viewModel)
+                self.update(provider: viewModel.provider)
+            }
         }
     }
     
-    private func updateDetails() {
+    private func updateDetails(_ viewModel: AppointmentsDetailsViewItem) {
         headerView.caption = viewModel.caption
         headerView.captionIcon = viewModel.captionIcon
         headerView.details1 = viewModel.details1

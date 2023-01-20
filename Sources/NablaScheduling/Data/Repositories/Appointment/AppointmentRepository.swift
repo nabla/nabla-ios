@@ -4,6 +4,7 @@ import NablaCore
 
 protocol AppointmentRepository {
     func watchAppointments(state: Appointment.State) -> AnyPublisher<PaginatedList<Appointment>, NablaError>
+    func watchAppointment(withId id: UUID) -> AnyPublisher<Appointment, NablaError>
     /// - Throws: ``NablaError``
     func scheduleAppointment(
         location: LocationType,

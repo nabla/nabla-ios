@@ -1028,35 +1028,10 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
 	}
 	private var __p_modal: (AppointmentDetailsModal)?
 
-    public var provider: Provider {
-		get {	invocations.append(.p_provider_get); return __p_provider ?? givenGetterValue(.p_provider_get, "AppointmentDetailsViewModelMock - stub value for provider was not defined") }
+    public var state: AppointmentsDetailsViewState {
+		get {	invocations.append(.p_state_get); return __p_state ?? givenGetterValue(.p_state_get, "AppointmentDetailsViewModelMock - stub value for state was not defined") }
 	}
-	private var __p_provider: (Provider)?
-
-    public var caption: String {
-		get {	invocations.append(.p_caption_get); return __p_caption ?? givenGetterValue(.p_caption_get, "AppointmentDetailsViewModelMock - stub value for caption was not defined") }
-	}
-	private var __p_caption: (String)?
-
-    public var captionIcon: AppointmentDetailsView.CaptionIcon {
-		get {	invocations.append(.p_captionIcon_get); return __p_captionIcon ?? givenGetterValue(.p_captionIcon_get, "AppointmentDetailsViewModelMock - stub value for captionIcon was not defined") }
-	}
-	private var __p_captionIcon: (AppointmentDetailsView.CaptionIcon)?
-
-    public var details1: String? {
-		get {	invocations.append(.p_details1_get); return __p_details1 ?? optionalGivenGetterValue(.p_details1_get, "AppointmentDetailsViewModelMock - stub value for details1 was not defined") }
-	}
-	private var __p_details1: (String)?
-
-    public var details2: String? {
-		get {	invocations.append(.p_details2_get); return __p_details2 ?? optionalGivenGetterValue(.p_details2_get, "AppointmentDetailsViewModelMock - stub value for details2 was not defined") }
-	}
-	private var __p_details2: (String)?
-
-    public var showCancelButton: Bool {
-		get {	invocations.append(.p_showCancelButton_get); return __p_showCancelButton ?? givenGetterValue(.p_showCancelButton_get, "AppointmentDetailsViewModelMock - stub value for showCancelButton was not defined") }
-	}
-	private var __p_showCancelButton: (Bool)?
+	private var __p_state: (AppointmentsDetailsViewState)?
 
 
 
@@ -1110,12 +1085,7 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
         case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
         case p_modal_get
 		case p_modal_set(Parameter<AppointmentDetailsModal?>)
-        case p_provider_get
-        case p_caption_get
-        case p_captionIcon_get
-        case p_details1_get
-        case p_details2_get
-        case p_showCancelButton_get
+        case p_state_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -1131,12 +1101,7 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
 				return Matcher.ComparisonResult(results)
             case (.p_modal_get,.p_modal_get): return Matcher.ComparisonResult.match
 			case (.p_modal_set(let left),.p_modal_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AppointmentDetailsModal?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
-            case (.p_provider_get,.p_provider_get): return Matcher.ComparisonResult.match
-            case (.p_caption_get,.p_caption_get): return Matcher.ComparisonResult.match
-            case (.p_captionIcon_get,.p_captionIcon_get): return Matcher.ComparisonResult.match
-            case (.p_details1_get,.p_details1_get): return Matcher.ComparisonResult.match
-            case (.p_details2_get,.p_details2_get): return Matcher.ComparisonResult.match
-            case (.p_showCancelButton_get,.p_showCancelButton_get): return Matcher.ComparisonResult.match
+            case (.p_state_get,.p_state_get): return Matcher.ComparisonResult.match
             default: return .none
             }
         }
@@ -1149,12 +1114,7 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
             case let .m_onChange__throttle_throttle(p0): return p0.intValue
             case .p_modal_get: return 0
 			case .p_modal_set(let newValue): return newValue.intValue
-            case .p_provider_get: return 0
-            case .p_caption_get: return 0
-            case .p_captionIcon_get: return 0
-            case .p_details1_get: return 0
-            case .p_details2_get: return 0
-            case .p_showCancelButton_get: return 0
+            case .p_state_get: return 0
             }
         }
         func assertionName() -> String {
@@ -1165,12 +1125,7 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
             case .m_onChange__throttle_throttle: return ".onChange(throttle:)"
             case .p_modal_get: return "[get] .modal"
 			case .p_modal_set: return "[set] .modal"
-            case .p_provider_get: return "[get] .provider"
-            case .p_caption_get: return "[get] .caption"
-            case .p_captionIcon_get: return "[get] .captionIcon"
-            case .p_details1_get: return "[get] .details1"
-            case .p_details2_get: return "[get] .details2"
-            case .p_showCancelButton_get: return "[get] .showCancelButton"
+            case .p_state_get: return "[get] .state"
             }
         }
     }
@@ -1186,23 +1141,8 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
         public static func modal(getter defaultValue: AppointmentDetailsModal?...) -> PropertyStub {
             return Given(method: .p_modal_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func provider(getter defaultValue: Provider...) -> PropertyStub {
-            return Given(method: .p_provider_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func caption(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_caption_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func captionIcon(getter defaultValue: AppointmentDetailsView.CaptionIcon...) -> PropertyStub {
-            return Given(method: .p_captionIcon_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func details1(getter defaultValue: String?...) -> PropertyStub {
-            return Given(method: .p_details1_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func details2(getter defaultValue: String?...) -> PropertyStub {
-            return Given(method: .p_details2_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func showCancelButton(getter defaultValue: Bool...) -> PropertyStub {
-            return Given(method: .p_showCancelButton_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func state(getter defaultValue: AppointmentsDetailsViewState...) -> PropertyStub {
+            return Given(method: .p_state_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func onChange(willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
@@ -1236,12 +1176,7 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var modal: Verify { return Verify(method: .p_modal_get) }
 		public static func modal(set newValue: Parameter<AppointmentDetailsModal?>) -> Verify { return Verify(method: .p_modal_set(newValue)) }
-        public static var provider: Verify { return Verify(method: .p_provider_get) }
-        public static var caption: Verify { return Verify(method: .p_caption_get) }
-        public static var captionIcon: Verify { return Verify(method: .p_captionIcon_get) }
-        public static var details1: Verify { return Verify(method: .p_details1_get) }
-        public static var details2: Verify { return Verify(method: .p_details2_get) }
-        public static var showCancelButton: Verify { return Verify(method: .p_showCancelButton_get) }
+        public static var state: Verify { return Verify(method: .p_state_get) }
     }
 
     public struct Perform {

@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import NablaCore
 
@@ -10,15 +11,24 @@ enum AppointmentDetailsModal {
     case detailSheet(SheetViewModel<Void>)
 }
 
+struct AppointmentsDetailsViewItem {
+    let provider: Provider
+    let caption: String
+    let captionIcon: AppointmentDetailsView.CaptionIcon
+    let details1: String?
+    let details2: String?
+    let showCancelButton: Bool
+}
+
+enum AppointmentsDetailsViewState {
+    case loading
+    case ready(AppointmentsDetailsViewItem)
+}
+
 // sourcery: AutoMockable
 protocol AppointmentDetailsViewModel: ViewModel {
     var modal: AppointmentDetailsModal? { get set }
-    var provider: Provider { get }
-    var caption: String { get }
-    var captionIcon: AppointmentDetailsView.CaptionIcon { get }
-    var details1: String? { get }
-    var details2: String? { get }
-    var showCancelButton: Bool { get }
+    var state: AppointmentsDetailsViewState { get }
     
     func userDidTapAppointmentDetails()
     func userDidTapCancelButton()
@@ -30,47 +40,10 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
     weak var delegate: AppointmentDetailsDelegate?
     
     @Published var modal: AppointmentDetailsModal?
-    
-    var provider: Provider {
-        appointment.provider
-    }
-    
-    var caption: String {
-        if appointment.start.nabla.isToday {
-            return L10n.confirmationScreenCaptionFormatToday(formatTime(date: appointment.start))
-        } else {
-            return L10n.confirmationScreenCaptionFormat(formatTimeAndDate(date: appointment.start))
-        }
-    }
-    
-    var captionIcon: AppointmentDetailsView.CaptionIcon {
-        switch appointment.location {
-        case .remote: return .video
-        case .physical: return .house
-        case .unknown: return .video
-        }
-    }
-    
-    var details1: String? {
-        switch appointment.location {
-        case .remote, .unknown: return nil
-        case let .physical(physicalLocation): return addressFormatter.format(physicalLocation.address)
-        }
-    }
-    
-    var details2: String? {
-        switch appointment.location {
-        case .remote, .unknown: return nil
-        case let .physical(physicalLocation): return physicalLocation.address.extraDetails
-        }
-    }
-    
-    var showCancelButton: Bool {
-        appointment.start.nabla.isFuture && !isAppointmentAboutToStart
-    }
+    @Published var state: AppointmentsDetailsViewState = .loading
     
     func userDidTapAppointmentDetails() {
-        guard let address = appointment.location.asPhysical?.address else { return }
+        guard let address = appointment?.location.asPhysical?.address else { return }
         
         let actions = universalLinkGenerator.makeUniversalLinks(forAdress: address)
             .compactMap { universalLink -> SheetViewModel<Void>.Action? in
@@ -91,31 +64,117 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
     // MARK: Init
     
     init(
+        appointmentId: UUID,
+        delegate: AppointmentDetailsDelegate,
+        client: NablaSchedulingClient,
+        addressFormatter: AddressFormatter,
+        universalLinkGenerator: UniversalLinkGenerator
+    ) {
+        self.appointmentId = appointmentId
+        self.delegate = delegate
+        self.client = client
+        self.addressFormatter = addressFormatter
+        self.universalLinkGenerator = universalLinkGenerator
+        
+        watchAppointment()
+    }
+    
+    init(
         appointment: Appointment,
         delegate: AppointmentDetailsDelegate,
         client: NablaSchedulingClient,
         addressFormatter: AddressFormatter,
         universalLinkGenerator: UniversalLinkGenerator
     ) {
+        appointmentId = appointment.id
         self.appointment = appointment
         self.delegate = delegate
         self.client = client
         self.addressFormatter = addressFormatter
         self.universalLinkGenerator = universalLinkGenerator
+        
+        state = .ready(makeViewItem(for: appointment))
+        watchAppointment()
     }
     
     // MARK: - Private
     
-    private let appointment: Appointment
+    private let appointmentId: UUID
     private let client: NablaSchedulingClient
     private let addressFormatter: AddressFormatter
     private let universalLinkGenerator: UniversalLinkGenerator
     
-    private var isAppointmentAboutToStart: Bool {
+    private var appointmentWatcher: AnyCancellable?
+    private var appointment: Appointment?
+    
+    private func isAppointmentAboutToStart(_ appointment: Appointment) -> Bool {
         appointment.start.nabla.isFuture && appointment.start.nabla.timeIntervalSinceNow < 10 * 60
     }
     
+    private func makeViewItem(for appointment: Appointment) -> AppointmentsDetailsViewItem {
+        .init(
+            provider: appointment.provider,
+            caption: caption(for: appointment),
+            captionIcon: captionIcon(for: appointment),
+            details1: details1(for: appointment),
+            details2: details2(for: appointment),
+            showCancelButton: appointment.start.nabla.isFuture && !isAppointmentAboutToStart(appointment)
+        )
+    }
+    
+    private func caption(for appointment: Appointment) -> String {
+        if appointment.start.nabla.isToday {
+            return L10n.confirmationScreenCaptionFormatToday(formatTime(date: appointment.start))
+        } else {
+            return L10n.confirmationScreenCaptionFormat(formatTimeAndDate(date: appointment.start))
+        }
+    }
+    
+    private func captionIcon(for appointment: Appointment) -> AppointmentDetailsView.CaptionIcon {
+        switch appointment.location {
+        case .remote: return .video
+        case .physical: return .house
+        case .unknown: return .video
+        }
+    }
+    
+    private func details1(for appointment: Appointment) -> String? {
+        switch appointment.location {
+        case .remote, .unknown: return nil
+        case let .physical(physicalLocation): return addressFormatter.format(physicalLocation.address)
+        }
+    }
+    
+    private func details2(for appointment: Appointment) -> String? {
+        switch appointment.location {
+        case .remote, .unknown: return nil
+        case let .physical(physicalLocation): return physicalLocation.address.extraDetails
+        }
+    }
+    
+    private func watchAppointment() {
+        if appointment == nil {
+            state = .loading
+        }
+        appointmentWatcher = client.watchAppointment(id: appointmentId)
+            .nabla.drive(
+                receiveValue: { [weak self] appointment in
+                    guard let self = self else { return }
+                    self.appointment = appointment
+                    self.state = .ready(self.makeViewItem(for: appointment))
+                },
+                receiveError: { [weak self] error in
+                    self?.modal = .alert(.error(
+                        title: L10n.appointmentDetailsScreenWatchAppointmentErrorTitle,
+                        error: error,
+                        fallbackMessage: L10n.appointmentDetailsScreenWatchAppointmentErrorMessage
+                    ))
+                }
+            )
+    }
+    
     private func cancelAppointment() async {
+        guard let appointment = appointment else { return }
         do {
             try await client.cancelAppointment(withId: appointment.id)
             await MainActor.run { [delegate] in
@@ -124,7 +183,7 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
         } catch {
             modal = .alert(.error(
                 title: L10n.appointmentDetailsScreenCancelAppointmentErrorTitle,
-                error: ServerError(underlyingError: nil, message: nil),
+                error: error,
                 fallbackMessage: L10n.appointmentDetailsScreenCancelAppointmentErrorMessage
             ))
         }

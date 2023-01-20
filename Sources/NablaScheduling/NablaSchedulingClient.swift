@@ -16,6 +16,10 @@ public final class NablaSchedulingClient: SchedulingClient {
         container.watchAppointmentsInteractor.execute(state: state)
     }
     
+    func watchAppointment(id: UUID) -> AnyPublisher<Appointment, NablaError> {
+        container.watchAppointmentInteractor.execute(id: id)
+    }
+    
     func watchCategories() -> AnyPublisher<[Category], NablaError> {
         container.watchCategoriesInteractor.execute()
     }

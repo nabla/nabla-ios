@@ -34,6 +34,10 @@ internal enum L10n {
   }
   /// Appointment
   internal static let appointmentDetailsScreenTitle = L10n.tr("Localizable", "appointment_details_screen_title")
+  /// Failed to load the appointment. Please try again.
+  internal static let appointmentDetailsScreenWatchAppointmentErrorMessage = L10n.tr("Localizable", "appointment_details_screen_watch_appointment_error_message")
+  /// Something went wrong
+  internal static let appointmentDetailsScreenWatchAppointmentErrorTitle = L10n.tr("Localizable", "appointment_details_screen_watch_appointment_error_title")
   /// Schedule an appointment
   internal static let appointmentsScreenActionButtonLabel = L10n.tr("Localizable", "appointments_screen_action_button_label")
   /// Join the call

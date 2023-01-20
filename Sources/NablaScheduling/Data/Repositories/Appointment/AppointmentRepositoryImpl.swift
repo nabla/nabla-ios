@@ -19,6 +19,14 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
             .eraseToAnyPublisher()
     }
     
+    func watchAppointment(withId id: UUID) -> AnyPublisher<Appointment, NablaError> {
+        let transformer = RemoteAppointmentTransformer(logger: logger)
+        return remoteDataSource.watchAppointment(withId: id)
+            .map { transformer.transform($0) }
+            .mapError(GQLErrorTransformer.transform(gqlError:))
+            .eraseToAnyPublisher()
+    }
+    
     /// - Throws: ``NablaError``
     func scheduleAppointment(location: LocationType, categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
         do {

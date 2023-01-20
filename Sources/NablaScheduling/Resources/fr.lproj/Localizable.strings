@@ -31,6 +31,9 @@
 "appointment_details_screen_cancel_appointment_modal_confirm_button" = "Confirmer l’annulation";
 "appointment_details_screen_cancel_appointment_modal_close_button" = "Conserver le rendez-vous";
 
+"appointment_details_screen_watch_appointment_error_title" = "Une erreur est survenue";
+"appointment_details_screen_watch_appointment_error_message" = "Impossible de trouver le rendez-vous. Réessayez.";
+
 "appointment_details_screen_cancel_appointment_error_title" = "Une erreur est survenue";
 "appointment_details_screen_cancel_appointment_error_message" = "Impossible d'annuler le rendez-vous. Réessayez.";
 

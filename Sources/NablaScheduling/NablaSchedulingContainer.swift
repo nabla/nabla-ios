@@ -11,6 +11,7 @@ final class NablaSchedulingContainer {
     let addressFormatter: AddressFormatter
     let universalLinkGenerator: CompositeUniversalLinkGenerator
     let watchAppointmentsInteractor: WatchAppointmentsInteractor
+    let watchAppointmentInteractor: WatchAppointmentInteractor
     let watchCategoriesInteractor: WatchCategoriesInteractor
     let watchAvailabilitySlotsInteractor: WatchAvailabilitySlotsInteractor
     let scheduleAppointmentInteractor: ScheduleAppointmentInteractor
@@ -68,6 +69,7 @@ final class NablaSchedulingContainer {
         availabilitySlotRepository = AvailabilitySlotRepositoryImpl(remoteDataSource: availabilitySlotRemoteDataSource)
         
         watchAppointmentsInteractor = WatchAppointmentsInteractorImpl(repository: appointmentRepository)
+        watchAppointmentInteractor = WatchAppointmentInteractorImpl(repository: appointmentRepository)
         watchCategoriesInteractor = WatchCategoriesInteractorImpl(repository: availabilitySlotRepository)
         watchAvailabilitySlotsInteractor = WatchAvailabilitySlotsInteractorImpl(repository: availabilitySlotRepository)
         scheduleAppointmentInteractor = ScheduleAppointmentInteractorImpl(repository: appointmentRepository)
