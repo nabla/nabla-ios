@@ -71,7 +71,10 @@ final class LocationCell: UITableViewCell, Reusable {
         hstack.nabla.pinToSuperView(insets: .nabla.all(12))
         
         contentView.addSubview(containerView)
-        containerView.nabla.pinToSuperView(insets: .init(top: 12, leading: 16, bottom: 0, trailing: 16))
+        containerView.nabla.pinToSuperView(
+            insets: .init(top: 12, leading: 16, bottom: 0, trailing: 16),
+            priority: .nabla.cellContentPriority
+        )
     }
     
     override func setSelected(_: Bool, animated _: Bool) {
