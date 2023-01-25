@@ -29,17 +29,18 @@ struct AppointmentViewItem {
 
 // sourcery: AutoMockable
 protocol AppointmentListViewModel: ViewModel, AppointmentCellViewModelDelegate {
-    var selectedSelector: AppointmentsSelector { get set }
-    var appointments: [Appointment] { get }
-    var isLoading: Bool { get }
-    var alert: AlertViewModel? { get set }
-    var videoCallRoom: Location.RemoteLocation.VideoCallRoom? { get }
+    @MainActor var selectedSelector: AppointmentsSelector { get set }
+    @MainActor var appointments: [Appointment] { get }
+    @MainActor var isLoading: Bool { get }
+    @MainActor var alert: AlertViewModel? { get set }
+    @MainActor var videoCallRoom: Location.RemoteLocation.VideoCallRoom? { get }
     
-    func userDidReachEndOfList()
-    func userDidTapCreateAppointmentButton()
-    func userDidSelectAppointment(atIndex index: Int)
+    @MainActor func userDidReachEndOfList()
+    @MainActor func userDidTapCreateAppointmentButton()
+    @MainActor func userDidSelectAppointment(atIndex index: Int)
 }
 
+@MainActor
 final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableObject {
     // MARK: - Internal
     
@@ -64,8 +65,8 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     }
     
     func userDidReachEndOfList() {
-        Task(priority: .userInitiated) { [weak self] in
-            await self?.loadMoreAppointments()
+        Task {
+            await loadMoreAppointments()
         }
     }
     
@@ -88,7 +89,7 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     
     // MARK: Init
     
-    init(
+    nonisolated init(
         delegate: AppointmentListDelegate,
         client: NablaSchedulingClient,
         logger: Logger
@@ -96,8 +97,11 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
         self.delegate = delegate
         self.client = client
         self.logger = logger
-        watchUpcomingAppointments()
-        watchFinalizedAppointments()
+        
+        Task {
+            await watchUpcomingAppointments()
+            await watchFinalizedAppointments()
+        }
     }
     
     // MARK: - Private

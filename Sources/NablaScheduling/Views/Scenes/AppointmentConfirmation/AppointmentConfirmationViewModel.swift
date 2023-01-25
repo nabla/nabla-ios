@@ -13,24 +13,25 @@ enum AppointmentConfirmationModal {
 
 // sourcery: AutoMockable
 protocol AppointmentConfirmationViewModel: ViewModel {
-    var provider: Provider? { get }
-    var caption: String { get }
-    var captionIcon: AppointmentDetailsView.CaptionIcon { get }
-    var details1: String? { get }
-    var details2: String? { get }
-    var agreesWithFirstConsent: Bool { get set }
-    var agreesWithSecondConsent: Bool { get set }
-    var canConfirm: Bool { get }
-    var isConfirming: Bool { get }
-    var isLoadingConsents: Bool { get }
-    var consents: ConsentsViewModel? { get }
-    var consentsLoadingError: ConsentsErrorViewModel? { get }
-    var modal: AppointmentConfirmationModal? { get set }
+    @MainActor var provider: Provider? { get }
+    @MainActor var caption: String { get }
+    @MainActor var captionIcon: AppointmentDetailsView.CaptionIcon { get }
+    @MainActor var details1: String? { get }
+    @MainActor var details2: String? { get }
+    @MainActor var agreesWithFirstConsent: Bool { get set }
+    @MainActor var agreesWithSecondConsent: Bool { get set }
+    @MainActor var canConfirm: Bool { get }
+    @MainActor var isConfirming: Bool { get }
+    @MainActor var isLoadingConsents: Bool { get }
+    @MainActor var consents: ConsentsViewModel? { get }
+    @MainActor var consentsLoadingError: ConsentsErrorViewModel? { get }
+    @MainActor var modal: AppointmentConfirmationModal? { get set }
     
-    func userDidTapAppointmentDetails()
-    func userDidTapConfirmButton()
+    @MainActor func userDidTapAppointmentDetails()
+    @MainActor func userDidTapConfirmButton()
 }
 
+@MainActor
 final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewModel, ObservableObject {
     // MARK: - Internal
 
@@ -95,20 +96,20 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     }
 
     func userDidTapConfirmButton() {
-        Task(priority: .userInitiated) { [weak self] in
-            await self?.confirmAppointment()
+        Task {
+            await confirmAppointment()
         }
     }
     
     func userDidTapErrorViewRetryButton() {
-        Task(priority: .userInitiated) { [weak self] in
-            await self?.fetchConsents()
+        Task {
+            await fetchConsents()
         }
     }
 
     // MARK: Init
 
-    init(
+    nonisolated init(
         category: Category,
         timeSlot: AvailabilitySlot,
         location: LocationType,
@@ -125,9 +126,9 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         self.universalLinkGenerator = universalLinkGenerator
         self.delegate = delegate
         
-        watchProvider()
-        Task(priority: .userInitiated) { [weak self] in
-            await self?.fetchConsents()
+        Task {
+            await watchProvider()
+            await fetchConsents()
         }
     }
 
@@ -154,9 +155,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
                 providerId: timeSlot.providerId,
                 date: timeSlot.start
             )
-            await MainActor.run { [delegate] in
-                delegate?.appointmentConfirmationViewModel(self, didConfirm: appointment)
-            }
+            delegate?.appointmentConfirmationViewModel(self, didConfirm: appointment)
         } catch {
             modal = .alert(.error(
                 title: L10n.confirmationScreenErrorTitle,
@@ -220,7 +219,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
             consentsLoadingError = ConsentsErrorViewModel(
                 message: errorMessage,
                 handler: { [weak self] in
-                    Task(priority: .userInitiated) { [weak self] in
+                    Task(priority: .userInitiated) {
                         await self?.fetchConsents()
                     }
                 }

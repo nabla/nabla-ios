@@ -9,17 +9,18 @@ protocol AppointmentCellViewModelDelegate: AnyObject {
 
 // sourcery: AutoMockable
 protocol AppointmentCellViewModel: ViewModel {
-    var avatar: AvatarViewModel { get }
-    var title: String { get }
-    var subtitle: String { get }
-    var enabled: Bool { get }
-    var primaryActionTitle: String? { get }
-    var showDisclosureIndicator: Bool { get }
+    @MainActor var avatar: AvatarViewModel { get }
+    @MainActor var title: String { get }
+    @MainActor var subtitle: String { get }
+    @MainActor var enabled: Bool { get }
+    @MainActor var primaryActionTitle: String? { get }
+    @MainActor var showDisclosureIndicator: Bool { get }
     
-    func userDidTapPrimaryActionButton()
-    func userDidTapSecondaryActionsButton()
+    @MainActor func userDidTapPrimaryActionButton()
+    @MainActor func userDidTapSecondaryActionsButton()
 }
 
+@MainActor
 final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableObject {
     // MARK: - Internal
     
@@ -75,6 +76,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
         self.appointment = appointment
         self.videoCallClient = videoCallClient
         self.delegate = delegate
+        
         observeTime()
         observeCurrentVideoCall()
     }

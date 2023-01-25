@@ -13,15 +13,16 @@ struct CategoryViewItem {
 
 // sourcery: AutoMockable
 protocol CategoryPickerViewModel: ViewModel {
-    var isLoading: Bool { get }
-    var disclaimer: String? { get }
-    var items: [CategoryViewItem] { get }
-    var error: AlertViewModel? { get set }
+    @MainActor var isLoading: Bool { get }
+    @MainActor var disclaimer: String? { get }
+    @MainActor var items: [CategoryViewItem] { get }
+    @MainActor var error: AlertViewModel? { get set }
     
-    func userDidPullToRefresh()
-    func userDidSelect(category: CategoryViewItem, at index: Int)
+    @MainActor func userDidPullToRefresh()
+    @MainActor func userDidSelect(category: CategoryViewItem, at index: Int)
 }
 
+@MainActor
 final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObject {
     // MARK: - Internal
     
@@ -39,7 +40,7 @@ final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObje
     }
     
     var items: [CategoryViewItem] {
-        categories.map(Self.transform(_:))
+        categories.map { transform($0) }
     }
     
     func userDidPullToRefresh() {
@@ -53,7 +54,7 @@ final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObje
     
     // MARK: Init
     
-    init(
+    nonisolated init(
         preselectedLocation: LocationType?,
         client: NablaSchedulingClient,
         delegate: CategoryPickerViewModelDelegate
@@ -61,7 +62,10 @@ final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObje
         self.preselectedLocation = preselectedLocation
         self.client = client
         self.delegate = delegate
-        watchCategories()
+        
+        Task {
+            await watchCategories()
+        }
     }
     
     // MARK: - Private
@@ -93,7 +97,7 @@ final class CategoryPickerViewModelImpl: CategoryPickerViewModel, ObservableObje
             )
     }
     
-    private static func transform(_ category: Category) -> CategoryViewItem {
+    private func transform(_ category: Category) -> CategoryViewItem {
         CategoryViewItem(
             id: category.id,
             title: category.name

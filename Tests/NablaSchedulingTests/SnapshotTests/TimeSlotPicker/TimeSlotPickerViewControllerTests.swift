@@ -4,7 +4,7 @@ import NablaCoreTestsUtils
 import SnapshotTesting
 import XCTest
 
-class TimeSlotPickerViewControllerTests: XCTestCase {
+@MainActor class TimeSlotPickerViewControllerTests: XCTestCase {
     private var sut: TimeSlotPickerViewController!
     
     private var viewModel: TimeSlotPickerViewModelMock!

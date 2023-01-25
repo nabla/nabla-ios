@@ -245,32 +245,38 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var avatar: AvatarViewModel {
+    @MainActor
+		public var avatar: AvatarViewModel {
 		get {	invocations.append(.p_avatar_get); return __p_avatar ?? givenGetterValue(.p_avatar_get, "AppointmentCellViewModelMock - stub value for avatar was not defined") }
 	}
 	private var __p_avatar: (AvatarViewModel)?
 
-    public var title: String {
+    @MainActor
+		public var title: String {
 		get {	invocations.append(.p_title_get); return __p_title ?? givenGetterValue(.p_title_get, "AppointmentCellViewModelMock - stub value for title was not defined") }
 	}
 	private var __p_title: (String)?
 
-    public var subtitle: String {
+    @MainActor
+		public var subtitle: String {
 		get {	invocations.append(.p_subtitle_get); return __p_subtitle ?? givenGetterValue(.p_subtitle_get, "AppointmentCellViewModelMock - stub value for subtitle was not defined") }
 	}
 	private var __p_subtitle: (String)?
 
-    public var enabled: Bool {
+    @MainActor
+		public var enabled: Bool {
 		get {	invocations.append(.p_enabled_get); return __p_enabled ?? givenGetterValue(.p_enabled_get, "AppointmentCellViewModelMock - stub value for enabled was not defined") }
 	}
 	private var __p_enabled: (Bool)?
 
-    public var primaryActionTitle: String? {
+    @MainActor
+		public var primaryActionTitle: String? {
 		get {	invocations.append(.p_primaryActionTitle_get); return __p_primaryActionTitle ?? optionalGivenGetterValue(.p_primaryActionTitle_get, "AppointmentCellViewModelMock - stub value for primaryActionTitle was not defined") }
 	}
 	private var __p_primaryActionTitle: (String)?
 
-    public var showDisclosureIndicator: Bool {
+    @MainActor
+		public var showDisclosureIndicator: Bool {
 		get {	invocations.append(.p_showDisclosureIndicator_get); return __p_showDisclosureIndicator ?? givenGetterValue(.p_showDisclosureIndicator_get, "AppointmentCellViewModelMock - stub value for showDisclosureIndicator was not defined") }
 	}
 	private var __p_showDisclosureIndicator: (Bool)?
@@ -279,13 +285,15 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
 
 
 
-    open func userDidTapPrimaryActionButton() {
+    @MainActor
+	open func userDidTapPrimaryActionButton() {
         addInvocation(.m_userDidTapPrimaryActionButton)
 		let perform = methodPerformValue(.m_userDidTapPrimaryActionButton) as? () -> Void
 		perform?()
     }
 
-    open func userDidTapSecondaryActionsButton() {
+    @MainActor
+	open func userDidTapSecondaryActionsButton() {
         addInvocation(.m_userDidTapSecondaryActionsButton)
 		let perform = methodPerformValue(.m_userDidTapSecondaryActionsButton) as? () -> Void
 		perform?()
@@ -392,22 +400,28 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
             super.init(products)
         }
 
-        public static func avatar(getter defaultValue: AvatarViewModel...) -> PropertyStub {
+        @MainActor
+		public static func avatar(getter defaultValue: AvatarViewModel...) -> PropertyStub {
             return Given(method: .p_avatar_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func title(getter defaultValue: String...) -> PropertyStub {
+        @MainActor
+		public static func title(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_title_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func subtitle(getter defaultValue: String...) -> PropertyStub {
+        @MainActor
+		public static func subtitle(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_subtitle_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func enabled(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func enabled(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_enabled_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func primaryActionTitle(getter defaultValue: String?...) -> PropertyStub {
+        @MainActor
+		public static func primaryActionTitle(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_primaryActionTitle_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func showDisclosureIndicator(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func showDisclosureIndicator(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_showDisclosureIndicator_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -436,8 +450,10 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidTapPrimaryActionButton() -> Verify { return Verify(method: .m_userDidTapPrimaryActionButton)}
-        public static func userDidTapSecondaryActionsButton() -> Verify { return Verify(method: .m_userDidTapSecondaryActionsButton)}
+        @MainActor
+		public static func userDidTapPrimaryActionButton() -> Verify { return Verify(method: .m_userDidTapPrimaryActionButton)}
+        @MainActor
+		public static func userDidTapSecondaryActionsButton() -> Verify { return Verify(method: .m_userDidTapSecondaryActionsButton)}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var avatar: Verify { return Verify(method: .p_avatar_get) }
@@ -452,10 +468,12 @@ open class AppointmentCellViewModelMock: AppointmentCellViewModel, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidTapPrimaryActionButton(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapPrimaryActionButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapPrimaryActionButton, performs: perform)
         }
-        public static func userDidTapSecondaryActionsButton(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapSecondaryActionsButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapSecondaryActionsButton, performs: perform)
         }
         public static func onChange(perform: @escaping () -> Void) -> Perform {
@@ -579,69 +597,82 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var provider: Provider? {
+    @MainActor
+		public var provider: Provider? {
 		get {	invocations.append(.p_provider_get); return __p_provider ?? optionalGivenGetterValue(.p_provider_get, "AppointmentConfirmationViewModelMock - stub value for provider was not defined") }
 	}
 	private var __p_provider: (Provider)?
 
-    public var caption: String {
+    @MainActor
+		public var caption: String {
 		get {	invocations.append(.p_caption_get); return __p_caption ?? givenGetterValue(.p_caption_get, "AppointmentConfirmationViewModelMock - stub value for caption was not defined") }
 	}
 	private var __p_caption: (String)?
 
-    public var captionIcon: AppointmentDetailsView.CaptionIcon {
+    @MainActor
+		public var captionIcon: AppointmentDetailsView.CaptionIcon {
 		get {	invocations.append(.p_captionIcon_get); return __p_captionIcon ?? givenGetterValue(.p_captionIcon_get, "AppointmentConfirmationViewModelMock - stub value for captionIcon was not defined") }
 	}
 	private var __p_captionIcon: (AppointmentDetailsView.CaptionIcon)?
 
-    public var details1: String? {
+    @MainActor
+		public var details1: String? {
 		get {	invocations.append(.p_details1_get); return __p_details1 ?? optionalGivenGetterValue(.p_details1_get, "AppointmentConfirmationViewModelMock - stub value for details1 was not defined") }
 	}
 	private var __p_details1: (String)?
 
-    public var details2: String? {
+    @MainActor
+		public var details2: String? {
 		get {	invocations.append(.p_details2_get); return __p_details2 ?? optionalGivenGetterValue(.p_details2_get, "AppointmentConfirmationViewModelMock - stub value for details2 was not defined") }
 	}
 	private var __p_details2: (String)?
 
-    public var agreesWithFirstConsent: Bool {
+    @MainActor
+		public var agreesWithFirstConsent: Bool {
 		get {	invocations.append(.p_agreesWithFirstConsent_get); return __p_agreesWithFirstConsent ?? givenGetterValue(.p_agreesWithFirstConsent_get, "AppointmentConfirmationViewModelMock - stub value for agreesWithFirstConsent was not defined") }
 		set {	invocations.append(.p_agreesWithFirstConsent_set(.value(newValue))); __p_agreesWithFirstConsent = newValue }
 	}
 	private var __p_agreesWithFirstConsent: (Bool)?
 
-    public var agreesWithSecondConsent: Bool {
+    @MainActor
+		public var agreesWithSecondConsent: Bool {
 		get {	invocations.append(.p_agreesWithSecondConsent_get); return __p_agreesWithSecondConsent ?? givenGetterValue(.p_agreesWithSecondConsent_get, "AppointmentConfirmationViewModelMock - stub value for agreesWithSecondConsent was not defined") }
 		set {	invocations.append(.p_agreesWithSecondConsent_set(.value(newValue))); __p_agreesWithSecondConsent = newValue }
 	}
 	private var __p_agreesWithSecondConsent: (Bool)?
 
-    public var canConfirm: Bool {
+    @MainActor
+		public var canConfirm: Bool {
 		get {	invocations.append(.p_canConfirm_get); return __p_canConfirm ?? givenGetterValue(.p_canConfirm_get, "AppointmentConfirmationViewModelMock - stub value for canConfirm was not defined") }
 	}
 	private var __p_canConfirm: (Bool)?
 
-    public var isConfirming: Bool {
+    @MainActor
+		public var isConfirming: Bool {
 		get {	invocations.append(.p_isConfirming_get); return __p_isConfirming ?? givenGetterValue(.p_isConfirming_get, "AppointmentConfirmationViewModelMock - stub value for isConfirming was not defined") }
 	}
 	private var __p_isConfirming: (Bool)?
 
-    public var isLoadingConsents: Bool {
+    @MainActor
+		public var isLoadingConsents: Bool {
 		get {	invocations.append(.p_isLoadingConsents_get); return __p_isLoadingConsents ?? givenGetterValue(.p_isLoadingConsents_get, "AppointmentConfirmationViewModelMock - stub value for isLoadingConsents was not defined") }
 	}
 	private var __p_isLoadingConsents: (Bool)?
 
-    public var consents: ConsentsViewModel? {
+    @MainActor
+		public var consents: ConsentsViewModel? {
 		get {	invocations.append(.p_consents_get); return __p_consents ?? optionalGivenGetterValue(.p_consents_get, "AppointmentConfirmationViewModelMock - stub value for consents was not defined") }
 	}
 	private var __p_consents: (ConsentsViewModel)?
 
-    public var consentsLoadingError: ConsentsErrorViewModel? {
+    @MainActor
+		public var consentsLoadingError: ConsentsErrorViewModel? {
 		get {	invocations.append(.p_consentsLoadingError_get); return __p_consentsLoadingError ?? optionalGivenGetterValue(.p_consentsLoadingError_get, "AppointmentConfirmationViewModelMock - stub value for consentsLoadingError was not defined") }
 	}
 	private var __p_consentsLoadingError: (ConsentsErrorViewModel)?
 
-    public var modal: AppointmentConfirmationModal? {
+    @MainActor
+		public var modal: AppointmentConfirmationModal? {
 		get {	invocations.append(.p_modal_get); return __p_modal ?? optionalGivenGetterValue(.p_modal_get, "AppointmentConfirmationViewModelMock - stub value for modal was not defined") }
 		set {	invocations.append(.p_modal_set(.value(newValue))); __p_modal = newValue }
 	}
@@ -651,13 +682,15 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
 
 
 
-    open func userDidTapAppointmentDetails() {
+    @MainActor
+	open func userDidTapAppointmentDetails() {
         addInvocation(.m_userDidTapAppointmentDetails)
 		let perform = methodPerformValue(.m_userDidTapAppointmentDetails) as? () -> Void
 		perform?()
     }
 
-    open func userDidTapConfirmButton() {
+    @MainActor
+	open func userDidTapConfirmButton() {
         addInvocation(.m_userDidTapConfirmButton)
 		let perform = methodPerformValue(.m_userDidTapConfirmButton) as? () -> Void
 		perform?()
@@ -804,43 +837,56 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
             super.init(products)
         }
 
-        public static func provider(getter defaultValue: Provider?...) -> PropertyStub {
+        @MainActor
+		public static func provider(getter defaultValue: Provider?...) -> PropertyStub {
             return Given(method: .p_provider_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func caption(getter defaultValue: String...) -> PropertyStub {
+        @MainActor
+		public static func caption(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_caption_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func captionIcon(getter defaultValue: AppointmentDetailsView.CaptionIcon...) -> PropertyStub {
+        @MainActor
+		public static func captionIcon(getter defaultValue: AppointmentDetailsView.CaptionIcon...) -> PropertyStub {
             return Given(method: .p_captionIcon_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func details1(getter defaultValue: String?...) -> PropertyStub {
+        @MainActor
+		public static func details1(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_details1_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func details2(getter defaultValue: String?...) -> PropertyStub {
+        @MainActor
+		public static func details2(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_details2_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func agreesWithFirstConsent(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func agreesWithFirstConsent(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_agreesWithFirstConsent_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func agreesWithSecondConsent(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func agreesWithSecondConsent(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_agreesWithSecondConsent_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func canConfirm(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func canConfirm(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_canConfirm_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func isConfirming(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func isConfirming(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isConfirming_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func isLoadingConsents(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func isLoadingConsents(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoadingConsents_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func consents(getter defaultValue: ConsentsViewModel?...) -> PropertyStub {
+        @MainActor
+		public static func consents(getter defaultValue: ConsentsViewModel?...) -> PropertyStub {
             return Given(method: .p_consents_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func consentsLoadingError(getter defaultValue: ConsentsErrorViewModel?...) -> PropertyStub {
+        @MainActor
+		public static func consentsLoadingError(getter defaultValue: ConsentsErrorViewModel?...) -> PropertyStub {
             return Given(method: .p_consentsLoadingError_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func modal(getter defaultValue: AppointmentConfirmationModal?...) -> PropertyStub {
+        @MainActor
+		public static func modal(getter defaultValue: AppointmentConfirmationModal?...) -> PropertyStub {
             return Given(method: .p_modal_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -869,8 +915,10 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidTapAppointmentDetails() -> Verify { return Verify(method: .m_userDidTapAppointmentDetails)}
-        public static func userDidTapConfirmButton() -> Verify { return Verify(method: .m_userDidTapConfirmButton)}
+        @MainActor
+		public static func userDidTapAppointmentDetails() -> Verify { return Verify(method: .m_userDidTapAppointmentDetails)}
+        @MainActor
+		public static func userDidTapConfirmButton() -> Verify { return Verify(method: .m_userDidTapConfirmButton)}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var provider: Verify { return Verify(method: .p_provider_get) }
@@ -895,10 +943,12 @@ open class AppointmentConfirmationViewModelMock: AppointmentConfirmationViewMode
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidTapAppointmentDetails(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapAppointmentDetails(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapAppointmentDetails, performs: perform)
         }
-        public static func userDidTapConfirmButton(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapConfirmButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapConfirmButton, performs: perform)
         }
         public static func onChange(perform: @escaping () -> Void) -> Perform {
@@ -1022,13 +1072,15 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var modal: AppointmentDetailsModal? {
+    @MainActor
+		public var modal: AppointmentDetailsModal? {
 		get {	invocations.append(.p_modal_get); return __p_modal ?? optionalGivenGetterValue(.p_modal_get, "AppointmentDetailsViewModelMock - stub value for modal was not defined") }
 		set {	invocations.append(.p_modal_set(.value(newValue))); __p_modal = newValue }
 	}
 	private var __p_modal: (AppointmentDetailsModal)?
 
-    public var state: AppointmentsDetailsViewState {
+    @MainActor
+		public var state: AppointmentsDetailsViewState {
 		get {	invocations.append(.p_state_get); return __p_state ?? givenGetterValue(.p_state_get, "AppointmentDetailsViewModelMock - stub value for state was not defined") }
 	}
 	private var __p_state: (AppointmentsDetailsViewState)?
@@ -1037,13 +1089,15 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
 
 
 
-    open func userDidTapAppointmentDetails() {
+    @MainActor
+	open func userDidTapAppointmentDetails() {
         addInvocation(.m_userDidTapAppointmentDetails)
 		let perform = methodPerformValue(.m_userDidTapAppointmentDetails) as? () -> Void
 		perform?()
     }
 
-    open func userDidTapCancelButton() {
+    @MainActor
+	open func userDidTapCancelButton() {
         addInvocation(.m_userDidTapCancelButton)
 		let perform = methodPerformValue(.m_userDidTapCancelButton) as? () -> Void
 		perform?()
@@ -1138,10 +1192,12 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
             super.init(products)
         }
 
-        public static func modal(getter defaultValue: AppointmentDetailsModal?...) -> PropertyStub {
+        @MainActor
+		public static func modal(getter defaultValue: AppointmentDetailsModal?...) -> PropertyStub {
             return Given(method: .p_modal_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func state(getter defaultValue: AppointmentsDetailsViewState...) -> PropertyStub {
+        @MainActor
+		public static func state(getter defaultValue: AppointmentsDetailsViewState...) -> PropertyStub {
             return Given(method: .p_state_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -1170,8 +1226,10 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidTapAppointmentDetails() -> Verify { return Verify(method: .m_userDidTapAppointmentDetails)}
-        public static func userDidTapCancelButton() -> Verify { return Verify(method: .m_userDidTapCancelButton)}
+        @MainActor
+		public static func userDidTapAppointmentDetails() -> Verify { return Verify(method: .m_userDidTapAppointmentDetails)}
+        @MainActor
+		public static func userDidTapCancelButton() -> Verify { return Verify(method: .m_userDidTapCancelButton)}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var modal: Verify { return Verify(method: .p_modal_get) }
@@ -1183,10 +1241,12 @@ open class AppointmentDetailsViewModelMock: AppointmentDetailsViewModel, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidTapAppointmentDetails(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapAppointmentDetails(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapAppointmentDetails, performs: perform)
         }
-        public static func userDidTapCancelButton(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapCancelButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapCancelButton, performs: perform)
         }
         public static func onChange(perform: @escaping () -> Void) -> Perform {
@@ -1310,29 +1370,34 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var selectedSelector: AppointmentsSelector {
+    @MainActor
+		public var selectedSelector: AppointmentsSelector {
 		get {	invocations.append(.p_selectedSelector_get); return __p_selectedSelector ?? givenGetterValue(.p_selectedSelector_get, "AppointmentListViewModelMock - stub value for selectedSelector was not defined") }
 		set {	invocations.append(.p_selectedSelector_set(.value(newValue))); __p_selectedSelector = newValue }
 	}
 	private var __p_selectedSelector: (AppointmentsSelector)?
 
-    public var appointments: [Appointment] {
+    @MainActor
+		public var appointments: [Appointment] {
 		get {	invocations.append(.p_appointments_get); return __p_appointments ?? givenGetterValue(.p_appointments_get, "AppointmentListViewModelMock - stub value for appointments was not defined") }
 	}
 	private var __p_appointments: ([Appointment])?
 
-    public var isLoading: Bool {
+    @MainActor
+		public var isLoading: Bool {
 		get {	invocations.append(.p_isLoading_get); return __p_isLoading ?? givenGetterValue(.p_isLoading_get, "AppointmentListViewModelMock - stub value for isLoading was not defined") }
 	}
 	private var __p_isLoading: (Bool)?
 
-    public var alert: AlertViewModel? {
+    @MainActor
+		public var alert: AlertViewModel? {
 		get {	invocations.append(.p_alert_get); return __p_alert ?? optionalGivenGetterValue(.p_alert_get, "AppointmentListViewModelMock - stub value for alert was not defined") }
 		set {	invocations.append(.p_alert_set(.value(newValue))); __p_alert = newValue }
 	}
 	private var __p_alert: (AlertViewModel)?
 
-    public var videoCallRoom: Location.RemoteLocation.VideoCallRoom? {
+    @MainActor
+		public var videoCallRoom: Location.RemoteLocation.VideoCallRoom? {
 		get {	invocations.append(.p_videoCallRoom_get); return __p_videoCallRoom ?? optionalGivenGetterValue(.p_videoCallRoom_get, "AppointmentListViewModelMock - stub value for videoCallRoom was not defined") }
 	}
 	private var __p_videoCallRoom: (Location.RemoteLocation.VideoCallRoom)?
@@ -1341,19 +1406,22 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 
 
 
-    open func userDidReachEndOfList() {
+    @MainActor
+	open func userDidReachEndOfList() {
         addInvocation(.m_userDidReachEndOfList)
 		let perform = methodPerformValue(.m_userDidReachEndOfList) as? () -> Void
 		perform?()
     }
 
-    open func userDidTapCreateAppointmentButton() {
+    @MainActor
+	open func userDidTapCreateAppointmentButton() {
         addInvocation(.m_userDidTapCreateAppointmentButton)
 		let perform = methodPerformValue(.m_userDidTapCreateAppointmentButton) as? () -> Void
 		perform?()
     }
 
-    open func userDidSelectAppointment(atIndex index: Int) {
+    @MainActor
+	open func userDidSelectAppointment(atIndex index: Int) {
         addInvocation(.m_userDidSelectAppointment__atIndex_index(Parameter<Int>.value(`index`)))
 		let perform = methodPerformValue(.m_userDidSelectAppointment__atIndex_index(Parameter<Int>.value(`index`))) as? (Int) -> Void
 		perform?(`index`)
@@ -1502,19 +1570,24 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             super.init(products)
         }
 
-        public static func selectedSelector(getter defaultValue: AppointmentsSelector...) -> PropertyStub {
+        @MainActor
+		public static func selectedSelector(getter defaultValue: AppointmentsSelector...) -> PropertyStub {
             return Given(method: .p_selectedSelector_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func appointments(getter defaultValue: [Appointment]...) -> PropertyStub {
+        @MainActor
+		public static func appointments(getter defaultValue: [Appointment]...) -> PropertyStub {
             return Given(method: .p_appointments_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func alert(getter defaultValue: AlertViewModel?...) -> PropertyStub {
+        @MainActor
+		public static func alert(getter defaultValue: AlertViewModel?...) -> PropertyStub {
             return Given(method: .p_alert_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func videoCallRoom(getter defaultValue: Location.RemoteLocation.VideoCallRoom?...) -> PropertyStub {
+        @MainActor
+		public static func videoCallRoom(getter defaultValue: Location.RemoteLocation.VideoCallRoom?...) -> PropertyStub {
             return Given(method: .p_videoCallRoom_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -1543,9 +1616,12 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidReachEndOfList() -> Verify { return Verify(method: .m_userDidReachEndOfList)}
-        public static func userDidTapCreateAppointmentButton() -> Verify { return Verify(method: .m_userDidTapCreateAppointmentButton)}
-        public static func userDidSelectAppointment(atIndex index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelectAppointment__atIndex_index(`index`))}
+        @MainActor
+		public static func userDidReachEndOfList() -> Verify { return Verify(method: .m_userDidReachEndOfList)}
+        @MainActor
+		public static func userDidTapCreateAppointmentButton() -> Verify { return Verify(method: .m_userDidTapCreateAppointmentButton)}
+        @MainActor
+		public static func userDidSelectAppointment(atIndex index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelectAppointment__atIndex_index(`index`))}
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Location.RemoteLocation.VideoCallRoom>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(`viewModel`, `room`))}
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapSecondaryActionsButtonFor appointment: Parameter<Appointment>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(`viewModel`, `appointment`))}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
@@ -1563,13 +1639,16 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidReachEndOfList(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidReachEndOfList(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidReachEndOfList, performs: perform)
         }
-        public static func userDidTapCreateAppointmentButton(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapCreateAppointmentButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapCreateAppointmentButton, performs: perform)
         }
-        public static func userDidSelectAppointment(atIndex index: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
+        @MainActor
+		public static func userDidSelectAppointment(atIndex index: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
             return Perform(method: .m_userDidSelectAppointment__atIndex_index(`index`), performs: perform)
         }
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Location.RemoteLocation.VideoCallRoom>, perform: @escaping (AppointmentCellViewModel, Location.RemoteLocation.VideoCallRoom) -> Void) -> Perform {
@@ -1699,22 +1778,26 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var isLoading: Bool {
+    @MainActor
+		public var isLoading: Bool {
 		get {	invocations.append(.p_isLoading_get); return __p_isLoading ?? givenGetterValue(.p_isLoading_get, "CategoryPickerViewModelMock - stub value for isLoading was not defined") }
 	}
 	private var __p_isLoading: (Bool)?
 
-    public var disclaimer: String? {
+    @MainActor
+		public var disclaimer: String? {
 		get {	invocations.append(.p_disclaimer_get); return __p_disclaimer ?? optionalGivenGetterValue(.p_disclaimer_get, "CategoryPickerViewModelMock - stub value for disclaimer was not defined") }
 	}
 	private var __p_disclaimer: (String)?
 
-    public var items: [CategoryViewItem] {
+    @MainActor
+		public var items: [CategoryViewItem] {
 		get {	invocations.append(.p_items_get); return __p_items ?? givenGetterValue(.p_items_get, "CategoryPickerViewModelMock - stub value for items was not defined") }
 	}
 	private var __p_items: ([CategoryViewItem])?
 
-    public var error: AlertViewModel? {
+    @MainActor
+		public var error: AlertViewModel? {
 		get {	invocations.append(.p_error_get); return __p_error ?? optionalGivenGetterValue(.p_error_get, "CategoryPickerViewModelMock - stub value for error was not defined") }
 		set {	invocations.append(.p_error_set(.value(newValue))); __p_error = newValue }
 	}
@@ -1724,13 +1807,15 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
 
 
 
-    open func userDidPullToRefresh() {
+    @MainActor
+	open func userDidPullToRefresh() {
         addInvocation(.m_userDidPullToRefresh)
 		let perform = methodPerformValue(.m_userDidPullToRefresh) as? () -> Void
 		perform?()
     }
 
-    open func userDidSelect(category: CategoryViewItem, at index: Int) {
+    @MainActor
+	open func userDidSelect(category: CategoryViewItem, at index: Int) {
         addInvocation(.m_userDidSelect__category_categoryat_index(Parameter<CategoryViewItem>.value(`category`), Parameter<Int>.value(`index`)))
 		let perform = methodPerformValue(.m_userDidSelect__category_categoryat_index(Parameter<CategoryViewItem>.value(`category`), Parameter<Int>.value(`index`))) as? (CategoryViewItem, Int) -> Void
 		perform?(`category`, `index`)
@@ -1837,16 +1922,20 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
             super.init(products)
         }
 
-        public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func disclaimer(getter defaultValue: String?...) -> PropertyStub {
+        @MainActor
+		public static func disclaimer(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_disclaimer_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func items(getter defaultValue: [CategoryViewItem]...) -> PropertyStub {
+        @MainActor
+		public static func items(getter defaultValue: [CategoryViewItem]...) -> PropertyStub {
             return Given(method: .p_items_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
+        @MainActor
+		public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
             return Given(method: .p_error_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -1875,8 +1964,10 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
-        public static func userDidSelect(category: Parameter<CategoryViewItem>, at index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelect__category_categoryat_index(`category`, `index`))}
+        @MainActor
+		public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
+        @MainActor
+		public static func userDidSelect(category: Parameter<CategoryViewItem>, at index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelect__category_categoryat_index(`category`, `index`))}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var isLoading: Verify { return Verify(method: .p_isLoading_get) }
@@ -1890,10 +1981,12 @@ open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidPullToRefresh, performs: perform)
         }
-        public static func userDidSelect(category: Parameter<CategoryViewItem>, at index: Parameter<Int>, perform: @escaping (CategoryViewItem, Int) -> Void) -> Perform {
+        @MainActor
+		public static func userDidSelect(category: Parameter<CategoryViewItem>, at index: Parameter<Int>, perform: @escaping (CategoryViewItem, Int) -> Void) -> Perform {
             return Perform(method: .m_userDidSelect__category_categoryat_index(`category`, `index`), performs: perform)
         }
         public static func onChange(perform: @escaping () -> Void) -> Perform {
@@ -2272,7 +2365,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 		return __value
     }
 
-    open func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel {
+    @MainActor
+	open func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel {
         addInvocation(.m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(Parameter<Appointment>.value(`appointment`), Parameter<AppointmentCellViewModelDelegate>.value(`delegate`)))
 		let perform = methodPerformValue(.m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(Parameter<Appointment>.value(`appointment`), Parameter<AppointmentCellViewModelDelegate>.value(`delegate`))) as? (Appointment, AppointmentCellViewModelDelegate) -> Void
 		perform?(`appointment`, `delegate`)
@@ -2372,7 +2466,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
             return Given(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, willReturn: AppointmentCellViewModel...) -> MethodStub {
+        @MainActor
+		public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, willReturn: AppointmentCellViewModel...) -> MethodStub {
             return Given(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createLocationPickerViewController(delegate: Parameter<LocationPickerViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
@@ -2403,7 +2498,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 			willProduce(stubber)
 			return given
         }
-        public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, willProduce: (Stubber<AppointmentCellViewModel>) -> Void) -> MethodStub {
+        @MainActor
+		public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, willProduce: (Stubber<AppointmentCellViewModel>) -> Void) -> MethodStub {
             let willReturn: [AppointmentCellViewModel] = []
 			let given: Given = { return Given(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (AppointmentCellViewModel).self)
@@ -2419,7 +2515,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createCategoryPickerViewController(preselectedLocation: Parameter<LocationType?>, delegate: Parameter<CategoryPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(`preselectedLocation`, `delegate`))}
         public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`))}
         public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`))}
-        public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`))}
+        @MainActor
+		public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`))}
     }
 
     public struct Perform {
@@ -2438,7 +2535,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createAppointmentConfirmationViewController(location: Parameter<LocationType>, category: Parameter<Category>, timeSlot: Parameter<AvailabilitySlot>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, perform: @escaping (LocationType, Category, AvailabilitySlot, AppointmentConfirmationViewModelDelegate) -> Void) -> Perform {
             return Perform(method: .m_createAppointmentConfirmationViewController__location_locationcategory_categorytimeSlot_timeSlotdelegate_delegate(`location`, `category`, `timeSlot`, `delegate`), performs: perform)
         }
-        public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, perform: @escaping (Appointment, AppointmentCellViewModelDelegate) -> Void) -> Perform {
+        @MainActor
+		public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, perform: @escaping (Appointment, AppointmentCellViewModelDelegate) -> Void) -> Perform {
             return Perform(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), performs: perform)
         }
     }
@@ -2556,17 +2654,20 @@ open class LocationPickerViewModelMock: LocationPickerViewModel, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var isLoading: Bool {
+    @MainActor
+		public var isLoading: Bool {
 		get {	invocations.append(.p_isLoading_get); return __p_isLoading ?? givenGetterValue(.p_isLoading_get, "LocationPickerViewModelMock - stub value for isLoading was not defined") }
 	}
 	private var __p_isLoading: (Bool)?
 
-    public var items: [LocationViewItem] {
+    @MainActor
+		public var items: [LocationViewItem] {
 		get {	invocations.append(.p_items_get); return __p_items ?? givenGetterValue(.p_items_get, "LocationPickerViewModelMock - stub value for items was not defined") }
 	}
 	private var __p_items: ([LocationViewItem])?
 
-    public var error: AlertViewModel? {
+    @MainActor
+		public var error: AlertViewModel? {
 		get {	invocations.append(.p_error_get); return __p_error ?? optionalGivenGetterValue(.p_error_get, "LocationPickerViewModelMock - stub value for error was not defined") }
 		set {	invocations.append(.p_error_set(.value(newValue))); __p_error = newValue }
 	}
@@ -2576,19 +2677,22 @@ open class LocationPickerViewModelMock: LocationPickerViewModel, Mock {
 
 
 
-    open func start() {
+    @MainActor
+	open func start() {
         addInvocation(.m_start)
 		let perform = methodPerformValue(.m_start) as? () -> Void
 		perform?()
     }
 
-    open func userDidPullToRefresh() {
+    @MainActor
+	open func userDidPullToRefresh() {
         addInvocation(.m_userDidPullToRefresh)
 		let perform = methodPerformValue(.m_userDidPullToRefresh) as? () -> Void
 		perform?()
     }
 
-    open func userDidSelect(location: LocationViewItem, at index: Int) {
+    @MainActor
+	open func userDidSelect(location: LocationViewItem, at index: Int) {
         addInvocation(.m_userDidSelect__location_locationat_index(Parameter<LocationViewItem>.value(`location`), Parameter<Int>.value(`index`)))
 		let perform = methodPerformValue(.m_userDidSelect__location_locationat_index(Parameter<LocationViewItem>.value(`location`), Parameter<Int>.value(`index`))) as? (LocationViewItem, Int) -> Void
 		perform?(`location`, `index`)
@@ -2696,13 +2800,16 @@ open class LocationPickerViewModelMock: LocationPickerViewModel, Mock {
             super.init(products)
         }
 
-        public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func items(getter defaultValue: [LocationViewItem]...) -> PropertyStub {
+        @MainActor
+		public static func items(getter defaultValue: [LocationViewItem]...) -> PropertyStub {
             return Given(method: .p_items_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
+        @MainActor
+		public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
             return Given(method: .p_error_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -2731,9 +2838,12 @@ open class LocationPickerViewModelMock: LocationPickerViewModel, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func start() -> Verify { return Verify(method: .m_start)}
-        public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
-        public static func userDidSelect(location: Parameter<LocationViewItem>, at index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelect__location_locationat_index(`location`, `index`))}
+        @MainActor
+		public static func start() -> Verify { return Verify(method: .m_start)}
+        @MainActor
+		public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
+        @MainActor
+		public static func userDidSelect(location: Parameter<LocationViewItem>, at index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelect__location_locationat_index(`location`, `index`))}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var isLoading: Verify { return Verify(method: .p_isLoading_get) }
@@ -2746,13 +2856,16 @@ open class LocationPickerViewModelMock: LocationPickerViewModel, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func start(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func start(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_start, performs: perform)
         }
-        public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidPullToRefresh, performs: perform)
         }
-        public static func userDidSelect(location: Parameter<LocationViewItem>, at index: Parameter<Int>, perform: @escaping (LocationViewItem, Int) -> Void) -> Perform {
+        @MainActor
+		public static func userDidSelect(location: Parameter<LocationViewItem>, at index: Parameter<Int>, perform: @escaping (LocationViewItem, Int) -> Void) -> Perform {
             return Perform(method: .m_userDidSelect__location_locationat_index(`location`, `index`), performs: perform)
         }
         public static func onChange(perform: @escaping () -> Void) -> Perform {
@@ -2876,22 +2989,26 @@ open class TimeSlotPickerViewModelMock: TimeSlotPickerViewModel, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var isLoading: Bool {
+    @MainActor
+		public var isLoading: Bool {
 		get {	invocations.append(.p_isLoading_get); return __p_isLoading ?? givenGetterValue(.p_isLoading_get, "TimeSlotPickerViewModelMock - stub value for isLoading was not defined") }
 	}
 	private var __p_isLoading: (Bool)?
 
-    public var groups: [TimeSlotGroupViewItem] {
+    @MainActor
+		public var groups: [TimeSlotGroupViewItem] {
 		get {	invocations.append(.p_groups_get); return __p_groups ?? givenGetterValue(.p_groups_get, "TimeSlotPickerViewModelMock - stub value for groups was not defined") }
 	}
 	private var __p_groups: ([TimeSlotGroupViewItem])?
 
-    public var canContinue: Bool {
+    @MainActor
+		public var canContinue: Bool {
 		get {	invocations.append(.p_canContinue_get); return __p_canContinue ?? givenGetterValue(.p_canContinue_get, "TimeSlotPickerViewModelMock - stub value for canContinue was not defined") }
 	}
 	private var __p_canContinue: (Bool)?
 
-    public var error: AlertViewModel? {
+    @MainActor
+		public var error: AlertViewModel? {
 		get {	invocations.append(.p_error_get); return __p_error ?? optionalGivenGetterValue(.p_error_get, "TimeSlotPickerViewModelMock - stub value for error was not defined") }
 		set {	invocations.append(.p_error_set(.value(newValue))); __p_error = newValue }
 	}
@@ -2901,31 +3018,36 @@ open class TimeSlotPickerViewModelMock: TimeSlotPickerViewModel, Mock {
 
 
 
-    open func userDidPullToRefresh() {
+    @MainActor
+	open func userDidPullToRefresh() {
         addInvocation(.m_userDidPullToRefresh)
 		let perform = methodPerformValue(.m_userDidPullToRefresh) as? () -> Void
 		perform?()
     }
 
-    open func userDidReachEndOfList() {
+    @MainActor
+	open func userDidReachEndOfList() {
         addInvocation(.m_userDidReachEndOfList)
 		let perform = methodPerformValue(.m_userDidReachEndOfList) as? () -> Void
 		perform?()
     }
 
-    open func userDidTapGroup(_ group: TimeSlotGroupViewItem, at index: Int) {
+    @MainActor
+	open func userDidTapGroup(_ group: TimeSlotGroupViewItem, at index: Int) {
         addInvocation(.m_userDidTapGroup__groupat_index(Parameter<TimeSlotGroupViewItem>.value(`group`), Parameter<Int>.value(`index`)))
 		let perform = methodPerformValue(.m_userDidTapGroup__groupat_index(Parameter<TimeSlotGroupViewItem>.value(`group`), Parameter<Int>.value(`index`))) as? (TimeSlotGroupViewItem, Int) -> Void
 		perform?(`group`, `index`)
     }
 
-    open func userDidTapTimeSlot(_ timeSlot: TimeSlotViewItem, at timeSlotIndex: Int, in group: TimeSlotGroupViewItem, at groupIndex: Int) {
+    @MainActor
+	open func userDidTapTimeSlot(_ timeSlot: TimeSlotViewItem, at timeSlotIndex: Int, in group: TimeSlotGroupViewItem, at groupIndex: Int) {
         addInvocation(.m_userDidTapTimeSlot__timeSlotat_timeSlotIndexin_groupat_groupIndex(Parameter<TimeSlotViewItem>.value(`timeSlot`), Parameter<Int>.value(`timeSlotIndex`), Parameter<TimeSlotGroupViewItem>.value(`group`), Parameter<Int>.value(`groupIndex`)))
 		let perform = methodPerformValue(.m_userDidTapTimeSlot__timeSlotat_timeSlotIndexin_groupat_groupIndex(Parameter<TimeSlotViewItem>.value(`timeSlot`), Parameter<Int>.value(`timeSlotIndex`), Parameter<TimeSlotGroupViewItem>.value(`group`), Parameter<Int>.value(`groupIndex`))) as? (TimeSlotViewItem, Int, TimeSlotGroupViewItem, Int) -> Void
 		perform?(`timeSlot`, `timeSlotIndex`, `group`, `groupIndex`)
     }
 
-    open func userDidTapConfirmButton() {
+    @MainActor
+	open func userDidTapConfirmButton() {
         addInvocation(.m_userDidTapConfirmButton)
 		let perform = methodPerformValue(.m_userDidTapConfirmButton) as? () -> Void
 		perform?()
@@ -3053,16 +3175,20 @@ open class TimeSlotPickerViewModelMock: TimeSlotPickerViewModel, Mock {
             super.init(products)
         }
 
-        public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func groups(getter defaultValue: [TimeSlotGroupViewItem]...) -> PropertyStub {
+        @MainActor
+		public static func groups(getter defaultValue: [TimeSlotGroupViewItem]...) -> PropertyStub {
             return Given(method: .p_groups_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func canContinue(getter defaultValue: Bool...) -> PropertyStub {
+        @MainActor
+		public static func canContinue(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_canContinue_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
+        @MainActor
+		public static func error(getter defaultValue: AlertViewModel?...) -> PropertyStub {
             return Given(method: .p_error_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -3091,11 +3217,16 @@ open class TimeSlotPickerViewModelMock: TimeSlotPickerViewModel, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
-        public static func userDidReachEndOfList() -> Verify { return Verify(method: .m_userDidReachEndOfList)}
-        public static func userDidTapGroup(_ group: Parameter<TimeSlotGroupViewItem>, at index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidTapGroup__groupat_index(`group`, `index`))}
-        public static func userDidTapTimeSlot(_ timeSlot: Parameter<TimeSlotViewItem>, at timeSlotIndex: Parameter<Int>, in group: Parameter<TimeSlotGroupViewItem>, at groupIndex: Parameter<Int>) -> Verify { return Verify(method: .m_userDidTapTimeSlot__timeSlotat_timeSlotIndexin_groupat_groupIndex(`timeSlot`, `timeSlotIndex`, `group`, `groupIndex`))}
-        public static func userDidTapConfirmButton() -> Verify { return Verify(method: .m_userDidTapConfirmButton)}
+        @MainActor
+		public static func userDidPullToRefresh() -> Verify { return Verify(method: .m_userDidPullToRefresh)}
+        @MainActor
+		public static func userDidReachEndOfList() -> Verify { return Verify(method: .m_userDidReachEndOfList)}
+        @MainActor
+		public static func userDidTapGroup(_ group: Parameter<TimeSlotGroupViewItem>, at index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidTapGroup__groupat_index(`group`, `index`))}
+        @MainActor
+		public static func userDidTapTimeSlot(_ timeSlot: Parameter<TimeSlotViewItem>, at timeSlotIndex: Parameter<Int>, in group: Parameter<TimeSlotGroupViewItem>, at groupIndex: Parameter<Int>) -> Verify { return Verify(method: .m_userDidTapTimeSlot__timeSlotat_timeSlotIndexin_groupat_groupIndex(`timeSlot`, `timeSlotIndex`, `group`, `groupIndex`))}
+        @MainActor
+		public static func userDidTapConfirmButton() -> Verify { return Verify(method: .m_userDidTapConfirmButton)}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
         public static var isLoading: Verify { return Verify(method: .p_isLoading_get) }
@@ -3109,19 +3240,24 @@ open class TimeSlotPickerViewModelMock: TimeSlotPickerViewModel, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidPullToRefresh(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidPullToRefresh, performs: perform)
         }
-        public static func userDidReachEndOfList(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidReachEndOfList(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidReachEndOfList, performs: perform)
         }
-        public static func userDidTapGroup(_ group: Parameter<TimeSlotGroupViewItem>, at index: Parameter<Int>, perform: @escaping (TimeSlotGroupViewItem, Int) -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapGroup(_ group: Parameter<TimeSlotGroupViewItem>, at index: Parameter<Int>, perform: @escaping (TimeSlotGroupViewItem, Int) -> Void) -> Perform {
             return Perform(method: .m_userDidTapGroup__groupat_index(`group`, `index`), performs: perform)
         }
-        public static func userDidTapTimeSlot(_ timeSlot: Parameter<TimeSlotViewItem>, at timeSlotIndex: Parameter<Int>, in group: Parameter<TimeSlotGroupViewItem>, at groupIndex: Parameter<Int>, perform: @escaping (TimeSlotViewItem, Int, TimeSlotGroupViewItem, Int) -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapTimeSlot(_ timeSlot: Parameter<TimeSlotViewItem>, at timeSlotIndex: Parameter<Int>, in group: Parameter<TimeSlotGroupViewItem>, at groupIndex: Parameter<Int>, perform: @escaping (TimeSlotViewItem, Int, TimeSlotGroupViewItem, Int) -> Void) -> Perform {
             return Perform(method: .m_userDidTapTimeSlot__timeSlotat_timeSlotIndexin_groupat_groupIndex(`timeSlot`, `timeSlotIndex`, `group`, `groupIndex`), performs: perform)
         }
-        public static func userDidTapConfirmButton(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapConfirmButton(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapConfirmButton, performs: perform)
         }
         public static func onChange(perform: @escaping () -> Void) -> Perform {

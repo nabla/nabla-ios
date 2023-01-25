@@ -28,7 +28,7 @@ protocol InternalSchedulingViewFactory {
         delegate: AppointmentConfirmationViewModelDelegate
     ) -> UIViewController
     
-    func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel
+    @MainActor func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel
 }
 
 public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, InternalSchedulingViewFactory {
@@ -131,7 +131,7 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
         return AppointmentConfirmationViewController(viewModel: viewModel)
     }
     
-    func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel {
+    @MainActor func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel {
         AppointmentCellViewModelImpl(
             appointment: appointment,
             videoCallClient: client.container.videoCallClient,

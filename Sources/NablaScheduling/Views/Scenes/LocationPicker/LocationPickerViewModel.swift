@@ -15,15 +15,16 @@ struct LocationViewItem {
 
 // sourcery: AutoMockable
 protocol LocationPickerViewModel: ViewModel {
-    var isLoading: Bool { get }
-    var items: [LocationViewItem] { get }
-    var error: AlertViewModel? { get set }
+    @MainActor var isLoading: Bool { get }
+    @MainActor var items: [LocationViewItem] { get }
+    @MainActor var error: AlertViewModel? { get set }
     
-    func start()
-    func userDidPullToRefresh()
-    func userDidSelect(location: LocationViewItem, at index: Int)
+    @MainActor func start()
+    @MainActor func userDidPullToRefresh()
+    @MainActor func userDidSelect(location: LocationViewItem, at index: Int)
 }
 
+@MainActor
 final class LocationPickerViewModelImpl: LocationPickerViewModel, ObservableObject {
     // MARK: - Internal
     
@@ -38,13 +39,13 @@ final class LocationPickerViewModelImpl: LocationPickerViewModel, ObservableObje
     @Published var error: AlertViewModel?
     
     func start() {
-        Task(priority: .userInitiated) {
+        Task {
             await loadAvailableLocations()
         }
     }
     
     func userDidPullToRefresh() {
-        Task(priority: .userInitiated) {
+        Task {
             await loadAvailableLocations()
         }
     }
@@ -55,7 +56,7 @@ final class LocationPickerViewModelImpl: LocationPickerViewModel, ObservableObje
     
     // MARK: Init
     
-    init(
+    nonisolated init(
         delegate: LocationPickerViewModelDelegate,
         client: NablaSchedulingClient
     ) {
@@ -72,9 +73,7 @@ final class LocationPickerViewModelImpl: LocationPickerViewModel, ObservableObje
         do {
             let availableLocations = try await client.getAvailableLocations()
             if let location = availableLocations.first, availableLocations.count == 1 {
-                await MainActor.run {
-                    delegate?.locationPickerViewModel(self, didSkipStepWithSingleLocation: location)
-                }
+                delegate?.locationPickerViewModel(self, didSkipStepWithSingleLocation: location)
             }
             items = availableLocations
                 .map(adapt(location:))

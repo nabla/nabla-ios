@@ -5,7 +5,7 @@ import NablaCoreTestsUtils
 import SnapshotTesting
 import XCTest
 
-class LocationPickerViewControllerTests: XCTestCase {
+@MainActor class LocationPickerViewControllerTests: XCTestCase {
     private var sut: LocationPickerViewController!
     
     private var viewModel: LocationPickerViewModelMock!

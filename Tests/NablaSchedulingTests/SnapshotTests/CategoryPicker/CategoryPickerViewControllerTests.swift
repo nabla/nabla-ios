@@ -5,7 +5,7 @@ import NablaCoreTestsUtils
 import SnapshotTesting
 import XCTest
 
-class CategoryPickerViewControllerTests: XCTestCase {
+@MainActor class CategoryPickerViewControllerTests: XCTestCase {
     private var sut: CategoryPickerViewController!
     
     private var viewModel: CategoryPickerViewModelMock!

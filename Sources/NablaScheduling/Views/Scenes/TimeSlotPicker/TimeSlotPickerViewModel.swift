@@ -24,18 +24,19 @@ struct TimeSlotViewItem: Identifiable, Hashable {
 
 // sourcery: AutoMockable
 protocol TimeSlotPickerViewModel: ViewModel {
-    var isLoading: Bool { get }
-    var groups: [TimeSlotGroupViewItem] { get }
-    var canContinue: Bool { get }
-    var error: AlertViewModel? { get set }
+    @MainActor var isLoading: Bool { get }
+    @MainActor var groups: [TimeSlotGroupViewItem] { get }
+    @MainActor var canContinue: Bool { get }
+    @MainActor var error: AlertViewModel? { get set }
     
-    func userDidPullToRefresh()
-    func userDidReachEndOfList()
-    func userDidTapGroup(_ group: TimeSlotGroupViewItem, at index: Int)
-    func userDidTapTimeSlot(_ timeSlot: TimeSlotViewItem, at timeSlotIndex: Int, in group: TimeSlotGroupViewItem, at groupIndex: Int)
-    func userDidTapConfirmButton()
+    @MainActor func userDidPullToRefresh()
+    @MainActor func userDidReachEndOfList()
+    @MainActor func userDidTapGroup(_ group: TimeSlotGroupViewItem, at index: Int)
+    @MainActor func userDidTapTimeSlot(_ timeSlot: TimeSlotViewItem, at timeSlotIndex: Int, in group: TimeSlotGroupViewItem, at groupIndex: Int)
+    @MainActor func userDidTapConfirmButton()
 }
 
+@MainActor
 final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObject {
     // MARK: - Internal
     
@@ -57,8 +58,8 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     }
     
     func userDidReachEndOfList() {
-        Task(priority: .userInitiated) { [weak self] in
-            await self?.loadMoreAvailabilitySlots()
+        Task {
+            await loadMoreAvailabilitySlots()
         }
     }
     
@@ -90,7 +91,7 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     
     // MARK: Init
     
-    init(
+    nonisolated init(
         location: LocationType,
         category: Category,
         client: NablaSchedulingClient,
@@ -100,7 +101,10 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
         self.category = category
         self.client = client
         self.delegate = delegate
-        watchAvailabilitySlots()
+        
+        Task {
+            await watchAvailabilitySlots()
+        }
     }
     
     // MARK: - Private

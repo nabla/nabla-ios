@@ -5,7 +5,7 @@ import NablaCoreTestsUtils
 import SnapshotTesting
 import XCTest
 
-class AppointmentCellTests: XCTestCase {
+@MainActor class AppointmentCellTests: XCTestCase {
     private var sut: AppointmentCell!
     
     private var viewModel: AppointmentCellViewModelMock!

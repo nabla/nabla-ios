@@ -27,13 +27,14 @@ enum AppointmentsDetailsViewState {
 
 // sourcery: AutoMockable
 protocol AppointmentDetailsViewModel: ViewModel {
-    var modal: AppointmentDetailsModal? { get set }
-    var state: AppointmentsDetailsViewState { get }
+    @MainActor var modal: AppointmentDetailsModal? { get set }
+    @MainActor var state: AppointmentsDetailsViewState { get }
     
-    func userDidTapAppointmentDetails()
-    func userDidTapCancelButton()
+    @MainActor func userDidTapAppointmentDetails()
+    @MainActor func userDidTapCancelButton()
 }
 
+@MainActor
 final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetailsViewModel {
     // MARK: - Internal
     
@@ -63,7 +64,7 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
     
     // MARK: Init
     
-    init(
+    nonisolated init(
         appointmentId: UUID,
         delegate: AppointmentDetailsDelegate,
         client: NablaSchedulingClient,
@@ -76,10 +77,12 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
         self.addressFormatter = addressFormatter
         self.universalLinkGenerator = universalLinkGenerator
         
-        watchAppointment()
+        Task {
+            await watchAppointment()
+        }
     }
     
-    init(
+    nonisolated init(
         appointment: Appointment,
         delegate: AppointmentDetailsDelegate,
         client: NablaSchedulingClient,
@@ -93,8 +96,10 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
         self.addressFormatter = addressFormatter
         self.universalLinkGenerator = universalLinkGenerator
         
-        state = .ready(makeViewItem(for: appointment))
-        watchAppointment()
+        Task {
+            await display(appointment: appointment)
+            await watchAppointment()
+        }
     }
     
     // MARK: - Private
@@ -159,9 +164,7 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
         appointmentWatcher = client.watchAppointment(id: appointmentId)
             .nabla.drive(
                 receiveValue: { [weak self] appointment in
-                    guard let self = self else { return }
-                    self.appointment = appointment
-                    self.state = .ready(self.makeViewItem(for: appointment))
+                    self?.display(appointment: appointment)
                 },
                 receiveError: { [weak self] error in
                     self?.modal = .alert(.error(
@@ -173,13 +176,17 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
             )
     }
     
+    private func display(appointment: Appointment) {
+        self.appointment = appointment
+        let viewItem = makeViewItem(for: appointment)
+        state = .ready(viewItem)
+    }
+    
     private func cancelAppointment() async {
         guard let appointment = appointment else { return }
         do {
             try await client.cancelAppointment(withId: appointment.id)
-            await MainActor.run { [delegate] in
-                delegate?.appointmentDetailsDidCancelAppointment(appointment)
-            }
+            delegate?.appointmentDetailsDidCancelAppointment(appointment)
         } catch {
             modal = .alert(.error(
                 title: L10n.appointmentDetailsScreenCancelAppointmentErrorTitle,
