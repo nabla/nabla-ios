@@ -1,20 +1,14 @@
 import Foundation
 
-class Session {
+struct Session {
     // MARK: - Internal
     
     let userId: String
     let provider: SessionTokenProvider
     var tokens: SessionTokens?
     
-    init(
-        userId: String,
-        provider: SessionTokenProvider,
-        tokens: SessionTokens?
-    ) {
-        self.userId = userId
-        self.provider = provider
-        self.tokens = tokens
+    func with(tokens: SessionTokens) -> Session {
+        .init(userId: userId, provider: provider, tokens: tokens)
     }
     
     // MARK: - Private

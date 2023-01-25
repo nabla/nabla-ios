@@ -21,9 +21,7 @@ class AuthenticatorImpl: Authenticator {
     }
     
     func logOut() {
-        let oldTokens = session?.tokens
         session = nil
-        notifyTokensChanged(oldValue: oldTokens, newValue: nil)
     }
     
     func getAccessToken() async throws -> AuthenticationState {
@@ -44,9 +42,7 @@ class AuthenticatorImpl: Authenticator {
                 throw UnknownAuthenticationError(undelryingError: error)
             }
         case let .success(tokens):
-            let oldTokens = session.tokens
-            session.tokens = tokens
-            notifyTokensChanged(oldValue: oldTokens, newValue: tokens)
+            self.session = session.with(tokens: tokens)
             return .authenticated(accessToken: tokens.accessToken.value)
         }
     }
@@ -81,8 +77,11 @@ class AuthenticatorImpl: Authenticator {
     private let notificationCenter = NotificationCenter()
     private let httpManager: HTTPManager
     
-    private var session: Session?
     private var renewTaskHolder = TaskHolder<SessionTokens>()
+    
+    private var session: Session? {
+        didSet { notifyTokensChanged(oldValue: oldValue?.tokens, newValue: session?.tokens) }
+    }
     
     private func makeOrReuseRenewSessionTask(session: Session) async -> Task<SessionTokens, Error> {
         let taskId = session.tokens?.refreshToken.value ?? "nil-session-task-id"
