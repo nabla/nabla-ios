@@ -51,6 +51,7 @@ final class TimeSlotPickerViewController: UIViewController {
     
     private lazy var refreshControl: UIRefreshControl = {
         let view = UIRefreshControl()
+        view.tintColor = NablaTheme.Shared.loadingViewIndicatorTintColor
         view.addTarget(self, action: #selector(refreshControlHandler), for: .valueChanged)
         return view
     }()
@@ -131,6 +132,9 @@ final class TimeSlotPickerViewController: UIViewController {
         if refreshControl.isRefreshing, !viewModel.isLoading {
             refreshControl.endRefreshing()
         }
+        if !refreshControl.isRefreshing, viewModel.isLoading {
+            refreshControl.nabla.beginRefreshing()
+        }
     }
     
     private func updateItems() {
@@ -142,6 +146,7 @@ final class TimeSlotPickerViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Int, TimeSlotGroupViewItem>()
         snapshot.appendSections([0, 1])
         snapshot.appendItems(viewModel.groups, toSection: 0)
+        guard snapshot.itemIdentifiers != dataSource.snapshot().itemIdentifiers else { return }
         dataSource.apply(snapshot, animatingDifferences: !isFirstLoad) { [weak self] in
             guard let self = self else { return }
             if self.tableView.nabla.isScrollAtBottom {

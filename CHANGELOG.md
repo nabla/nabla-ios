@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Scheduling: Improved the loading indicators in the new appointment flow.
+
 
 ## [1.0.0-alpha30] - 2023-01-19
 

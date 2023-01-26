@@ -107,6 +107,7 @@ final class LocationPickerViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Int, LocationViewItem>()
         snapshot.appendSections([0, 1])
         snapshot.appendItems(viewModel.items, toSection: 0)
+        guard snapshot.itemIdentifiers != dataSource.snapshot().itemIdentifiers else { return }
         dataSource.apply(snapshot, animatingDifferences: false, completion: nil)
     }
     
@@ -115,7 +116,7 @@ final class LocationPickerViewController: UIViewController {
             refreshControl.endRefreshing()
         }
         if !refreshControl.isRefreshing, viewModel.isLoading {
-            refreshControl.beginRefreshing()
+            refreshControl.nabla.beginRefreshing()
         }
     }
     

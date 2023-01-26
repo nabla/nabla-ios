@@ -127,6 +127,7 @@ final class CategoryPickerViewController: UIViewController {
         }
         snapshot.appendSections([.items])
         snapshot.appendItems(viewModel.items.map { .category($0) }, toSection: .items)
+        guard snapshot.itemIdentifiers != dataSource.snapshot().itemIdentifiers else { return }
         dataSource.apply(snapshot, animatingDifferences: false, completion: nil)
     }
     
@@ -135,7 +136,7 @@ final class CategoryPickerViewController: UIViewController {
             refreshControl.endRefreshing()
         }
         if !refreshControl.isRefreshing, viewModel.isLoading {
-            refreshControl.beginRefreshing()
+            refreshControl.nabla.beginRefreshing()
         }
     }
     

@@ -61,7 +61,7 @@ import XCTest
         viewModel.given(.items(getter: []))
         // WHEN
         // THEN
-        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages(wait: 0.5))
     }
     
     func testCategoryPickerViewControllerWithBigItems() {
