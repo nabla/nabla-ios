@@ -1,11 +1,12 @@
+import Combine
 import Foundation
+import NablaCore
 
-final class FetchConsentsInteractorImpl: FetchConcentsInteractor {
+final class WatchConsentsInteractorImpl: WatchConsentsInteractor {
     // MARK: - Internal
-    
-    /// - Throws: ``NablaError``
-    func execute(location: LocationType) async throws -> Consents {
-        try await repository.fetchConsents(location: location)
+
+    func execute(location: LocationType) -> AnyPublisher<Consents, NablaCore.NablaError> {
+        repository.watchConsents(location: location)
     }
     
     // MARK: Init

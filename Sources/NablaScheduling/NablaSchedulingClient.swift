@@ -52,9 +52,8 @@ public final class NablaSchedulingClient: SchedulingClient {
         try await container.cancelAppointmentInteractor.execute(appointmentId: appointmentId)
     }
     
-    /// - Throws: ``NablaError``
-    func fetchConsents(location: LocationType) async throws -> Consents {
-        try await container.fetchConsentsInteractor.execute(location: location)
+    func watchConsents(location: LocationType) -> AnyPublisher<Consents, NablaError> {
+        container.watchConsentsInteractor.execute(location: location)
     }
     
     /// - Throws: ``NablaError``

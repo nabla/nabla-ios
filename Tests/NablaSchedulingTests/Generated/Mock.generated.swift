@@ -2114,40 +2114,38 @@ open class ConsentsRemoteDataSourceMock: ConsentsRemoteDataSource, Mock {
 
 
 
-    open func fetchConsents() throws -> RemoteConsents {
-        addInvocation(.m_fetchConsents)
-		let perform = methodPerformValue(.m_fetchConsents) as? () -> Void
+    open func watchConsents() -> AnyPublisher<RemoteConsents, GQLError> {
+        addInvocation(.m_watchConsents)
+		let perform = methodPerformValue(.m_watchConsents) as? () -> Void
 		perform?()
-		var __value: RemoteConsents
+		var __value: AnyPublisher<RemoteConsents, GQLError>
 		do {
-		    __value = try methodReturnValue(.m_fetchConsents).casted()
-		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for fetchConsents(). Use given")
-			Failure("Stub return value not specified for fetchConsents(). Use given")
+		    __value = try methodReturnValue(.m_watchConsents).casted()
 		} catch {
-		    throw error
+			onFatalFailure("Stub return value not specified for watchConsents(). Use given")
+			Failure("Stub return value not specified for watchConsents(). Use given")
 		}
 		return __value
     }
 
 
     fileprivate enum MethodType {
-        case m_fetchConsents
+        case m_watchConsents
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_fetchConsents, .m_fetchConsents): return .match
+            case (.m_watchConsents, .m_watchConsents): return .match
             }
         }
 
         func intValue() -> Int {
             switch self {
-            case .m_fetchConsents: return 0
+            case .m_watchConsents: return 0
             }
         }
         func assertionName() -> String {
             switch self {
-            case .m_fetchConsents: return ".fetchConsents()"
+            case .m_watchConsents: return ".watchConsents()"
             }
         }
     }
@@ -2161,16 +2159,13 @@ open class ConsentsRemoteDataSourceMock: ConsentsRemoteDataSource, Mock {
         }
 
 
-        public static func fetchConsents(willReturn: RemoteConsents...) -> MethodStub {
-            return Given(method: .m_fetchConsents, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func watchConsents(willReturn: AnyPublisher<RemoteConsents, GQLError>...) -> MethodStub {
+            return Given(method: .m_watchConsents, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func fetchConsents(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_fetchConsents, products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func fetchConsents(willProduce: (StubberThrows<RemoteConsents>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_fetchConsents, products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (RemoteConsents).self)
+        public static func watchConsents(willProduce: (Stubber<AnyPublisher<RemoteConsents, GQLError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<RemoteConsents, GQLError>] = []
+			let given: Given = { return Given(method: .m_watchConsents, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<RemoteConsents, GQLError>).self)
 			willProduce(stubber)
 			return given
         }
@@ -2179,15 +2174,15 @@ open class ConsentsRemoteDataSourceMock: ConsentsRemoteDataSource, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func fetchConsents() -> Verify { return Verify(method: .m_fetchConsents)}
+        public static func watchConsents() -> Verify { return Verify(method: .m_watchConsents)}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func fetchConsents(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_fetchConsents, performs: perform)
+        public static func watchConsents(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchConsents, performs: perform)
         }
     }
 

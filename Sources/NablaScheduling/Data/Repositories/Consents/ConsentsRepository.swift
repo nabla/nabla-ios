@@ -1,6 +1,7 @@
+import Combine
 import Foundation
+import NablaCore
 
 protocol ConsentsRepository {
-    /// - Throws: ``NablaError``
-    func fetchConsents(location: LocationType) async throws -> Consents
+    func watchConsents(location: LocationType) -> AnyPublisher<Consents, NablaError>
 }

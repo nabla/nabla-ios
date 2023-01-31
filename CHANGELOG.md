@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Scheduling: Improved the loading indicators in the new appointment flow.
+- Scheduling: Fixed appointment scheduling consents not being updated when they are already present in the cache.
 
 
 ## [1.0.0-alpha30] - 2023-01-19

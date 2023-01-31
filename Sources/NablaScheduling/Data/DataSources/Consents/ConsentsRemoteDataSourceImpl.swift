@@ -1,27 +1,30 @@
+import Combine
 import Foundation
 import NablaCore
 
 final class ConsentsRemoteDataSourceImpl: ConsentsRemoteDataSource {
     // MARK: - Internal
-    
-    /// - Throws: ``GQLError``
-    func fetchConsents() async throws -> RemoteConsents {
-        let response = try await gqlClient.fetch(
+
+    func watchConsents() -> AnyPublisher<RemoteConsents, GQLError> {
+        gqlClient.watch(
             query: GQL.GetAppointmentConfirmationConsentsQuery(),
-            policy: .returnCacheDataElseFetch
+            policy: .returnCacheDataAndFetch
         )
-        return response.appointmentConfirmationConsents
+        .map { data in
+            data.appointmentConfirmationConsents
+        }
+        .eraseToAnyPublisher()
     }
-    
+
     // MARK: Init
-    
+
     init(
         gqlClient: GQLClient
     ) {
         self.gqlClient = gqlClient
     }
-    
+
     // MARK: - Private
-    
+
     private let gqlClient: GQLClient
 }

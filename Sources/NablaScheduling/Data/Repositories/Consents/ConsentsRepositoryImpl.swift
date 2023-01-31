@@ -1,19 +1,15 @@
+import Combine
 import Foundation
 import NablaCore
 
 final class ConsentsRepositoryImpl: ConsentsRepository {
-    // MARK: - Internal
-
-    /// - Throws: ``NablaError``
-    func fetchConsents(location: LocationType) async throws -> Consents {
-        do {
-            let remoteConsents = try await remoteDataSource.fetchConsents()
-            return RemoteConsentsTransformer.transform(remoteConsents, location: location)
-        } catch let gqlError as GQLError {
-            throw GQLErrorTransformer.transform(gqlError: gqlError)
-        } catch {
-            throw InternalError(underlyingError: error)
-        }
+    func watchConsents(location: LocationType) -> AnyPublisher<Consents, NablaError> {
+        remoteDataSource.watchConsents()
+            .map { remoteConsents in
+                RemoteConsentsTransformer.transform(remoteConsents, location: location)
+            }
+            .mapError(GQLErrorTransformer.transform)
+            .eraseToAnyPublisher()
     }
 
     // MARK: Init

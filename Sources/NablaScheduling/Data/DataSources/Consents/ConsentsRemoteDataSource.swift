@@ -1,7 +1,8 @@
+import Combine
 import Foundation
+import NablaCore
 
 // sourcery: AutoMockable
 protocol ConsentsRemoteDataSource {
-    /// - Throws: ``GQLError``
-    func fetchConsents() async throws -> RemoteConsents
+    func watchConsents() -> AnyPublisher<RemoteConsents, GQLError>
 }

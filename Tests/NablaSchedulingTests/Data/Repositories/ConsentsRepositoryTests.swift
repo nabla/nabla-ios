@@ -1,3 +1,4 @@
+import Combine
 import NablaCore
 @testable import NablaScheduling
 import SnapshotTesting
@@ -10,32 +11,58 @@ final class ConsentsRepositoryTests: XCTestCase {
 
     override func setUp() {
         remoteDataSource = .init()
-        
+
+        remoteDataSource.given(
+            .watchConsents(
+                willReturn: Just(
+                    RemoteConsents(
+                        firstConsentHtml: "firstConsentHtml",
+                        secondConsentHtml: "secondConsentHtml",
+                        physicalFirstConsentHtml: "physicalFirstConsentHtml",
+                        physicalSecondConsentHtml: "physicalSecondConsentHtml"
+                    )
+                )
+                .setFailureType(to: GQLError.self)
+                .eraseToAnyPublisher()
+            )
+        )
+
         sut = .init(remoteDataSource: remoteDataSource)
-        
-        remoteDataSource.given(.fetchConsents(willReturn: .init(
-            firstConsentHtml: "firstConsentHtml",
-            secondConsentHtml: "secondConsentHtml",
-            physicalFirstConsentHtml: "physicalFirstConsentHtml",
-            physicalSecondConsentHtml: "physicalSecondConsentHtml"
-        )))
     }
 
-    func testFetchPhysicalConsents() async throws {
+    func testFetchPhysicalConsents() {
         // GIVEN
+        let watchExpectation = expectation(description: "Watch Consents")
         // WHEN
-        let consents = try await sut.fetchConsents(location: .physical)
+        let watcher = sut.watchConsents(location: .physical)
+            .sink(
+                receiveCompletion: { _ in },
+                receiveValue: { consents in
+                    XCTAssertEqual(consents.firstConsentHtml, "physicalFirstConsentHtml")
+                    XCTAssertEqual(consents.secondConsentHtml, "physicalSecondConsentHtml")
+                    watchExpectation.fulfill()
+                }
+            )
         // THEN
-        XCTAssertEqual(consents.firstConsentHtml, "physicalFirstConsentHtml")
-        XCTAssertEqual(consents.secondConsentHtml, "physicalSecondConsentHtml")
+        waitForExpectations(timeout: 0.5)
+        XCTAssertNotNil(watcher)
     }
     
-    func testFetchRemoteConsents() async throws {
+    func testFetchRemoteConsents() {
         // GIVEN
+        let watchExpectation = expectation(description: "Watch Consents")
         // WHEN
-        let consents = try await sut.fetchConsents(location: .remote)
+        let watcher = sut.watchConsents(location: .remote)
+            .sink(
+                receiveCompletion: { _ in },
+                receiveValue: { consents in
+                    XCTAssertEqual(consents.firstConsentHtml, "firstConsentHtml")
+                    XCTAssertEqual(consents.secondConsentHtml, "secondConsentHtml")
+                    watchExpectation.fulfill()
+                }
+            )
         // THEN
-        XCTAssertEqual(consents.firstConsentHtml, "firstConsentHtml")
-        XCTAssertEqual(consents.secondConsentHtml, "secondConsentHtml")
+        waitForExpectations(timeout: 0.5)
+        XCTAssertNotNil(watcher)
     }
 }

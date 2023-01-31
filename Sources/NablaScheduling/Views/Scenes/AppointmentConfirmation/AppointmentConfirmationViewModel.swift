@@ -102,9 +102,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     }
     
     func userDidTapErrorViewRetryButton() {
-        Task {
-            await fetchConsents()
-        }
+        watchConsents()
     }
 
     // MARK: Init
@@ -128,7 +126,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         
         Task {
             await watchProvider()
-            await fetchConsents()
+            await watchConsents()
         }
     }
 
@@ -142,6 +140,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     private let universalLinkGenerator: UniversalLinkGenerator
     
     private var providerWatcher: AnyCancellable?
+    private var consentsWatcher: AnyCancellable?
 
     private func confirmAppointment() async {
         guard canConfirm, !isConfirming else {
@@ -185,47 +184,55 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
             )
     }
     
-    private func fetchConsents() async {
+    private func watchConsents() {
+        guard consents == nil else {
+            return
+        }
+
         guard !isLoadingConsents else {
             return
         }
-        
+
         isLoadingConsents = true
-        do {
-            let consents = try await client.fetchConsents(location: location)
-            
-            agreesWithFirstConsent = consents.firstConsentHtml == nil
-            agreesWithSecondConsent = consents.secondConsentHtml == nil
-            
-            let firstConsentHtml = formatConsentHtmlText(consents.firstConsentHtml)
-            let secondConsentHtml = formatConsentHtmlText(consents.secondConsentHtml)
-            self.consents = ConsentsViewModel(
-                firstConsentHtml: firstConsentHtml,
-                firstConsentContainsLink: consentContainsLink(firstConsentHtml),
-                secondConsentHtml: secondConsentHtml,
-                secondConsentContainsLink: consentContainsLink(secondConsentHtml)
-            )
-        } catch {
-            let errorMessage: String
-            
-            if let serverError = error as? ServerError, let message = serverError.message {
-                errorMessage = message
-            } else if let networkError = error as? NetworkError, let message = networkError.message {
-                errorMessage = message
-            } else {
-                errorMessage = L10n.confirmationScreenErrorTitle
-            }
-            
-            consentsLoadingError = ConsentsErrorViewModel(
-                message: errorMessage,
-                handler: { [weak self] in
-                    Task(priority: .userInitiated) {
-                        await self?.fetchConsents()
+        consentsWatcher = client.watchConsents(location: location)
+            .nabla.drive(
+                receiveValue: { [weak self] consents in
+                    guard let self = self else { return }
+                    self.agreesWithFirstConsent = consents.firstConsentHtml == nil
+                    self.agreesWithSecondConsent = consents.secondConsentHtml == nil
+
+                    let firstConsentHtml = self.formatConsentHtmlText(consents.firstConsentHtml)
+                    let secondConsentHtml = self.formatConsentHtmlText(consents.secondConsentHtml)
+                    self.consents = ConsentsViewModel(
+                        firstConsentHtml: firstConsentHtml,
+                        firstConsentContainsLink: self.consentContainsLink(firstConsentHtml),
+                        secondConsentHtml: secondConsentHtml,
+                        secondConsentContainsLink: self.consentContainsLink(secondConsentHtml)
+                    )
+                    self.isLoadingConsents = false
+                },
+                receiveError: { [weak self] error in
+                    guard let self = self else { return }
+
+                    let errorMessage: String
+
+                    if let serverError = error as? ServerError, let message = serverError.message {
+                        errorMessage = message
+                    } else if let networkError = error as? NetworkError, let message = networkError.message {
+                        errorMessage = message
+                    } else {
+                        errorMessage = L10n.confirmationScreenErrorTitle
                     }
+
+                    self.consentsLoadingError = ConsentsErrorViewModel(
+                        message: errorMessage,
+                        handler: { [weak self] in
+                            self?.watchConsents()
+                        }
+                    )
+                    self.isLoadingConsents = false
                 }
             )
-        }
-        isLoadingConsents = false
     }
     
     private func formatConsentHtmlText(_ maybeHtmlString: String?) -> NSAttributedString? {
