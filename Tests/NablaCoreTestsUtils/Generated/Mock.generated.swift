@@ -68,6 +68,12 @@ open class AuthenticatorMock: Authenticator, Mock {
 		perform?()
     }
 
+    open func markTokensAsInvalid() {
+        addInvocation(.m_markTokensAsInvalid)
+		let perform = methodPerformValue(.m_markTokensAsInvalid) as? () -> Void
+		perform?()
+    }
+
     open func getAccessToken() throws -> AuthenticationState {
         addInvocation(.m_getAccessToken)
 		let perform = methodPerformValue(.m_getAccessToken) as? () -> Void
@@ -114,6 +120,7 @@ open class AuthenticatorMock: Authenticator, Mock {
     fileprivate enum MethodType {
         case m_authenticate__userId_userIdprovider_provider(Parameter<String>, Parameter<SessionTokenProvider>)
         case m_logOut
+        case m_markTokensAsInvalid
         case m_getAccessToken
         case m_addObserver__observerselector_selector(Parameter<Any>, Parameter<Selector>)
         case m_removeObserver__observer(Parameter<Any>)
@@ -128,6 +135,8 @@ open class AuthenticatorMock: Authenticator, Mock {
 				return Matcher.ComparisonResult(results)
 
             case (.m_logOut, .m_logOut): return .match
+
+            case (.m_markTokensAsInvalid, .m_markTokensAsInvalid): return .match
 
             case (.m_getAccessToken, .m_getAccessToken): return .match
 
@@ -151,6 +160,7 @@ open class AuthenticatorMock: Authenticator, Mock {
             switch self {
             case let .m_authenticate__userId_userIdprovider_provider(p0, p1): return p0.intValue + p1.intValue
             case .m_logOut: return 0
+            case .m_markTokensAsInvalid: return 0
             case .m_getAccessToken: return 0
             case let .m_addObserver__observerselector_selector(p0, p1): return p0.intValue + p1.intValue
             case let .m_removeObserver__observer(p0): return p0.intValue
@@ -161,6 +171,7 @@ open class AuthenticatorMock: Authenticator, Mock {
             switch self {
             case .m_authenticate__userId_userIdprovider_provider: return ".authenticate(userId:provider:)"
             case .m_logOut: return ".logOut()"
+            case .m_markTokensAsInvalid: return ".markTokensAsInvalid()"
             case .m_getAccessToken: return ".getAccessToken()"
             case .m_addObserver__observerselector_selector: return ".addObserver(_:selector:)"
             case .m_removeObserver__observer: return ".removeObserver(_:)"
@@ -208,6 +219,7 @@ open class AuthenticatorMock: Authenticator, Mock {
 
         public static func authenticate(userId: Parameter<String>, provider: Parameter<SessionTokenProvider>) -> Verify { return Verify(method: .m_authenticate__userId_userIdprovider_provider(`userId`, `provider`))}
         public static func logOut() -> Verify { return Verify(method: .m_logOut)}
+        public static func markTokensAsInvalid() -> Verify { return Verify(method: .m_markTokensAsInvalid)}
         public static func getAccessToken() -> Verify { return Verify(method: .m_getAccessToken)}
         public static func addObserver(_ observer: Parameter<Any>, selector: Parameter<Selector>) -> Verify { return Verify(method: .m_addObserver__observerselector_selector(`observer`, `selector`))}
         public static func removeObserver(_ observer: Parameter<Any>) -> Verify { return Verify(method: .m_removeObserver__observer(`observer`))}
@@ -223,6 +235,9 @@ open class AuthenticatorMock: Authenticator, Mock {
         }
         public static func logOut(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_logOut, performs: perform)
+        }
+        public static func markTokensAsInvalid(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_markTokensAsInvalid, performs: perform)
         }
         public static func getAccessToken(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_getAccessToken, performs: perform)

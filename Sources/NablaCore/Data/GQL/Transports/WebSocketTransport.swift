@@ -111,7 +111,8 @@ extension WebSocketTransport: ApolloWebSocketTransportDelegate {
         }
         logger.info(message: "Websocket did disconnect", extra: extra)
         if let error = error, isAuthError(error) {
-            updateAuthenticationHeader()
+            logger.warning(message: "Websocket closing connection after authentication error", extra: extra)
+            apollo.closeConnection()
         }
     }
     
