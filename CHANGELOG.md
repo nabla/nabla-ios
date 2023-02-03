@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Scheduling: Improved the loading indicators in the new appointment flow.
 - Scheduling: Fixed appointment scheduling consents not being updated when they are already present in the cache.
+- VideoCall: Fixed a bug preventing video call request messages from being displayed in the chat.
 
 
 ## [1.0.0-alpha30] - 2023-01-19

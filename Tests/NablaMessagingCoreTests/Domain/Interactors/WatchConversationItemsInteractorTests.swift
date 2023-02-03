@@ -15,6 +15,7 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
     private var itemsRepository: ConversationItemRepositoryMock!
     private var conversationsRepository: ConversationRepositoryMock!
     private var logger: LoggerMock!
+    private var gateKeepers: GateKeepersMock!
 
     override func setUp() {
         super.setUp()
@@ -23,6 +24,15 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
         itemsRepository = .init()
         conversationsRepository = .init()
         logger = .init()
+        gateKeepers = .init()
+        
+        sut = WatchConversationItemsInteractorImpl(
+            authenticator: authenticator,
+            itemsRepository: itemsRepository,
+            conversationsRepository: conversationsRepository,
+            gateKeepers: gateKeepers,
+            logger: logger
+        )
         
         authenticator.given(.isSessionInitialized(willReturn: true))
         conversationsRepository.given(.getConversationTransientId(from: .any, willReturn: .init(remoteId: conversationId)))
@@ -30,8 +40,7 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
 
     func testFiltersVideoCallRoomInteractiveMessageWhenVideoCallNotSupported() throws {
         // GIVEN
-        let gateKeepers = GateKeepers(supportVideoCallActionRequests: false)
-        let sut = makeInteractor(gateKeepers: gateKeepers)
+        gateKeepers.given(.supportVideoCallActionRequests(getter: false))
         let receivedValue = expectation(description: "Received conversation items")
         let elements: [ConversationItem] = [
             TextMessageItem(id: .init(), date: .init(), sender: .me, sendingState: .sent, replyTo: .none, content: "Hello"),
@@ -64,15 +73,5 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
         XCTRequireEqual(result.elements.count, 2)
         XCTAssert(result.elements[0] is TextMessageItem)
         XCTAssert(result.elements[1] is TextMessageItem)
-    }
-    
-    private func makeInteractor(gateKeepers: GateKeepers) -> WatchConversationItemsInteractorImpl {
-        WatchConversationItemsInteractorImpl(
-            authenticator: authenticator,
-            itemsRepository: itemsRepository,
-            conversationsRepository: conversationsRepository,
-            gateKeepers: gateKeepers,
-            logger: logger
-        )
     }
 }

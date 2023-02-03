@@ -32,7 +32,7 @@ public class MessagingContainer {
         
         logger = coreContainer.logger
         gqlClient = coreContainer.gqlClient
-        gateKeepers = .init(supportVideoCallActionRequests: coreContainer.videoCallClient != nil)
+        gateKeepers = GateKeepersImpl(coreContainer: coreContainer)
         
         conversationLocalDataSource = ConversationLocalDataSourceImpl()
         conversationRemoteDataSource = ConversationRemoteDataSourceImpl(
