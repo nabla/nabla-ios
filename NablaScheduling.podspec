@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name               = "NablaScheduling"
-  spec.version            = "1.0.0-alpha30"
+  spec.version            = "1.0.0-alpha31"
   spec.summary            = "#{spec.name} iOS SDK"
 
   spec.description        = <<-DESC
