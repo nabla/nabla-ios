@@ -26,6 +26,7 @@ protocol VideoCallRoomViewContract: AnyObject {
     func stopPictureInPicture(completion: (() -> Void)?)
     
     func openSettings()
+    func updatePartcipantsCount(count: Int?)
 }
 
 final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewContract {
@@ -52,14 +53,14 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         switch track {
         case .none, .disconnected:
             visible = false
-            minitatureVideoView.track = nil
-            minitatureVideoView.isLoading = true
+            miniatureVideoView.track = nil
+            miniatureVideoView.isLoading = true
         case let .connected(track):
             visible = true
-            minitatureVideoView.track = track
-            minitatureVideoView.isLoading = false
+            miniatureVideoView.track = track
+            miniatureVideoView.isLoading = false
         }
-        minitatureVideoView.isHidden = !visible
+        miniatureVideoView.isHidden = !visible
     }
     
     func setMicrophoneButton(activated: Bool) {
@@ -110,6 +111,17 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
     func openSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
+    }
+    
+    func updatePartcipantsCount(count: Int?) {
+        if let count = count {
+            participantsCountView.text = "\(count)"
+            participantsCountView.alpha = 1
+            viewsToHideInPiP.insert(participantsCountView)
+        } else {
+            participantsCountView.alpha = 0
+            viewsToHideInPiP.remove(participantsCountView)
+        }
     }
     
     // MARK: Initializer
@@ -180,7 +192,7 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         return view
     }()
 
-    private lazy var minitatureVideoView: VideoTrackView = {
+    private lazy var miniatureVideoView: VideoTrackView = {
         let view = VideoTrackView()
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 8
@@ -194,6 +206,21 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         view.backgroundColor = .black.withAlphaComponent(0.8)
         return view
     }()
+    
+    private let participantsCountView: ParticipantsCountView = {
+        let view = ParticipantsCountView()
+        view.alpha = 0
+        return view
+    }()
+    
+    private lazy var viewsToHideInPiP: Set<UIView> = [
+        closeButton,
+        microphoneButton,
+        cameraButton,
+        cameraPositionButton,
+        hangButton,
+        miniatureVideoView,
+    ]
     
     private func makeButton(selector: Selector) -> ImageButton {
         let button = ImageButton(imageSize: CGSize(width: 28, height: 28))
@@ -239,7 +266,7 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         
         let footerHStack = UIStackView(arrangedSubviews: [
             UIView(),
-            minitatureVideoView,
+            miniatureVideoView,
         ])
         footerHStack.axis = .horizontal
         footerHStack.distribution = .fill
@@ -263,6 +290,11 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         
         contentView.addSubview(closeButton)
         closeButton.nabla.pin(to: contentView.safeAreaLayoutGuide, edges: [.top, .leading])
+        
+        contentView.addSubview(participantsCountView)
+        participantsCountView.nabla.pin(to: contentView.safeAreaLayoutGuide,
+                                        edges: [.top, .trailing],
+                                        insets: .nabla.only(top: 12, trailing: 16))
     }
     
     @objc private func closeButtonHandler() {
@@ -298,15 +330,6 @@ extension VideoCallRoomViewController: PictureInPicturePresentable {
     func contentViewForPictureInPictureViewController(_: PictureInPictureViewController) -> UIView {
         contentView
     }
-    
-    private var viewsToHideInPiP: [UIView] { [
-        closeButton,
-        microphoneButton,
-        cameraButton,
-        cameraPositionButton,
-        hangButton,
-        minitatureVideoView,
-    ] }
     
     func pictureInPictureViewController(_: PictureInPictureViewController, willMinimize _: UIView) {
         UIView.animate(withDuration: 0.25) {

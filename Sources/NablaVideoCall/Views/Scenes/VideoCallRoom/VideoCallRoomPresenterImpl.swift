@@ -106,7 +106,15 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     }
     
     private let remoteUserSerialQueue = DispatchQueue(label: "remoteUserSerialQueue", qos: .userInteractive)
-    private var remoteUser: RemoteUser? {
+    private var activeRemoteUser: RemoteUser? {
+        didSet {
+            DispatchQueue.main.async {
+                self.updateParticipants()
+            }
+        }
+    }
+
+    private var remoteUsers: [String: RemoteUser] = [:] {
         didSet {
             DispatchQueue.main.async { self.updateParticipants() }
         }
@@ -140,7 +148,7 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
     }
     
     private func updateParticipants() {
-        let remoteTrack = remoteUser?.getVideoTrack()
+        let remoteTrack = (activeRemoteUser ?? remoteUsers.values.first)?.getVideoTrack()
         let localTrack = localUser?.getVideoTrack()
         if let remoteTrack = remoteTrack, let localTrack = localTrack {
             view?.setMainTrack(.connected(remoteTrack))
@@ -155,6 +163,7 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
             view?.setMainTrack(.disconnected)
             view?.setSecondaryTrack(nil)
         }
+        view?.updatePartcipantsCount(count: remoteUsers.count > 1 ? (remoteUsers.count + 1) : nil)
     }
     
     private func updateLocalUserState() {
@@ -232,25 +241,25 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
     
     func room(_: Room, participant: RemoteParticipant, didSubscribe _: RemoteTrackPublication, track: Track) {
         remoteUserSerialQueue.sync {
-            var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
+            var remoteUser = self.remoteUsers[participant.sid] ?? RemoteUser(participant: participant)
             if let videoTrack = track as? VideoTrack {
                 remoteUser.videoTracks.append(videoTrack)
             } else if let audioTrack = track as? AudioTrack {
                 remoteUser.audioTracks.append(audioTrack)
             }
-            self.remoteUser = remoteUser
+            self.remoteUsers[participant.sid] = remoteUser
         }
     }
     
     func room(_: Room, participant: RemoteParticipant, didUnpublish publication: RemoteTrackPublication) {
         remoteUserSerialQueue.sync {
-            var remoteUser = self.remoteUser ?? RemoteUser(participant: participant)
+            var remoteUser = self.remoteUsers[participant.sid] ?? RemoteUser(participant: participant)
             if let videoTrack = publication.track as? VideoTrack {
                 remoteUser.videoTracks.removeAll(where: { $0.sid == videoTrack.sid })
             } else if let audioTrack = publication.track as? AudioTrack {
                 remoteUser.audioTracks.removeAll(where: { $0.sid == audioTrack.sid })
             }
-            self.remoteUser = remoteUser
+            self.remoteUsers[participant.sid] = remoteUser
         }
     }
     
@@ -262,9 +271,9 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
         }
     }
     
-    func room(_: Room, participantDidLeave _: RemoteParticipant) {
+    func room(_: Room, participantDidLeave participant: RemoteParticipant) {
         remoteUserSerialQueue.sync {
-            self.remoteUser = nil
+            self.remoteUsers[participant.sid] = nil
         }
     }
     
@@ -292,14 +301,23 @@ extension VideoCallRoomPresenterImpl: RoomDelegate {
         
         remoteUserSerialQueue.sync {
             if let remoteParticipant = participant as? RemoteParticipant {
-                var remoteUser = remoteUser ?? RemoteUser(participant: remoteParticipant)
+                var remoteUser = self.remoteUsers[participant.sid] ?? RemoteUser(participant: remoteParticipant)
                 if publication.track is VideoTrack {
                     remoteUser.videoMuted = muted
                 } else if publication.track is AudioTrack {
                     remoteUser.audioMuted = muted
                 }
-                self.remoteUser = remoteUser
+                self.remoteUsers[participant.sid] = remoteUser
             }
+        }
+    }
+    
+    func room(_: Room, didUpdate speakers: [Participant]) {
+        guard let activeRemoteSpeaker = speakers
+            .compactMap({ $0 as? RemoteParticipant })
+            .first else { return }
+        remoteUserSerialQueue.sync {
+            activeRemoteUser = remoteUsers[activeRemoteSpeaker.sid]
         }
     }
 }

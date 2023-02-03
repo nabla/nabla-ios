@@ -170,6 +170,17 @@ let package = Package(
                 .process("Resources"),
             ]
         ),
+        .testTarget(
+            name: "NablaVideoCallTests",
+            dependencies: [
+                .target(name: "NablaVideoCall"),
+                .target(name: "NablaCoreTestsUtils"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+            ],
+            resources: [
+                .process("SnapshotTests/ParticipantsCountView/__Snapshots__"),
+            ]
+        ),
         .target(
             name: "NablaScheduling",
             dependencies: [
