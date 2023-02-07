@@ -251,7 +251,7 @@ import Foundation
     }
 
      struct State: GraphQLSelectionSet {
-       static let possibleTypes: [String] = ["UpcomingAppointment", "FinalizedAppointment"]
+       static let possibleTypes: [String] = ["PendingAppointment", "UpcomingAppointment", "FinalizedAppointment"]
 
        static var selections: [GraphQLSelection] {
         return [
@@ -268,6 +268,10 @@ import Foundation
 
        init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
+      }
+
+       static func makePendingAppointment() -> State {
+        return State(unsafeResultMap: ["__typename": "PendingAppointment"])
       }
 
        static func makeUpcomingAppointment() -> State {
