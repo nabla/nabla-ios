@@ -243,6 +243,12 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         setUpSubviews()
         hideError()
         presenter.start()
+        
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
+    deinit {
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     private func setUpSubviews() {

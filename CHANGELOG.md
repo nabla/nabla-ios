@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- VideoCall: Disabled screen idling during video calls.
+
 ### Changed
 
 ### Fixed
