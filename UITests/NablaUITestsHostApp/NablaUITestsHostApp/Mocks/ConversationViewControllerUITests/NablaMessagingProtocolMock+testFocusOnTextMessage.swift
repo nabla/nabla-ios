@@ -29,7 +29,12 @@ extension NablaMessagingClientProtocolMock {
                 ],
                 loadMore: nil
             )
-            return Just(list)
+            let response = Response<PaginatedList<ConversationItem>>(
+                data: list,
+                isDataFresh: true,
+                refreshingState: .refreshed
+            )
+            return Just(response)
                 .setFailureType(to: NablaError.self)
                 .eraseToAnyPublisher()
         }

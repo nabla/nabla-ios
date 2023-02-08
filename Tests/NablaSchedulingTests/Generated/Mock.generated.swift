@@ -1390,6 +1390,12 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 	private var __p_isLoading: (Bool)?
 
     @MainActor
+		public var isRefreshing: Bool {
+		get {	invocations.append(.p_isRefreshing_get); return __p_isRefreshing ?? givenGetterValue(.p_isRefreshing_get, "AppointmentListViewModelMock - stub value for isRefreshing was not defined") }
+	}
+	private var __p_isRefreshing: (Bool)?
+
+    @MainActor
 		public var alert: AlertViewModel? {
 		get {	invocations.append(.p_alert_get); return __p_alert ?? optionalGivenGetterValue(.p_alert_get, "AppointmentListViewModelMock - stub value for alert was not defined") }
 		set {	invocations.append(.p_alert_set(.value(newValue))); __p_alert = newValue }
@@ -1480,6 +1486,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 		case p_selectedSelector_set(Parameter<AppointmentsSelector>)
         case p_appointments_get
         case p_isLoading_get
+        case p_isRefreshing_get
         case p_alert_get
 		case p_alert_set(Parameter<AlertViewModel?>)
         case p_videoCallRoom_get
@@ -1517,6 +1524,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 			case (.p_selectedSelector_set(let left),.p_selectedSelector_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AppointmentsSelector>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_appointments_get,.p_appointments_get): return Matcher.ComparisonResult.match
             case (.p_isLoading_get,.p_isLoading_get): return Matcher.ComparisonResult.match
+            case (.p_isRefreshing_get,.p_isRefreshing_get): return Matcher.ComparisonResult.match
             case (.p_alert_get,.p_alert_get): return Matcher.ComparisonResult.match
 			case (.p_alert_set(let left),.p_alert_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_videoCallRoom_get,.p_videoCallRoom_get): return Matcher.ComparisonResult.match
@@ -1537,6 +1545,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 			case .p_selectedSelector_set(let newValue): return newValue.intValue
             case .p_appointments_get: return 0
             case .p_isLoading_get: return 0
+            case .p_isRefreshing_get: return 0
             case .p_alert_get: return 0
 			case .p_alert_set(let newValue): return newValue.intValue
             case .p_videoCallRoom_get: return 0
@@ -1555,6 +1564,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 			case .p_selectedSelector_set: return "[set] .selectedSelector"
             case .p_appointments_get: return "[get] .appointments"
             case .p_isLoading_get: return "[get] .isLoading"
+            case .p_isRefreshing_get: return "[get] .isRefreshing"
             case .p_alert_get: return "[get] .alert"
 			case .p_alert_set: return "[set] .alert"
             case .p_videoCallRoom_get: return "[get] .videoCallRoom"
@@ -1581,6 +1591,10 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         @MainActor
 		public static func isLoading(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_isLoading_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        @MainActor
+		public static func isRefreshing(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isRefreshing_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         @MainActor
 		public static func alert(getter defaultValue: AlertViewModel?...) -> PropertyStub {
@@ -1630,6 +1644,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 		public static func selectedSelector(set newValue: Parameter<AppointmentsSelector>) -> Verify { return Verify(method: .p_selectedSelector_set(newValue)) }
         public static var appointments: Verify { return Verify(method: .p_appointments_get) }
         public static var isLoading: Verify { return Verify(method: .p_isLoading_get) }
+        public static var isRefreshing: Verify { return Verify(method: .p_isRefreshing_get) }
         public static var alert: Verify { return Verify(method: .p_alert_get) }
 		public static func alert(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_alert_set(newValue)) }
         public static var videoCallRoom: Verify { return Verify(method: .p_videoCallRoom_get) }

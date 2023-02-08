@@ -6,9 +6,9 @@ import NablaCore
 protocol ConversationRepository {
     func getConversationTransientId(from id: UUID) -> TransientUUID
     
-    func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<Conversation, NablaError>
+    func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError>
     
-    func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError>
+    func watchConversations() -> AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError>
     
     /// - Throws: ``NablaError``
     func createConversation(

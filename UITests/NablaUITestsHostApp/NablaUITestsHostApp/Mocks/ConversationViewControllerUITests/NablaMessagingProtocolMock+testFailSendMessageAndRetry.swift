@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import NablaCore
+@testable import NablaCore
 @testable import NablaMessagingCore
 
 extension NablaMessagingClientProtocolMock {
@@ -11,6 +11,9 @@ extension NablaMessagingClientProtocolMock {
 
         watchItemsClosure = { _ in
             watchItemsSubject
+                .map { list in
+                    Response(data: list, isDataFresh: true, refreshingState: .refreshed)
+                }
                 .setFailureType(to: NablaError.self)
                 .eraseToAnyPublisher()
         }

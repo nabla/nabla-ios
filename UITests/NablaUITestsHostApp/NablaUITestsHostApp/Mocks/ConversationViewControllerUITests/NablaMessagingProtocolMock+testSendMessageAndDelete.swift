@@ -12,6 +12,13 @@ extension NablaMessagingClientProtocolMock {
         watchItemsClosure = { _ in
             watchItemsSubject
                 .setFailureType(to: NablaError.self)
+                .map { list in
+                    Response(
+                        data: list,
+                        isDataFresh: true,
+                        refreshingState: .refreshed
+                    )
+                }
                 .eraseToAnyPublisher()
         }
 

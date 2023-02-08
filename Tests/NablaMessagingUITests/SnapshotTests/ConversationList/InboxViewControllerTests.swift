@@ -7,12 +7,13 @@ import XCTest
 
 final class InboxViewControllerTests: XCTestCase {
     private var navigationController: UINavigationController!
+    private var conversationListView: ConversationListView!
     private var sut: InboxViewController!
 
     override func setUp() {
         super.setUp()
         sut = InboxViewController()
-        let conversationListView = ConversationListView(logger: LoggerMock())
+        conversationListView = ConversationListView(logger: LoggerMock())
         conversationListView.configure(with: .loaded(viewModel: .empty))
         sut.setContentView(conversationListView)
         navigationController = UINavigationController(rootViewController: sut)
@@ -38,6 +39,23 @@ final class InboxViewControllerTests: XCTestCase {
         // GIVEN
         // WHEN
         sut.set(loading: true)
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testInboxViewControllerIsRefreshing() {
+        // GIVEN
+        // WHEN
+        conversationListView.configure(with: .loaded(viewModel: .init(items: [], isRefreshing: true)))
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testInboxViewControllerIsRefreshingWithLargeTitle() {
+        // GIVEN
+        navigationController.navigationBar.prefersLargeTitles = true
+        // WHEN
+        conversationListView.configure(with: .loaded(viewModel: .init(items: [], isRefreshing: true)))
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }

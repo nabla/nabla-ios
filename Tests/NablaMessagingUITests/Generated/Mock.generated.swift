@@ -959,11 +959,11 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 		return __value
     }
 
-    open func watchItems(ofConversationWithId conversationId: UUID) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+    open func watchItems(ofConversationWithId conversationId: UUID) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError> {
         addInvocation(.m_watchItems__ofConversationWithId_conversationId(Parameter<UUID>.value(`conversationId`)))
 		let perform = methodPerformValue(.m_watchItems__ofConversationWithId_conversationId(Parameter<UUID>.value(`conversationId`))) as? (UUID) -> Void
 		perform?(`conversationId`)
-		var __value: AnyPublisher<PaginatedList<ConversationItem>, NablaError>
+		var __value: AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>
 		do {
 		    __value = try methodReturnValue(.m_watchItems__ofConversationWithId_conversationId(Parameter<UUID>.value(`conversationId`))).casted()
 		} catch {
@@ -999,11 +999,11 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 		}
     }
 
-    open func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
+    open func watchConversations() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError> {
         addInvocation(.m_watchConversations)
 		let perform = methodPerformValue(.m_watchConversations) as? () -> Void
 		perform?()
-		var __value: AnyPublisher<PaginatedList<Conversation>, NablaError>
+		var __value: AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversations).casted()
 		} catch {
@@ -1013,11 +1013,11 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 		return __value
     }
 
-    open func watchConversation(withId conversationId: UUID) -> AnyPublisher<Conversation, NablaError> {
+    open func watchConversation(withId conversationId: UUID) -> AnyPublisher<Response<Conversation>, NablaError> {
         addInvocation(.m_watchConversation__withId_conversationId(Parameter<UUID>.value(`conversationId`)))
 		let perform = methodPerformValue(.m_watchConversation__withId_conversationId(Parameter<UUID>.value(`conversationId`))) as? (UUID) -> Void
 		perform?(`conversationId`)
-		var __value: AnyPublisher<Conversation, NablaError>
+		var __value: AnyPublisher<Response<Conversation>, NablaError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversation__withId_conversationId(Parameter<UUID>.value(`conversationId`))).casted()
 		} catch {
@@ -1335,13 +1335,13 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
         public static func startConversation(title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willReturn: Conversation...) -> MethodStub {
             return Given(method: .m_startConversation__title_titleproviderIds_providerIds(`title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchItems(ofConversationWithId conversationId: Parameter<UUID>, willReturn: AnyPublisher<PaginatedList<ConversationItem>, NablaError>...) -> MethodStub {
+        public static func watchItems(ofConversationWithId conversationId: Parameter<UUID>, willReturn: AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>...) -> MethodStub {
             return Given(method: .m_watchItems__ofConversationWithId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversations(willReturn: AnyPublisher<PaginatedList<Conversation>, NablaError>...) -> MethodStub {
+        public static func watchConversations(willReturn: AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>...) -> MethodStub {
             return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversation(withId conversationId: Parameter<UUID>, willReturn: AnyPublisher<Conversation, NablaError>...) -> MethodStub {
+        public static func watchConversation(withId conversationId: Parameter<UUID>, willReturn: AnyPublisher<Response<Conversation>, NablaError>...) -> MethodStub {
             return Given(method: .m_watchConversation__withId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createConversation(withMessage message: Parameter<MessageInput>, title: Parameter<String?>, willReturn: Conversation...) -> MethodStub {
@@ -1366,24 +1366,24 @@ open class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol, Mock 
 			willProduce(stubber)
 			return given
         }
-        public static func watchItems(ofConversationWithId conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<PaginatedList<ConversationItem>, NablaError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<PaginatedList<ConversationItem>, NablaError>] = []
+        public static func watchItems(ofConversationWithId conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>] = []
 			let given: Given = { return Given(method: .m_watchItems__ofConversationWithId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<PaginatedList<ConversationItem>, NablaError>).self)
+			let stubber = given.stub(for: (AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>).self)
 			willProduce(stubber)
 			return given
         }
-        public static func watchConversations(willProduce: (Stubber<AnyPublisher<PaginatedList<Conversation>, NablaError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<PaginatedList<Conversation>, NablaError>] = []
+        public static func watchConversations(willProduce: (Stubber<AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>] = []
 			let given: Given = { return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<PaginatedList<Conversation>, NablaError>).self)
+			let stubber = given.stub(for: (AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>).self)
 			willProduce(stubber)
 			return given
         }
-        public static func watchConversation(withId conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<Conversation, NablaError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<Conversation, NablaError>] = []
+        public static func watchConversation(withId conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<Response<Conversation>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Response<Conversation>, NablaError>] = []
 			let given: Given = { return Given(method: .m_watchConversation__withId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<Conversation, NablaError>).self)
+			let stubber = given.stub(for: (AnyPublisher<Response<Conversation>, NablaError>).self)
 			willProduce(stubber)
 			return given
         }

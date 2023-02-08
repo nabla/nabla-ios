@@ -14,6 +14,8 @@ internal enum L10n {
   internal static let defaultCancelButton = L10n.tr("Localizable", "default_cancel_button")
   /// Ok
   internal static let errorDefaultCloseButton = L10n.tr("Localizable", "error_default_close_button")
+  /// Refreshing
+  internal static let refreshingIndicatorLabel = L10n.tr("Localizable", "refreshing_indicator_label")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

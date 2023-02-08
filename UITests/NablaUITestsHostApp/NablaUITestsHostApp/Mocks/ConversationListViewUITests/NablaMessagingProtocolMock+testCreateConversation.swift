@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import NablaCore
+@testable import NablaCore
 @testable import NablaMessagingCore
 
 extension NablaMessagingClientProtocolMock {
@@ -12,7 +12,11 @@ extension NablaMessagingClientProtocolMock {
         let watchConversationsSubject = CurrentValueSubject<PaginatedList<Conversation>, NablaError>(.empty)
         
         watchConversationsClosure = {
-            watchConversationsSubject.eraseToAnyPublisher()
+            watchConversationsSubject
+                .map { list in
+                    Response(data: list, isDataFresh: true, refreshingState: .refreshed)
+                }
+                .eraseToAnyPublisher()
         }
         startConversationClosure = { title, _ in
             let created = Conversation.mock(title: title)

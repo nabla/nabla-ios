@@ -3,11 +3,11 @@ import NablaCore
 import UIKit
 
 public class ConversationListView: UIView, ConversationListViewContract {
-    // MARK: - Public
+    // MARK: - Internal
 
     var presenter: ConversationListPresenter?
 
-    // MARK: - Initializer
+    // MARK: Initializer
 
     init(logger: Logger) {
         self.logger = logger
@@ -20,7 +20,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     override public func didMoveToSuperview() {
         super.didMoveToSuperview()
@@ -30,7 +30,7 @@ public class ConversationListView: UIView, ConversationListViewContract {
         }
     }
 
-    // MARK: - ConversationListViewContract
+    // MARK: ConversationListViewContract
 
     func configure(with state: ConversationListViewState) {
         switch state {
@@ -84,9 +84,21 @@ public class ConversationListView: UIView, ConversationListViewContract {
     private lazy var loadingIndicator: UIActivityIndicatorView = createLoadingIndicator()
     private lazy var errorView: ErrorView = createErrorView()
     private lazy var loadingFooterView: LoadingFooterView = createLoadingFooterView()
+    private lazy var refreshingIndicatorView = NablaViews.RefreshingIndicatorView()
 
     private let logger: Logger
     private var viewModel: ConversationListViewModel = .empty
+    
+    private var viewController: UIViewController? {
+        var nextResponder: UIResponder = self
+        while let next = nextResponder.next {
+            nextResponder = next
+            if let viewController = nextResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
+    }
 
     private func setUp() {
         backgroundColor = NablaTheme.ConversationPreview.backgroundColor
@@ -151,6 +163,18 @@ public class ConversationListView: UIView, ConversationListViewContract {
             newItems: self.viewModel.items,
             animatingDifferences: animated
         )
+        set(refreshing: viewModel.isRefreshing)
+    }
+    
+    private var defaultTitleView: UIView?
+    private func set(refreshing: Bool) {
+        if refreshing {
+            defaultTitleView = viewController?.navigationItem.titleView
+            viewController?.navigationItem.titleView = refreshingIndicatorView
+        } else {
+            viewController?.navigationItem.titleView = defaultTitleView
+            defaultTitleView = nil
+        }
     }
 
     private func reconfigureItems(

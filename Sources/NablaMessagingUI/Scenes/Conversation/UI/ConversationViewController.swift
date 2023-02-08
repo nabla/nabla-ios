@@ -6,9 +6,13 @@ import PDFKit
 import UIKit
 
 final class ConversationViewController: UIViewController, ConversationViewContract {
-    // MARK: - Init
+    // MARK: - Internal
+    
+    var presenter: ConversationPresenter!
     
     weak var delegate: ConversationViewControllerDelegate?
+    
+    // MARK: Init
 
     init(
         logger: Logger,
@@ -29,38 +33,15 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
         presenter.start()
     }
-    
-    private func initialize() {
-        hidesBottomBarWhenPushed = true
-        
-        navigationItem.titleView = navigationItem.titleView ?? titleView
-        navigationItem.largeTitleDisplayMode = .never
-        
-        let scrollEdgeAppearance = navigationItem.scrollEdgeAppearance
-            ?? UINavigationBar.appearance().scrollEdgeAppearance?.copy()
-            ?? UINavigationBarAppearance()
-        scrollEdgeAppearance.configureWithDefaultBackground()
-        navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
-    }
-    
-    private func setUp() {
-        // The background of the chat is set on the `collectionView`.
-        // We use the `composerBackgroundColor` here because of safe area, `self.view` is visble under the composer.
-        view.backgroundColor = NablaTheme.Conversation.composerBackgroundColor
-    }
 
-    // MARK: - Internal
-
-    var presenter: ConversationPresenter!
-
-    // MARK: - ConversationViewContract
+    // MARK: ConversationViewContract
 
     var showRecordAudioMessageButton = true {
         didSet { composerView.showRecordAudioButton = showRecordAudioMessageButton }
@@ -143,7 +124,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     func scrollToItem(withId id: UUID) {
         guard
-            case let .loaded(items, _) = state,
+            case let .loaded(items, _, _) = state,
             let item = items.first(where: { $0.id == id }),
             let indexPath = dataSource.indexPath(for: DiffableConversationViewItem(value: item)) else {
             return
@@ -151,7 +132,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         collectionView.scrollToItem(at: indexPath, at: [.centeredHorizontally, .centeredVertically], animated: true)
     }
 
-    // MARK: Private
+    // MARK: - Private
 
     private enum Section {
         case main
@@ -189,8 +170,34 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     private lazy var collectionView: UICollectionView = makeCollectionView()
     private lazy var composerView: ComposerView = makeComposerView()
     
+    private lazy var refreshingIndicatorItem: UIBarButtonItem = {
+        let view = UIActivityIndicatorView()
+        view.startAnimating()
+        view.color = NablaTheme.Colors.Stroke.base
+        return UIBarButtonItem(customView: view)
+    }()
+    
     // TODO: @tgy - Don't retain modules
     private lazy var imagePickerModule = ImagePickerModule(delegate: self)
+    
+    private func initialize() {
+        hidesBottomBarWhenPushed = true
+        
+        navigationItem.titleView = navigationItem.titleView ?? titleView
+        navigationItem.largeTitleDisplayMode = .never
+        
+        let scrollEdgeAppearance = navigationItem.scrollEdgeAppearance
+            ?? UINavigationBar.appearance().scrollEdgeAppearance?.copy()
+            ?? UINavigationBarAppearance()
+        scrollEdgeAppearance.configureWithDefaultBackground()
+        navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
+    }
+    
+    private func setUp() {
+        // The background of the chat is set on the `collectionView`.
+        // We use the `composerBackgroundColor` here because of safe area, `self.view` is visble under the composer.
+        view.backgroundColor = NablaTheme.Conversation.composerBackgroundColor
+    }
     
     private func makeTitleView() -> TitleView {
         let view = TitleView(frame: .zero)
@@ -259,18 +266,20 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     // - Loaded -> collectionView + composerView
     private func updateLayoutAfterStateChange(oldValue: ConversationViewState) {
         switch (state, oldValue) {
-        case let (.loaded(items, showComposer), .loaded(previousItems, _)):
+        case let (.loaded(items, showComposer, isRefreshing), .loaded(previousItems, _, _)):
             applySnapshot(items: items, animatingDifferences: !previousItems.isEmpty)
             updateComposerVisibility(showComposer: showComposer)
+            set(refreshing: isRefreshing)
         case (.loading, _):
             switchToLoadingLayout()
             loadingView.startAnimating()
         case let (.error(viewModel), _):
             switchToErrorLayout(viewModel: viewModel)
-        case let (.loaded(items, showComposer), _):
+        case let (.loaded(items, showComposer, isRefreshing), _):
             switchToLoadedLayout(with: collectionView)
             updateComposerVisibility(showComposer: showComposer)
             applySnapshot(items: items)
+            set(refreshing: isRefreshing)
         }
     }
     
@@ -301,6 +310,14 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         fromView.removeFromSuperview()
         loadedView.addSubview(toView)
         toView.nabla.pinToSuperView()
+    }
+    
+    private func set(refreshing: Bool) {
+        if refreshing {
+            navigationItem.nabla.insertRightBarButtonItem(refreshingIndicatorItem, at: 0)
+        } else {
+            navigationItem.nabla.removeRightBarButtonItem(refreshingIndicatorItem)
+        }
     }
     
     private func applySnapshot(items: [ConversationViewItem], animatingDifferences: Bool = true) {

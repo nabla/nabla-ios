@@ -8,9 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Core: Added a new `watchEventsConnectionState` method on `NablaClient` which allows you to monitor the current state of the network connection used to receive live events.
+- Messaging Core: Added a new `Response` object returned by watchers. It contains metadata about the freshness of the data returned, allowing the caller to know if the data comes from cache or is fresh and if a background refresh is in progress.
 - VideoCall: Disabled screen idling during video calls.
 
 ### Changed
+- Messaging Core: `watchConversation(withId:)` now returns a `AnyPublisher<Response<Conversation>, NablaError>`.
+- Messaging Core: `watchItems(ofConversationWithId:)` now returns a `AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>`.
+- Messaging Core: `watchConversations()` now returns a `AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>`.
 
 ### Fixed
 

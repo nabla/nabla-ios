@@ -33,10 +33,10 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     }
 
     var watchItemsReceivedInvocations: [(conversationId: UUID, Void)] = []
-    var watchItemsClosure: ((_ conversationId: UUID) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError>)?
+    var watchItemsClosure: ((_ conversationId: UUID) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>)?
     func watchItems(
         ofConversationWithId conversationId: UUID
-    ) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+    ) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError> {
         watchItemsReceivedInvocations.append((conversationId: conversationId, ()))
         return watchItemsClosure?(conversationId) ?? Empty().eraseToAnyPublisher()
     }
@@ -69,17 +69,17 @@ final class NablaMessagingClientProtocolMock: NablaMessagingClientProtocol {
     }
 
     var watchConversationsParams: [Void] = []
-    var watchConversationsClosure: (() -> AnyPublisher<PaginatedList<Conversation>, NablaError>)?
-    func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
+    var watchConversationsClosure: (() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>)?
+    func watchConversations() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError> {
         watchConversationsParams.append(())
         return watchConversationsClosure?() ?? Empty().eraseToAnyPublisher()
     }
 
     var watchConversationParams: [(conversationId: UUID, Void)] = []
-    var watchConversationClosure: ((_ conversationId: UUID) -> AnyPublisher<Conversation, NablaError>)?
+    var watchConversationClosure: ((_ conversationId: UUID) -> AnyPublisher<Response<Conversation>, NablaError>)?
     func watchConversation(
         withId conversationId: UUID
-    ) -> AnyPublisher<Conversation, NablaError> {
+    ) -> AnyPublisher<Response<Conversation>, NablaError> {
         watchConversationParams.append((conversationId: conversationId, ()))
         return watchConversationClosure?(conversationId) ?? Empty().eraseToAnyPublisher()
     }

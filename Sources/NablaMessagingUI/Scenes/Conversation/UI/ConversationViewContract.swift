@@ -4,7 +4,7 @@ import NablaMessagingCore
 
 enum ConversationViewState {
     case loading
-    case loaded(items: [ConversationViewItem], showComposer: Bool)
+    case loaded(items: [ConversationViewItem], showComposer: Bool, isRefreshing: Bool)
     case error(viewModel: ErrorViewModel)
 }
 

@@ -21,8 +21,17 @@ class HttpInterceptorProvider: InterceptorProvider {
     
     func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation: GraphQLOperation {
         var interceptors = defaultProvider.interceptors(for: operation)
-        interceptors.insert(RequestHeadersInterceptor(environment: environment, extraHeaders: extraHeaders), at: 0)
-        interceptors.insert(AuthorizationInterceptor(authenticator: authenticator), at: 0)
+        
+        if let networkInterceptorIndex = interceptors.firstIndex(where: { $0 is NetworkFetchInterceptor }) {
+            interceptors.insert(
+                RequestHeadersInterceptor(environment: environment, extraHeaders: extraHeaders),
+                at: networkInterceptorIndex
+            )
+            interceptors.insert(
+                AuthorizationInterceptor(authenticator: authenticator),
+                at: networkInterceptorIndex
+            )
+        }
         return interceptors
     }
     

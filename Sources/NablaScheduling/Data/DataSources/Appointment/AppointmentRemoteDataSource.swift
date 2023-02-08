@@ -3,7 +3,7 @@ import Foundation
 import NablaCore
 
 protocol AppointmentRemoteDataSource {
-    func watchAppointments(state: RemoteAppointment.State.Enum) -> AnyPublisher<PaginatedList<RemoteAppointment>, GQLError>
+    func watchAppointments(state: RemoteAppointment.State.Enum) -> AnyPublisher<AnyResponse<PaginatedList<RemoteAppointment>, GQLError>, GQLError>
     func watchAppointment(withId id: UUID) -> AnyPublisher<RemoteAppointment, GQLError>
     func subscribeToAppointmentsEvents() -> AnyPublisher<RemoteAppointmentsEvent, Never>
     /// - Throws: ``GQLError``

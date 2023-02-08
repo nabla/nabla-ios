@@ -11,6 +11,8 @@ public protocol GQLClient {
     
     func watch<Query: GQLQuery>(query: Query, policy: GQLWatchPolicy) -> AnyPublisher<Query.Data, GQLError>
     
+    func watchAndUpdate<Query: GQLQuery>(query: Query) -> AnyPublisher<AnyResponse<Query.Data, GQLError>, GQLError>
+    
     func subscribe<Subscription: GQLSubscription>(subscription: Subscription) -> AnyPublisher<Subscription.Data, Never>
     
     func addRefetchTriggers(_ triggers: [RefetchTrigger])

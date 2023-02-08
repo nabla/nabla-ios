@@ -118,6 +118,8 @@ final class AppointmentListViewController: UIViewController {
         return view
     }()
     
+    private lazy var refreshingIndicatorView = NablaViews.RefreshingIndicatorView()
+    
     private func setUp() {
         view.backgroundColor = NablaTheme.AppointmentListViewTheme.backgroundColor
         
@@ -178,6 +180,7 @@ final class AppointmentListViewController: UIViewController {
             guard let self = self else { return }
             self.updateAppointmentList()
             self.updateIsLoading()
+            self.updateIsRefreshing()
             self.updateSelector()
             self.updateAlert()
             self.updateVideoCallRoom()
@@ -213,6 +216,17 @@ final class AppointmentListViewController: UIViewController {
     
     private func updateIsLoading() {
         loadingView.isHidden = !viewModel.isLoading
+    }
+    
+    private var defaultTitleView: UIView?
+    private func updateIsRefreshing() {
+        if viewModel.isRefreshing {
+            defaultTitleView = navigationItem.titleView
+            navigationItem.titleView = refreshingIndicatorView
+        } else {
+            navigationItem.titleView = defaultTitleView
+            defaultTitleView = nil
+        }
     }
     
     private func updateAlert() {

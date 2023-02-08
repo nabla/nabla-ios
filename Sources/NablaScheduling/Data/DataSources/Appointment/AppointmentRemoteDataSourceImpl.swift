@@ -5,7 +5,7 @@ import NablaCore
 final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     // MARK: Internal
     
-    func watchAppointments(state: RemoteAppointment.State.Enum) -> AnyPublisher<PaginatedList<RemoteAppointment>, GQLError> {
+    func watchAppointments(state: RemoteAppointment.State.Enum) -> AnyPublisher<AnyResponse<PaginatedList<RemoteAppointment>, GQLError>, GQLError> {
         switch state {
         case .upcoming: return watchUpcomingAppointments()
         case .finalized: return watchFinalizedAppointments()
@@ -95,49 +95,57 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         }
     }
     
-    private func watchUpcomingAppointments() -> AnyPublisher<PaginatedList<RemoteAppointment>, GQLError> {
-        gqlClient.watch(
-            query: Queries.getUpcomingAppointmentsRootQuery,
-            policy: .returnCacheDataAndFetch
+    private func watchUpcomingAppointments() -> AnyPublisher<AnyResponse<PaginatedList<RemoteAppointment>, GQLError>, GQLError> {
+        gqlClient.watchAndUpdate(
+            query: Queries.getUpcomingAppointmentsRootQuery
         )
-        .map { response -> PaginatedList<RemoteAppointment> in
-            let data = response.upcomingAppointments.data.map(\.fragments.appointmentFragment)
+        .map { response -> AnyResponse<PaginatedList<RemoteAppointment>, GQLError> in
+            let appointments = response.data.upcomingAppointments
+            let data = appointments.data.map(\.fragments.appointmentFragment)
                 
             var fetchMore: (() async throws -> Void)?
-            if let cursor = response.upcomingAppointments.nextCursor {
+            if let cursor = appointments.nextCursor {
                 fetchMore = { [weak self] in
                     try await self?.fetchMoreUpcomingAppointments(cursor: cursor)
                 }
             }
 
-            return PaginatedList<RemoteAppointment>(
-                data: data,
-                hasMore: response.upcomingAppointments.hasMore,
+            let list = PaginatedList<RemoteAppointment>(
+                elements: data,
                 loadMore: fetchMore
+            )
+            return .init(
+                data: list,
+                isDataFresh: response.isDataFresh,
+                refreshingState: response.refreshingState
             )
         }
         .eraseToAnyPublisher()
     }
     
-    private func watchFinalizedAppointments() -> AnyPublisher<PaginatedList<RemoteAppointment>, GQLError> {
-        gqlClient.watch(
-            query: Queries.getFinalizedAppointmentsRootQuery,
-            policy: .returnCacheDataAndFetch
+    private func watchFinalizedAppointments() -> AnyPublisher<AnyResponse<PaginatedList<RemoteAppointment>, GQLError>, GQLError> {
+        gqlClient.watchAndUpdate(
+            query: Queries.getFinalizedAppointmentsRootQuery
         )
-        .map { response -> PaginatedList<RemoteAppointment> in
-            let data = response.pastAppointments.data.map(\.fragments.appointmentFragment)
+        .map { response -> AnyResponse<PaginatedList<RemoteAppointment>, GQLError> in
+            let appointments = response.data.pastAppointments
+            let data = appointments.data.map(\.fragments.appointmentFragment)
                 
             var fetchMore: (() async throws -> Void)?
-            if let cursor = response.pastAppointments.nextCursor {
+            if let cursor = appointments.nextCursor {
                 fetchMore = { [weak self] in
                     try await self?.fetchMoreFinalizedAppointments(cursor: cursor)
                 }
             }
 
-            return PaginatedList<RemoteAppointment>(
-                data: data,
-                hasMore: response.pastAppointments.hasMore,
+            let list = PaginatedList<RemoteAppointment>(
+                elements: data,
                 loadMore: fetchMore
+            )
+            return .init(
+                data: list,
+                isDataFresh: response.isDataFresh,
+                refreshingState: response.refreshingState
             )
         }
         .eraseToAnyPublisher()

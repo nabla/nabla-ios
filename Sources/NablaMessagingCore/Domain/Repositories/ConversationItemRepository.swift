@@ -6,7 +6,7 @@ import NablaCore
 protocol ConversationItemRepository {
     func watchConversationItems(
         ofConversationWithId: TransientUUID
-    ) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError>
+    ) -> AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError>
     
     /// - Throws: ``NablaError``
     func sendMessage(

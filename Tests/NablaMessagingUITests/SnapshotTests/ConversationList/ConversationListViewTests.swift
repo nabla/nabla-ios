@@ -47,7 +47,7 @@ final class ConversationListViewTests: XCTestCase {
     func testConversationLVConfigureWithLoadedNoItems() {
         // GIVEN
         // WHEN
-        sut.configure(with: .loaded(viewModel: .init(items: [])))
+        sut.configure(with: .loaded(viewModel: .init(items: [], isRefreshing: false)))
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
@@ -55,14 +55,14 @@ final class ConversationListViewTests: XCTestCase {
     func testConversationLVConfigureWithLoadedItems() {
         // GIVEN
         // WHEN
-        sut.configure(with: .loaded(viewModel: .init(items: [item])))
+        sut.configure(with: .loaded(viewModel: .init(items: [item], isRefreshing: true)))
         // THEN
         assertSnapshots(matching: sut, as: .lightAndDarkImages(size: ViewImageConfig.iPhoneSe.size))
     }
 
     func testConversationLVDisplayLoadingMore() {
         // GIVEN
-        sut.configure(with: .loaded(viewModel: .init(items: [item])))
+        sut.configure(with: .loaded(viewModel: .init(items: [item], isRefreshing: false)))
         // WHEN
         sut.displayLoadingMore()
         // THEN

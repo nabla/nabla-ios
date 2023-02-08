@@ -5,17 +5,18 @@ import NablaCore
 final class AppointmentRepositoryImpl: AppointmentRepository {
     // MARK: - Internal
     
-    func watchAppointments(state: Appointment.State) -> AnyPublisher<PaginatedList<Appointment>, NablaError> {
+    func watchAppointments(state: Appointment.State) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
         let transformer = RemoteAppointmentTransformer(logger: logger)
         return remoteDataSource.watchAppointments(state: transformer.transform(state))
-            .map { remote in
-                PaginatedList<Appointment>(
-                    data: remote.data.map(transformer.transform),
-                    hasMore: remote.hasMore,
-                    loadMore: remote.loadMore
+            .mapError(GQLErrorTransformer.transform(gqlError:))
+            .map { response in
+                response.map(
+                    data: { list in
+                        list.map(transformer.transform)
+                    },
+                    error: GQLErrorTransformer.transform(gqlError:)
                 )
             }
-            .mapError(GQLErrorTransformer.transform(gqlError:))
             .eraseToAnyPublisher()
     }
     

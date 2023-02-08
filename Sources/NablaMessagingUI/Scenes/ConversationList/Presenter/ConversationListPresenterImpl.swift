@@ -65,11 +65,15 @@ final class ConversationListPresenterImpl: ConversationListPresenter {
         guard !isLoading else { return }
         isLoading = true
         watcher = client.watchConversations().nabla.drive(
-            receiveValue: { [weak self] list in
+            receiveValue: { [weak self] response in
                 guard let self = self else { return }
                 self.isLoading = false
-                self.list = list
-                let viewModel = ConversationListViewModelTransformer().transform(conversations: list.elements)
+                self.list = response.data
+                let transformer = ConversationListViewModelTransformer()
+                let viewModel = ConversationListViewModel(
+                    items: response.data.elements.map(transformer.transform(conversation:)),
+                    isRefreshing: response.refreshingState.isRefreshing
+                )
                 self.configureView(with: .loaded(viewModel: viewModel))
             },
             receiveError: { [weak self] error in

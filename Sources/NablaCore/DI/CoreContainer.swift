@@ -26,6 +26,7 @@ public class CoreContainer {
     
     // MARK: - Internal
     
+    let webSocketTransport: WebSocketTransport
     let registerDeviceInteractor: RegisterDeviceInteractor
     
     convenience init(
@@ -183,7 +184,6 @@ public class CoreContainer {
     private let schedulingModule: SchedulingModule?
     private let interceptorProvider: InterceptorProvider
     private let httpTransport: HttpTransport
-    private let webSocketTransport: WebSocketTransport
     private let combinedTransport: CombinedTransport
     private let apolloStore: ApolloStore
     private let userLocalDataSource: UserLocalDataSource

@@ -14,9 +14,9 @@ protocol ConversationRemoteDataSource {
     
     func markConversationAsSeen(conversationId: UUID) async throws
     
-    func watchConversation(_ conversationId: UUID) -> AnyPublisher<RemoteConversation, GQLError>
+    func watchConversation(_ conversationId: UUID) -> AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError>
     
-    func watchConversations() -> AnyPublisher<PaginatedList<RemoteConversation>, GQLError>
+    func watchConversations() -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError>
     
     func subscribeToConversationsEvents() -> AnyPublisher<RemoteConversationsEvent, Never>
 }

@@ -12,7 +12,7 @@ public final class NablaSchedulingClient: SchedulingClient {
     
     // MARK: - Internal
     
-    func watchAppointments(state: Appointment.State) -> AnyPublisher<PaginatedList<Appointment>, NablaError> {
+    func watchAppointments(state: Appointment.State) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
         container.watchAppointmentsInteractor.execute(state: state)
     }
     

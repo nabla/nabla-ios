@@ -27,14 +27,17 @@ class ConversationRepositoryImpl: ConversationRepository {
         }
     }
     
-    func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<Conversation, NablaError> {
+    func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError> {
         let localConversation = localDataSource.watchConversation(conversationId.localId)
             .setFailureType(to: NablaError.self)
         
         let remoteConversation = conversationId.observeRemoteId()
-            .map { [remoteDataSource] remoteId -> AnyPublisher<RemoteConversation?, NablaError> in
+            .map { [remoteDataSource] remoteId -> AnyPublisher<AnyResponse<RemoteConversation, NablaError>?, NablaError> in
                 if let remoteId = remoteId {
                     return remoteDataSource.watchConversation(remoteId)
+                        .map { response in
+                            response.mapError(GQLErrorTransformer.transform(gqlError:))
+                        }
                         .nabla.asOptional()
                         .mapError(GQLErrorTransformer.transform(gqlError:))
                         .eraseToAnyPublisher()
@@ -47,11 +50,17 @@ class ConversationRepositoryImpl: ConversationRepository {
             .nabla.switchToLatest()
         
         return Publishers.CombineLatest(localConversation, remoteConversation)
-            .map { localConversation, remoteConversation -> Conversation? in
-                if let remoteConversation = remoteConversation {
-                    return ConversationTransformer.transform(fragment: remoteConversation)
+            .map { localConversation, remoteResponse -> AnyResponse<Conversation, NablaError>? in
+                if let remoteResponse = remoteResponse {
+                    return remoteResponse.mapData { remoteConversation in
+                        ConversationTransformer.transform(fragment: remoteConversation)
+                    }
                 } else if let localConversation = localConversation {
-                    return ConversationTransformer.transform(conversation: localConversation)
+                    return AnyResponse(
+                        data: ConversationTransformer.transform(conversation: localConversation),
+                        isDataFresh: true,
+                        refreshingState: .refreshed
+                    )
                 } else {
                     return nil
                 }
@@ -60,10 +69,17 @@ class ConversationRepositoryImpl: ConversationRepository {
             .eraseToAnyPublisher()
     }
     
-    func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
+    func watchConversations() -> AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError> {
         let watcher = remoteDataSource.watchConversations()
             .mapError(GQLErrorTransformer.transform(gqlError:))
-            .map { $0.map(ConversationTransformer.transform(fragment:)) }
+            .map { response in
+                response.map(
+                    data: { paginatedList in
+                        paginatedList.map(ConversationTransformer.transform(fragment:))
+                    },
+                    error: GQLErrorTransformer.transform(gqlError:)
+                )
+            }
             .eraseToAnyPublisher()
         
         var subscription: AnyCancellable? = makeOrReuseConversationEventsSubscription()

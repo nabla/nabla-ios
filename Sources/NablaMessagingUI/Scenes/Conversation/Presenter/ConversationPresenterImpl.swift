@@ -71,7 +71,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
     func didReplyToMessage(withId id: UUID) {
         guard
-            case let .loaded(items, _) = state,
+            case let .loaded(items, _, _) = state,
             let item = items.first(where: { $0.id == id }),
             let message = item as? ConversationViewMessageItem else {
             return
@@ -101,7 +101,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     func didReachEndOfConversation() {
-        guard let loadMore = conversationItems?.loadMore, loadMoreItemsAction == nil else { return }
+        guard let loadMore = conversationItems?.data.loadMore, loadMoreItemsAction == nil else { return }
         loadMoreItemsAction = Task(priority: .userInitiated, operation: {
             do {
                 try await loadMore()
@@ -145,7 +145,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
 
     func didTapTextItem(withId id: UUID) {
-        guard case .me = (conversationItems?.elements.first(where: { $0.id == id }) as? TextMessageItem)?.sender else {
+        guard case .me = (conversationItems?.data.elements.first(where: { $0.id == id }) as? TextMessageItem)?.sender else {
             return
         }
         if id == focusedPatientTextItemId {
@@ -199,7 +199,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
     private weak var view: ConversationViewContract?
     private var conversation: Conversation?
-    private var conversationItems: PaginatedList<ConversationItem>?
+    private var conversationItems: Response<PaginatedList<ConversationItem>>?
     private var draftText: String = ""
     private var state: ConversationViewState = .loading {
         didSet { view?.configure(withState: state) }
@@ -223,10 +223,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
         state = .loading
         
         conversationWatcher = client.watchConversation(withId: conversationId)
-            .nabla.drive(receiveValue: { [weak self] conversation in
+            .nabla.drive(receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                self.conversation = conversation
-                let conversationViewModel = Self.transform(conversation: conversation)
+                self.conversation = response.data
+                let conversationViewModel = Self.transform(conversation: response.data)
                 self.view?.configure(withConversation: conversationViewModel)
                 self.updateConversationItems()
             }, receiveError: { [weak self] error in
@@ -236,9 +236,9 @@ final class ConversationPresenterImpl: ConversationPresenter {
             })
         
         itemsWatcher = client.watchItems(ofConversationWithId: conversationId)
-            .nabla.drive(receiveValue: { [weak self] conversationItems in
+            .nabla.drive(receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                self.conversationItems = conversationItems
+                self.conversationItems = response
                 self.updateConversationItems()
                 self.markConversationAsSeen()
             }, receiveError: { [weak self] error in
@@ -285,11 +285,15 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private func updateConversationItems() {
         guard let conversationItems = conversationItems else { return }
         let viewItems = ConversationItemsTransformer.transform(
-            conversationItems: conversationItems,
+            conversationItems: conversationItems.data,
             providers: conversation?.providers ?? [],
             focusedTextItemId: focusedPatientTextItemId
         )
-        state = .loaded(items: viewItems, showComposer: !(conversation?.isLocked ?? false))
+        state = .loaded(
+            items: viewItems,
+            showComposer: !(conversation?.isLocked ?? false),
+            isRefreshing: conversationItems.refreshingState.isRefreshing
+        )
     }
 }
 

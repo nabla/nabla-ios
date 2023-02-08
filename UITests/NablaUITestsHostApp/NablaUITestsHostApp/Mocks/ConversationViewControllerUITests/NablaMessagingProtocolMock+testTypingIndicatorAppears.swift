@@ -36,11 +36,19 @@ extension NablaMessagingClientProtocolMock {
             
             return subject
                 .compactMap(\.elements.first)
+                .map { list in
+                    Response(data: list, isDataFresh: true, refreshingState: .refreshed)
+                }
                 .eraseToAnyPublisher()
         }
 
         watchItemsClosure = { _ in
-            Just(PaginatedList(elements: [], loadMore: nil))
+            let response = Response<PaginatedList<ConversationItem>>(
+                data: .empty,
+                isDataFresh: true,
+                refreshingState: .refreshed
+            )
+            return Just(response)
                 .setFailureType(to: NablaError.self)
                 .eraseToAnyPublisher()
         }

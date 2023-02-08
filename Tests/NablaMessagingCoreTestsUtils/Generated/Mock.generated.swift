@@ -393,11 +393,11 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
 
 
 
-    open func watchConversationItems(ofConversationWithId conversationId: UUID) -> AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError> {
+    open func watchConversationItems(ofConversationWithId conversationId: UUID) -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError> {
         addInvocation(.m_watchConversationItems__ofConversationWithId_conversationId(Parameter<UUID>.value(`conversationId`)))
 		let perform = methodPerformValue(.m_watchConversationItems__ofConversationWithId_conversationId(Parameter<UUID>.value(`conversationId`))) as? (UUID) -> Void
 		perform?(`conversationId`)
-		var __value: AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError>
+		var __value: AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversationItems__ofConversationWithId_conversationId(Parameter<UUID>.value(`conversationId`))).casted()
 		} catch {
@@ -507,16 +507,16 @@ open class ConversationItemRemoteDataSourceMock: ConversationItemRemoteDataSourc
         }
 
 
-        public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, willReturn: AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError>...) -> MethodStub {
+        public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, willReturn: AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError>...) -> MethodStub {
             return Given(method: .m_watchConversationItems__ofConversationWithId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func subscribeToConversationItemsEvents(ofConversationWithId conversationId: Parameter<UUID>, willReturn: AnyPublisher<RemoteConversationEvent, Never>...) -> MethodStub {
             return Given(method: .m_subscribeToConversationItemsEvents__ofConversationWithId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError>] = []
+        public static func watchConversationItems(ofConversationWithId conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError>] = []
 			let given: Given = { return Given(method: .m_watchConversationItems__ofConversationWithId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError>).self)
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError>).self)
 			willProduce(stubber)
 			return given
         }
@@ -693,11 +693,11 @@ open class ConversationItemRepositoryMock: ConversationItemRepository, Mock {
 
 
 
-    open func watchConversationItems(ofConversationWithId: TransientUUID) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+    open func watchConversationItems(ofConversationWithId: TransientUUID) -> AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError> {
         addInvocation(.m_watchConversationItems__ofConversationWithId_ofConversationWithId(Parameter<TransientUUID>.value(`ofConversationWithId`)))
 		let perform = methodPerformValue(.m_watchConversationItems__ofConversationWithId_ofConversationWithId(Parameter<TransientUUID>.value(`ofConversationWithId`))) as? (TransientUUID) -> Void
 		perform?(`ofConversationWithId`)
-		var __value: AnyPublisher<PaginatedList<ConversationItem>, NablaError>
+		var __value: AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversationItems__ofConversationWithId_ofConversationWithId(Parameter<TransientUUID>.value(`ofConversationWithId`))).casted()
 		} catch {
@@ -809,13 +809,13 @@ open class ConversationItemRepositoryMock: ConversationItemRepository, Mock {
         }
 
 
-        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>, willReturn: AnyPublisher<PaginatedList<ConversationItem>, NablaError>...) -> MethodStub {
+        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>, willReturn: AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError>...) -> MethodStub {
             return Given(method: .m_watchConversationItems__ofConversationWithId_ofConversationWithId(`ofConversationWithId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>, willProduce: (Stubber<AnyPublisher<PaginatedList<ConversationItem>, NablaError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<PaginatedList<ConversationItem>, NablaError>] = []
+        public static func watchConversationItems(ofConversationWithId: Parameter<TransientUUID>, willProduce: (Stubber<AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError>] = []
 			let given: Given = { return Given(method: .m_watchConversationItems__ofConversationWithId_ofConversationWithId(`ofConversationWithId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<PaginatedList<ConversationItem>, NablaError>).self)
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError>).self)
 			willProduce(stubber)
 			return given
         }
@@ -1320,11 +1320,11 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
 		}
     }
 
-    open func watchConversation(_ conversationId: UUID) -> AnyPublisher<RemoteConversation, GQLError> {
+    open func watchConversation(_ conversationId: UUID) -> AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError> {
         addInvocation(.m_watchConversation__conversationId(Parameter<UUID>.value(`conversationId`)))
 		let perform = methodPerformValue(.m_watchConversation__conversationId(Parameter<UUID>.value(`conversationId`))) as? (UUID) -> Void
 		perform?(`conversationId`)
-		var __value: AnyPublisher<RemoteConversation, GQLError>
+		var __value: AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversation__conversationId(Parameter<UUID>.value(`conversationId`))).casted()
 		} catch {
@@ -1334,11 +1334,11 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
 		return __value
     }
 
-    open func watchConversations() -> AnyPublisher<PaginatedList<RemoteConversation>, GQLError> {
+    open func watchConversations() -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError> {
         addInvocation(.m_watchConversations)
 		let perform = methodPerformValue(.m_watchConversations) as? () -> Void
 		perform?()
-		var __value: AnyPublisher<PaginatedList<RemoteConversation>, GQLError>
+		var __value: AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversations).casted()
 		} catch {
@@ -1437,26 +1437,26 @@ open class ConversationRemoteDataSourceMock: ConversationRemoteDataSource, Mock 
         public static func createConversation(message: Parameter<GQL.SendMessageInput?>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willReturn: RemoteConversation...) -> MethodStub {
             return Given(method: .m_createConversation__message_messagetitle_titleproviderIds_providerIds(`message`, `title`, `providerIds`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversation(_ conversationId: Parameter<UUID>, willReturn: AnyPublisher<RemoteConversation, GQLError>...) -> MethodStub {
+        public static func watchConversation(_ conversationId: Parameter<UUID>, willReturn: AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError>...) -> MethodStub {
             return Given(method: .m_watchConversation__conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversations(willReturn: AnyPublisher<PaginatedList<RemoteConversation>, GQLError>...) -> MethodStub {
+        public static func watchConversations(willReturn: AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError>...) -> MethodStub {
             return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func subscribeToConversationsEvents(willReturn: AnyPublisher<RemoteConversationsEvent, Never>...) -> MethodStub {
             return Given(method: .m_subscribeToConversationsEvents, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversation(_ conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<RemoteConversation, GQLError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<RemoteConversation, GQLError>] = []
+        public static func watchConversation(_ conversationId: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError>] = []
 			let given: Given = { return Given(method: .m_watchConversation__conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<RemoteConversation, GQLError>).self)
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError>).self)
 			willProduce(stubber)
 			return given
         }
-        public static func watchConversations(willProduce: (Stubber<AnyPublisher<PaginatedList<RemoteConversation>, GQLError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<PaginatedList<RemoteConversation>, GQLError>] = []
+        public static func watchConversations(willProduce: (Stubber<AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError>] = []
 			let given: Given = { return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<PaginatedList<RemoteConversation>, GQLError>).self)
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError>).self)
 			willProduce(stubber)
 			return given
         }
@@ -1665,11 +1665,11 @@ open class ConversationRepositoryMock: ConversationRepository, Mock {
 		return __value
     }
 
-    open func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<Conversation, NablaError> {
+    open func watchConversation(withId conversationId: TransientUUID) -> AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError> {
         addInvocation(.m_watchConversation__withId_conversationId(Parameter<TransientUUID>.value(`conversationId`)))
 		let perform = methodPerformValue(.m_watchConversation__withId_conversationId(Parameter<TransientUUID>.value(`conversationId`))) as? (TransientUUID) -> Void
 		perform?(`conversationId`)
-		var __value: AnyPublisher<Conversation, NablaError>
+		var __value: AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversation__withId_conversationId(Parameter<TransientUUID>.value(`conversationId`))).casted()
 		} catch {
@@ -1679,11 +1679,11 @@ open class ConversationRepositoryMock: ConversationRepository, Mock {
 		return __value
     }
 
-    open func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
+    open func watchConversations() -> AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError> {
         addInvocation(.m_watchConversations)
 		let perform = methodPerformValue(.m_watchConversations) as? () -> Void
 		perform?()
-		var __value: AnyPublisher<PaginatedList<Conversation>, NablaError>
+		var __value: AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError>
 		do {
 		    __value = try methodReturnValue(.m_watchConversations).casted()
 		} catch {
@@ -1836,10 +1836,10 @@ open class ConversationRepositoryMock: ConversationRepository, Mock {
         public static func getConversationTransientId(from id: Parameter<UUID>, willReturn: TransientUUID...) -> MethodStub {
             return Given(method: .m_getConversationTransientId__from_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversation(withId conversationId: Parameter<TransientUUID>, willReturn: AnyPublisher<Conversation, NablaError>...) -> MethodStub {
+        public static func watchConversation(withId conversationId: Parameter<TransientUUID>, willReturn: AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError>...) -> MethodStub {
             return Given(method: .m_watchConversation__withId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func watchConversations(willReturn: AnyPublisher<PaginatedList<Conversation>, NablaError>...) -> MethodStub {
+        public static func watchConversations(willReturn: AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError>...) -> MethodStub {
             return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createConversation(message: Parameter<MessageInput>, title: Parameter<String?>, providerIds: Parameter<[UUID]?>, willReturn: Conversation...) -> MethodStub {
@@ -1855,17 +1855,17 @@ open class ConversationRepositoryMock: ConversationRepository, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func watchConversation(withId conversationId: Parameter<TransientUUID>, willProduce: (Stubber<AnyPublisher<Conversation, NablaError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<Conversation, NablaError>] = []
+        public static func watchConversation(withId conversationId: Parameter<TransientUUID>, willProduce: (Stubber<AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError>] = []
 			let given: Given = { return Given(method: .m_watchConversation__withId_conversationId(`conversationId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<Conversation, NablaError>).self)
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<Conversation, NablaError>, NablaError>).self)
 			willProduce(stubber)
 			return given
         }
-        public static func watchConversations(willProduce: (Stubber<AnyPublisher<PaginatedList<Conversation>, NablaError>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<PaginatedList<Conversation>, NablaError>] = []
+        public static func watchConversations(willProduce: (Stubber<AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError>] = []
 			let given: Given = { return Given(method: .m_watchConversations, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<PaginatedList<Conversation>, NablaError>).self)
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<PaginatedList<Conversation>, NablaError>, NablaError>).self)
 			willProduce(stubber)
 			return given
         }

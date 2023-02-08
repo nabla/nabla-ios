@@ -17,11 +17,7 @@ final class AvailabilitySlotRepositoryImpl: AvailabilitySlotRepository {
     func watchAvailabilitySlots(forCategoryWithId categoryId: UUID, location: LocationType) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
         remoteDataSource.watchAvailabilitySlots(forCategoryWithId: categoryId, isPhysical: location == .physical)
             .map { remoteList -> PaginatedList<AvailabilitySlot> in
-                PaginatedList(
-                    data: remoteList.data.map(RemoteAvailabilitySlotsTransformer.transform),
-                    hasMore: remoteList.hasMore,
-                    loadMore: remoteList.loadMore
-                )
+                remoteList.map(RemoteAvailabilitySlotsTransformer.transform)
             }
             .mapError(GQLErrorTransformer.transform)
             .eraseToAnyPublisher()

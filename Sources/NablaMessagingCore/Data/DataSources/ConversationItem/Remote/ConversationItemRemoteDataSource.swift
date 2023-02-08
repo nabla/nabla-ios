@@ -6,7 +6,7 @@ import NablaCore
 protocol ConversationItemRemoteDataSource {
     func watchConversationItems(
         ofConversationWithId conversationId: UUID
-    ) -> AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError>
+    ) -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError>
     
     func subscribeToConversationItemsEvents(
         ofConversationWithId conversationId: UUID

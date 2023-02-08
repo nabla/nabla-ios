@@ -10,7 +10,15 @@ extension NablaMessagingClientProtocolMock {
         let watchItemsSubject = CurrentValueSubject<PaginatedList<ConversationItem>, NablaError>(.empty)
 
         watchItemsClosure = { _ in
-            watchItemsSubject.eraseToAnyPublisher()
+            watchItemsSubject
+                .map { list in
+                    Response(
+                        data: list,
+                        isDataFresh: true,
+                        refreshingState: .refreshed
+                    )
+                }
+                .eraseToAnyPublisher()
         }
 
         sendMessageClosure = { message, _ in

@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 private enum Constants {
@@ -90,6 +91,18 @@ public class NablaClient {
     /// Log the current user out
     public func logOut() {
         container.logOutInteractor.execute()
+    }
+    
+    /// Watch the state of the events connection the SDK is using to receive live updates (new messages, new appointments etc...)
+    ///
+    /// You can use this to display a message to the user indicating they are offline if your use case
+    /// is time sensitive and the risk of missing a message is important.
+    ///
+    /// Note that when the SDK is initialized, it starts with ``EventsConnectionState.notConnected``.
+    /// The state will get updated when calling ``NablaClient.authenticate(userId:provider:)``.
+    ///
+    public func watchEventsConnectionState() -> AnyPublisher<EventsConnectionState, Never> {
+        container.webSocketTransport.observeConnectionState()
     }
 
     /// Add default HTTP Headers to calls. This is for internal usage and you should probably never call it.

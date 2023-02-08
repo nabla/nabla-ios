@@ -22,10 +22,11 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
             policy: .fetchIgnoringCacheData
         )
         .map { response -> PaginatedList<RemoteAvailabilitySlot> in
-            let data = response.appointmentCategory.category.availableSlotsV2.slots.map(\.fragments.availabilitySlotFragment)
+            let availableSlots = response.appointmentCategory.category.availableSlotsV2
+            let data = availableSlots.slots.map(\.fragments.availabilitySlotFragment)
             
             var fetchMore: (() async throws -> Void)?
-            if let cursor = response.appointmentCategory.category.availableSlotsV2.nextCursor {
+            if let cursor = availableSlots.nextCursor {
                 fetchMore = { [weak self] in
                     try await self?.fetchMoreAvailableSlots(
                         forCategoryWithId: categoryId,
@@ -36,8 +37,7 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
             }
             
             return PaginatedList<RemoteAvailabilitySlot>(
-                data: data,
-                hasMore: response.appointmentCategory.category.availableSlotsV2.hasMore,
+                elements: data,
                 loadMore: fetchMore
             )
         }

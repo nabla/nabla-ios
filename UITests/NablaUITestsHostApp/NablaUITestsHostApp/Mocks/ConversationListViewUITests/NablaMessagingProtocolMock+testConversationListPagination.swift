@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import NablaCore
+@testable import NablaCore
 @testable import NablaMessagingCore
 
 extension NablaMessagingClientProtocolMock {
@@ -26,7 +26,15 @@ extension NablaMessagingClientProtocolMock {
         subject.send(dynamicList)
         
         watchConversationsClosure = {
-            subject.eraseToAnyPublisher()
+            subject
+                .map { list in
+                    Response(
+                        data: list,
+                        isDataFresh: true,
+                        refreshingState: .refreshed
+                    )
+                }
+                .eraseToAnyPublisher()
         }
     }
 }

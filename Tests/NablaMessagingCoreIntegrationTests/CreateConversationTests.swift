@@ -19,7 +19,7 @@ class CreateConversationTests: XCTestCase {
         env.session.beginRecording()
         _ = try await env.messagingClient.createConversation(withMessage: .text(content: "Hello"), title: nil, providerIds: nil)
         
-        let endRecordingCompletion = expectation(description: "enRecording did complete")
+        let endRecordingCompletion = expectation(description: "endRecording did complete")
         env.session.endRecording {
             endRecordingCompletion.fulfill()
         }
@@ -39,8 +39,8 @@ class CreateConversationTests: XCTestCase {
         let initialListDidLoad = expectation(description: "Initial conversation list did load")
         let watcher1 = env.messagingClient.watchConversations()
             .nabla.sink(
-                receiveValue: { conversations in
-                    initalConversationsCount = conversations.elements.count
+                receiveValue: { response in
+                    initalConversationsCount = response.data.elements.count
                     initialListDidLoad.fulfill()
                 },
                 receiveError: { error in
@@ -57,10 +57,10 @@ class CreateConversationTests: XCTestCase {
         let finalListDidLoad = expectation(description: "Final conversation list did load")
         let watcher2 = env.messagingClient.watchConversations()
             .nabla.sink(
-                receiveValue: { conversations in
-                    XCTAssertEqual(conversations.elements.count, initalConversationsCount + 1)
+                receiveValue: { response in
+                    XCTAssertEqual(response.data.elements.count, initalConversationsCount + 1)
                     // TODO: Fix conversations order https://github.com/nabla/health/issues/20428
-                    XCTAssertTrue(conversations.elements.contains(where: { $0.id == createdConversation.id }))
+                    XCTAssertTrue(response.data.elements.contains(where: { $0.id == createdConversation.id }))
 //                    XCTAssertEqual(conversations.elements.first?.id, createdConversation.id)
                     finalListDidLoad.fulfill()
                 },
@@ -71,7 +71,7 @@ class CreateConversationTests: XCTestCase {
         wait(for: [finalListDidLoad], timeout: 3)
         watcher2.cancel()
         
-        let endRecordingCompletion = expectation(description: "enRecording did complete")
+        let endRecordingCompletion = expectation(description: "endRecording did complete")
         env.session.endRecording {
             endRecordingCompletion.fulfill()
         }

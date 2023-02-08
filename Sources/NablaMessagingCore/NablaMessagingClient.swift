@@ -51,7 +51,7 @@ public class NablaMessagingClient: NablaCore.MessagingClient {
     /// - Returns: ``AnyPublisher<PaginatedList<ConversationItem>, NablaError>``
     public func watchItems(
         ofConversationWithId conversationId: UUID
-    ) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+    ) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError> {
         container.watchConversationItemsInteractor.execute(conversationId: conversationId)
     }
     
@@ -91,7 +91,7 @@ public class NablaMessagingClient: NablaCore.MessagingClient {
     
     /// Watch the list of conversations the current user is involved in.
     /// - Returns: ``AnyPublisher<PaginatedList<Conversation>, NablaError>``
-    public func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError> {
+    public func watchConversations() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError> {
         container.watchConversationsInteractor.execute()
     }
     
@@ -101,7 +101,7 @@ public class NablaMessagingClient: NablaCore.MessagingClient {
     /// - Returns: ``AnyPublisher<Conversation, NablaError>``
     public func watchConversation(
         withId conversationId: UUID
-    ) -> AnyPublisher<Conversation, NablaError> {
+    ) -> AnyPublisher<Response<Conversation>, NablaError> {
         container.watchConversationInteractor.execute(conversationId)
     }
     

@@ -666,6 +666,20 @@ open class GQLClientMock: GQLClient, Mock {
 		return __value
     }
 
+    open func watchAndUpdate<Query: GQLQuery>(query: Query) -> AnyPublisher<AnyResponse<Query.Data, GQLError>, GQLError> {
+        addInvocation(.m_watchAndUpdate__query_query(Parameter<Query>.value(`query`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_watchAndUpdate__query_query(Parameter<Query>.value(`query`).wrapAsGeneric())) as? (Query) -> Void
+		perform?(`query`)
+		var __value: AnyPublisher<AnyResponse<Query.Data, GQLError>, GQLError>
+		do {
+		    __value = try methodReturnValue(.m_watchAndUpdate__query_query(Parameter<Query>.value(`query`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchAndUpdate<Query: GQLQuery>(query: Query). Use given")
+			Failure("Stub return value not specified for watchAndUpdate<Query: GQLQuery>(query: Query). Use given")
+		}
+		return __value
+    }
+
     open func subscribe<Subscription: GQLSubscription>(subscription: Subscription) -> AnyPublisher<Subscription.Data, Never> {
         addInvocation(.m_subscribe__subscription_subscription(Parameter<Subscription>.value(`subscription`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_subscribe__subscription_subscription(Parameter<Subscription>.value(`subscription`).wrapAsGeneric())) as? (Subscription) -> Void
@@ -691,6 +705,7 @@ open class GQLClientMock: GQLClient, Mock {
         case m_fetch__query_querypolicy_policy(Parameter<GenericAttribute>, Parameter<GQLFetchPolicy>)
         case m_perform__mutation_mutation(Parameter<GenericAttribute>)
         case m_watch__query_querypolicy_policy(Parameter<GenericAttribute>, Parameter<GQLWatchPolicy>)
+        case m_watchAndUpdate__query_query(Parameter<GenericAttribute>)
         case m_subscribe__subscription_subscription(Parameter<GenericAttribute>)
         case m_addRefetchTriggers__triggers(Parameter<[RefetchTrigger]>)
 
@@ -713,6 +728,11 @@ open class GQLClientMock: GQLClient, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsPolicy, rhs: rhsPolicy, with: matcher), lhsPolicy, rhsPolicy, "policy"))
 				return Matcher.ComparisonResult(results)
 
+            case (.m_watchAndUpdate__query_query(let lhsQuery), .m_watchAndUpdate__query_query(let rhsQuery)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "query"))
+				return Matcher.ComparisonResult(results)
+
             case (.m_subscribe__subscription_subscription(let lhsSubscription), .m_subscribe__subscription_subscription(let rhsSubscription)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsSubscription, rhs: rhsSubscription, with: matcher), lhsSubscription, rhsSubscription, "subscription"))
@@ -731,6 +751,7 @@ open class GQLClientMock: GQLClient, Mock {
             case let .m_fetch__query_querypolicy_policy(p0, p1): return p0.intValue + p1.intValue
             case let .m_perform__mutation_mutation(p0): return p0.intValue
             case let .m_watch__query_querypolicy_policy(p0, p1): return p0.intValue + p1.intValue
+            case let .m_watchAndUpdate__query_query(p0): return p0.intValue
             case let .m_subscribe__subscription_subscription(p0): return p0.intValue
             case let .m_addRefetchTriggers__triggers(p0): return p0.intValue
             }
@@ -740,6 +761,7 @@ open class GQLClientMock: GQLClient, Mock {
             case .m_fetch__query_querypolicy_policy: return ".fetch(query:policy:)"
             case .m_perform__mutation_mutation: return ".perform(mutation:)"
             case .m_watch__query_querypolicy_policy: return ".watch(query:policy:)"
+            case .m_watchAndUpdate__query_query: return ".watchAndUpdate(query:)"
             case .m_subscribe__subscription_subscription: return ".subscribe(subscription:)"
             case .m_addRefetchTriggers__triggers: return ".addRefetchTriggers(_:)"
             }
@@ -764,6 +786,9 @@ open class GQLClientMock: GQLClient, Mock {
         public static func watch<Query: GQLQuery>(query: Parameter<Query>, policy: Parameter<GQLWatchPolicy>, willReturn: AnyPublisher<Query.Data, GQLError>...) -> MethodStub {
             return Given(method: .m_watch__query_querypolicy_policy(`query`.wrapAsGeneric(), `policy`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func watchAndUpdate<Query: GQLQuery>(query: Parameter<Query>, willReturn: AnyPublisher<AnyResponse<Query.Data, GQLError>, GQLError>...) -> MethodStub {
+            return Given(method: .m_watchAndUpdate__query_query(`query`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func subscribe<Subscription: GQLSubscription>(subscription: Parameter<Subscription>, willReturn: AnyPublisher<Subscription.Data, Never>...) -> MethodStub {
             return Given(method: .m_subscribe__subscription_subscription(`subscription`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -771,6 +796,13 @@ open class GQLClientMock: GQLClient, Mock {
             let willReturn: [AnyPublisher<Query.Data, GQLError>] = []
 			let given: Given = { return Given(method: .m_watch__query_querypolicy_policy(`query`.wrapAsGeneric(), `policy`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (AnyPublisher<Query.Data, GQLError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func watchAndUpdate<Query: GQLQuery>(query: Parameter<Query>, willProduce: (Stubber<AnyPublisher<AnyResponse<Query.Data, GQLError>, GQLError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<Query.Data, GQLError>, GQLError>] = []
+			let given: Given = { return Given(method: .m_watchAndUpdate__query_query(`query`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<Query.Data, GQLError>, GQLError>).self)
 			willProduce(stubber)
 			return given
         }
@@ -809,6 +841,7 @@ open class GQLClientMock: GQLClient, Mock {
         public static func fetch<Query>(query: Parameter<Query>, policy: Parameter<GQLFetchPolicy>) -> Verify where Query:GQLQuery { return Verify(method: .m_fetch__query_querypolicy_policy(`query`.wrapAsGeneric(), `policy`))}
         public static func perform<Mutation>(mutation: Parameter<Mutation>) -> Verify where Mutation:GQLMutation { return Verify(method: .m_perform__mutation_mutation(`mutation`.wrapAsGeneric()))}
         public static func watch<Query>(query: Parameter<Query>, policy: Parameter<GQLWatchPolicy>) -> Verify where Query:GQLQuery { return Verify(method: .m_watch__query_querypolicy_policy(`query`.wrapAsGeneric(), `policy`))}
+        public static func watchAndUpdate<Query>(query: Parameter<Query>) -> Verify where Query:GQLQuery { return Verify(method: .m_watchAndUpdate__query_query(`query`.wrapAsGeneric()))}
         public static func subscribe<Subscription>(subscription: Parameter<Subscription>) -> Verify where Subscription:GQLSubscription { return Verify(method: .m_subscribe__subscription_subscription(`subscription`.wrapAsGeneric()))}
         public static func addRefetchTriggers(_ triggers: Parameter<[RefetchTrigger]>) -> Verify { return Verify(method: .m_addRefetchTriggers__triggers(`triggers`))}
     }
@@ -825,6 +858,9 @@ open class GQLClientMock: GQLClient, Mock {
         }
         public static func watch<Query>(query: Parameter<Query>, policy: Parameter<GQLWatchPolicy>, perform: @escaping (Query, GQLWatchPolicy) -> Void) -> Perform where Query:GQLQuery {
             return Perform(method: .m_watch__query_querypolicy_policy(`query`.wrapAsGeneric(), `policy`), performs: perform)
+        }
+        public static func watchAndUpdate<Query>(query: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_watchAndUpdate__query_query(`query`.wrapAsGeneric()), performs: perform)
         }
         public static func subscribe<Subscription>(subscription: Parameter<Subscription>, perform: @escaping (Subscription) -> Void) -> Perform where Subscription:GQLSubscription {
             return Perform(method: .m_subscribe__subscription_subscription(`subscription`.wrapAsGeneric()), performs: perform)

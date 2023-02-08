@@ -19,10 +19,9 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     func watchConversationItems(
         ofConversationWithId conversationId: UUID
-    ) -> AnyPublisher<PaginatedList<RemoteConversationItem>, GQLError> {
-        let watcher = gqlClient.watch(
-            query: Constants.rootQuery(conversationId: conversationId),
-            policy: .returnCacheDataAndFetch
+    ) -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, GQLError>, GQLError> {
+        let watcher = gqlClient.watchAndUpdate(
+            query: Constants.rootQuery(conversationId: conversationId)
         )
         
         let makeLoadMore: (String?) -> () async throws -> Void = { [weak self] cursor in
@@ -37,12 +36,14 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         }
         
         return watcher
-            .map { data -> PaginatedList<RemoteConversationItem> in
-                let items = data.conversation.conversation.items
-                return PaginatedList(
-                    elements: items.data.compactMap { $0?.fragments.conversationItemFragment },
-                    loadMore: items.hasMore ? makeLoadMore(items.nextCursor) : nil
-                )
+            .map { response -> AnyResponse<PaginatedList<RemoteConversationItem>, GQLError> in
+                response.mapData { data in
+                    let items = data.conversation.conversation.items
+                    return PaginatedList(
+                        elements: items.data.compactMap { $0?.fragments.conversationItemFragment },
+                        loadMore: items.hasMore ? makeLoadMore(items.nextCursor) : nil
+                    )
+                }
             }
             .eraseToAnyPublisher()
     }

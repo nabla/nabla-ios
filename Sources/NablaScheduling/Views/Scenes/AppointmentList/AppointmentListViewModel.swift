@@ -32,6 +32,7 @@ protocol AppointmentListViewModel: ViewModel, AppointmentCellViewModelDelegate {
     @MainActor var selectedSelector: AppointmentsSelector { get set }
     @MainActor var appointments: [Appointment] { get }
     @MainActor var isLoading: Bool { get }
+    @MainActor var isRefreshing: Bool { get }
     @MainActor var alert: AlertViewModel? { get set }
     @MainActor var videoCallRoom: Location.RemoteLocation.VideoCallRoom? { get }
     
@@ -57,10 +58,17 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
         }
     }
     
+    var isRefreshing: Bool {
+        switch selectedSelector {
+        case .upcoming: return isRefreshingUpcomingAppointments
+        case .finalized: return isRefreshingFinalizedAppointments
+        }
+    }
+    
     var appointments: [Appointment] {
         switch selectedSelector {
-        case .upcoming: return upcomingAppointments.data
-        case .finalized: return finalizedAppointments.data
+        case .upcoming: return upcomingAppointments.elements
+        case .finalized: return finalizedAppointments.elements
         }
     }
     
@@ -77,8 +85,8 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     func userDidSelectAppointment(atIndex index: Int) {
         let appointment: Appointment?
         switch selectedSelector {
-        case .upcoming: appointment = upcomingAppointments.data.nabla.element(at: index)
-        case .finalized: appointment = finalizedAppointments.data.nabla.element(at: index)
+        case .upcoming: appointment = upcomingAppointments.elements.nabla.element(at: index)
+        case .finalized: appointment = finalizedAppointments.elements.nabla.element(at: index)
         }
         guard let selectedAppointment = appointment else {
             logger.error(message: "Appointment at index not found", extra: ["index": index])
@@ -113,10 +121,12 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     private let client: NablaSchedulingClient
     private let logger: Logger
     
-    @Published private var upcomingAppointments: PaginatedList<Appointment> = .init(data: [], hasMore: false, loadMore: nil)
-    @Published private var finalizedAppointments: PaginatedList<Appointment> = .init(data: [], hasMore: false, loadMore: nil)
+    @Published private var upcomingAppointments: PaginatedList<Appointment> = .empty
+    @Published private var finalizedAppointments: PaginatedList<Appointment> = .empty
     @Published private var isLoadingUpcomingAppointments = false
     @Published private var isLoadingFinalizedAppointments = false
+    @Published private var isRefreshingUpcomingAppointments = false
+    @Published private var isRefreshingFinalizedAppointments = false
     
     private var isLoadingMoreUpcomingAppointments = false
     private var isLoadingMoreFinalizedAppointments = false
@@ -129,9 +139,10 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
         
         upcomingAppointmentsWatcher = client.watchAppointments(state: .upcoming)
             .nabla.drive(
-                receiveValue: { [weak self] data in
-                    self?.upcomingAppointments = data
+                receiveValue: { [weak self] response in
+                    self?.upcomingAppointments = response.data
                     self?.isLoadingUpcomingAppointments = false
+                    self?.isRefreshingUpcomingAppointments = response.refreshingState.isRefreshing
                 },
                 receiveError: { [weak self] error in
                     self?.alert = .error(
@@ -140,6 +151,7 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
                         fallbackMessage: L10n.appointmentsScreenLoadListErrorMessage
                     )
                     self?.isLoadingUpcomingAppointments = false
+                    self?.isRefreshingUpcomingAppointments = false
                 }
             )
     }
@@ -149,9 +161,10 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
         
         finalizedAppointmentsWatcher = client.watchAppointments(state: .finalized)
             .nabla.drive(
-                receiveValue: { [weak self] data in
-                    self?.finalizedAppointments = data
+                receiveValue: { [weak self] response in
+                    self?.finalizedAppointments = response.data
                     self?.isLoadingFinalizedAppointments = false
+                    self?.isRefreshingFinalizedAppointments = response.refreshingState.isRefreshing
                 },
                 receiveError: { [weak self] error in
                     self?.alert = .error(
@@ -160,6 +173,7 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
                         fallbackMessage: L10n.appointmentsScreenLoadListErrorMessage
                     )
                     self?.isLoadingFinalizedAppointments = false
+                    self?.isRefreshingFinalizedAppointments = false
                 }
             )
     }

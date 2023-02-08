@@ -18,7 +18,7 @@ protocol NablaMessagingClientProtocol {
 
     func watchItems(
         ofConversationWithId conversationId: UUID
-    ) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError>
+    ) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>
 
     func setIsTyping(
         _ isTyping: Bool,
@@ -27,9 +27,9 @@ protocol NablaMessagingClientProtocol {
 
     func markConversationAsSeen(_ conversationId: UUID) async throws
 
-    func watchConversations() -> AnyPublisher<PaginatedList<Conversation>, NablaError>
+    func watchConversations() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>
 
-    func watchConversation(withId conversationId: UUID) -> AnyPublisher<Conversation, NablaError>
+    func watchConversation(withId conversationId: UUID) -> AnyPublisher<Response<Conversation>, NablaError>
 
     func sendMessage(
         _ message: MessageInput,

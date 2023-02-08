@@ -30,12 +30,13 @@ import XCTest
         viewModel.given(.onChange(willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.onChange(throttle: .any, willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.alert(getter: nil))
+        viewModel.given(.isLoading(getter: false))
+        viewModel.given(.isRefreshing(getter: false))
     }
 
     func testAppointmentlistViewControllerUpcomingTabWithImminentAppointments() {
         // GIVEN
         viewModel.given(.selectedSelector(getter: .upcoming))
-        viewModel.given(.isLoading(getter: false))
         viewModel.given(.appointments(getter: [
             makeAppointment(state: .upcoming, date: .nabla.now()),
             makeAppointment(state: .upcoming, date: .nabla.now().adding(minutes: 9)),
@@ -49,7 +50,19 @@ import XCTest
     func testAppointmentlistViewControllerUpcomingTabWithFarAppointments() {
         // GIVEN
         viewModel.given(.selectedSelector(getter: .upcoming))
-        viewModel.given(.isLoading(getter: false))
+        viewModel.given(.appointments(getter: [
+            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 1979286455)), // 2032
+            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 906285296)), // 1998
+        ]))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testAppointmentlistViewControllerUpcomingTabWithFarAppointmentsRefreshing() {
+        // GIVEN
+        viewModel.given(.isRefreshing(getter: true))
+        viewModel.given(.selectedSelector(getter: .upcoming))
         viewModel.given(.appointments(getter: [
             makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 1979286455)), // 2032
             makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 906285296)), // 1998
@@ -62,7 +75,6 @@ import XCTest
     func testAppointmentlistViewControllerFinalizedTab() {
         // GIVEN
         viewModel.given(.selectedSelector(getter: .finalized))
-        viewModel.given(.isLoading(getter: false))
         viewModel.given(.appointments(getter: (0 ... 10).map { (index: Int) -> Appointment in
             makeAppointment(state: .finalized, date: .nabla.now().adding(minutes: index))
         }))

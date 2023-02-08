@@ -21,22 +21,20 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
 
     // MARK: - Internal
     
-    func execute(conversationId: UUID) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+    func execute(conversationId: UUID) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError> {
         guard isAuthenticated else {
             return Fail(error: MissingAuthenticationProviderError()).eraseToAnyPublisher()
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
         return itemsRepository
             .watchConversationItems(ofConversationWithId: transientId)
-            .map { [logger, gateKeepers] (conversationItems: PaginatedList<ConversationItem>) -> PaginatedList<ConversationItem> in
-                if gateKeepers.supportVideoCallActionRequests { return conversationItems }
-                var elements = conversationItems.elements
-                elements.removeAll { $0 is VideoCallRoomInteractiveMessage }
-                if conversationItems.elements.count != elements.count {
-                    logger.warning(message: "Found some `VideoCallRoomInteractiveMessage` but the `NablaVideoCallModule` is not registered.")
+            .map { [logger, gateKeepers] response -> AnyResponse<PaginatedList<ConversationItem>, NablaError> in
+                if gateKeepers.supportVideoCallActionRequests { return response }
+                return response.mapData { conversationItems in
+                    Self.filterVideoCallItems(from: conversationItems, logger: logger)
                 }
-                return PaginatedList(elements: elements, loadMore: conversationItems.loadMore)
             }
+            .map { $0.asResponse() }
             .eraseToAnyPublisher()
     }
     
@@ -46,4 +44,13 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
     private let conversationsRepository: ConversationRepository
     private let gateKeepers: GateKeepers
     private let logger: Logger
+    
+    private static func filterVideoCallItems(from list: PaginatedList<ConversationItem>, logger: Logger) -> PaginatedList<ConversationItem> {
+        var elements = list.elements
+        elements.removeAll { $0 is VideoCallRoomInteractiveMessage }
+        if list.elements.count != elements.count {
+            logger.warning(message: "Found some `VideoCallRoomInteractiveMessage` but the `NablaVideoCallModule` is not registered.")
+        }
+        return PaginatedList(elements: elements, loadMore: list.loadMore)
+    }
 }

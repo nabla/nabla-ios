@@ -5,3 +5,7 @@
 // ----- Errors
 
 "error_default_close_button" = "Ok";
+
+// ----- Refreshing indicator
+
+"refreshing_indicator_label" = "Mise à jour";

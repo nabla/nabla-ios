@@ -47,7 +47,12 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
             VideoCallRoomInteractiveMessage(id: .init(), date: .init(), sender: .me, status: .closed),
             TextMessageItem(id: .init(), date: .init(), sender: .me, sendingState: .sent, replyTo: .none, content: "World"),
         ]
-        let publisher = Just(PaginatedList(elements: elements, loadMore: nil))
+        let response = AnyResponse<PaginatedList<ConversationItem>, NablaError>(
+            data: PaginatedList(elements: elements, loadMore: nil),
+            isDataFresh: true,
+            refreshingState: .refreshed
+        )
+        let publisher = Just(response)
             .setFailureType(to: NablaError.self)
             .eraseToAnyPublisher()
         
@@ -64,7 +69,7 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
                     XCTFail("Received unexpected error: \(error)")
                 }
             }, receiveValue: { conversationItems in
-                result = conversationItems
+                result = conversationItems.data
                 receivedValue.fulfill()
             })
         waitForExpectations(timeout: 0.5)

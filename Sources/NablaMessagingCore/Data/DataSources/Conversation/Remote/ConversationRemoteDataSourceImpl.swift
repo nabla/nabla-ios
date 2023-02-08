@@ -38,19 +38,19 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
         _ = try await gqlClient.perform(mutation: GQL.MaskAsSeenMutation(conversationId: conversationId))
     }
     
-    func watchConversation(_ conversationId: UUID) -> AnyPublisher<RemoteConversation, GQLError> {
-        gqlClient.watch(
-            query: GQL.GetConversationQuery(id: conversationId),
-            policy: .returnCacheDataAndFetch
+    func watchConversation(_ conversationId: UUID) -> AnyPublisher<AnyResponse<RemoteConversation, GQLError>, GQLError> {
+        gqlClient.watchAndUpdate(
+            query: GQL.GetConversationQuery(id: conversationId)
         )
-        .map(\.conversation.conversation.fragments.conversationFragment)
+        .map { response in
+            response.mapData(\.conversation.conversation.fragments.conversationFragment)
+        }
         .eraseToAnyPublisher()
     }
     
-    func watchConversations() -> AnyPublisher<PaginatedList<RemoteConversation>, GQLError> {
-        let watcher = gqlClient.watch(
-            query: Constants.conversationsRootQuery,
-            policy: .fetchIgnoringCacheData
+    func watchConversations() -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversation>, GQLError>, GQLError> {
+        let watcher = gqlClient.watchAndUpdate(
+            query: Constants.conversationsRootQuery
         )
         
         let makeLoadMore: (String?) -> () async throws -> Void = { [weak self] cursor in
@@ -65,14 +65,16 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
         }
         
         return watcher
-            .map { data in
-                let sortedConversations = data.conversations.conversations
-                    .map(\.fragments.conversationFragment)
-                    .nabla.sorted(\.updatedAt, using: >)
-                return PaginatedList(
-                    elements: sortedConversations,
-                    loadMore: data.conversations.hasMore ? makeLoadMore(data.conversations.nextCursor) : nil
-                )
+            .map { response in
+                response.mapData { data in
+                    let sortedConversations = data.conversations.conversations
+                        .map(\.fragments.conversationFragment)
+                        .nabla.sorted(\.updatedAt, using: >)
+                    return PaginatedList(
+                        elements: sortedConversations,
+                        loadMore: data.conversations.hasMore ? makeLoadMore(data.conversations.nextCursor) : nil
+                    )
+                }
             }
             .eraseToAnyPublisher()
     }

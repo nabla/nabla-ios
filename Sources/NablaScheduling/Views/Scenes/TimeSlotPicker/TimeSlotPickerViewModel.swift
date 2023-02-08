@@ -134,7 +134,7 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
         modelWatcher = client.watchAvailabilitySlots(forCategoryWithId: category.id, location: location)
             .nabla.drive(
                 receiveValue: { [weak self] list in
-                    self?.slots = Self.group(list.data)
+                    self?.slots = Self.group(list.elements)
                     self?.loadMore = list.loadMore
                     self?.isLoading = false
                 },

@@ -16,11 +16,6 @@ struct ConversationListViewModelTransformer {
         )
     }
     
-    func transform(conversations: [Conversation]) -> ConversationListViewModel {
-        let items = conversations.map(transform(conversation:))
-        return ConversationListViewModel(items: items)
-    }
-    
     // MARK: - Private
     
     private var shortDateFormatter: DateFormatter = {

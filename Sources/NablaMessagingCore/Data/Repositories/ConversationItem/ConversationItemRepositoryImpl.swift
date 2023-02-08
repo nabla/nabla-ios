@@ -25,20 +25,29 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     
     func watchConversationItems(
         ofConversationWithId conversationId: TransientUUID
-    ) -> AnyPublisher<PaginatedList<ConversationItem>, NablaError> {
+    ) -> AnyPublisher<AnyResponse<PaginatedList<ConversationItem>, NablaError>, NablaError> {
         let localData = itemsLocalDataSource
             .watchConversationItems(ofConversationWithId: conversationId.localId)
             .setFailureType(to: NablaError.self)
+            .eraseToAnyPublisher()
         
         let remoteData = conversationId.observeRemoteId()
-            .map { [itemsRemoteDataSource] remoteConversationId -> AnyPublisher<PaginatedList<RemoteConversationItem>, NablaError> in
+            .map { [itemsRemoteDataSource] remoteConversationId -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, NablaError>, NablaError> in
                 if let remoteConversationId = remoteConversationId {
                     return itemsRemoteDataSource
                         .watchConversationItems(ofConversationWithId: remoteConversationId)
                         .mapError(GQLErrorTransformer.transform(gqlError:))
+                        .map { response in
+                            response.mapError(GQLErrorTransformer.transform(gqlError:))
+                        }
                         .eraseToAnyPublisher()
                 } else {
-                    return Just(PaginatedList<RemoteConversationItem>.empty)
+                    let initialValue = AnyResponse<PaginatedList<RemoteConversationItem>, NablaError>(
+                        data: .empty,
+                        isDataFresh: false,
+                        refreshingState: .refreshing
+                    )
+                    return Just(initialValue)
                         .setFailureType(to: NablaError.self)
                         .eraseToAnyPublisher()
                 }
@@ -50,12 +59,14 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         assert(subscriber != nil) // Silences "Variable `subscriber` was written to, but never read" warning
         
         return Publishers.CombineLatest(localData, remoteData)
-            .map { [logger] localData, remoteData -> PaginatedList<ConversationItem> in
-                let items = Self.merge(remoteData.elements, localData, logger: logger)
-                return PaginatedList(
-                    elements: items,
-                    loadMore: remoteData.loadMore
-                )
+            .map { [logger] (localData: [LocalConversationItem], remoteResponse: AnyResponse<PaginatedList<RemoteConversationItem>, NablaError>) in
+                remoteResponse.mapData { remoteData in
+                    let items = Self.merge(remoteData.elements, localData, logger: logger)
+                    return PaginatedList(
+                        elements: items,
+                        loadMore: remoteData.loadMore
+                    )
+                }
             }
             .handleEvents(receiveCancel: {
                 subscriber = nil
