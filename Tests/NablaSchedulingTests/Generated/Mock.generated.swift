@@ -1408,6 +1408,13 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 	}
 	private var __p_videoCallRoom: (Location.RemoteLocation.VideoCallRoom)?
 
+    @MainActor
+		public var externalCallURL: URL? {
+		get {	invocations.append(.p_externalCallURL_get); return __p_externalCallURL ?? optionalGivenGetterValue(.p_externalCallURL_get, "AppointmentListViewModelMock - stub value for externalCallURL was not defined") }
+		set {	invocations.append(.p_externalCallURL_set(.value(newValue))); __p_externalCallURL = newValue }
+	}
+	private var __p_externalCallURL: (URL)?
+
 
 
 
@@ -1437,6 +1444,12 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         addInvocation(.m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<Location.RemoteLocation.VideoCallRoom>.value(`room`)))
 		let perform = methodPerformValue(.m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<Location.RemoteLocation.VideoCallRoom>.value(`room`))) as? (AppointmentCellViewModel, Location.RemoteLocation.VideoCallRoom) -> Void
 		perform?(`viewModel`, `room`)
+    }
+
+    open func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapJoinExternalCallURL url: URL) {
+        addInvocation(.m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<URL>.value(`url`)))
+		let perform = methodPerformValue(.m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(Parameter<AppointmentCellViewModel>.value(`viewModel`), Parameter<URL>.value(`url`))) as? (AppointmentCellViewModel, URL) -> Void
+		perform?(`viewModel`, `url`)
     }
 
     open func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapSecondaryActionsButtonFor appointment: Appointment) {
@@ -1479,6 +1492,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         case m_userDidTapCreateAppointmentButton
         case m_userDidSelectAppointment__atIndex_index(Parameter<Int>)
         case m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(Parameter<AppointmentCellViewModel>, Parameter<Location.RemoteLocation.VideoCallRoom>)
+        case m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(Parameter<AppointmentCellViewModel>, Parameter<URL>)
         case m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(Parameter<AppointmentCellViewModel>, Parameter<Appointment>)
         case m_onChange
         case m_onChange__throttle_throttle(Parameter<DispatchQueue.SchedulerTimeType.Stride>)
@@ -1490,6 +1504,8 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         case p_alert_get
 		case p_alert_set(Parameter<AlertViewModel?>)
         case p_videoCallRoom_get
+        case p_externalCallURL_get
+		case p_externalCallURL_set(Parameter<URL?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -1506,6 +1522,12 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsViewmodel, rhs: rhsViewmodel, with: matcher), lhsViewmodel, rhsViewmodel, "_ viewModel"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsRoom, rhs: rhsRoom, with: matcher), lhsRoom, rhsRoom, "didTapJoinVideoCall room"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(let lhsViewmodel, let lhsUrl), .m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(let rhsViewmodel, let rhsUrl)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsViewmodel, rhs: rhsViewmodel, with: matcher), lhsViewmodel, rhsViewmodel, "_ viewModel"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher), lhsUrl, rhsUrl, "didTapJoinExternalCallURL url"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(let lhsViewmodel, let lhsAppointment), .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(let rhsViewmodel, let rhsAppointment)):
@@ -1528,6 +1550,8 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case (.p_alert_get,.p_alert_get): return Matcher.ComparisonResult.match
 			case (.p_alert_set(let left),.p_alert_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_videoCallRoom_get,.p_videoCallRoom_get): return Matcher.ComparisonResult.match
+            case (.p_externalCallURL_get,.p_externalCallURL_get): return Matcher.ComparisonResult.match
+			case (.p_externalCallURL_set(let left),.p_externalCallURL_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<URL?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             default: return .none
             }
         }
@@ -1538,6 +1562,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case .m_userDidTapCreateAppointmentButton: return 0
             case let .m_userDidSelectAppointment__atIndex_index(p0): return p0.intValue
             case let .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(p0, p1): return p0.intValue + p1.intValue
+            case let .m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(p0, p1): return p0.intValue + p1.intValue
             case let .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(p0, p1): return p0.intValue + p1.intValue
             case .m_onChange: return 0
             case let .m_onChange__throttle_throttle(p0): return p0.intValue
@@ -1549,6 +1574,8 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case .p_alert_get: return 0
 			case .p_alert_set(let newValue): return newValue.intValue
             case .p_videoCallRoom_get: return 0
+            case .p_externalCallURL_get: return 0
+			case .p_externalCallURL_set(let newValue): return newValue.intValue
             }
         }
         func assertionName() -> String {
@@ -1557,6 +1584,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case .m_userDidTapCreateAppointmentButton: return ".userDidTapCreateAppointmentButton()"
             case .m_userDidSelectAppointment__atIndex_index: return ".userDidSelectAppointment(atIndex:)"
             case .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room: return ".appointmentCellViewModel(_:didTapJoinVideoCall:)"
+            case .m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url: return ".appointmentCellViewModel(_:didTapJoinExternalCallURL:)"
             case .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment: return ".appointmentCellViewModel(_:didTapSecondaryActionsButtonFor:)"
             case .m_onChange: return ".onChange()"
             case .m_onChange__throttle_throttle: return ".onChange(throttle:)"
@@ -1568,6 +1596,8 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case .p_alert_get: return "[get] .alert"
 			case .p_alert_set: return "[set] .alert"
             case .p_videoCallRoom_get: return "[get] .videoCallRoom"
+            case .p_externalCallURL_get: return "[get] .externalCallURL"
+			case .p_externalCallURL_set: return "[set] .externalCallURL"
             }
         }
     }
@@ -1604,6 +1634,10 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
 		public static func videoCallRoom(getter defaultValue: Location.RemoteLocation.VideoCallRoom?...) -> PropertyStub {
             return Given(method: .p_videoCallRoom_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
+        @MainActor
+		public static func externalCallURL(getter defaultValue: URL?...) -> PropertyStub {
+            return Given(method: .p_externalCallURL_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
         public static func onChange(willReturn: AnyPublisher<Void, Never>...) -> MethodStub {
             return Given(method: .m_onChange, products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -1637,6 +1671,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         @MainActor
 		public static func userDidSelectAppointment(atIndex index: Parameter<Int>) -> Verify { return Verify(method: .m_userDidSelectAppointment__atIndex_index(`index`))}
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Location.RemoteLocation.VideoCallRoom>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(`viewModel`, `room`))}
+        public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinExternalCallURL url: Parameter<URL>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(`viewModel`, `url`))}
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapSecondaryActionsButtonFor appointment: Parameter<Appointment>) -> Verify { return Verify(method: .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(`viewModel`, `appointment`))}
         public static func onChange() -> Verify { return Verify(method: .m_onChange)}
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>) -> Verify { return Verify(method: .m_onChange__throttle_throttle(`throttle`))}
@@ -1648,6 +1683,8 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         public static var alert: Verify { return Verify(method: .p_alert_get) }
 		public static func alert(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_alert_set(newValue)) }
         public static var videoCallRoom: Verify { return Verify(method: .p_videoCallRoom_get) }
+        public static var externalCallURL: Verify { return Verify(method: .p_externalCallURL_get) }
+		public static func externalCallURL(set newValue: Parameter<URL?>) -> Verify { return Verify(method: .p_externalCallURL_set(newValue)) }
     }
 
     public struct Perform {
@@ -1668,6 +1705,9 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         }
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinVideoCall room: Parameter<Location.RemoteLocation.VideoCallRoom>, perform: @escaping (AppointmentCellViewModel, Location.RemoteLocation.VideoCallRoom) -> Void) -> Perform {
             return Perform(method: .m_appointmentCellViewModel__viewModeldidTapJoinVideoCall_room(`viewModel`, `room`), performs: perform)
+        }
+        public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapJoinExternalCallURL url: Parameter<URL>, perform: @escaping (AppointmentCellViewModel, URL) -> Void) -> Perform {
+            return Perform(method: .m_appointmentCellViewModel__viewModeldidTapJoinExternalCallURL_url(`viewModel`, `url`), performs: perform)
         }
         public static func appointmentCellViewModel(_ viewModel: Parameter<AppointmentCellViewModel>, didTapSecondaryActionsButtonFor appointment: Parameter<Appointment>, perform: @escaping (AppointmentCellViewModel, Appointment) -> Void) -> Perform {
             return Perform(method: .m_appointmentCellViewModel__viewModeldidTapSecondaryActionsButtonFor_appointment(`viewModel`, `appointment`), performs: perform)

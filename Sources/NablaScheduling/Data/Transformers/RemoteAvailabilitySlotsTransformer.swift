@@ -27,7 +27,7 @@ enum RemoteAvailabilitySlotsTransformer {
                 extraDetails: address.extraDetails
             )))
         } else if location.asRemoteAvailabilitySlotLocation != nil {
-            return .remote(.init(videoCallRoom: nil))
+            return .remote(.undefined)
         } else {
             assertionFailure("Unknown location type")
             return .unknown

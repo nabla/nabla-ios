@@ -184,6 +184,7 @@ final class AppointmentListViewController: UIViewController {
             self.updateSelector()
             self.updateAlert()
             self.updateVideoCallRoom()
+            self.updateExternalCallURL()
         }
     }
     
@@ -244,6 +245,13 @@ final class AppointmentListViewController: UIViewController {
             return
         }
         videoCallClient.openVideoCallRoom(url: room.url, token: room.token, from: self)
+    }
+
+    private func updateExternalCallURL() {
+        guard let externalCallURL = viewModel.externalCallURL else { return }
+        UIApplication.shared.open(externalCallURL) { _ in
+            self.viewModel.externalCallURL = nil
+        }
     }
 }
 

@@ -4,6 +4,7 @@ import NablaCore
 
 protocol AppointmentCellViewModelDelegate: AnyObject {
     func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapJoinVideoCall room: Location.RemoteLocation.VideoCallRoom)
+    func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapJoinExternalCallURL url: URL)
     func appointmentCellViewModel(_ viewModel: AppointmentCellViewModel, didTapSecondaryActionsButtonFor appointment: Appointment)
 }
 
@@ -44,11 +45,17 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     }
     
     var primaryActionTitle: String? {
-        guard let room = joinableVideoCallRoom else { return nil }
-        if currentVideoCallToken == room.token {
-            return L10n.appointmentsScreenCellJoinInprogressButtonLabel
-        } else {
+        switch joinableRemoteLocation {
+        case let .videoCallRoom(room):
+            if currentVideoCallToken == room.token {
+                return L10n.appointmentsScreenCellJoinInprogressButtonLabel
+            } else {
+                return L10n.appointmentsScreenCellJoinButtonLabel
+            }
+        case let .externalCallURL(externalCallURL):
             return L10n.appointmentsScreenCellJoinButtonLabel
+        default:
+            return nil
         }
     }
     
@@ -57,11 +64,14 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     }
     
     func userDidTapPrimaryActionButton() {
-        guard
-            let remoteLocation = appointment.location.asRemote,
-            let videoCallRoom = remoteLocation.videoCallRoom
-        else { return }
-        delegate?.appointmentCellViewModel(self, didTapJoinVideoCall: videoCallRoom)
+        switch appointment.location.asRemote {
+        case let .externalCallURL(url):
+            delegate?.appointmentCellViewModel(self, didTapJoinExternalCallURL: url)
+        case let .videoCallRoom(videoCallRoom):
+            delegate?.appointmentCellViewModel(self, didTapJoinVideoCall: videoCallRoom)
+        default:
+            break
+        }
     }
     
     func userDidTapSecondaryActionsButton() {
@@ -89,8 +99,8 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     private var currentVideoCallWatcher: AnyCancellable?
     
     @Published private var currentVideoCallToken: String?
-    @Published private var joinableVideoCallRoom: Location.RemoteLocation.VideoCallRoom?
-    
+    @Published private var joinableRemoteLocation: Location.RemoteLocation?
+
     private var isAppointmentAboutToStart: Bool {
         appointment.start.nabla.isFuture && appointment.start.nabla.timeIntervalSinceNow < 10 * 60
     }
@@ -100,7 +110,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     }
     
     private func observeTime() {
-        updateTimeConstraintedProperties()
+        updateTimeConstrainedProperties()
         
         // Only self-refresh date display for dates in the [-1h; +1h] range
         if abs(appointment.start.nabla.timeIntervalSinceNow) < 60 * 60 {
@@ -110,15 +120,14 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
         }
     }
     
-    private func updateTimeConstraintedProperties() {
+    private func updateTimeConstrainedProperties() {
         subtitle = format(appointment.start)
-        if
-            let remoteLocation = appointment.location.asRemote,
-            appointment.state != .finalized,
-            isAppointmentAboutToStart || appointment.start.nabla.isPast {
-            joinableVideoCallRoom = remoteLocation.videoCallRoom
+        if let remoteLocation = appointment.location.asRemote,
+           appointment.state != .finalized,
+           isAppointmentAboutToStart || appointment.start.nabla.isPast {
+            joinableRemoteLocation = remoteLocation
         } else {
-            joinableVideoCallRoom = nil
+            joinableRemoteLocation = nil
         }
     }
     

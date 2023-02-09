@@ -1,3 +1,4 @@
+import Foundation
 import NablaCore
 
 final class RemoteAppointmentTransformer {
@@ -32,12 +33,11 @@ final class RemoteAppointmentTransformer {
             
     private func transform(_ location: RemoteAppointment.Location) -> Location {
         if let remoteLocation = location.fragments.locationFragment.asRemoteAppointmentLocation {
-            if let livekitRoom = remoteLocation.livekitRoom?.fragments.livekitRoomFragment {
-                let videoCallRoom = transform(livekitRoom)
-                return .remote(.init(videoCallRoom: videoCallRoom))
-            } else {
-                return .remote(.init(videoCallRoom: nil))
-            }
+            return .remote(
+                remoteLocation.externalCallUrl.flatMap { URL(string: $0) }.map { .externalCallURL($0) }
+                    ?? remoteLocation.livekitRoom.flatMap { transform($0.fragments.livekitRoomFragment) }.map { .videoCallRoom($0) }
+                    ?? .undefined
+            )
         } else if let physicalLocation = location.fragments.locationFragment.asPhysicalAppointmentLocation {
             let address = transform(physicalLocation.address.fragments.addressFragment)
             return .physical(.init(address: address))

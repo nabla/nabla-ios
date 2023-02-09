@@ -14,9 +14,11 @@ public enum Location: Equatable {
         public let address: Address
     }
 
-    public struct RemoteLocation: Equatable {
-        public let videoCallRoom: VideoCallRoom?
-        
+    public enum RemoteLocation: Equatable {
+        case videoCallRoom(VideoCallRoom)
+        case externalCallURL(URL)
+        case undefined
+
         public struct VideoCallRoom: Equatable {
             public let url: String
             public let token: String

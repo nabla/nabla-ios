@@ -26,7 +26,7 @@ protocol VideoCallRoomViewContract: AnyObject {
     func stopPictureInPicture(completion: (() -> Void)?)
     
     func openSettings()
-    func updatePartcipantsCount(count: Int?)
+    func updateParticipantsCount(count: Int?)
 }
 
 final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewContract {
@@ -113,7 +113,7 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
         UIApplication.shared.open(url)
     }
     
-    func updatePartcipantsCount(count: Int?) {
+    func updateParticipantsCount(count: Int?) {
         if let count = count {
             participantsCountView.text = "\(count)"
             participantsCountView.alpha = 1

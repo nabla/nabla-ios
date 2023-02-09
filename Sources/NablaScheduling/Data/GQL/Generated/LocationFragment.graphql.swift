@@ -25,6 +25,7 @@ import Foundation
             __typename
             ...LivekitRoomFragment
           }
+          externalCallUrl
         }
       }
       """
@@ -52,8 +53,8 @@ import Foundation
       return LocationFragment(unsafeResultMap: ["__typename": "PhysicalAppointmentLocation", "address": address.resultMap])
     }
 
-     static func makeRemoteAppointmentLocation(livekitRoom: AsRemoteAppointmentLocation.LivekitRoom? = nil) -> LocationFragment {
-      return LocationFragment(unsafeResultMap: ["__typename": "RemoteAppointmentLocation", "livekitRoom": livekitRoom.flatMap { (value: AsRemoteAppointmentLocation.LivekitRoom) -> ResultMap in value.resultMap }])
+     static func makeRemoteAppointmentLocation(livekitRoom: AsRemoteAppointmentLocation.LivekitRoom? = nil, externalCallUrl: String? = nil) -> LocationFragment {
+      return LocationFragment(unsafeResultMap: ["__typename": "RemoteAppointmentLocation", "livekitRoom": livekitRoom.flatMap { (value: AsRemoteAppointmentLocation.LivekitRoom) -> ResultMap in value.resultMap }, "externalCallUrl": externalCallUrl])
     }
 
      var __typename: String {
@@ -191,6 +192,7 @@ import Foundation
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("livekitRoom", type: .object(LivekitRoom.selections)),
+          GraphQLField("externalCallUrl", type: .scalar(String.self)),
         ]
       }
 
@@ -200,8 +202,8 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
-       init(livekitRoom: LivekitRoom? = nil) {
-        self.init(unsafeResultMap: ["__typename": "RemoteAppointmentLocation", "livekitRoom": livekitRoom.flatMap { (value: LivekitRoom) -> ResultMap in value.resultMap }])
+       init(livekitRoom: LivekitRoom? = nil, externalCallUrl: String? = nil) {
+        self.init(unsafeResultMap: ["__typename": "RemoteAppointmentLocation", "livekitRoom": livekitRoom.flatMap { (value: LivekitRoom) -> ResultMap in value.resultMap }, "externalCallUrl": externalCallUrl])
       }
 
        var __typename: String {
@@ -219,6 +221,15 @@ import Foundation
         }
         set {
           resultMap.updateValue(newValue?.resultMap, forKey: "livekitRoom")
+        }
+      }
+
+       var externalCallUrl: String? {
+        get {
+          return resultMap["externalCallUrl"] as? String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "externalCallUrl")
         }
       }
 

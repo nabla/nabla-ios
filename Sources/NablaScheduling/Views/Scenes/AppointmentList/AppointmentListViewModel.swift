@@ -35,7 +35,8 @@ protocol AppointmentListViewModel: ViewModel, AppointmentCellViewModelDelegate {
     @MainActor var isRefreshing: Bool { get }
     @MainActor var alert: AlertViewModel? { get set }
     @MainActor var videoCallRoom: Location.RemoteLocation.VideoCallRoom? { get }
-    
+    @MainActor var externalCallURL: URL? { get set }
+
     @MainActor func userDidReachEndOfList()
     @MainActor func userDidTapCreateAppointmentButton()
     @MainActor func userDidSelectAppointment(atIndex index: Int)
@@ -50,7 +51,8 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     @Published var selectedSelector: AppointmentsSelector = .upcoming
     @Published var alert: AlertViewModel?
     @Published var videoCallRoom: Location.RemoteLocation.VideoCallRoom?
-    
+    @Published var externalCallURL: URL?
+
     var isLoading: Bool {
         switch selectedSelector {
         case .upcoming: return isLoadingUpcomingAppointments
@@ -210,7 +212,11 @@ extension AppointmentListViewModelImpl: AppointmentCellViewModelDelegate {
     func appointmentCellViewModel(_: AppointmentCellViewModel, didTapJoinVideoCall room: Location.RemoteLocation.VideoCallRoom) {
         videoCallRoom = room
     }
-    
+
+    func appointmentCellViewModel(_: AppointmentCellViewModel, didTapJoinExternalCallURL url: URL) {
+        externalCallURL = url
+    }
+
     func appointmentCellViewModel(_: AppointmentCellViewModel, didTapSecondaryActionsButtonFor appointment: Appointment) {
         delegate?.appointmentListDidSelectAppointment(appointment)
     }

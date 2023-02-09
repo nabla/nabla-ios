@@ -5,7 +5,7 @@ import NablaCoreTestsUtils
 import SnapshotTesting
 import XCTest
 
-@MainActor class AppointmentlistViewControllerTests: XCTestCase {
+@MainActor class AppointmentListViewControllerTests: XCTestCase {
     private var sut: AppointmentListViewController!
     
     private var viewModel: AppointmentListViewModelMock!
@@ -96,9 +96,7 @@ import XCTest
                 title: "GP",
                 avatarUrl: nil
             ),
-            location: .remote(.init(
-                videoCallRoom: state == .finalized ? nil : .init(url: "", token: "")
-            ))
+            location: .remote(state == .finalized ? .undefined : .videoCallRoom(.init(url: "", token: "")))
         )
     }
 }

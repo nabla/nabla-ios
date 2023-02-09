@@ -163,7 +163,7 @@ final class VideoCallRoomPresenterImpl: VideoCallRoomPresenter {
             view?.setMainTrack(.disconnected)
             view?.setSecondaryTrack(nil)
         }
-        view?.updatePartcipantsCount(count: remoteUsers.count > 1 ? (remoteUsers.count + 1) : nil)
+        view?.updateParticipantsCount(count: remoteUsers.count > 1 ? (remoteUsers.count + 1) : nil)
     }
     
     private func updateLocalUserState() {
