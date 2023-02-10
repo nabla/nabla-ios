@@ -23,6 +23,8 @@ final class ConversationPresenterImpl: ConversationPresenter {
     
     func didTapOnSend(text: String, medias: [Media], replyingToMessageUUID replyToUUID: UUID?) {
         view?.emptyComposer()
+        didRecentlySendNewMessage = true
+        
         medias.forEach { media in
             guard let input = media.messageInput else { return }
             Task(priority: .userInitiated) {
@@ -201,6 +203,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
     private var conversation: Conversation?
     private var conversationItems: Response<PaginatedList<ConversationItem>>?
     private var draftText: String = ""
+    private var didRecentlySendNewMessage = false
     private var state: ConversationViewState = .loading {
         didSet { view?.configure(withState: state) }
     }
@@ -241,6 +244,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
                 self.conversationItems = response
                 self.updateConversationItems()
                 self.markConversationAsSeen()
+                if self.didRecentlySendNewMessage, let firstItem = response.data.elements.first {
+                    self.view?.scrollToItem(withId: firstItem.id)
+                    self.didRecentlySendNewMessage = false
+                }
             }, receiveError: { [weak self] error in
                 guard let self = self else { return }
                 self.logger.warning(message: "Failed to watch messages", error: error)

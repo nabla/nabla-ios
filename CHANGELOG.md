@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Messaging Core: `watchConversation(withId:)` now returns a `AnyPublisher<Response<Conversation>, NablaError>`.
 - Messaging Core: `watchItems(ofConversationWithId:)` now returns a `AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>`.
 - Messaging Core: `watchConversations()` now returns a `AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>`.
+- Messaging UI: After sending a message in a conversation, the view will automatically scroll to it.
 - Messaging UI: Increased the composer default font size.
 
 ### Fixed
