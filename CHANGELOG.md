@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Scheduling: Months are no longer capitalized when using the french locale.
+
 
 ## [1.0.0-alpha31] - 2023-02-03
 

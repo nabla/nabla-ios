@@ -178,13 +178,14 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
         dateFormatter.timeStyle = .none
         dateFormatter.dateStyle = .full
         dateFormatter.doesRelativeDateFormatting = true
+        dateFormatter.formattingContext = .beginningOfSentence
         
         return slots
             .nabla.sortedByKeys()
             .map { date, slots -> TimeSlotGroupViewItem in
                 TimeSlotGroupViewItem(
                     id: date,
-                    title: dateFormatter.string(from: date).capitalized,
+                    title: dateFormatter.string(from: date),
                     subtitle: L10n.timeSlotsPickerScreenGroupSubtitleFormat(slots.count),
                     timeSlots: slots.map { transform($0, selected: selected) },
                     opened: openedGroups.contains(date)
