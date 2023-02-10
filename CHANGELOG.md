@@ -14,9 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - VideoCall: Handle and open external video call urls when specified on appointments.
 
 ### Changed
+
 - Messaging Core: `watchConversation(withId:)` now returns a `AnyPublisher<Response<Conversation>, NablaError>`.
 - Messaging Core: `watchItems(ofConversationWithId:)` now returns a `AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError>`.
 - Messaging Core: `watchConversations()` now returns a `AnyPublisher<Response<PaginatedList<Conversation>>, NablaError>`.
+- Messaging UI: Increased the composer default font size.
 
 ### Fixed
 

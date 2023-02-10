@@ -160,7 +160,7 @@ public extension NablaTheme {
         /// Color used to display the text entered by the user in the composer in the conversation screen.
         public static var composerTextColor = Colors.Text.base
         /// Font used for the text entered by the user in the composer in the conversation screen.
-        public static var composerFont = Fonts.body
+        public static var composerFont = Fonts.caption
         /// UIImage used for the send button in the composer in the conversation screen.
         public static var sendIcon = UIImage(systemName: "arrow.up.circle.fill")
         /// UIImage used for the send button disabled state in the composer in the conversation screen.
