@@ -44,8 +44,8 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                 } else {
                     let initialValue = AnyResponse<PaginatedList<RemoteConversationItem>, NablaError>(
                         data: .empty,
-                        isDataFresh: false,
-                        refreshingState: .refreshing
+                        isDataFresh: true,
+                        refreshingState: .refreshed
                     )
                     return Just(initialValue)
                         .setFailureType(to: NablaError.self)
