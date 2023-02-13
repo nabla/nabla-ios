@@ -20,7 +20,7 @@ final class SentryErrorReporter: ErrorReporter {
         sentryOptions.enableSwizzling = false
         sentryOptions.attachStacktrace = false
         
-        let client = Client(options: sentryOptions)
+        let client = SentryClient(options: sentryOptions)
         hub = SentryHub(client: client, andScope: nil)
         
         hub?.scope.setTags(tags)

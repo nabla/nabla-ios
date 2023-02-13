@@ -52,7 +52,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
             } else {
                 return L10n.appointmentsScreenCellJoinButtonLabel
             }
-        case let .externalCallURL(externalCallURL):
+        case .externalCallURL:
             return L10n.appointmentsScreenCellJoinButtonLabel
         default:
             return nil
