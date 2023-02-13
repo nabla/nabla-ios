@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Scheduling: Months are no longer capitalized when using the french locale.
+- VideoCall: Prevent a scenario where the video call screen would appear after the user hangs up.
 
 
 ## [1.0.0-alpha31] - 2023-02-03

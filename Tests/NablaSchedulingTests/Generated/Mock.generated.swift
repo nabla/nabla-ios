@@ -1405,6 +1405,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
     @MainActor
 		public var videoCallRoom: Location.RemoteLocation.VideoCallRoom? {
 		get {	invocations.append(.p_videoCallRoom_get); return __p_videoCallRoom ?? optionalGivenGetterValue(.p_videoCallRoom_get, "AppointmentListViewModelMock - stub value for videoCallRoom was not defined") }
+		set {	invocations.append(.p_videoCallRoom_set(.value(newValue))); __p_videoCallRoom = newValue }
 	}
 	private var __p_videoCallRoom: (Location.RemoteLocation.VideoCallRoom)?
 
@@ -1504,6 +1505,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         case p_alert_get
 		case p_alert_set(Parameter<AlertViewModel?>)
         case p_videoCallRoom_get
+		case p_videoCallRoom_set(Parameter<Location.RemoteLocation.VideoCallRoom?>)
         case p_externalCallURL_get
 		case p_externalCallURL_set(Parameter<URL?>)
 
@@ -1550,6 +1552,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case (.p_alert_get,.p_alert_get): return Matcher.ComparisonResult.match
 			case (.p_alert_set(let left),.p_alert_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<AlertViewModel?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_videoCallRoom_get,.p_videoCallRoom_get): return Matcher.ComparisonResult.match
+			case (.p_videoCallRoom_set(let left),.p_videoCallRoom_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<Location.RemoteLocation.VideoCallRoom?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             case (.p_externalCallURL_get,.p_externalCallURL_get): return Matcher.ComparisonResult.match
 			case (.p_externalCallURL_set(let left),.p_externalCallURL_set(let right)): return Matcher.ComparisonResult([Matcher.ParameterComparisonResult(Parameter<URL?>.compare(lhs: left, rhs: right, with: matcher), left, right, "newValue")])
             default: return .none
@@ -1574,6 +1577,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case .p_alert_get: return 0
 			case .p_alert_set(let newValue): return newValue.intValue
             case .p_videoCallRoom_get: return 0
+			case .p_videoCallRoom_set(let newValue): return newValue.intValue
             case .p_externalCallURL_get: return 0
 			case .p_externalCallURL_set(let newValue): return newValue.intValue
             }
@@ -1596,6 +1600,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
             case .p_alert_get: return "[get] .alert"
 			case .p_alert_set: return "[set] .alert"
             case .p_videoCallRoom_get: return "[get] .videoCallRoom"
+			case .p_videoCallRoom_set: return "[set] .videoCallRoom"
             case .p_externalCallURL_get: return "[get] .externalCallURL"
 			case .p_externalCallURL_set: return "[set] .externalCallURL"
             }
@@ -1683,6 +1688,7 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
         public static var alert: Verify { return Verify(method: .p_alert_get) }
 		public static func alert(set newValue: Parameter<AlertViewModel?>) -> Verify { return Verify(method: .p_alert_set(newValue)) }
         public static var videoCallRoom: Verify { return Verify(method: .p_videoCallRoom_get) }
+		public static func videoCallRoom(set newValue: Parameter<Location.RemoteLocation.VideoCallRoom?>) -> Verify { return Verify(method: .p_videoCallRoom_set(newValue)) }
         public static var externalCallURL: Verify { return Verify(method: .p_externalCallURL_get) }
 		public static func externalCallURL(set newValue: Parameter<URL?>) -> Verify { return Verify(method: .p_externalCallURL_set(newValue)) }
     }

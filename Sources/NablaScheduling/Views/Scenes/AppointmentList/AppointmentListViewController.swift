@@ -244,7 +244,9 @@ final class AppointmentListViewController: UIViewController {
             logger.error(message: "Missing `NablaVideoCallModule`.")
             return
         }
-        videoCallClient.openVideoCallRoom(url: room.url, token: room.token, from: self)
+        videoCallClient.openVideoCallRoom(url: room.url, token: room.token, from: self) { [viewModel] in
+            viewModel.videoCallRoom = nil
+        }
     }
 
     private func updateExternalCallURL() {

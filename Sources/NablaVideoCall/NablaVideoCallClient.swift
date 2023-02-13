@@ -14,12 +14,12 @@ public final class NablaVideoCallClient: VideoCallClient {
         container.currentVideoCallInteractor.watchCurrentVideoCall()
     }
     
-    public func openVideoCallRoom(url: String, token: String, from viewController: UIViewController) {
+    public func openVideoCallRoom(url: String, token: String, from viewController: UIViewController, completion: (() -> Void)?) {
         if currentVideoCallToken == token {
             container.currentVideoCallInteractor.openCurrentVideoCall()
         } else if currentVideoCallToken == nil {
             let modal = NablaVideoCallViewFactoryImpl(client: self).createVideoCallRoomViewController(url: url, token: token)
-            viewController.present(modal, animated: true)
+            viewController.present(modal, animated: true, completion: completion)
         } else {
             container.logger.warning(message: "Can not join a video call while another is in progress.")
         }

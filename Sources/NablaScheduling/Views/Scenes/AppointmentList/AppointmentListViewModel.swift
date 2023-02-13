@@ -34,7 +34,7 @@ protocol AppointmentListViewModel: ViewModel, AppointmentCellViewModelDelegate {
     @MainActor var isLoading: Bool { get }
     @MainActor var isRefreshing: Bool { get }
     @MainActor var alert: AlertViewModel? { get set }
-    @MainActor var videoCallRoom: Location.RemoteLocation.VideoCallRoom? { get }
+    @MainActor var videoCallRoom: Location.RemoteLocation.VideoCallRoom? { get set }
     @MainActor var externalCallURL: URL? { get set }
 
     @MainActor func userDidReachEndOfList()

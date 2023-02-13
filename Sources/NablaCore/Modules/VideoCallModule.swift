@@ -13,5 +13,11 @@ public protocol VideoCallClient {
     // Ideally we would extract VideoCall cells to NablaVideoCall package to avoid such public APIs, see #20836 for more details
     var currentVideoCallToken: String? { get }
     func watchCurrentVideoCall() -> AnyPublisher<String?, Never>
-    func openVideoCallRoom(url: String, token: String, from viewController: UIViewController)
+    func openVideoCallRoom(url: String, token: String, from viewController: UIViewController, completion: (() -> Void)?)
+}
+
+public extension VideoCallClient {
+    func openVideoCallRoom(url: String, token: String, from viewController: UIViewController) {
+        openVideoCallRoom(url: url, token: token, from: viewController, completion: nil)
+    }
 }

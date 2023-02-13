@@ -2119,6 +2119,12 @@ open class VideoCallClientMock: VideoCallClient, Mock {
 		return __value
     }
 
+    open func openVideoCallRoom(url: String, token: String, from viewController: UIViewController, completion: (() -> Void)?) {
+        addInvocation(.m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(Parameter<String>.value(`url`), Parameter<String>.value(`token`), Parameter<UIViewController>.value(`viewController`), Parameter<(() -> Void)?>.value(`completion`)))
+		let perform = methodPerformValue(.m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(Parameter<String>.value(`url`), Parameter<String>.value(`token`), Parameter<UIViewController>.value(`viewController`), Parameter<(() -> Void)?>.value(`completion`))) as? (String, String, UIViewController, (() -> Void)?) -> Void
+		perform?(`url`, `token`, `viewController`, `completion`)
+    }
+
     open func openVideoCallRoom(url: String, token: String, from viewController: UIViewController) {
         addInvocation(.m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(Parameter<String>.value(`url`), Parameter<String>.value(`token`), Parameter<UIViewController>.value(`viewController`)))
 		let perform = methodPerformValue(.m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(Parameter<String>.value(`url`), Parameter<String>.value(`token`), Parameter<UIViewController>.value(`viewController`))) as? (String, String, UIViewController) -> Void
@@ -2128,6 +2134,7 @@ open class VideoCallClientMock: VideoCallClient, Mock {
 
     fileprivate enum MethodType {
         case m_watchCurrentVideoCall
+        case m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(Parameter<String>, Parameter<String>, Parameter<UIViewController>, Parameter<(() -> Void)?>)
         case m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(Parameter<String>, Parameter<String>, Parameter<UIViewController>)
         case p_crossModuleViews_get
         case p_currentVideoCallToken_get
@@ -2135,6 +2142,14 @@ open class VideoCallClientMock: VideoCallClient, Mock {
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
             case (.m_watchCurrentVideoCall, .m_watchCurrentVideoCall): return .match
+
+            case (.m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(let lhsUrl, let lhsToken, let lhsViewcontroller, let lhsCompletion), .m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(let rhsUrl, let rhsToken, let rhsViewcontroller, let rhsCompletion)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher), lhsUrl, rhsUrl, "url"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsToken, rhs: rhsToken, with: matcher), lhsToken, rhsToken, "token"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsViewcontroller, rhs: rhsViewcontroller, with: matcher), lhsViewcontroller, rhsViewcontroller, "from viewController"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCompletion, rhs: rhsCompletion, with: matcher), lhsCompletion, rhsCompletion, "completion"))
+				return Matcher.ComparisonResult(results)
 
             case (.m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(let lhsUrl, let lhsToken, let lhsViewcontroller), .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(let rhsUrl, let rhsToken, let rhsViewcontroller)):
 				var results: [Matcher.ParameterComparisonResult] = []
@@ -2151,6 +2166,7 @@ open class VideoCallClientMock: VideoCallClient, Mock {
         func intValue() -> Int {
             switch self {
             case .m_watchCurrentVideoCall: return 0
+            case let .m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .p_crossModuleViews_get: return 0
             case .p_currentVideoCallToken_get: return 0
@@ -2159,6 +2175,7 @@ open class VideoCallClientMock: VideoCallClient, Mock {
         func assertionName() -> String {
             switch self {
             case .m_watchCurrentVideoCall: return ".watchCurrentVideoCall()"
+            case .m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion: return ".openVideoCallRoom(url:token:from:completion:)"
             case .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController: return ".openVideoCallRoom(url:token:from:)"
             case .p_crossModuleViews_get: return "[get] .crossModuleViews"
             case .p_currentVideoCallToken_get: return "[get] .currentVideoCallToken"
@@ -2197,6 +2214,7 @@ open class VideoCallClientMock: VideoCallClient, Mock {
         fileprivate var method: MethodType
 
         public static func watchCurrentVideoCall() -> Verify { return Verify(method: .m_watchCurrentVideoCall)}
+        public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>, completion: Parameter<(() -> Void)?>) -> Verify { return Verify(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(`url`, `token`, `viewController`, `completion`))}
         public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>) -> Verify { return Verify(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(`url`, `token`, `viewController`))}
         public static var crossModuleViews: Verify { return Verify(method: .p_crossModuleViews_get) }
         public static var currentVideoCallToken: Verify { return Verify(method: .p_currentVideoCallToken_get) }
@@ -2208,6 +2226,9 @@ open class VideoCallClientMock: VideoCallClient, Mock {
 
         public static func watchCurrentVideoCall(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_watchCurrentVideoCall, performs: perform)
+        }
+        public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>, completion: Parameter<(() -> Void)?>, perform: @escaping (String, String, UIViewController, (() -> Void)?) -> Void) -> Perform {
+            return Perform(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewControllercompletion_completion(`url`, `token`, `viewController`, `completion`), performs: perform)
         }
         public static func openVideoCallRoom(url: Parameter<String>, token: Parameter<String>, from viewController: Parameter<UIViewController>, perform: @escaping (String, String, UIViewController) -> Void) -> Perform {
             return Perform(method: .m_openVideoCallRoom__url_urltoken_tokenfrom_viewController(`url`, `token`, `viewController`), performs: perform)
