@@ -18,7 +18,7 @@ struct TestEnvironment {
     let session: DVR.Session
     let mockUUIDGenerator: MockUUIDGenerator
     
-    static func make(filePath: String = #filePath, function: String = #function) -> TestEnvironment {
+    static func make(filePath: String = #filePath, function: String = #function) async -> TestEnvironment {
         let userId = "e84db0e2-6a7c-4ff3-b1cb-72afb6a4bc78"
         let session = makeMockSession(filePath: filePath, function: function)
         let networkConfiguration = NetworkConfiguration(session: session)
@@ -54,7 +54,10 @@ struct TestEnvironment {
             session: session,
             mockUUIDGenerator: mockUUIDGenerator
         )
-        nablaClient.logOut() // Clears persisted data
+        
+        // TODO: use `NablaClient.logOut()` instead
+        await coreContainer.logOutInteractor.execute()
+        
         nablaClient.authenticate(userId: userId, provider: env)
         return env
     }

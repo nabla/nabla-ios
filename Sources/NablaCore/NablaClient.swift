@@ -90,7 +90,7 @@ public class NablaClient {
 
     /// Log the current user out
     public func logOut() {
-        container.logOutInteractor.execute()
+        Task { await container.logOutInteractor.execute() }
     }
     
     /// Watch the state of the events connection the SDK is using to receive live updates (new messages, new appointments etc...)

@@ -3,17 +3,15 @@ import Foundation
 final class LogOutInteractorImpl: LogOutInteractor {
     // MARK: - Internal
     
-    func execute() {
+    func execute() async {
         userRepository.setCurrentUser(nil)
         authenticator.logOut()
         scopedKeyValueStore.clear()
         extraActions.forEach { $0() }
-        Task {
-            do {
-                try await gqlStore.clearCache()
-            } catch {
-                logger.error(message: "Failed to clear cache on logout", error: error)
-            }
+        do {
+            try await gqlStore.clearCache()
+        } catch {
+            logger.error(message: "Failed to clear cache on logout", error: error)
         }
     }
     
