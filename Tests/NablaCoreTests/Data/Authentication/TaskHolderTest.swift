@@ -39,4 +39,50 @@ class TaskHolderTest: XCTestCase {
         XCTAssertEqual(result1, 1)
         XCTAssertEqual(result2, 2)
     }
+    
+    func testFirstTaskIsSharedWhileItRunsFromDifferentThreads() {
+        // GIVEN
+        let sut = TaskHolder<Int>()
+        let queue1 = DispatchQueue(label: "com.nabla.tests.queue1", qos: .background)
+        let queue2 = DispatchQueue(label: "com.nabla.tests.queue2", qos: .background)
+        let result1 = Reference<Int?>(value: nil)
+        let result2 = Reference<Int?>(value: nil)
+        let expectation1 = expectation(description: "Queue 1 did complete")
+        let expectation2 = expectation(description: "Queue 2 did complete")
+
+        // WHEN
+        queue1.async { // Start immediatly...
+            Task {
+                result1.value = try await sut.run {
+                    try await Task.sleep(nanoseconds: 100000000) // ... and wait 100 milliseconds
+                    return 1
+                }
+                expectation1.fulfill()
+            }
+        }
+
+        queue2.async { // Start immediatly
+            Task {
+                result2.value = try await sut.run {
+                    2 // ... and return immediatly
+                }
+                expectation2.fulfill()
+            }
+        }
+
+        // THEN
+        waitForExpectations(timeout: 0.5)
+        // We can't assume which queue will run first, but both task should have the same non-nil output
+        XCTAssertNotNil(result1.value)
+        XCTAssertNotNil(result2.value)
+        XCTAssertEqual(result1.value, result2.value)
+    }
+}
+
+private final class Reference<T> {
+    var value: T
+
+    init(value: T) {
+        self.value = value
+    }
 }
