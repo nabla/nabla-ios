@@ -61,7 +61,7 @@ class TaskHolderTest: XCTestCase {
             }
         }
 
-        queue2.async { // Start immediatly
+        queue2.asyncAfter(deadline: .now() + 0.05) { // Wait 50 milliseconds...
             Task {
                 result2.value = try await sut.run {
                     2 // ... and return immediatly
@@ -72,10 +72,8 @@ class TaskHolderTest: XCTestCase {
 
         // THEN
         waitForExpectations(timeout: 0.5)
-        // We can't assume which queue will run first, but both task should have the same non-nil output
-        XCTAssertNotNil(result1.value)
-        XCTAssertNotNil(result2.value)
-        XCTAssertEqual(result1.value, result2.value)
+        XCTAssertEqual(result1.value, 1)
+        XCTAssertEqual(result2.value, 1)
     }
 }
 
