@@ -2,6 +2,8 @@ import Foundation
 
 public class AuthenticationError: NablaError {}
 
+public class CurrentUserAlreadySetError: AuthenticationError {}
+
 public class AuthenticationInternalError: NablaError {
     public let message: String
     

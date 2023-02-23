@@ -9,7 +9,14 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        nablaClient = NablaClient(modules: [], configuration: .init(apiKey: ""), name: "")
+        nablaClient = NablaClient(
+            modules: [],
+            configuration: .init(
+                apiKey: "",
+                sessionTokenProvider: MockSessionTokenProvider()
+            ),
+            name: ""
+        )
         messagingClient = NablaMessagingClient(container: nablaClient.container)
     }
     
@@ -109,5 +116,11 @@ class AuthenticatedEndpointsTests: XCTestCase {
         } catch {
             XCTAssert(error is MissingAuthenticationProviderError)
         }
+    }
+}
+
+private final class MockSessionTokenProvider: SessionTokenProvider {
+    func provideTokens(forUserId _: String, completion: @escaping (AuthTokens?) -> Void) {
+        completion(nil)
     }
 }

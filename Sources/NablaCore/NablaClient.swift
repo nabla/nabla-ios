@@ -65,32 +65,45 @@ public class NablaClient {
             configuration.logger.warning(message: "NablaClient.initialize() should only be called once. Ignoring this call and using the previously created shared instance.")
             return
         }
-        _shared = NablaClient(modules: modules, configuration: configuration, networkConfiguration: networkConfiguration, name: Constants.defaultName)
+        _shared = NablaClient(
+            modules: modules,
+            configuration: configuration,
+            networkConfiguration: networkConfiguration,
+            name: Constants.defaultName
+        )
     }
 
     /// Authenticate the current user.
     /// - Parameters:
     ///   - userId: Identifies the user between sessions, will be passed when calling the ``SessionTokenProvider``.
     ///   - provider: ``Tokens`` provider.
-    public func authenticate(
-        userId: String,
-        provider: SessionTokenProvider
-    ) {
-        if let currentUser = container.userRepository.getCurrentUser(), currentUser.id != userId {
-            container.logger.info(message: "Authenticating a new user, will log previous one out first.")
-            logOut()
+    public func setCurrentUser(userId: String) throws {
+        container.authenticator.authenticate(userId: userId)
+        
+        if let previousUser = container.userRepository.getCurrentUser() {
+            if previousUser.id == userId {
+                container.logger.info(message: "Setting the same current user again, ignoring.")
+                return
+            } else {
+                container.logger.error(message: "Trying to authenticating a new user, should clear previous one first by calling `clearCurrentUser`.")
+                throw CurrentUserAlreadySetError()
+            }
         }
+        container.logger.info(message: "Setting a new current user.")
         container.userRepository.setCurrentUser(User(id: userId))
-        container.authenticator.authenticate(userId: userId, provider: provider)
         
         Task(priority: .background) {
             await container.registerDeviceInteractor.execute(userId: userId)
         }
     }
+    
+    public var currentUserId: String? {
+        container.userRepository.getCurrentUser()?.id
+    }
 
-    /// Log the current user out
-    public func logOut() {
-        Task { await container.logOutInteractor.execute() }
+    /// Clears all data linked to the current userId in memory and on disk
+    public func clearCurrentUser() async {
+        await container.logOutInteractor.execute()
     }
     
     /// Watch the state of the events connection the SDK is using to receive live updates (new messages, new appointments etc...)

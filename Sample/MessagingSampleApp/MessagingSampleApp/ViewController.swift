@@ -9,10 +9,14 @@ class ViewController: DemoViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let userId = "dummy_user_id" // In a real scenario, you need to replace it with your own stable user id.
-        NablaClient.shared.authenticate(userId: userId, provider: FakeAuthenticator.shared)
-        let view = NablaClient.shared.messaging.views.createConversationListView(delegate: self)
-        setContentView(view)
+        do {
+            let userId = "dummy_user_id" // In a real scenario, you need to replace it with your own stable user id.
+            try NablaClient.shared.setCurrentUser(userId: userId)
+            let view = NablaClient.shared.messaging.views.createConversationListView(delegate: self)
+            setContentView(view)
+        } catch {
+            print("Unable to set the current user, reason: \(error)")
+        }
     }
     
     // MARK: Handlers

@@ -56,10 +56,10 @@ open class AuthenticatorMock: Authenticator, Mock {
 
 
 
-    open func authenticate(userId: String, provider: SessionTokenProvider) {
-        addInvocation(.m_authenticate__userId_userIdprovider_provider(Parameter<String>.value(`userId`), Parameter<SessionTokenProvider>.value(`provider`)))
-		let perform = methodPerformValue(.m_authenticate__userId_userIdprovider_provider(Parameter<String>.value(`userId`), Parameter<SessionTokenProvider>.value(`provider`))) as? (String, SessionTokenProvider) -> Void
-		perform?(`userId`, `provider`)
+    open func authenticate(userId: String) {
+        addInvocation(.m_authenticate__userId_userId(Parameter<String>.value(`userId`)))
+		let perform = methodPerformValue(.m_authenticate__userId_userId(Parameter<String>.value(`userId`))) as? (String) -> Void
+		perform?(`userId`)
     }
 
     open func logOut() {
@@ -118,7 +118,7 @@ open class AuthenticatorMock: Authenticator, Mock {
 
 
     fileprivate enum MethodType {
-        case m_authenticate__userId_userIdprovider_provider(Parameter<String>, Parameter<SessionTokenProvider>)
+        case m_authenticate__userId_userId(Parameter<String>)
         case m_logOut
         case m_markTokensAsInvalid
         case m_getAccessToken
@@ -128,10 +128,9 @@ open class AuthenticatorMock: Authenticator, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_authenticate__userId_userIdprovider_provider(let lhsUserid, let lhsProvider), .m_authenticate__userId_userIdprovider_provider(let rhsUserid, let rhsProvider)):
+            case (.m_authenticate__userId_userId(let lhsUserid), .m_authenticate__userId_userId(let rhsUserid)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "userId"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsProvider, rhs: rhsProvider, with: matcher), lhsProvider, rhsProvider, "provider"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_logOut, .m_logOut): return .match
@@ -158,7 +157,7 @@ open class AuthenticatorMock: Authenticator, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_authenticate__userId_userIdprovider_provider(p0, p1): return p0.intValue + p1.intValue
+            case let .m_authenticate__userId_userId(p0): return p0.intValue
             case .m_logOut: return 0
             case .m_markTokensAsInvalid: return 0
             case .m_getAccessToken: return 0
@@ -169,7 +168,7 @@ open class AuthenticatorMock: Authenticator, Mock {
         }
         func assertionName() -> String {
             switch self {
-            case .m_authenticate__userId_userIdprovider_provider: return ".authenticate(userId:provider:)"
+            case .m_authenticate__userId_userId: return ".authenticate(userId:)"
             case .m_logOut: return ".logOut()"
             case .m_markTokensAsInvalid: return ".markTokensAsInvalid()"
             case .m_getAccessToken: return ".getAccessToken()"
@@ -217,7 +216,7 @@ open class AuthenticatorMock: Authenticator, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func authenticate(userId: Parameter<String>, provider: Parameter<SessionTokenProvider>) -> Verify { return Verify(method: .m_authenticate__userId_userIdprovider_provider(`userId`, `provider`))}
+        public static func authenticate(userId: Parameter<String>) -> Verify { return Verify(method: .m_authenticate__userId_userId(`userId`))}
         public static func logOut() -> Verify { return Verify(method: .m_logOut)}
         public static func markTokensAsInvalid() -> Verify { return Verify(method: .m_markTokensAsInvalid)}
         public static func getAccessToken() -> Verify { return Verify(method: .m_getAccessToken)}
@@ -230,8 +229,8 @@ open class AuthenticatorMock: Authenticator, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func authenticate(userId: Parameter<String>, provider: Parameter<SessionTokenProvider>, perform: @escaping (String, SessionTokenProvider) -> Void) -> Perform {
-            return Perform(method: .m_authenticate__userId_userIdprovider_provider(`userId`, `provider`), performs: perform)
+        public static func authenticate(userId: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_authenticate__userId_userId(`userId`), performs: perform)
         }
         public static func logOut(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_logOut, performs: perform)

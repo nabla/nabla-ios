@@ -4,11 +4,10 @@ struct Session {
     // MARK: - Internal
     
     let userId: String
-    let provider: SessionTokenProvider
     var tokens: SessionTokens?
     
     func with(tokens: SessionTokens) -> Session {
-        .init(userId: userId, provider: provider, tokens: tokens)
+        .init(userId: userId, tokens: tokens)
     }
     
     // MARK: - Private

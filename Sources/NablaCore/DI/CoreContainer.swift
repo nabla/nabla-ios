@@ -101,7 +101,10 @@ public class CoreContainer {
             session: networkConfiguration.session,
             requestBehavior: headersRequestBehavior
         )
-        authenticator = AuthenticatorImpl(httpManager: httpManager)
+        authenticator = AuthenticatorImpl(
+            httpManager: httpManager,
+            sessionTokenProvider: configuration.sessionTokenProvider
+        )
         apolloStore = Self.makeApolloStore(logger: logger)
         interceptorProvider = HttpInterceptorProvider(
             environment: environment,

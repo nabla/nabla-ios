@@ -7,10 +7,7 @@ public enum AuthenticationState {
 
 // sourcery: AutoMockable
 public protocol Authenticator {
-    func authenticate(
-        userId: String,
-        provider: SessionTokenProvider
-    )
+    func authenticate(userId: String)
     func logOut()
     func markTokensAsInvalid()
     /// - Throws: ``AuthenticationError``

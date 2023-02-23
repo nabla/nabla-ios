@@ -12,7 +12,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NablaMessagingModule(),
                 NablaVideoCallModule(),
             ],
-            configuration: .init(apiKey: "<yourapikey>")
+            configuration: .init(
+                apiKey: "<yourapikey>",
+                sessionTokenProvider: FakeAuthenticator()
+            )
         )
         
         return true

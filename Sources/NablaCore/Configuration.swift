@@ -12,10 +12,12 @@ public struct Configuration {
     public init(
         apiKey: String,
         logger: Logger = ConsoleLogger(),
+        sessionTokenProvider: SessionTokenProvider,
         enableReporting: Bool = true
     ) {
         self.apiKey = apiKey
         self.logger = logger
+        self.sessionTokenProvider = sessionTokenProvider
         self.enableReporting = enableReporting
     }
 
@@ -23,5 +25,6 @@ public struct Configuration {
 
     let apiKey: String
     let logger: Logger
+    let sessionTokenProvider: SessionTokenProvider
     let enableReporting: Bool
 }

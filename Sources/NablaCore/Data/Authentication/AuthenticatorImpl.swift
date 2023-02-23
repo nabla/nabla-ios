@@ -3,19 +3,18 @@ import Foundation
 class AuthenticatorImpl: Authenticator {
     // MARK: - Initialiazer
 
-    init(httpManager: HTTPManager) {
+    init(httpManager: HTTPManager, sessionTokenProvider: SessionTokenProvider) {
         self.httpManager = httpManager
+        self.sessionTokenProvider = sessionTokenProvider
     }
 
     // MARK: - Internal
     
     func authenticate(
-        userId: String,
-        provider: SessionTokenProvider
+        userId: String
     ) {
         session = Session(
             userId: userId,
-            provider: provider,
             tokens: nil
         )
     }
@@ -73,6 +72,7 @@ class AuthenticatorImpl: Authenticator {
     
     private let notificationCenter = NotificationCenter()
     private let httpManager: HTTPManager
+    private let sessionTokenProvider: SessionTokenProvider
     
     private let sharedTask = TaskHolder<AuthenticationState>()
     
@@ -96,7 +96,7 @@ class AuthenticatorImpl: Authenticator {
     /// - Throws: ``AuthenticationError``
     private func requireTokens(session: Session) async throws -> SessionTokens {
         let authTokens = await withCheckedContinuation { (continuation: CheckedContinuation<AuthTokens?, Never>) in
-            session.provider.provideTokens(forUserId: session.userId) { authTokens in
+            sessionTokenProvider.provideTokens(forUserId: session.userId) { authTokens in
                 continuation.resume(returning: authTokens)
             }
         }
