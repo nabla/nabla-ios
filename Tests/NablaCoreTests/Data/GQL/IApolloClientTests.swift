@@ -1,4 +1,5 @@
 import Apollo
+import ApolloAPI
 @testable import NablaCore
 import NablaCoreTestsUtils
 import XCTest
@@ -414,32 +415,34 @@ final class IApolloClientTests: XCTestCase {
 private class MockQuery: GraphQLQuery {
     typealias Data = MockData
     
-    let operationDefinition = ""
-    let operationName = "MockQuery"
+    static let operationName = "MockQuery"
+    static var document: DocumentType = .notPersisted(definition: .init(""))
 }
 
-private struct MockData: GraphQLSelectionSet {
-    static let selections = [GraphQLSelection]()
-    var resultMap: ResultMap
+private struct MockData: GQL.SelectionSet {
+    // swiftlint:disable identifier_name
+    static var __parentType: ParentType { fatalError() }
+    static let __selections = [Selection]()
+    
+    let __data: DataDict
+    // swiftlint:enable identifier_name
+    
+    init(data: DataDict) { __data = data }
     
     var value: Int? {
-        resultMap["value"] as? Int
-    }
-    
-    init(unsafeResultMap: ResultMap) {
-        resultMap = unsafeResultMap
+        __data._data["value"] as? Int
     }
     
     init(value: Int) {
-        resultMap = .init(dictionaryLiteral: ("value", value))
+        __data = .init(["value": value], variables: nil)
     }
 }
 
 private class MockApolloClientInterface: IApolloClient {
     private var watchers = [String: Any]()
     
-    func watcher<Query: GraphQLQuery>(for query: Query) -> MockGraphQLQueryWatcher<Query> {
-        if let watcher = watchers[query.operationName] as? MockGraphQLQueryWatcher<Query> {
+    func watcher<Query: GQLQuery>(for _: Query) -> MockGraphQLQueryWatcher<Query> {
+        if let watcher = watchers[Query.operationName] as? MockGraphQLQueryWatcher<Query> {
             return watcher
         }
         fatalError("Watcher not found. Call MockApolloClientInterface.watch(query:cachePolicy:resultHandler:) first.")
@@ -451,7 +454,7 @@ private class MockApolloClientInterface: IApolloClient {
         resultHandler: @escaping GraphQLResultHandler<Query.Data>
     ) -> IGraphQLQueryWatcher {
         let watcher = MockGraphQLQueryWatcher(query: query, resultHandler: resultHandler)
-        watchers[query.operationName] = watcher
+        watchers[Query.operationName] = watcher
         return watcher
     }
     

@@ -1,8 +1,8 @@
 import Apollo
 import Foundation
 
-enum Normalization {
-    static func cacheKey(for object: JSONObject) -> String? {
+public enum Normalization {
+    public static func cacheKey(for object: JSONObject) -> String? {
         guard let rawId = object["id"] as? String else { return nil }
         
         // If `id` is uuid, that's enough

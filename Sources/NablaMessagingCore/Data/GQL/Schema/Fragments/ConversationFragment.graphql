@@ -1,4 +1,4 @@
-fragment ConversationFragment on Conversation {
+fragment ConversationFragment on Conversation @apollo_client_ios_localCacheMutation {
     id
     title
     subtitle

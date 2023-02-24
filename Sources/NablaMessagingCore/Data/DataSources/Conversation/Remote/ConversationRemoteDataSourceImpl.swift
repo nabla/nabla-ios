@@ -18,9 +18,9 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     func createConversation(message: GQL.SendMessageInput?, title: String?, providerIds: [UUID]?) async throws -> RemoteConversation {
         let response = try await gqlClient.perform(
             mutation: GQL.CreateConversationMutation(
-                title: title,
-                providerIds: providerIds,
-                initialMessage: message
+                title: title.nabla.asGQLNullable(),
+                providerIds: providerIds.nabla.asGQLNullable(),
+                initialMessage: message.nabla.asGQLNullable()
             )
         )
         let conversation = response.createConversation.conversation.fragments.conversationFragment
@@ -94,9 +94,17 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     
     private enum Constants {
         static let numberOfItemsPerPage = 50
+        static let conversationsLocalCacheMutation = GQL.GetConversationsLocalCacheMutation(
+            page: .init(cursor: .none, numberOfItems: .some(numberOfItemsPerPage))
+        )
         static let conversationsRootQuery = conversationsQuery(forCursor: nil)
-        static func conversationsQuery(forCursor cursor: String??) -> GQL.GetConversationsQuery {
-            GQL.GetConversationsQuery(page: .init(cursor: cursor, numberOfItems: numberOfItemsPerPage))
+        static func conversationsQuery(forCursor cursor: String?) -> GQL.GetConversationsQuery {
+            GQL.GetConversationsQuery(
+                page: .init(
+                    cursor: cursor.nabla.asGQLNullable(),
+                    numberOfItems: .some(numberOfItemsPerPage)
+                )
+            )
         }
     }
     
@@ -115,41 +123,39 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     
     private func appendToCache(conversation: GQL.ConversationFragment) async throws {
         try await gqlStore.updateCache(
-            for: Constants.conversationsRootQuery,
-            onlyIfExists: true,
+            cacheMutation: Constants.conversationsLocalCacheMutation,
             body: { cache in
                 let alreadyInCache = cache.conversations.conversations
                     .contains { existingConversation in
                         existingConversation.fragments.conversationFragment.id == conversation.id
                     }
-                
                 if alreadyInCache {
                     return
                 }
-                
-                cache.conversations.conversations.insert(.init(unsafeResultMap: conversation.resultMap), at: 0)
+                cache.conversations.conversations.insert(.init(data: conversation.__data), at: 0)
             }
         )
     }
     
     private func removeFromCache(conversationId: UUID) async throws {
         try await gqlStore.updateCache(
-            for: Constants.conversationsRootQuery,
-            onlyIfExists: true,
+            cacheMutation: Constants.conversationsLocalCacheMutation,
             body: { cache in
-                cache.conversations.conversations.removeAll(where: { $0.fragments.conversationFragment.id == conversationId })
+                cache.conversations.conversations.removeAll { $0.fragments.conversationFragment.id == conversationId }
             }
         )
     }
     
     private func handleLoadMoreConversations(data: RemoteConversationList) async throws {
         try await gqlStore.updateCache(
-            for: Constants.conversationsRootQuery,
-            onlyIfExists: true
-        ) { (cache: inout RemoteConversationList) in
-            cache.conversations.conversations.append(contentsOf: data.conversations.conversations)
-            cache.conversations.hasMore = data.conversations.hasMore
-            cache.conversations.nextCursor = data.conversations.nextCursor
-        }
+            cacheMutation: Constants.conversationsLocalCacheMutation,
+            body: { cache in
+                cache.conversations.conversations.append(
+                    contentsOf: data.conversations.conversations.map { .init(data: $0.__data) }
+                )
+                cache.conversations.hasMore = data.conversations.hasMore
+                cache.conversations.nextCursor = data.conversations.nextCursor
+            }
+        )
     }
 }

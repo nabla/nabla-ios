@@ -12,3 +12,18 @@ query GetConversationItems($id: UUID!, $page: OpaqueCursorPage!) {
         }
     }
 }
+
+query GetConversationItemsLocalCacheMutation($id: UUID!, $page: OpaqueCursorPage!) @apollo_client_ios_localCacheMutation {
+    conversation(id: $id) {
+        conversation {
+            id
+            items(page: $page) {
+                hasMore
+                nextCursor
+                data {
+                    ...ConversationItemFragment
+                }
+            }
+        }
+    }
+}

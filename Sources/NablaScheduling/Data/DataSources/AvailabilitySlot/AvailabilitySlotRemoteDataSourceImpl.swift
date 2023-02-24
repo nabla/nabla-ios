@@ -16,7 +16,10 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
         .eraseToAnyPublisher()
     }
     
-    func watchAvailabilitySlots(forCategoryWithId categoryId: UUID, isPhysical: Bool) -> AnyPublisher<PaginatedList<RemoteAvailabilitySlot>, GQLError> {
+    func watchAvailabilitySlots(
+        forCategoryWithId categoryId: UUID,
+        isPhysical: Bool
+    ) -> AnyPublisher<PaginatedList<RemoteAvailabilitySlot>, GQLError> {
         gqlClient.watch(
             query: Queries.getAvailableSlotsRootQuery(isPhysical: isPhysical, categoryId: categoryId),
             policy: .fetchIgnoringCacheData
@@ -59,7 +62,19 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
     private let gqlClient: GQLClient
     private let gqlStore: GQLStore
     
+    private enum Constants {
+        static let numberOfItems = 100
+    }
+    
     private enum Queries {
+        static func getAvailableSlotsLocalCacheMutation(isPhysical: Bool, categoryId: UUID) -> GQL.GetAvailableSlotsLocalCacheMutation {
+            GQL.GetAvailableSlotsLocalCacheMutation(
+                isPhysical: isPhysical,
+                categoryId: categoryId,
+                page: .init(cursor: .none, numberOfItems: .some(Constants.numberOfItems))
+            )
+        }
+        
         static func getAvailableSlotsRootQuery(isPhysical: Bool, categoryId: UUID) -> GQL.GetAvailableSlotsQuery {
             getAvailableSlotsQuery(isPhysical: isPhysical, categoryId: categoryId, cursor: nil)
         }
@@ -72,7 +87,7 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
             GQL.GetAvailableSlotsQuery(
                 isPhysical: isPhysical,
                 categoryId: categoryId,
-                page: .init(cursor: cursor, numberOfItems: 100)
+                page: .init(cursor: cursor.nabla.asGQLNullable(), numberOfItems: .some(Constants.numberOfItems))
             )
         }
     }
@@ -82,17 +97,15 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
             query: Queries.getAvailableSlotsQuery(isPhysical: isPhysical, categoryId: categoryId, cursor: cursor),
             policy: .fetchIgnoringCacheCompletely
         )
-        
         try await gqlStore.updateCache(
-            for: Queries.getAvailableSlotsRootQuery(isPhysical: isPhysical, categoryId: categoryId),
-            onlyIfExists: true,
-            body: { (cache: inout GQL.GetAvailableSlotsQuery.Data) in
+            cacheMutation: Queries.getAvailableSlotsLocalCacheMutation(isPhysical: isPhysical, categoryId: categoryId),
+            body: { cache in
                 Self.append(response, to: &cache)
             }
         )
     }
     
-    private static func append(_ response: GQL.GetAvailableSlotsQuery.Data, to cache: inout GQL.GetAvailableSlotsQuery.Data) {
+    private static func append(_ response: GQL.GetAvailableSlotsQuery.Data, to cache: inout GQL.GetAvailableSlotsLocalCacheMutation.Data) {
         cache.appointmentCategory.category.availableSlotsV2.hasMore = response.appointmentCategory.category.availableSlotsV2.hasMore
         cache.appointmentCategory.category.availableSlotsV2.nextCursor = response.appointmentCategory.category.availableSlotsV2.nextCursor
         
@@ -104,7 +117,7 @@ final class AvailabilitySlotRemoteDataSourceImpl: AvailabilitySlotRemoteDataSour
         for newSlot in response.appointmentCategory.category.availableSlotsV2.slots {
             let key = makeKey(newSlot.fragments.availabilitySlotFragment)
             guard !existingSlots.contains(key) else { continue }
-            cache.appointmentCategory.category.availableSlotsV2.slots.append(newSlot)
+            cache.appointmentCategory.category.availableSlotsV2.slots.append(.init(data: newSlot.__data))
         }
     }
 }

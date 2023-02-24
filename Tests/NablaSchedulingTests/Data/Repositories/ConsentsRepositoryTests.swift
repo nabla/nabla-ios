@@ -11,15 +11,20 @@ final class ConsentsRepositoryTests: XCTestCase {
 
     override func setUp() {
         remoteDataSource = .init()
-
+        
         remoteDataSource.given(
             .watchConsents(
                 willReturn: Just(
                     RemoteConsents(
-                        firstConsentHtml: "firstConsentHtml",
-                        secondConsentHtml: "secondConsentHtml",
-                        physicalFirstConsentHtml: "physicalFirstConsentHtml",
-                        physicalSecondConsentHtml: "physicalSecondConsentHtml"
+                        data: .init(
+                            [
+                                "firstConsentHtml": "firstConsentHtml",
+                                "secondConsentHtml": "secondConsentHtml",
+                                "physicalFirstConsentHtml": "physicalFirstConsentHtml",
+                                "physicalSecondConsentHtml": "physicalSecondConsentHtml",
+                            ],
+                            variables: nil
+                        )
                     )
                 )
                 .setFailureType(to: GQLError.self)

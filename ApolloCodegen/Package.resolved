@@ -6,8 +6,17 @@
         "repositoryURL": "https://github.com/apollographql/apollo-ios",
         "state": {
           "branch": null,
-          "revision": "08a41bad4ebf76ae8e4efebf26862a42084b7786",
-          "version": "0.51.2"
+          "revision": "f9a452cf786e02cafff85c4acf9f72e99011b3ad",
+          "version": "1.0.7"
+        }
+      },
+      {
+        "package": "InflectorKit",
+        "repositoryURL": "https://github.com/mattt/InflectorKit",
+        "state": {
+          "branch": null,
+          "revision": "d8cbcc04972690aaa5fc760a2b9ddb3e9f0decd7",
+          "version": "1.0.0"
         }
       },
       {
@@ -24,8 +33,17 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
         "state": {
           "branch": null,
-          "revision": "9564d61b08a5335ae0a36f789a7d71493eacadfc",
-          "version": "0.3.2"
+          "revision": "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
+          "version": "1.2.2"
+        }
+      },
+      {
+        "package": "swift-collections",
+        "repositoryURL": "https://github.com/apple/swift-collections",
+        "state": {
+          "branch": null,
+          "revision": "f504716c27d2e5d4144fa4794b12129301d17729",
+          "version": "1.0.3"
         }
       }
     ]

@@ -1,3 +1,8 @@
+#if canImport(ApolloAPI)
+    import ApolloAPI
+#else
+    import Apollo
+#endif
 import Foundation
 
 protocol DeviceRepository {
@@ -53,16 +58,16 @@ final class DeviceRepositoryImpl: DeviceRepository {
     private let logger: Logger
     private let errorReporter: ErrorReporter
 
-    private func serialize(_ module: Module) -> GQL.SdkModule {
+    private func serialize(_ module: Module) -> GraphQLEnum<GQL.SdkModule> {
         if module is MessagingModule {
-            return .messaging
+            return .case(.messaging)
         }
         if module is VideoCallModule {
-            return .videoCall
+            return .case(.videoCall)
         }
         if module is SchedulingModule {
-            return .videoCallScheduling
+            return .case(.videoCallScheduling)
         }
-        return .__unknown(String(reflecting: module))
+        return .unknown(String(reflecting: module))
     }
 }

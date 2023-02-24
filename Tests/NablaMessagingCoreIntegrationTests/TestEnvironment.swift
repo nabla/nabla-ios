@@ -80,9 +80,9 @@ private final class MockSessionTokenProvider: SessionTokenProvider {
         completion(
             .init(
                 // Expires 17/09/2054
-                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjEyNjcwNTc2MjExLCJzZXNzaW9uX3V1aWQiOiJjZGUwOTY0NS01YzM0LTQyYmQtYmQxYS0zMWYwYzExMDYzMTMiLCJvcmdhbml6YXRpb25TdHJpbmdJZCI6Im5hYmxhIn0.9oR2z4ZLJTYMS-v7ZihACwa30eKdDRn4giGYoxgqrK0",
+                accessToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjI2NzcxNjA0MzAsInNlc3Npb25fdXVpZCI6IjI2OGM2MjFjLTMyMWYtNDQ2NS1hOWI2LWI5NGFhMTY2MjI5ZSIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.ppMNzZYsmFuBpM3FytHwptYjkOYL5XCB5BomFdi_NLE",
                 // Expires 17/09/2054
-                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlODRkYjBlMi02YTdjLTRmZjMtYjFjYi03MmFmYjZhNGJjNzgiLCJpc3MiOiJwcm9kLXBhdGllbnQiLCJ0eXAiOiJSZWZyZXNoIiwiZXhwIjoyNjc4MzUxOTExLCJzZXNzaW9uX3V1aWQiOiJjZGUwOTY0NS01YzM0LTQyYmQtYmQxYS0zMWYwYzExMDYzMTMiLCJvcmdhbml6YXRpb25TdHJpbmdJZCI6Im5hYmxhIn0.6OqBNXTC-2dj30WKDq7oyVHkTPAFm_NkJeZE1Zh3Bls"
+                refreshToken: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyM2E3Y2M5Zi1iYWJjLTRiMGUtYTI0Ny01M2YwZmMxYmM3NWMiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJSZWZyZXNoIiwiZXhwIjoyNjg0OTM2MTMwLCJzZXNzaW9uX3V1aWQiOiIyNjhjNjIxYy0zMjFmLTQ0NjUtYTliNi1iOTRhYTE2NjIyOWUiLCJvcmdhbml6YXRpb25TdHJpbmdJZCI6Im5hYmxhIn0.VyDjIeReJF7pF4_QvfnMHupX5x81OXWrZj9aYOolzRY"
             )
         )
     }

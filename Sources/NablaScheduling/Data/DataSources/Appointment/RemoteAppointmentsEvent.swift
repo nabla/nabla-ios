@@ -1,3 +1,3 @@
 import Foundation
 
-typealias RemoteAppointmentsEvent = GQL.AppointmentsEventsSubscription.Data.Appointment.Event
+typealias RemoteAppointmentsEvent = GQL.AppointmentsEventsSubscription.Data.Appointments.Event

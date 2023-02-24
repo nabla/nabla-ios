@@ -5,3 +5,11 @@ query GetConversation($id: UUID!) {
         }
     }
 }
+
+query GetConversationLocalCacheMutation($id: UUID!) @apollo_client_ios_localCacheMutation {
+    conversation(id: $id) {
+        conversation {
+            ...ConversationFragment
+        }
+    }
+}

@@ -9,8 +9,8 @@ let package = Package(
         .macOS(.v10_14),
     ],
     dependencies: [
-        .package(url: "https://github.com/apollographql/apollo-ios", from: "0.50.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.3.0"),
+        .package(url: "https://github.com/apollographql/apollo-ios", from: "1.0.7"),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.2"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

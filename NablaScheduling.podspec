@@ -20,6 +20,7 @@ Pod::Spec.new do |spec|
   spec.swift_versions     = '5.0'
   spec.source             = { :git => "https://github.com/nabla/nabla-ios.git", :tag => "#{spec.version}" }
   spec.source_files       = ["Sources/#{spec.name}/**/*.swift"]
+  spec.exclude_files      = "Sources/#{spec.name}/Data/GQL/Generated/SPM"
   spec.resource_bundles   = {"#{spec.name}Resources" => "Sources/#{spec.name}/Resources/**/*"}
 
   spec.dependency           'NablaCore', "#{spec.version}"

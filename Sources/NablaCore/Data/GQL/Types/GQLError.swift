@@ -13,7 +13,6 @@ public enum GQLError: Error {
     case networkError(message: String?)
     
     public enum CacheError: Error {
-        case queryNotCached
         case entityNotCached
         case normalizationFailed(object: Any)
         case unexpectedError

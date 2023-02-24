@@ -90,12 +90,22 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     private enum Constants {
         static let numberOfItemsPerPage = 50
         
+        static func localCacheMutation(conversationId: UUID) -> GQL.GetConversationItemsLocalCacheMutation {
+            .init(id: conversationId, page: .init(cursor: .none, numberOfItems: .some(numberOfItemsPerPage)))
+        }
+        
         static func rootQuery(conversationId: UUID) -> GQL.GetConversationItemsQuery {
             pageQuery(conversationId: conversationId, cursor: nil)
         }
         
-        static func pageQuery(conversationId: UUID, cursor: String??) -> GQL.GetConversationItemsQuery {
-            .init(id: conversationId, page: .init(cursor: cursor, numberOfItems: numberOfItemsPerPage))
+        static func pageQuery(conversationId: UUID, cursor: String?) -> GQL.GetConversationItemsQuery {
+            .init(
+                id: conversationId,
+                page: .init(
+                    cursor: cursor.nabla.asGQLNullable(),
+                    numberOfItems: .some(numberOfItemsPerPage)
+                )
+            )
         }
     }
     
@@ -126,14 +136,13 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     private func append(item: GQL.ConversationItemFragment, toCacheOfConversationWithId conversationId: UUID) async throws {
         try await gqlStore.updateCache(
-            for: Constants.rootQuery(conversationId: conversationId),
-            onlyIfExists: true,
+            cacheMutation: Constants.localCacheMutation(conversationId: conversationId),
             body: { cache in
                 let isAlreadyInConversation = cache.conversation.conversation.items.data.contains(
                     where: { $0?.fragments.conversationItemFragment.id == item.id }
                 )
                 if !isAlreadyInConversation {
-                    cache.conversation.conversation.items.data.append(.init(unsafeResultMap: item.resultMap))
+                    cache.conversation.conversation.items.data.append(.init(data: item.__data))
                 }
             }
         )
@@ -141,13 +150,11 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     private func update(provider: GQL.ProviderInConversationFragment, inCacheOfConversationWithId conversationId: UUID) async throws {
         try await gqlStore.updateCache(
-            for: GQL.GetConversationQuery(id: conversationId),
-            onlyIfExists: true,
+            cacheMutation: GQL.GetConversationLocalCacheMutation(id: conversationId),
             body: { cache in
                 let isAlreadyInConversation = cache.conversation.conversation.fragments.conversationFragment.providers.contains(where: { $0.fragments.providerInConversationFragment.id == provider.id })
-                
                 if !isAlreadyInConversation {
-                    cache.conversation.conversation.fragments.conversationFragment.providers.append(.init(unsafeResultMap: provider.resultMap))
+                    cache.conversation.conversation.fragments.conversationFragment.providers.append(.init(data: provider.__data))
                 }
             }
         )
@@ -155,37 +162,39 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
     
     private func handleLoadMoreConversationItems(data: GQL.GetConversationItemsQuery.Data, conversationId: UUID) async throws {
         try await gqlStore.updateCache(
-            for: Constants.rootQuery(conversationId: conversationId),
-            onlyIfExists: true
-        ) { [logger](cache: inout GQL.GetConversationItemsQuery.Data) in
-            let existingIds = Set(cache.conversation.conversation.items.data.compactMap {
-                $0?.fragments.conversationItemFragment.id
-            })
-            let newItems = data.conversation.conversation.items.data.filter { maybeItem in
-                guard let item = maybeItem else { return false }
-                guard let itemId = item.fragments.conversationItemFragment.id else {
-                    logger.warning(message: "Unknown item type", extra: ["type": item.__typename])
-                    return false
+            cacheMutation: Constants.localCacheMutation(conversationId: conversationId),
+            body: { [logger] cache in
+                let existingIds = Set(cache.conversation.conversation.items.data.compactMap {
+                    $0?.fragments.conversationItemFragment.id
+                })
+                let newItems = data.conversation.conversation.items.data.filter { maybeItem in
+                    guard let item = maybeItem else { return false }
+                    guard let itemId = item.fragments.conversationItemFragment.id else {
+                        logger.warning(message: "Unknown item type", extra: ["type": item.__typename])
+                        return false
+                    }
+                    if existingIds.contains(itemId) {
+                        logger.warning(message: "Found duplicated item when loading more", extra: ["item": item])
+                        return false
+                    }
+                    return true
                 }
-                if existingIds.contains(itemId) {
-                    logger.warning(message: "Found duplicated item when loading more", extra: ["item": item])
-                    return false
-                }
-                return true
+                cache.conversation.conversation.items.data.append(
+                    contentsOf: newItems.map { $0.map { .init(data: $0.__data) } }
+                )
+                cache.conversation.conversation.items.hasMore = data.conversation.conversation.items.hasMore
+                cache.conversation.conversation.items.nextCursor = data.conversation.conversation.items.nextCursor
             }
-            cache.conversation.conversation.items.data.append(contentsOf: newItems)
-            cache.conversation.conversation.items.hasMore = data.conversation.conversation.items.hasMore
-            cache.conversation.conversation.items.nextCursor = data.conversation.conversation.items.nextCursor
-        }
+        )
     }
 }
 
 private extension GQL.ConversationItemFragment {
     init(message: GQL.MessageFragment) {
-        self.init(unsafeResultMap: message.resultMap)
+        self.init(data: message.__data)
     }
     
     init(conversationActivity: GQL.ConversationActivityFragment) {
-        self.init(unsafeResultMap: conversationActivity.resultMap)
+        self.init(data: conversationActivity.__data)
     }
 }
