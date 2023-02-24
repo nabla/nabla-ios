@@ -24,6 +24,14 @@ public enum Location: Equatable {
             public let token: String
         }
     }
+    
+    var type: LocationType? {
+        switch self {
+        case .physical: return .physical
+        case .remote: return .remote
+        case .unknown: return nil
+        }
+    }
 }
 
 extension Location {

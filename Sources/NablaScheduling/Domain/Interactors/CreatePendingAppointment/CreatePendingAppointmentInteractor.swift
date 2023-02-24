@@ -1,6 +1,6 @@
 import Foundation
 
-protocol ScheduleAppointmentInteractor {
+protocol CreatePendingAppointmentInteractor {
     /// - Throws: ``NablaError``
     func execute(
         location: LocationType,

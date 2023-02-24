@@ -12,7 +12,7 @@ public final class NablaSchedulingClient: SchedulingClient {
     
     // MARK: - Internal
     
-    func watchAppointments(state: Appointment.State) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
+    func watchAppointments(state: AppointmentStateFilter) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
         container.watchAppointmentsInteractor.execute(state: state)
     }
     
@@ -33,18 +33,23 @@ public final class NablaSchedulingClient: SchedulingClient {
     }
     
     /// - Throws: ``NablaError``
-    func scheduleAppointment(
+    func createPendingAppointment(
         location: LocationType,
         categoryId: UUID,
         providerId: UUID,
         date: Date
     ) async throws -> Appointment {
-        try await container.scheduleAppointmentInteractor.execute(
+        try await container.createPendingAppointmentInteractor.execute(
             location: location,
             categoryId: categoryId,
             providerId: providerId,
             date: date
         )
+    }
+    
+    /// - Throws: ``NablaError``
+    func schedulePendingAppointment(withId appointmentId: UUID) async throws -> Appointment {
+        try await container.schedulePendingAppointmentInteractor.execute(appointmentId: appointmentId)
     }
     
     /// - Throws: ``NablaError``

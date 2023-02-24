@@ -6,6 +6,155 @@ import Foundation
 
 /// GQL namespace
  extension GQL {
+  struct PendingAppointmentFragment: GraphQLFragment {
+    /// The raw GraphQL definition of this fragment.
+     static let fragmentDefinition: String =
+      """
+      fragment PendingAppointmentFragment on PendingAppointment {
+        __typename
+        schedulingPaymentRequirement {
+          __typename
+          price {
+            __typename
+            ...PriceFragment
+          }
+        }
+      }
+      """
+
+     static let possibleTypes: [String] = ["PendingAppointment"]
+
+     static var selections: [GraphQLSelection] {
+      return [
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("schedulingPaymentRequirement", type: .object(SchedulingPaymentRequirement.selections)),
+      ]
+    }
+
+     private(set) var resultMap: ResultMap
+
+     init(unsafeResultMap: ResultMap) {
+      self.resultMap = unsafeResultMap
+    }
+
+     init(schedulingPaymentRequirement: SchedulingPaymentRequirement? = nil) {
+      self.init(unsafeResultMap: ["__typename": "PendingAppointment", "schedulingPaymentRequirement": schedulingPaymentRequirement.flatMap { (value: SchedulingPaymentRequirement) -> ResultMap in value.resultMap }])
+    }
+
+     var __typename: String {
+      get {
+        return resultMap["__typename"]! as! String
+      }
+      set {
+        resultMap.updateValue(newValue, forKey: "__typename")
+      }
+    }
+
+     var schedulingPaymentRequirement: SchedulingPaymentRequirement? {
+      get {
+        return (resultMap["schedulingPaymentRequirement"] as? ResultMap).flatMap { SchedulingPaymentRequirement(unsafeResultMap: $0) }
+      }
+      set {
+        resultMap.updateValue(newValue?.resultMap, forKey: "schedulingPaymentRequirement")
+      }
+    }
+
+     struct SchedulingPaymentRequirement: GraphQLSelectionSet {
+       static let possibleTypes: [String] = ["AppointmentSchedulingRequiresPayment"]
+
+       static var selections: [GraphQLSelection] {
+        return [
+          GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+          GraphQLField("price", type: .nonNull(.object(Price.selections))),
+        ]
+      }
+
+       private(set) var resultMap: ResultMap
+
+       init(unsafeResultMap: ResultMap) {
+        self.resultMap = unsafeResultMap
+      }
+
+       init(price: Price) {
+        self.init(unsafeResultMap: ["__typename": "AppointmentSchedulingRequiresPayment", "price": price.resultMap])
+      }
+
+       var __typename: String {
+        get {
+          return resultMap["__typename"]! as! String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+       var price: Price {
+        get {
+          return Price(unsafeResultMap: resultMap["price"]! as! ResultMap)
+        }
+        set {
+          resultMap.updateValue(newValue.resultMap, forKey: "price")
+        }
+      }
+
+       struct Price: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["Price"]
+
+         static var selections: [GraphQLSelection] {
+          return [
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLFragmentSpread(PriceFragment.self),
+          ]
+        }
+
+         private(set) var resultMap: ResultMap
+
+         init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+         init(amount: GQL.BigDecimal, currencyCode: String) {
+          self.init(unsafeResultMap: ["__typename": "Price", "amount": amount, "currencyCode": currencyCode])
+        }
+
+         var __typename: String {
+          get {
+            return resultMap["__typename"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+         var fragments: Fragments {
+          get {
+            return Fragments(unsafeResultMap: resultMap)
+          }
+          set {
+            resultMap += newValue.resultMap
+          }
+        }
+
+         struct Fragments {
+           private(set) var resultMap: ResultMap
+
+           init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
+          }
+
+           var priceFragment: PriceFragment {
+            get {
+              return PriceFragment(unsafeResultMap: resultMap)
+            }
+            set {
+              resultMap += newValue.resultMap
+            }
+          }
+        }
+      }
+    }
+  }
+
   struct UpcomingAppointmentFragment: GraphQLFragment {
     /// The raw GraphQL definition of this fragment.
      static let fragmentDefinition: String =
@@ -105,6 +254,10 @@ import Foundation
         }
         state {
           __typename
+          ... on PendingAppointment {
+            __typename
+            ...PendingAppointmentFragment
+          }
           ... on UpcomingAppointment {
             __typename
             ...UpcomingAppointmentFragment
@@ -256,7 +409,7 @@ import Foundation
        static var selections: [GraphQLSelection] {
         return [
           GraphQLTypeCase(
-            variants: ["UpcomingAppointment": AsUpcomingAppointment.selections, "FinalizedAppointment": AsFinalizedAppointment.selections],
+            variants: ["PendingAppointment": AsPendingAppointment.selections, "UpcomingAppointment": AsUpcomingAppointment.selections, "FinalizedAppointment": AsFinalizedAppointment.selections],
             default: [
               GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             ]
@@ -268,10 +421,6 @@ import Foundation
 
        init(unsafeResultMap: ResultMap) {
         self.resultMap = unsafeResultMap
-      }
-
-       static func makePendingAppointment() -> State {
-        return State(unsafeResultMap: ["__typename": "PendingAppointment"])
       }
 
        static func makeUpcomingAppointment() -> State {
@@ -288,6 +437,70 @@ import Foundation
         }
         set {
           resultMap.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+       var asPendingAppointment: AsPendingAppointment? {
+        get {
+          if !AsPendingAppointment.possibleTypes.contains(__typename) { return nil }
+          return AsPendingAppointment(unsafeResultMap: resultMap)
+        }
+        set {
+          guard let newValue = newValue else { return }
+          resultMap = newValue.resultMap
+        }
+      }
+
+       struct AsPendingAppointment: GraphQLSelectionSet {
+         static let possibleTypes: [String] = ["PendingAppointment"]
+
+         static var selections: [GraphQLSelection] {
+          return [
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLFragmentSpread(PendingAppointmentFragment.self),
+          ]
+        }
+
+         private(set) var resultMap: ResultMap
+
+         init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+         var __typename: String {
+          get {
+            return resultMap["__typename"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+         var fragments: Fragments {
+          get {
+            return Fragments(unsafeResultMap: resultMap)
+          }
+          set {
+            resultMap += newValue.resultMap
+          }
+        }
+
+         struct Fragments {
+           private(set) var resultMap: ResultMap
+
+           init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
+          }
+
+           var pendingAppointmentFragment: PendingAppointmentFragment {
+            get {
+              return PendingAppointmentFragment(unsafeResultMap: resultMap)
+            }
+            set {
+              resultMap += newValue.resultMap
+            }
+          }
         }
       }
 

@@ -5,7 +5,7 @@ import NablaCore
 final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     // MARK: Internal
     
-    func watchAppointments(state: RemoteAppointment.State.Enum) -> AnyPublisher<AnyResponse<PaginatedList<RemoteAppointment>, GQLError>, GQLError> {
+    func watchAppointments(state: AppointmentStateFilter) -> AnyPublisher<AnyResponse<PaginatedList<RemoteAppointment>, GQLError>, GQLError> {
         switch state {
         case .upcoming: return watchUpcomingAppointments()
         case .finalized: return watchFinalizedAppointments()
@@ -31,19 +31,31 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     }
     
     /// - Throws: ``GQLError``
-    func scheduleAppointment(isPhysical: Bool, categoryId: UUID, providerId: UUID, date: Date) async throws -> RemoteAppointment {
+    func createPendingAppointment(isPhysical: Bool, categoryId: UUID, providerId: UUID, date: Date) async throws -> RemoteAppointment {
         let response = try await gqlClient.perform(
-            mutation: GQL.ScheduleAppointmentMutation(
+            mutation: GQL.CreatePendingAppointmentMutation(
                 isPhysical: isPhysical,
                 categoryId: categoryId,
                 providerId: providerId,
-                timeSlot: date,
-                timeZone: TimeZone.current.identifier
+                startAt: date
             )
         )
-        let fragment = response.scheduleAppointmentV2.appointment.fragments.appointmentFragment
+        let fragment = response.createPendingAppointment.appointment.fragments.appointmentFragment
         try await insert(fragment)
         return fragment
+    }
+    
+    /// - Throws: ``GQLError``
+    func schedulePendingAppointment(withId appointmentId: UUID) async throws -> RemoteAppointment {
+        let response = try await gqlClient.perform(
+            mutation: GQL.SchedulePendingAppointmentMutation(appointmentId: appointmentId)
+        )
+        let appointment = response.schedulePendingAppointment.appointment.fragments.appointmentFragment
+        if appointment.state.asPendingAppointment == nil {
+            // If the appointment's state change, we must manually insert it in our upcoming/finalized cached queries
+            try await insert(appointment)
+        }
+        return appointment
     }
     
     /// - Throws: ``GQLError``
@@ -224,25 +236,32 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     }
     
     private func insert(_ appointment: RemoteAppointment) async throws {
-        switch appointment.state.asEnum {
-        case .upcoming:
-            try await gqlStore.updateCache(
-                for: Queries.getUpcomingAppointmentsRootQuery,
-                onlyIfExists: true
-            ) { (cache: inout GQL.GetUpcomingAppointmentsQuery.Data) in
-                guard !cache.upcomingAppointments.data.lazy.map(\.fragments.appointmentFragment.id).contains(appointment.id) else { return }
-                cache.upcomingAppointments.data.append(.init(fragment: appointment))
-                cache.upcomingAppointments.data = cache.upcomingAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: <)
-            }
-        case .finalized:
-            try await gqlStore.updateCache(
-                for: Queries.getFinalizedAppointmentsRootQuery,
-                onlyIfExists: true
-            ) { (cache: inout GQL.GetFinalizedAppointmentsQuery.Data) in
-                guard !cache.pastAppointments.data.lazy.map(\.fragments.appointmentFragment.id).contains(appointment.id) else { return }
-                cache.pastAppointments.data.append(.init(fragment: appointment))
-                cache.pastAppointments.data = cache.pastAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: >)
-            }
+        if appointment.state.asUpcomingAppointment != nil {
+            try await insertUpcomingAppointment(appointment)
+        } else if appointment.state.asFinalizedAppointment != nil {
+            try await insertFinalizedAppointment(appointment)
+        }
+    }
+    
+    private func insertUpcomingAppointment(_ appointment: RemoteAppointment) async throws {
+        try await gqlStore.updateCache(
+            for: Queries.getUpcomingAppointmentsRootQuery,
+            onlyIfExists: true
+        ) { (cache: inout GQL.GetUpcomingAppointmentsQuery.Data) in
+            guard !cache.upcomingAppointments.data.lazy.map(\.fragments.appointmentFragment.id).contains(appointment.id) else { return }
+            cache.upcomingAppointments.data.append(.init(fragment: appointment))
+            cache.upcomingAppointments.data = cache.upcomingAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: <)
+        }
+    }
+    
+    private func insertFinalizedAppointment(_ appointment: RemoteAppointment) async throws {
+        try await gqlStore.updateCache(
+            for: Queries.getFinalizedAppointmentsRootQuery,
+            onlyIfExists: true
+        ) { (cache: inout GQL.GetFinalizedAppointmentsQuery.Data) in
+            guard !cache.pastAppointments.data.lazy.map(\.fragments.appointmentFragment.id).contains(appointment.id) else { return }
+            cache.pastAppointments.data.append(.init(fragment: appointment))
+            cache.pastAppointments.data = cache.pastAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: >)
         }
     }
     

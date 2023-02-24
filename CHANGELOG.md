@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Scheduling: support for registering a payment step. See doc for details/instructions.
+
 ### Changed
 
 - Core: `NablaClient.authenticate` is replaced by `NablaClient.setCurrentUser` and `NablaClient.clearCurrentUser`. `SessionTokenProvider` is set during `NablaClient.initialize`.

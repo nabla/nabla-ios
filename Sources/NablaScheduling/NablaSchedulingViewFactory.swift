@@ -3,7 +3,10 @@ import UIKit
 
 public protocol NablaSchedulingViewFactory: SchedulingViewFactory {
     func createAppointmentListViewController(delegate: AppointmentListDelegate) -> UIViewController
-    func presentScheduleAppointmentNavigationController(from presentingViewController: UIViewController)
+    func presentScheduleAppointmentNavigationController(
+        from presentingViewController: UIViewController,
+        delegate: ScheduleAppointmentDelegate
+    )
     func createAppointmentDetailsViewController(appointmentId: UUID, delegate: AppointmentDetailsDelegate) -> UIViewController
     func createAppointmentDetailsViewController(appointment: Appointment, delegate: AppointmentDetailsDelegate) -> UIViewController
 }
@@ -22,10 +25,11 @@ protocol InternalSchedulingViewFactory {
         delegate: TimeSlotPickerViewModelDelegate
     ) -> UIViewController
     func createAppointmentConfirmationViewController(
-        location: LocationType,
-        category: Category,
-        timeSlot: AvailabilitySlot,
+        appointment: Appointment,
         delegate: AppointmentConfirmationViewModelDelegate
+    ) -> UIViewController
+    func createSuccessViewController(
+        delegate: SuccessViewModelDelegate
     ) -> UIViewController
     
     @MainActor func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel
@@ -49,8 +53,11 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
         return viewController
     }
 
-    public func presentScheduleAppointmentNavigationController(from presentingViewController: UIViewController) {
-        let viewController = ScheduleAppointmentNavigationController(factory: self)
+    public func presentScheduleAppointmentNavigationController(
+        from presentingViewController: UIViewController,
+        delegate: ScheduleAppointmentDelegate
+    ) {
+        let viewController = ScheduleAppointmentNavigationController(factory: self, delegate: delegate)
         presentingViewController.present(viewController, animated: true)
     }
     
@@ -114,21 +121,22 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
     }
     
     func createAppointmentConfirmationViewController(
-        location: LocationType,
-        category: Category,
-        timeSlot: AvailabilitySlot,
+        appointment: Appointment,
         delegate: AppointmentConfirmationViewModelDelegate
     ) -> UIViewController {
         let viewModel = AppointmentConfirmationViewModelImpl(
-            category: category,
-            timeSlot: timeSlot,
-            location: location,
+            appointment: appointment,
             client: client,
             addressFormatter: client.container.addressFormatter,
             universalLinkGenerator: client.container.universalLinkGenerator,
             delegate: delegate
         )
         return AppointmentConfirmationViewController(viewModel: viewModel)
+    }
+    
+    func createSuccessViewController(delegate: SuccessViewModelDelegate) -> UIViewController {
+        let viewModel = SuccessViewModelImpl(delegate: delegate)
+        return SuccessViewController(viewModel: viewModel)
     }
     
     @MainActor func createAppointmentCellViewModel(appointment: Appointment, delegate: AppointmentCellViewModelDelegate) -> AppointmentCellViewModel {

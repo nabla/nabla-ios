@@ -2,12 +2,18 @@ import Foundation
 import UIKit
 
 final class ScheduleAppointmentNavigationController: NavigationController {
+    // MARK: - Internal
+    
+    weak var scheduleAppointmentDelegate: ScheduleAppointmentDelegate?
+    
     // MARK: Init
 
     init(
-        factory: InternalSchedulingViewFactory
+        factory: InternalSchedulingViewFactory,
+        delegate: ScheduleAppointmentDelegate
     ) {
         self.factory = factory
+        scheduleAppointmentDelegate = delegate
         super.init(rootViewController: UIViewController())
         setViewControllers([factory.createLocationPickerViewController(delegate: self)], animated: false)
     }
@@ -50,15 +56,9 @@ extension ScheduleAppointmentNavigationController: CategoryPickerViewModelDelega
 }
 
 extension ScheduleAppointmentNavigationController: TimeSlotPickerViewModelDelegate {
-    func timeSlotPickerViewModel(_: TimeSlotPickerViewModel, didSelect timeSlot: AvailabilitySlot) {
-        guard
-            let location = selectedLocation,
-            let category = selectedCategory
-        else { return }
+    func timeSlotPickerViewModel(_: TimeSlotPickerViewModel, didSelect appointment: Appointment) {
         let destination = factory.createAppointmentConfirmationViewController(
-            location: location,
-            category: category,
-            timeSlot: timeSlot,
+            appointment: appointment,
             delegate: self
         )
         pushViewController(destination, animated: true)
@@ -66,7 +66,42 @@ extension ScheduleAppointmentNavigationController: TimeSlotPickerViewModelDelega
 }
 
 extension ScheduleAppointmentNavigationController: AppointmentConfirmationViewModelDelegate {
+    func appointmentConfirmationViewModel(_: AppointmentConfirmationViewModel, confirm appointment: Appointment) async throws {
+        guard isPaymentRequired(for: appointment) else {
+            return
+        }
+        
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            var modal: UIViewController?
+            modal = scheduleAppointmentDelegate?.paymentViewController(for: appointment) { result in
+                modal?.dismiss(animated: true) {
+                    continuation.resume(with: result)
+                }
+            }
+            guard let modal = modal else {
+                continuation.resume(with: .success(()))
+                return
+            }
+            modal.modalPresentationStyle = .fullScreen // Prevents unhandled swipe to close gestures.
+            present(modal, animated: true)
+        }
+    }
+    
+    private func isPaymentRequired(for appointment: Appointment) -> Bool {
+        switch appointment.state {
+        case let .pending(paymentRequirement): return paymentRequirement != nil
+        case .finalized, .upcoming: return false
+        }
+    }
+    
     func appointmentConfirmationViewModel(_: AppointmentConfirmationViewModel, didConfirm _: Appointment) {
+        let destination = factory.createSuccessViewController(delegate: self)
+        setViewControllers([destination], animated: true)
+    }
+}
+
+extension ScheduleAppointmentNavigationController: SuccessViewModelDelegate {
+    func successViewModelDidConfirm(_: SuccessViewModel) {
         dismiss(animated: true)
     }
 }

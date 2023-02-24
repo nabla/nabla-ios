@@ -45,9 +45,8 @@ final class AppointmentConfirmationViewController: UIViewController {
         )
         view.title = ""
         view.subtitle = ""
-        view.caption = ""
-        view.onDetailsTapped = { [viewModel] in
-            viewModel.userDidTapAppointmentDetails()
+        view.onLocationTap = { [weak self] in
+            self?.viewModel.userDidTapAppointmentLocation()
         }
         return view
     }()
@@ -90,7 +89,6 @@ final class AppointmentConfirmationViewController: UIViewController {
     
     private lazy var actionButton: NablaViews.PrimaryButton = {
         let view = NablaViews.PrimaryButton()
-        view.setTitle(L10n.confirmationScreenActionButtonLabel, for: .normal)
         view.theme = NablaTheme.AppointmentConfirmationTheme.confirmButton
         view.onTap = { [viewModel] in
             viewModel.userDidTapConfirmButton()
@@ -136,11 +134,8 @@ final class AppointmentConfirmationViewController: UIViewController {
         _viewModel.onChange { [weak self] viewModel in
             guard let self = self else { return }
             self.updateProvider()
-            
-            self.headerView.caption = viewModel.caption
-            self.headerView.captionIcon = viewModel.captionIcon
-            self.headerView.details1 = viewModel.details1
-            self.headerView.details2 = viewModel.details2
+            self.updateError()
+            self.updateDetails()
             
             if viewModel.isLoadingConsents {
                 self.actionButton.isHidden = true
@@ -166,9 +161,18 @@ final class AppointmentConfirmationViewController: UIViewController {
                 
                 self.actionButton.isEnabled = viewModel.canConfirm
                 self.actionButton.isLoading = viewModel.isConfirming
-                self.updateError()
             }
         }
+    }
+    
+    private func updateDetails() {
+        actionButton.setTitle(viewModel.confirmActionTitle, for: .normal)
+        
+        headerView.locationType = viewModel.locationType
+        headerView.location = viewModel.location
+        headerView.locationDetails = viewModel.locationDetails
+        headerView.date = viewModel.date
+        headerView.price = viewModel.price
     }
     
     private func updateProvider() {
@@ -220,7 +224,7 @@ final class AppointmentConfirmationViewController: UIViewController {
     }
     
     private func updateError() {
-        guard presentedViewController == nil, let modal = viewModel.modal else { return }
+        guard let modal = viewModel.modal else { return }
         switch modal {
         case let .alert(alert):
             let controller = nabla.makeController(for: alert)

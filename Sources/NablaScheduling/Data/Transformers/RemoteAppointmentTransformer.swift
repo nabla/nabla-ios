@@ -14,13 +14,6 @@ final class RemoteAppointmentTransformer {
         )
     }
     
-    func transform(_ state: Appointment.State) -> RemoteAppointment.State.Enum {
-        switch state {
-        case .upcoming: return .upcoming
-        case .finalized: return .finalized
-        }
-    }
-    
     // MARK: Init
     
     init(logger: Logger) {
@@ -53,6 +46,9 @@ final class RemoteAppointmentTransformer {
             return .upcoming
         } else if state.asFinalizedAppointment != nil {
             return .finalized
+        } else if let pendingAppointment = state.asPendingAppointment?.fragments.pendingAppointmentFragment {
+            let paymentRequirement = pendingAppointment.schedulingPaymentRequirement.map(transform(_:))
+            return .pending(paymentRequirement: paymentRequirement)
         }
         let message = "Unknown appointment state"
         logger.error(message: message)
@@ -70,6 +66,14 @@ final class RemoteAppointmentTransformer {
             country: address.country,
             extraDetails: address.extraDetails
         )
+    }
+    
+    private func transform(_ paymentRequirement: GQL.PendingAppointmentFragment.SchedulingPaymentRequirement) -> Appointment.PaymentRequirement {
+        .init(price: transform(paymentRequirement.price.fragments.priceFragment))
+    }
+    
+    private func transform(_ price: GQL.PriceFragment) -> Price {
+        Price(amount: price.amount, currenyCode: price.currencyCode)
     }
     
     private func transform(_ livekitRoom: GQL.LivekitRoomFragment) -> Location.RemoteLocation.VideoCallRoom? {

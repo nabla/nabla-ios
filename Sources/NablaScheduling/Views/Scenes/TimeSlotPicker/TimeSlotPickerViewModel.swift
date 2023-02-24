@@ -3,7 +3,7 @@ import Foundation
 import NablaCore
 
 protocol TimeSlotPickerViewModelDelegate: AnyObject {
-    func timeSlotPickerViewModel(_ viewModel: TimeSlotPickerViewModel, didSelect: AvailabilitySlot)
+    func timeSlotPickerViewModel(_ viewModel: TimeSlotPickerViewModel, didSelect: Appointment)
 }
 
 struct TimeSlotGroupViewItem: Identifiable, Hashable {
@@ -26,7 +26,8 @@ struct TimeSlotViewItem: Identifiable, Hashable {
 protocol TimeSlotPickerViewModel: ViewModel {
     @MainActor var isLoading: Bool { get }
     @MainActor var groups: [TimeSlotGroupViewItem] { get }
-    @MainActor var canContinue: Bool { get }
+    @MainActor var canSubmit: Bool { get }
+    @MainActor var isSubmitting: Bool { get }
     @MainActor var error: AlertViewModel? { get set }
     
     @MainActor func userDidPullToRefresh()
@@ -43,13 +44,14 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     weak var delegate: TimeSlotPickerViewModelDelegate?
     
     @Published private(set) var isLoading = false
+    @Published private(set) var isSubmitting = false
     @Published var error: AlertViewModel?
     
     var groups: [TimeSlotGroupViewItem] {
         Self.transform(slots, openedGroups: openedGroups, selected: selected)
     }
     
-    var canContinue: Bool {
+    var canSubmit: Bool {
         selected != nil
     }
     
@@ -86,7 +88,23 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     
     func userDidTapConfirmButton() {
         guard let selected = selected else { return }
-        delegate?.timeSlotPickerViewModel(self, didSelect: selected)
+        
+        isSubmitting = true
+        Task {
+            do {
+                let appointment = try await createPendingAppointment(timeSlot: selected)
+                await MainActor.run {
+                    delegate?.timeSlotPickerViewModel(self, didSelect: appointment)
+                }
+            } catch {
+                self.error = .error(
+                    title: L10n.timeSlotsPickerScreenErrorTitle,
+                    error: error,
+                    fallbackMessage: L10n.timeSlotsPickerScreenErrorMessage
+                )
+            }
+            isSubmitting = false
+        }
     }
     
     // MARK: Init
@@ -121,6 +139,10 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     private var loadMore: (() async throws -> Void)?
     private var modelWatcher: AnyCancellable?
     
+    // The multi-steps confirmation might fail partially, or the user might go back and forth between screens.
+    // We keep all the pending appointments to be able to retry the failed steps.
+    private var pendingAppointments = [Date: Appointment]()
+    
     private struct TimeSlotGroup {
         let id: UUID
         let title: String
@@ -147,6 +169,22 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
                     self?.isLoading = false
                 }
             )
+    }
+    
+    private func createPendingAppointment(timeSlot: AvailabilitySlot) async throws -> Appointment {
+        // We might have created the appointment already, and come back to this screen.
+        // In this case, we want to reuse the apointment and not lose it.
+        if let pendingAppointment = pendingAppointments[timeSlot.start] {
+            return pendingAppointment
+        }
+        let appointment = try await client.createPendingAppointment(
+            location: location,
+            categoryId: category.id,
+            providerId: timeSlot.providerId,
+            date: timeSlot.start
+        )
+        pendingAppointments[timeSlot.start] = appointment
+        return appointment
     }
     
     private func loadMoreAvailabilitySlots() async {

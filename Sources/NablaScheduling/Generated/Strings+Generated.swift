@@ -24,20 +24,16 @@ internal enum L10n {
   internal static let appointmentDetailsScreenCancelAppointmentModalMessage = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_modal_message")
   /// Cancel appointment
   internal static let appointmentDetailsScreenCancelAppointmentModalTitle = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_modal_title")
-  /// Consultation planned on %@
-  internal static func appointmentDetailsScreenCaptionFormat(_ p1: Any) -> String {
-    return L10n.tr("Localizable", "appointment_details_screen_caption_format", String(describing: p1))
-  }
-  /// Consultation planned today at %@
-  internal static func appointmentDetailsScreenCaptionFormatToday(_ p1: Any) -> String {
-    return L10n.tr("Localizable", "appointment_details_screen_caption_format_today", String(describing: p1))
-  }
   /// Appointment
   internal static let appointmentDetailsScreenTitle = L10n.tr("Localizable", "appointment_details_screen_title")
   /// Failed to load the appointment. Please try again.
   internal static let appointmentDetailsScreenWatchAppointmentErrorMessage = L10n.tr("Localizable", "appointment_details_screen_watch_appointment_error_message")
   /// Something went wrong
   internal static let appointmentDetailsScreenWatchAppointmentErrorTitle = L10n.tr("Localizable", "appointment_details_screen_watch_appointment_error_title")
+  /// In-person consultation
+  internal static let appointmentDetailsViewPhysicalLocationLabel = L10n.tr("Localizable", "appointment_details_view_physical_location_label")
+  /// Remote consultation
+  internal static let appointmentDetailsViewRemoteLocationLabel = L10n.tr("Localizable", "appointment_details_view_remote_location_label")
   /// Schedule an appointment
   internal static let appointmentsScreenActionButtonLabel = L10n.tr("Localizable", "appointments_screen_action_button_label")
   /// Join the call
@@ -71,15 +67,9 @@ internal enum L10n {
   /// Select a category
   internal static let categoryPickerScreenTitle = L10n.tr("Localizable", "category_picker_screen_title")
   /// Confirm the appointment
-  internal static let confirmationScreenActionButtonLabel = L10n.tr("Localizable", "confirmation_screen_action_button_label")
-  /// Consultation planned on %@
-  internal static func confirmationScreenCaptionFormat(_ p1: Any) -> String {
-    return L10n.tr("Localizable", "confirmation_screen_caption_format", String(describing: p1))
-  }
-  /// Consultation planned today at %@
-  internal static func confirmationScreenCaptionFormatToday(_ p1: Any) -> String {
-    return L10n.tr("Localizable", "confirmation_screen_caption_format_today", String(describing: p1))
-  }
+  internal static let confirmationScreenActionButtonLabelFreeAppointment = L10n.tr("Localizable", "confirmation_screen_action_button_label_free_appointment")
+  /// Go to payment
+  internal static let confirmationScreenActionButtonLabelPaidAppointment = L10n.tr("Localizable", "confirmation_screen_action_button_label_paid_appointment")
   /// I consent to do a video consultation.
   internal static let confirmationScreenConsultationDisclaimer = L10n.tr("Localizable", "confirmation_screen_consultation_disclaimer")
   /// I consent to the data processing policy.
@@ -104,6 +94,10 @@ internal enum L10n {
   internal static let locationPickerScreenErrorTitle = L10n.tr("Localizable", "location_picker_screen_error_title")
   /// Select a location
   internal static let locationPickerScreenTitle = L10n.tr("Localizable", "location_picker_screen_title")
+  /// Ok
+  internal static let successScreenButton = L10n.tr("Localizable", "success_screen_button")
+  /// Your appointment has been booked!
+  internal static let successScreenLabel = L10n.tr("Localizable", "success_screen_label")
   /// No availabilities
   internal static let timeSlotsPickerScreenEmptyLabel = L10n.tr("Localizable", "time_slots_picker_screen_empty_label")
   /// Failed to display the availabilities. Please try again.

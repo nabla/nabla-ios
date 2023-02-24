@@ -30,8 +30,11 @@ import XCTest
                     title: "Description",
                     avatarUrl: nil
                 )))
-        viewModel.given(.caption(getter: "Consultation planned on 1 January 1970 at 01:00"))
-        viewModel.given(.captionIcon(getter: .video))
+        viewModel.given(.locationType(getter: .remote))
+        viewModel.given(.location(getter: nil))
+        viewModel.given(.locationDetails(getter: nil))
+        viewModel.given(.date(getter: Date(timeIntervalSince1970: 0)))
+        viewModel.given(.price(getter: nil))
         viewModel.given(.isLoadingConsents(getter: false))
         viewModel.given(.consentsLoadingError(getter: nil))
         viewModel.given(.consents(getter: defaultConsents))
@@ -39,6 +42,7 @@ import XCTest
         viewModel.given(.agreesWithSecondConsent(getter: false))
         viewModel.given(.canConfirm(getter: false))
         viewModel.given(.isConfirming(getter: false))
+        viewModel.given(.confirmActionTitle(getter: "Confirm the appointment"))
         viewModel.given(.modal(getter: nil))
     }
     
@@ -206,8 +210,8 @@ import XCTest
     
     func testAppointmentConfirmationViewControllerForPhysicalLocation() {
         // GIVEN
-        viewModel.given(.captionIcon(getter: .house))
-        viewModel.given(.details1(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
+        viewModel.given(.locationType(getter: .physical))
+        viewModel.given(.location(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -215,9 +219,29 @@ import XCTest
     
     func testAppointmentConfirmationViewControllerForPhysicalLocationWithExtra() {
         // GIVEN
-        viewModel.given(.captionIcon(getter: .house))
-        viewModel.given(.details1(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
-        viewModel.given(.details2(getter: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"))
+        viewModel.given(.locationType(getter: .physical))
+        viewModel.given(.location(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
+        viewModel.given(.locationDetails(getter: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testAppointmentConfirmationViewControllerForPhysicalLocationWithPrice() {
+        // GIVEN
+        viewModel.given(.locationType(getter: .physical))
+        viewModel.given(.location(getter: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"))
+        viewModel.given(.locationDetails(getter: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"))
+        viewModel.given(.price(getter: "25.00 €"))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testAppointmentConfirmationViewControllerForRemoteLocationWithPrice() {
+        // GIVEN
+        viewModel.given(.locationType(getter: .remote))
+        viewModel.given(.price(getter: "25.00 €"))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())

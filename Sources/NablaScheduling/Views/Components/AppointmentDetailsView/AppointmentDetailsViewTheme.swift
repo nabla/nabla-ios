@@ -16,16 +16,10 @@ public extension AppointmentDetailsView {
         /// Font used to display details of the doctor.
         public var doctorDescriptionFont: UIFont
         
-        /// Theme for the caption subview.
-        public var caption: CaptionView.Theme
+        /// Color used to display the separator between the doctor and the appointment details.
+        public var separatorColor: UIColor
         
-        /// Color used to display the address.
-        public var addressColor: UIColor
-        /// Font used to display the address.
-        public var addressFont: UIFont
-        /// Color used to display the address extra information.
-        public var addressExtraColor: UIColor
-        /// Font used to display the address extra information.
-        public var addressExtraFont: UIFont
+        /// Theme used for each element of the appointment details
+        public var accessoriesTheme: AppointmentDetailsAccessoryView.Theme
     }
 }

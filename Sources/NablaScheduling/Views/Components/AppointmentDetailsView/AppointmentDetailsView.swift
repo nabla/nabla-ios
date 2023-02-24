@@ -4,11 +4,6 @@ import UIKit
 public final class AppointmentDetailsView: UIView {
     // MARK: - Internal
     
-    enum CaptionIcon {
-        case video
-        case house
-    }
-    
     var theme: Theme {
         didSet { updateTheme() }
     }
@@ -28,37 +23,36 @@ public final class AppointmentDetailsView: UIView {
         set { subtitleLabel.text = newValue }
     }
     
-    var caption: String? {
-        get { captionView.text }
-        set { captionView.text = newValue }
-    }
-    
-    var captionIcon: CaptionIcon = .video {
+    var locationType: LocationType = .remote {
         didSet {
-            switch captionIcon {
-            case .video: captionView.image = .nabla.symbol(.video)
-            case .house: captionView.image = .nabla.symbol(.house)
-            }
+            locationAccessoryView.image = image(for: locationType)
+            locationAccessoryView.title = title(for: locationType)
         }
     }
     
-    var details1: String? {
-        get { details1Label.text }
+    var location: String? {
+        get { locationAccessoryView.subtitle }
+        set { locationAccessoryView.subtitle = newValue }
+    }
+    
+    var locationDetails: String? {
+        get { locationAccessoryView.extra }
+        set { locationAccessoryView.extra = newValue }
+    }
+    
+    var date: Date = .init() {
+        didSet { dateAccessoryView.title = format(date: date) }
+    }
+    
+    var price: String? {
+        get { priceAccessoryView.title }
         set {
-            details1Label.text = newValue
-            details1Label.isHidden = newValue?.isEmpty ?? true
+            priceAccessoryView.title = newValue
+            priceAccessoryView.isHidden = newValue == nil
         }
     }
     
-    var details2: String? {
-        get { details2Label.text }
-        set {
-            details2Label.text = newValue
-            details2Label.isHidden = newValue?.isEmpty ?? true
-        }
-    }
-    
-    var onDetailsTapped: (() -> Void)?
+    var onLocationTap: (() -> Void)?
     
     // MARK: Init
     
@@ -98,24 +92,42 @@ public final class AppointmentDetailsView: UIView {
         return view
     }()
     
-    private lazy var captionView: CaptionView = {
-        let view = CaptionView(frame: .zero, theme: theme.caption)
+    private lazy var accessorySeparator: UIView = {
+        let view = UIView()
+        view.nabla.constraintHeight(1)
+        view.backgroundColor = theme.separatorColor
         return view
     }()
     
-    private lazy var details1Label: UILabel = {
-        let view = UILabel()
-        view.numberOfLines = 0
-        view.textAlignment = .center
-        view.isHidden = true
+    private lazy var accessoryContainer: UIView = {
+        let view = UIStackView(arrangedSubviews: [
+            locationAccessoryView,
+            dateAccessoryView,
+            priceAccessoryView,
+        ])
+        view.axis = .vertical
+        view.alignment = .leading
+        view.distribution = .fill
+        view.spacing = 8
         return view
     }()
     
-    private lazy var details2Label: UILabel = {
-        let view = UILabel()
-        view.numberOfLines = 0
-        view.textAlignment = .center
-        view.isHidden = true
+    private lazy var locationAccessoryView: AppointmentDetailsAccessoryView = {
+        let view = AppointmentDetailsAccessoryView(theme: theme.accessoriesTheme)
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(locationTapHandler))
+        view.addGestureRecognizer(tapRecognizer)
+        return view
+    }()
+    
+    private lazy var dateAccessoryView: AppointmentDetailsAccessoryView = {
+        let view = AppointmentDetailsAccessoryView(theme: theme.accessoriesTheme)
+        view.image = .nabla.symbol(.calendar)
+        return view
+    }()
+    
+    private lazy var priceAccessoryView: AppointmentDetailsAccessoryView = {
+        let view = AppointmentDetailsAccessoryView(theme: theme.accessoriesTheme)
+        view.image = .nabla.symbol(.dollarSignCircle)
         return view
     }()
     
@@ -124,23 +136,26 @@ public final class AppointmentDetailsView: UIView {
             avatarView,
             titleLabel,
             subtitleLabel,
-            captionView,
-            details1Label,
-            details2Label,
         ])
         vstack.axis = .vertical
         vstack.alignment = .center
         vstack.distribution = .fill
         addSubview(vstack)
-        vstack.nabla.pinToSuperView(insets: .nabla.make(horizontal: 8, vertical: 20))
+        vstack.nabla.pinToSuperView(edges: [.leading, .top, .trailing], insets: .nabla.all(20))
         vstack.setCustomSpacing(12, after: avatarView)
         vstack.setCustomSpacing(4, after: titleLabel)
         vstack.setCustomSpacing(12, after: subtitleLabel)
-        vstack.setCustomSpacing(16, after: captionView)
-        vstack.setCustomSpacing(12, after: details1Label)
         
-        addTapGesture(to: details1Label, action: #selector(detailsTapHandler))
-        addTapGesture(to: details2Label, action: #selector(detailsTapHandler))
+        addSubview(accessorySeparator)
+        accessorySeparator.nabla.pinToSuperView(edges: [.leading, .trailing])
+        
+        addSubview(accessoryContainer)
+        accessoryContainer.nabla.pinToSuperView(edges: [.leading, .bottom, .trailing], insets: .nabla.all(20))
+        
+        NSLayoutConstraint.activate([
+            accessorySeparator.topAnchor.constraint(equalTo: vstack.bottomAnchor, constant: 20),
+            accessoryContainer.topAnchor.constraint(equalTo: accessorySeparator.bottomAnchor, constant: 20),
+        ])
     }
     
     private func updateTheme() {
@@ -153,21 +168,36 @@ public final class AppointmentDetailsView: UIView {
         subtitleLabel.textColor = theme.doctorDescriptionColor
         subtitleLabel.font = theme.doctorDescriptionFont
         
-        captionView.theme = theme.caption
-        
-        details1Label.textColor = theme.addressColor
-        details1Label.font = theme.addressFont
-        details2Label.textColor = theme.addressExtraColor
-        details2Label.font = theme.addressExtraFont
+        accessorySeparator.backgroundColor = theme.separatorColor
+        locationAccessoryView.theme = theme.accessoriesTheme
+        dateAccessoryView.theme = theme.accessoriesTheme
+        priceAccessoryView.theme = theme.accessoriesTheme
     }
     
-    private func addTapGesture(to view: UIView, action: Selector) {
-        let tapGesture = UITapGestureRecognizer(target: self, action: action)
-        view.addGestureRecognizer(tapGesture)
-        view.isUserInteractionEnabled = true
+    private func format(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.formattingContext = .beginningOfSentence
+        formatter.doesRelativeDateFormatting = true
+        formatter.dateStyle = .long
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
     
-    @objc func detailsTapHandler() {
-        onDetailsTapped?()
+    private func image(for locationType: LocationType) -> UIImage {
+        switch locationType {
+        case .physical: return .nabla.symbol(.house)
+        case .remote: return .nabla.symbol(.video)
+        }
+    }
+    
+    private func title(for locationType: LocationType) -> String {
+        switch locationType {
+        case .physical: return L10n.appointmentDetailsViewPhysicalLocationLabel
+        case .remote: return L10n.appointmentDetailsViewRemoteLocationLabel
+        }
+    }
+    
+    @objc private func locationTapHandler() {
+        onLocationTap?()
     }
 }

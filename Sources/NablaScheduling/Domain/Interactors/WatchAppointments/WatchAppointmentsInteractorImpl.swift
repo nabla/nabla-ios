@@ -5,7 +5,7 @@ import NablaCore
 final class WatchAppointmentsInteractorImpl: WatchAppointmentsInteractor {
     // MARK: - Internal
     
-    func execute(state: Appointment.State) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
+    func execute(state: AppointmentStateFilter) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
         repository.watchAppointments(state: state)
     }
     

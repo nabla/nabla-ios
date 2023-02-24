@@ -5,9 +5,9 @@ import NablaCore
 final class AppointmentRepositoryImpl: AppointmentRepository {
     // MARK: - Internal
     
-    func watchAppointments(state: Appointment.State) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
+    func watchAppointments(state: AppointmentStateFilter) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
         let transformer = RemoteAppointmentTransformer(logger: logger)
-        return remoteDataSource.watchAppointments(state: transformer.transform(state))
+        return remoteDataSource.watchAppointments(state: state)
             .mapError(GQLErrorTransformer.transform(gqlError:))
             .map { response in
                 response.map(
@@ -29,14 +29,27 @@ final class AppointmentRepositoryImpl: AppointmentRepository {
     }
     
     /// - Throws: ``NablaError``
-    func scheduleAppointment(location: LocationType, categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
+    func createPendingAppointment(location: LocationType, categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
         do {
-            let appointment = try await remoteDataSource.scheduleAppointment(
+            let appointment = try await remoteDataSource.createPendingAppointment(
                 isPhysical: location == .physical,
                 categoryId: categoryId,
                 providerId: providerId,
                 date: date
             )
+            let transformer = RemoteAppointmentTransformer(logger: logger)
+            return transformer.transform(appointment)
+        } catch let gqlError as GQLError {
+            throw GQLErrorTransformer.transform(gqlError: gqlError)
+        } catch {
+            throw InternalError(underlyingError: error)
+        }
+    }
+
+    /// - Throws: ``NablaError``
+    func schedulePendingAppointment(withId appointmentId: UUID) async throws -> Appointment {
+        do {
+            let appointment = try await remoteDataSource.schedulePendingAppointment(withId: appointmentId)
             let transformer = RemoteAppointmentTransformer(logger: logger)
             return transformer.transform(appointment)
         } catch let gqlError as GQLError {

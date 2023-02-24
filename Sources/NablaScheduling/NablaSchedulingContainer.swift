@@ -14,7 +14,8 @@ final class NablaSchedulingContainer {
     let watchAppointmentInteractor: WatchAppointmentInteractor
     let watchCategoriesInteractor: WatchCategoriesInteractor
     let watchAvailabilitySlotsInteractor: WatchAvailabilitySlotsInteractor
-    let scheduleAppointmentInteractor: ScheduleAppointmentInteractor
+    let createPendingAppointmentInteractor: CreatePendingAppointmentInteractor
+    let schedulePendingAppointmentInteractor: SchedulingPendingAppointmentInteractor
     let cancelAppointmentInteractor: CancelAppointmentInteractor
     let watchProviderInteractor: WatchProviderInteractor
     let watchConsentsInteractor: WatchConsentsInteractor
@@ -72,7 +73,8 @@ final class NablaSchedulingContainer {
         watchAppointmentInteractor = WatchAppointmentInteractorImpl(repository: appointmentRepository)
         watchCategoriesInteractor = WatchCategoriesInteractorImpl(repository: availabilitySlotRepository)
         watchAvailabilitySlotsInteractor = WatchAvailabilitySlotsInteractorImpl(repository: availabilitySlotRepository)
-        scheduleAppointmentInteractor = ScheduleAppointmentInteractorImpl(repository: appointmentRepository)
+        createPendingAppointmentInteractor = CreatePendingAppointmentInteractorImpl(repository: appointmentRepository)
+        schedulePendingAppointmentInteractor = SchedulingPendingAppointmentInteractorImpl(repository: appointmentRepository)
         cancelAppointmentInteractor = CancelAppointmentInteractorImpl(repository: appointmentRepository)
         watchProviderInteractor = WatchProviderInteractorImpl(repository: providerRepository)
         watchConsentsInteractor = WatchConsentsInteractorImpl(repository: consentsRepository)

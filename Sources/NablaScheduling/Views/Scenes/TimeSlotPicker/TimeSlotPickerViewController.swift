@@ -156,7 +156,8 @@ final class TimeSlotPickerViewController: UIViewController {
     }
     
     private func updateActionButton() {
-        actionButton.isEnabled = viewModel.canContinue
+        actionButton.isEnabled = viewModel.canSubmit
+        actionButton.isLoading = viewModel.isSubmitting
     }
     
     private func updateError() {

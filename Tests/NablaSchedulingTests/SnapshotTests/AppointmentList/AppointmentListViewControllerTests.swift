@@ -111,8 +111,8 @@ extension MockFactory: NablaSchedulingViewFactory {
     func createAppointmentListViewController(delegate _: NablaScheduling.AppointmentListDelegate) -> UIViewController {
         fatalError()
     }
-    
-    func presentScheduleAppointmentNavigationController(from _: UIViewController) {
+
+    func presentScheduleAppointmentNavigationController(from _: UIViewController, delegate _: NablaScheduling.ScheduleAppointmentDelegate) {
         fatalError()
     }
     

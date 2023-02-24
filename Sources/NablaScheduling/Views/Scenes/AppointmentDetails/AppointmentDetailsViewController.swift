@@ -53,9 +53,8 @@ final class AppointmentDetailsViewController: UIViewController {
         )
         view.title = ""
         view.subtitle = ""
-        view.caption = ""
-        view.onDetailsTapped = { [viewModel] in
-            viewModel.userDidTapAppointmentDetails()
+        view.onLocationTap = { [weak self] in
+            self?.viewModel.userDidTapAppointmentLocation()
         }
         return view
     }()
@@ -127,11 +126,13 @@ final class AppointmentDetailsViewController: UIViewController {
     }
     
     private func updateDetails(_ viewModel: AppointmentsDetailsViewItem) {
-        headerView.caption = viewModel.caption
-        headerView.captionIcon = viewModel.captionIcon
-        headerView.details1 = viewModel.details1
-        headerView.details2 = viewModel.details2
         bottomContainer.isHidden = !viewModel.showCancelButton
+        
+        headerView.locationType = viewModel.locationType
+        headerView.location = viewModel.location
+        headerView.locationDetails = viewModel.locationDetails
+        headerView.date = viewModel.date
+        headerView.price = viewModel.price
     }
     
     private func update(provider: Provider) {

@@ -3,6 +3,7 @@ import Foundation
 import NablaCore
 
 protocol AppointmentConfirmationViewModelDelegate: AnyObject {
+    func appointmentConfirmationViewModel(_ viewModel: AppointmentConfirmationViewModel, confirm: Appointment) async throws
     func appointmentConfirmationViewModel(_ viewModel: AppointmentConfirmationViewModel, didConfirm: Appointment)
 }
 
@@ -14,20 +15,22 @@ enum AppointmentConfirmationModal {
 // sourcery: AutoMockable
 protocol AppointmentConfirmationViewModel: ViewModel {
     @MainActor var provider: Provider? { get }
-    @MainActor var caption: String { get }
-    @MainActor var captionIcon: AppointmentDetailsView.CaptionIcon { get }
-    @MainActor var details1: String? { get }
-    @MainActor var details2: String? { get }
+    @MainActor var locationType: LocationType { get }
+    @MainActor var location: String? { get }
+    @MainActor var locationDetails: String? { get }
+    @MainActor var date: Date { get }
+    @MainActor var price: String? { get }
     @MainActor var agreesWithFirstConsent: Bool { get set }
     @MainActor var agreesWithSecondConsent: Bool { get set }
     @MainActor var canConfirm: Bool { get }
+    @MainActor var confirmActionTitle: String { get }
     @MainActor var isConfirming: Bool { get }
     @MainActor var isLoadingConsents: Bool { get }
     @MainActor var consents: ConsentsViewModel? { get }
     @MainActor var consentsLoadingError: ConsentsErrorViewModel? { get }
     @MainActor var modal: AppointmentConfirmationModal? { get set }
     
-    @MainActor func userDidTapAppointmentDetails()
+    @MainActor func userDidTapAppointmentLocation()
     @MainActor func userDidTapConfirmButton()
 }
 
@@ -45,43 +48,49 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     @Published private(set) var consents: ConsentsViewModel?
     @Published private(set) var provider: Provider?
     @Published var modal: AppointmentConfirmationModal?
-
-    var caption: String {
-        if timeSlot.start.nabla.isToday {
-            return L10n.confirmationScreenCaptionFormatToday(formatTime(date: timeSlot.start))
-        } else {
-            return L10n.confirmationScreenCaptionFormat(formatTimeAndDate(date: timeSlot.start))
-        }
+    
+    var locationType: LocationType {
+        appointment.location.type ?? .remote
     }
     
-    var captionIcon: AppointmentDetailsView.CaptionIcon {
-        switch location {
-        case .remote: return .video
-        case .physical: return .house
-        }
-    }
-    
-    var details1: String? {
-        switch timeSlot.location {
+    var location: String? {
+        switch appointment.location {
         case .remote, .unknown: return nil
         case let .physical(physicalLocation):
             return addressFormatter.format(physicalLocation.address)
         }
     }
     
-    var details2: String? {
-        switch timeSlot.location {
+    var locationDetails: String? {
+        switch appointment.location {
         case .remote, .unknown: return nil
-        case let .physical(physicalLocation): return physicalLocation.address.extraDetails
+        case let .physical(physicalLocation):
+            return physicalLocation.address.extraDetails
         }
+    }
+    
+    var date: Date {
+        appointment.start
+    }
+    
+    var price: String? {
+        price(for: appointment)
     }
 
     var canConfirm: Bool {
         agreesWithFirstConsent && agreesWithSecondConsent
     }
     
-    func userDidTapAppointmentDetails() {
-        guard let physicalLocation = timeSlot.location.asPhysical else { return }
+    var confirmActionTitle: String {
+        if case let .pending(paymentRequirement) = appointment.state, paymentRequirement != nil {
+            return L10n.confirmationScreenActionButtonLabelPaidAppointment
+        } else {
+            return L10n.confirmationScreenActionButtonLabelFreeAppointment
+        }
+    }
+    
+    func userDidTapAppointmentLocation() {
+        guard let physicalLocation = appointment.location.asPhysical else { return }
         
         let actions = universalLinkGenerator.makeUniversalLinks(forAdress: physicalLocation.address)
             .compactMap { universalLink -> SheetViewModel<Void>.Action? in
@@ -108,17 +117,13 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     // MARK: Init
 
     nonisolated init(
-        category: Category,
-        timeSlot: AvailabilitySlot,
-        location: LocationType,
+        appointment: Appointment,
         client: NablaSchedulingClient,
         addressFormatter: AddressFormatter,
         universalLinkGenerator: UniversalLinkGenerator,
         delegate: AppointmentConfirmationViewModelDelegate
     ) {
-        self.category = category
-        self.timeSlot = timeSlot
-        self.location = location
+        self.appointment = appointment
         self.client = client
         self.addressFormatter = addressFormatter
         self.universalLinkGenerator = universalLinkGenerator
@@ -132,9 +137,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
 
     // MARK: - Private
 
-    private let category: Category
-    private let timeSlot: AvailabilitySlot
-    private let location: LocationType
+    private let appointment: Appointment
     private let client: NablaSchedulingClient
     private let addressFormatter: AddressFormatter
     private let universalLinkGenerator: UniversalLinkGenerator
@@ -148,13 +151,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         }
         isConfirming = true
         do {
-            let appointment = try await client.scheduleAppointment(
-                location: location,
-                categoryId: category.id,
-                providerId: timeSlot.providerId,
-                date: timeSlot.start
-            )
-            delegate?.appointmentConfirmationViewModel(self, didConfirm: appointment)
+            try await schedulePendingAppointment(appointment: appointment)
         } catch {
             modal = .alert(.error(
                 title: L10n.confirmationScreenErrorTitle,
@@ -164,12 +161,18 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         }
         isConfirming = false
     }
+    
+    private func schedulePendingAppointment(appointment: Appointment) async throws {
+        try await delegate?.appointmentConfirmationViewModel(self, confirm: appointment)
+        let confirmedAppointment = try await client.schedulePendingAppointment(withId: appointment.id)
+        delegate?.appointmentConfirmationViewModel(self, didConfirm: confirmedAppointment)
+    }
 
     private func watchProvider() {
         guard provider == nil else {
             return
         }
-        providerWatcher = client.watchProvider(id: timeSlot.providerId)
+        providerWatcher = client.watchProvider(id: appointment.provider.id)
             .nabla.drive(
                 receiveValue: { [weak self] provider in
                     self?.provider = provider
@@ -192,9 +195,14 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         guard !isLoadingConsents else {
             return
         }
+        
+        guard let locationType = appointment.location.type else {
+            // TODO: Logger
+            return
+        }
 
         isLoadingConsents = true
-        consentsWatcher = client.watchConsents(location: location)
+        consentsWatcher = client.watchConsents(location: locationType)
             .nabla.drive(
                 receiveValue: { [weak self] consents in
                     guard let self = self else { return }
@@ -263,18 +271,16 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         return containsLink
     }
     
-    private func formatTime(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
-    }
-    
-    private func formatTimeAndDate(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
+    private func price(for appointment: Appointment) -> String? {
+        switch appointment.state {
+        case .finalized, .upcoming: return nil
+        case let .pending(paymentRequirement):
+            guard let price = paymentRequirement?.price else { return nil }
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencyCode = price.currenyCode
+            return formatter.string(for: price.amount)
+        }
     }
 }
 

@@ -1,3 +1,11 @@
+fragment PendingAppointmentFragment on PendingAppointment {
+    schedulingPaymentRequirement {
+        price {
+            ...PriceFragment
+        }
+    }
+}
+
 fragment UpcomingAppointmentFragment on UpcomingAppointment {
     __typename
 }
@@ -13,6 +21,9 @@ fragment AppointmentFragment on Appointment {
         ...ProviderFragment
     }
     state {
+        ... on PendingAppointment {
+            ...PendingAppointmentFragment
+        }
         ... on UpcomingAppointment {
             ...UpcomingAppointmentFragment
         }

@@ -22,8 +22,6 @@
 // ----- Appointment details screen
 
 "appointment_details_screen_title" = "Rendez-vous";
-"appointment_details_screen_caption_format_today" = "Rendez-vous prévu aujourd'hui à %@";
-"appointment_details_screen_caption_format" = "Rendez-vous prévu le %@";
 "appointment_details_screen_action_button_label" = "Annuler le rendez-vous";
 
 "appointment_details_screen_cancel_appointment_modal_title" = "Annuler le rendez-vous";
@@ -76,12 +74,21 @@
 // ----- Confirmation screen
 
 "confirmation_screen_title" = "Confirmez votre rendez-vous";
-"confirmation_screen_caption_format_today" = "Rendez-vous prévu aujourd'hui à %@";
-"confirmation_screen_caption_format" = "Rendez-vous prévu le %@";
 "confirmation_screen_consultation_disclaimer" = "Je consens à réaliser un appel vidéo.";
 "confirmation_screen_data_disclaimer" = "Je consens au traitement de mes données personnelles.";
-"confirmation_screen_action_button_label" = "Confirmer le rendez-vous";
+"confirmation_screen_action_button_label_free_appointment" = "Confirmer le rendez-vous";
+"confirmation_screen_action_button_label_paid_appointment" = "Aller au paiement";
 
 "confirmation_screen_error_title" = "Une erreur est survenue";
 "confirmation_screen_error_message" = "Impossible de confirmer le rendez-vous. Réessayez.";
 "confirmation_screen_error_retry_button" = "Réessayer";
+
+// ----- Success screen
+
+"success_screen_label" = "Votre rendez-vous est réservé !";
+"success_screen_button" = "Ok";
+
+// ----- Appointment details view
+
+"appointment_details_view_remote_location_label" = "Téléconsultation";
+"appointment_details_view_physical_location_label" = "Consultation physique";

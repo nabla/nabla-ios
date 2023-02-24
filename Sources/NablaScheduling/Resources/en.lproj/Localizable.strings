@@ -22,8 +22,6 @@
 // ----- Appointment details screen
 
 "appointment_details_screen_title" = "Appointment";
-"appointment_details_screen_caption_format_today" = "Consultation planned today at %@";
-"appointment_details_screen_caption_format" = "Consultation planned on %@";
 "appointment_details_screen_action_button_label" = "Cancel appointment";
 
 "appointment_details_screen_cancel_appointment_modal_title" = "Cancel appointment";
@@ -76,12 +74,21 @@
 // ----- Confirmation screen
 
 "confirmation_screen_title" = "Confirm your appointment";
-"confirmation_screen_caption_format_today" = "Consultation planned today at %@";
-"confirmation_screen_caption_format" = "Consultation planned on %@";
 "confirmation_screen_consultation_disclaimer" = "I consent to do a video consultation.";
 "confirmation_screen_data_disclaimer" = "I consent to the data processing policy.";
-"confirmation_screen_action_button_label" = "Confirm the appointment";
+"confirmation_screen_action_button_label_free_appointment" = "Confirm the appointment";
+"confirmation_screen_action_button_label_paid_appointment" = "Go to payment";
 
 "confirmation_screen_error_title" = "Something went wrong";
 "confirmation_screen_error_message" = "Failed to schedule appointment. Please try again.";
 "confirmation_screen_error_retry_button" = "Retry";
+
+// ----- Success screen
+
+"success_screen_label" = "Your appointment has been booked!";
+"success_screen_button" = "Ok";
+
+// ----- Appointment details view
+
+"appointment_details_view_remote_location_label" = "Remote consultation";
+"appointment_details_view_physical_location_label" = "In-person consultation";

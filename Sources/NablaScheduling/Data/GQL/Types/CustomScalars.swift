@@ -7,4 +7,5 @@ extension GQL {
     typealias ID = GraphQLID
     typealias DateTime = Date
     typealias TimeZone = String
+    typealias BigDecimal = Decimal
 }

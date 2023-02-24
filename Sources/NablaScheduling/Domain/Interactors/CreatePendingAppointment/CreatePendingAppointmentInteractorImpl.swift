@@ -1,11 +1,11 @@
 import Foundation
 
-final class ScheduleAppointmentInteractorImpl: ScheduleAppointmentInteractor {
+final class CreatePendingAppointmentInteractorImpl: CreatePendingAppointmentInteractor {
     // MARK: - Internal
     
     /// - Throws: ``NablaError``
     func execute(location: LocationType, categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
-        try await repository.scheduleAppointment(
+        try await repository.createPendingAppointment(
             location: location,
             categoryId: categoryId,
             providerId: providerId,

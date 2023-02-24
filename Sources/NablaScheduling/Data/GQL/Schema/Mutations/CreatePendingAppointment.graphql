@@ -1,16 +1,14 @@
-mutation scheduleAppointment(
+mutation createPendingAppointment(
     $isPhysical: Boolean!,
     $categoryId: UUID!,
     $providerId: UUID!,
-    $timeSlot: DateTime!,
-    $timeZone: TimeZone!
+    $startAt: DateTime!
 ) {
-    scheduleAppointmentV2(
+    createPendingAppointment(
         categoryId: $categoryId,
         providerId: $providerId,
         isPhysical: $isPhysical,
-        slot: $timeSlot,
-        timeZone: $timeZone
+        startAt: $startAt
     ) {
         appointment {
             ...AppointmentFragment

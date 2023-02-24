@@ -10,17 +10,20 @@ public extension NablaTheme {
             doctorNameFont: Fonts.subtitleBold,
             doctorDescriptionColor: Colors.Text.subdued,
             doctorDescriptionFont: Fonts.body,
-            caption: .init(
-                textColor: .nabla.dynamic(lightMode: Colors.Text.accent, darkMode: Colors.Text.onAccent),
-                backgroundColor: .nabla.dynamic(lightMode: Colors.Fill.accentSubdued, darkMode: Colors.Fill.accent),
-                borderColor: Colors.Stroke.accent,
-                shape: .capsule,
-                font: Fonts.bodyMedium
-            ),
-            addressColor: Colors.Text.subdued,
-            addressFont: Fonts.bodyMedium,
-            addressExtraColor: Colors.Text.subdued,
-            addressExtraFont: Fonts.smallText
+            separatorColor: Colors.Stroke.subdued,
+            accessoriesTheme: AppointmentDetailsAccessoryViewTheme.base
+        )
+    }
+    
+    enum AppointmentDetailsAccessoryViewTheme {
+        public static var base = AppointmentDetailsAccessoryView.Theme(
+            imageColor: Colors.Text.accent,
+            titleColor: Colors.Text.accent,
+            titleFont: Fonts.bodyMedium,
+            subtitleColor: Colors.Text.subdued,
+            subtitleFont: Fonts.smallMedium,
+            extraColor: Colors.Text.subdued,
+            extraFont: Fonts.smallText
         )
     }
 }

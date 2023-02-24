@@ -1,0 +1,4 @@
+fragment PriceFragment on Price {
+    amount
+    currencyCode
+}

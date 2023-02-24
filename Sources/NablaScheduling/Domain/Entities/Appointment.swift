@@ -7,8 +7,13 @@ public struct Appointment {
     public let provider: Provider
     public let location: Location
     
-    public enum State {
+    public enum State: Equatable {
+        case pending(paymentRequirement: PaymentRequirement?)
         case upcoming
         case finalized
+    }
+    
+    public struct PaymentRequirement: Equatable {
+        public let price: Price
     }
 }

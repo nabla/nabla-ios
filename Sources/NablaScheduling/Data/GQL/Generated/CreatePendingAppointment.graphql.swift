@@ -6,17 +6,16 @@ import Foundation
 
 /// GQL namespace
  extension GQL {
-  final class ScheduleAppointmentMutation: GraphQLMutation {
+  final class CreatePendingAppointmentMutation: GraphQLMutation {
     /// The raw GraphQL definition of this operation.
      let operationDefinition: String =
       """
-      mutation scheduleAppointment($isPhysical: Boolean!, $categoryId: UUID!, $providerId: UUID!, $timeSlot: DateTime!, $timeZone: TimeZone!) {
-        scheduleAppointmentV2(
+      mutation createPendingAppointment($isPhysical: Boolean!, $categoryId: UUID!, $providerId: UUID!, $startAt: DateTime!) {
+        createPendingAppointment(
           categoryId: $categoryId
           providerId: $providerId
           isPhysical: $isPhysical
-          slot: $timeSlot
-          timeZone: $timeZone
+          startAt: $startAt
         ) {
           __typename
           appointment {
@@ -27,12 +26,14 @@ import Foundation
       }
       """
 
-     let operationName: String = "scheduleAppointment"
+     let operationName: String = "createPendingAppointment"
 
      var queryDocument: String {
       var document: String = operationDefinition
       document.append("\n" + AppointmentFragment.fragmentDefinition)
       document.append("\n" + ProviderFragment.fragmentDefinition)
+      document.append("\n" + PendingAppointmentFragment.fragmentDefinition)
+      document.append("\n" + PriceFragment.fragmentDefinition)
       document.append("\n" + UpcomingAppointmentFragment.fragmentDefinition)
       document.append("\n" + FinalizedAppointmentFragment.fragmentDefinition)
       document.append("\n" + LocationFragment.fragmentDefinition)
@@ -46,19 +47,17 @@ import Foundation
      var isPhysical: Bool
      var categoryId: GQL.UUID
      var providerId: GQL.UUID
-     var timeSlot: GQL.DateTime
-     var timeZone: GQL.TimeZone
+     var startAt: GQL.DateTime
 
-     init(isPhysical: Bool, categoryId: GQL.UUID, providerId: GQL.UUID, timeSlot: GQL.DateTime, timeZone: GQL.TimeZone) {
+     init(isPhysical: Bool, categoryId: GQL.UUID, providerId: GQL.UUID, startAt: GQL.DateTime) {
       self.isPhysical = isPhysical
       self.categoryId = categoryId
       self.providerId = providerId
-      self.timeSlot = timeSlot
-      self.timeZone = timeZone
+      self.startAt = startAt
     }
 
      var variables: GraphQLMap? {
-      return ["isPhysical": isPhysical, "categoryId": categoryId, "providerId": providerId, "timeSlot": timeSlot, "timeZone": timeZone]
+      return ["isPhysical": isPhysical, "categoryId": categoryId, "providerId": providerId, "startAt": startAt]
     }
 
      struct Data: GraphQLSelectionSet {
@@ -66,7 +65,7 @@ import Foundation
 
        static var selections: [GraphQLSelection] {
         return [
-          GraphQLField("scheduleAppointmentV2", arguments: ["categoryId": GraphQLVariable("categoryId"), "providerId": GraphQLVariable("providerId"), "isPhysical": GraphQLVariable("isPhysical"), "slot": GraphQLVariable("timeSlot"), "timeZone": GraphQLVariable("timeZone")], type: .nonNull(.object(ScheduleAppointmentV2.selections))),
+          GraphQLField("createPendingAppointment", arguments: ["categoryId": GraphQLVariable("categoryId"), "providerId": GraphQLVariable("providerId"), "isPhysical": GraphQLVariable("isPhysical"), "startAt": GraphQLVariable("startAt")], type: .nonNull(.object(CreatePendingAppointment.selections))),
         ]
       }
 
@@ -76,20 +75,20 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
-       init(scheduleAppointmentV2: ScheduleAppointmentV2) {
-        self.init(unsafeResultMap: ["__typename": "Mutation", "scheduleAppointmentV2": scheduleAppointmentV2.resultMap])
+       init(createPendingAppointment: CreatePendingAppointment) {
+        self.init(unsafeResultMap: ["__typename": "Mutation", "createPendingAppointment": createPendingAppointment.resultMap])
       }
 
-       var scheduleAppointmentV2: ScheduleAppointmentV2 {
+       var createPendingAppointment: CreatePendingAppointment {
         get {
-          return ScheduleAppointmentV2(unsafeResultMap: resultMap["scheduleAppointmentV2"]! as! ResultMap)
+          return CreatePendingAppointment(unsafeResultMap: resultMap["createPendingAppointment"]! as! ResultMap)
         }
         set {
-          resultMap.updateValue(newValue.resultMap, forKey: "scheduleAppointmentV2")
+          resultMap.updateValue(newValue.resultMap, forKey: "createPendingAppointment")
         }
       }
 
-       struct ScheduleAppointmentV2: GraphQLSelectionSet {
+       struct CreatePendingAppointment: GraphQLSelectionSet {
          static let possibleTypes: [String] = ["ScheduleAppointmentOutput"]
 
          static var selections: [GraphQLSelection] {

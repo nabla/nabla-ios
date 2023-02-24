@@ -17,6 +17,11 @@ import XCTest
         sut = TimeSlotPickerViewController(viewModel: viewModel)
         navigationController = UINavigationController(rootViewController: sut)
         
+        viewModel.given(.isLoading(getter: false))
+        viewModel.given(.canSubmit(getter: false))
+        viewModel.given(.isSubmitting(getter: false))
+        viewModel.given(.canSubmit(getter: false))
+        
         viewModel.given(.onChange(willReturn: Just(()).eraseToAnyPublisher()))
         viewModel.given(.onChange(throttle: .any, willReturn: Just(()).eraseToAnyPublisher()))
     }
@@ -25,8 +30,6 @@ import XCTest
         // GIVEN
         let data = makeGroups(openedGroups: [], selectedSlot: nil)
         viewModel.given(.groups(getter: data))
-        viewModel.given(.isLoading(getter: false))
-        viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -35,8 +38,6 @@ import XCTest
     func testTimeSlotPickerViewControllerEmptyView() {
         // GIVEN
         viewModel.given(.groups(getter: []))
-        viewModel.given(.isLoading(getter: false))
-        viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -46,7 +47,6 @@ import XCTest
         // GIVEN
         viewModel.given(.groups(getter: []))
         viewModel.given(.isLoading(getter: true))
-        viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -57,7 +57,6 @@ import XCTest
         let data = makeGroups(openedGroups: [], selectedSlot: nil)
         viewModel.given(.groups(getter: data))
         viewModel.given(.isLoading(getter: true))
-        viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -67,8 +66,6 @@ import XCTest
         // GIVEN
         let data = makeGroups(openedGroups: [4], selectedSlot: nil)
         viewModel.given(.groups(getter: data))
-        viewModel.given(.isLoading(getter: false))
-        viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -78,8 +75,6 @@ import XCTest
         // GIVEN
         let data = makeGroups(openedGroups: [3, 7], selectedSlot: nil)
         viewModel.given(.groups(getter: data))
-        viewModel.given(.isLoading(getter: false))
-        viewModel.given(.canContinue(getter: false))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
@@ -89,8 +84,16 @@ import XCTest
         // GIVEN
         let data = makeGroups(openedGroups: [4], selectedSlot: IndexPath(item: 2, section: 4))
         viewModel.given(.groups(getter: data))
-        viewModel.given(.isLoading(getter: false))
-        viewModel.given(.canContinue(getter: false))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testTimeSlotPickerViewControllerSubmitting() {
+        // GIVEN
+        let data = makeGroups(openedGroups: [4], selectedSlot: IndexPath(item: 2, section: 4))
+        viewModel.given(.groups(getter: data))
+        viewModel.given(.isSubmitting(getter: true))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())

@@ -1,0 +1,7 @@
+mutation schedulePendingAppointment($appointmentId: UUID!) {
+    schedulePendingAppointment(appointmentId: $appointmentId) {
+        appointment {
+            ...AppointmentFragment
+        }
+    }
+}

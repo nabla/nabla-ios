@@ -11,10 +11,11 @@ import XCTest
     private var navigationController: UINavigationController!
     
     private func makeReadyItem(
-        caption: String = "Consultation planned on 1 January 1970 at 01:00",
-        captionIcon: AppointmentDetailsView.CaptionIcon = .video,
-        details1: String? = nil,
-        details2: String? = nil,
+        locationType: LocationType = .physical,
+        location: String? = "22 rue Chapon",
+        locationDetails: String? = "Extra location information",
+        date: Date = Date(timeIntervalSinceReferenceDate: 0),
+        price: String? = nil,
         showCancelButton: Bool = true
     ) -> AppointmentsDetailsViewItem {
         .init(
@@ -26,10 +27,11 @@ import XCTest
                 title: "Description",
                 avatarUrl: nil
             ),
-            caption: caption,
-            captionIcon: captionIcon,
-            details1: details1,
-            details2: details2,
+            locationType: locationType,
+            location: location,
+            locationDetails: locationDetails,
+            date: date,
+            price: price,
             showCancelButton: showCancelButton
         )
     }
@@ -56,7 +58,9 @@ import XCTest
     func testAppointmentDetailsViewControllerForRemoteLocation() {
         // GIVEN
         viewModel.given(.state(getter: .ready(makeReadyItem(
-            captionIcon: .house
+            locationType: .remote,
+            location: nil,
+            locationDetails: nil
         ))))
         // WHEN
         // THEN
@@ -66,8 +70,9 @@ import XCTest
     func testAppointmentDetailsViewControllerForPhysicalLocation() {
         // GIVEN
         viewModel.given(.state(getter: .ready(makeReadyItem(
-            captionIcon: .house,
-            details1: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France"
+            locationType: .physical,
+            location: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France",
+            locationDetails: nil
         ))))
         // WHEN
         // THEN
@@ -77,9 +82,33 @@ import XCTest
     func testAppointmentDetailsViewControllerForPhysicalLocationWithExtra() {
         // GIVEN
         viewModel.given(.state(getter: .ready(makeReadyItem(
-            captionIcon: .house,
-            details1: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France",
-            details2: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"
+            locationType: .physical,
+            location: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France",
+            locationDetails: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes"
+        ))))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testAppointmentDetailsViewControllerForPhysicalLocationWithPrice() {
+        // GIVEN
+        viewModel.given(.state(getter: .ready(makeReadyItem(
+            locationType: .physical,
+            location: "22 rue Chapon mais en plus long car il faut que ça prenne plusieurs lignes, 75003 Paris, France",
+            locationDetails: "Deuxième porte à gauche. Mais ce texte aussi devrait utiliser plusieurs lignes",
+            price: "25.00 €"
+        ))))
+        // WHEN
+        // THEN
+        assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
+    }
+    
+    func testAppointmentDetailsViewControllerForRemoteLocationWithPrice() {
+        // GIVEN
+        viewModel.given(.state(getter: .ready(makeReadyItem(
+            locationType: .remote,
+            price: "25.00 €"
         ))))
         // WHEN
         // THEN

@@ -48,6 +48,8 @@ import Foundation
       var document: String = operationDefinition
       document.append("\n" + AppointmentFragment.fragmentDefinition)
       document.append("\n" + ProviderFragment.fragmentDefinition)
+      document.append("\n" + PendingAppointmentFragment.fragmentDefinition)
+      document.append("\n" + PriceFragment.fragmentDefinition)
       document.append("\n" + UpcomingAppointmentFragment.fragmentDefinition)
       document.append("\n" + FinalizedAppointmentFragment.fragmentDefinition)
       document.append("\n" + LocationFragment.fragmentDefinition)

@@ -14,6 +14,9 @@ public extension NablaExtension where Base: UIImage {
         case ellipsis
         case playFill = "play.fill"
         case house
+        case dollarSignCircle = "dollarsign.circle"
+        case calendar
+        case checkmarkCircle = "checkmark.circle"
     }
     
     static func symbol(_ symbol: SFSymbol) -> UIImage {

@@ -44,6 +44,7 @@ enum ApolloResponseParser {
             default:
                 break
             }
+            return .serverError(message: graphqlError.message)
         } else if let authenticationError = error as? AuthenticationError {
             return .authenticationError(authenticationError)
         } else if let websocketError = error as? WebSocketError {
