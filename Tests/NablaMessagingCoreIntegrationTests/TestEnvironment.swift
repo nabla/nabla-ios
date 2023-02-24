@@ -21,7 +21,6 @@ struct TestEnvironment {
     static func make(filePath: String = #filePath, function: String = #function) async throws -> TestEnvironment {
         let userId = "e84db0e2-6a7c-4ff3-b1cb-72afb6a4bc78"
         let session = makeMockSession(filePath: filePath, function: function)
-        let networkConfiguration = NetworkConfiguration(session: session)
         let mockUUIDGenerator = MockUUIDGenerator()
 
         let deviceLocalDataSource = DeviceLocalDataSourceMock()
@@ -29,19 +28,19 @@ struct TestEnvironment {
         deviceLocalDataSource.given(.codeVersion(getter: 42))
         deviceLocalDataSource.given(.deviceModel(getter: "Mocked: Simulator"))
         deviceLocalDataSource.given(.deviceOSVersion(getter: "Mocked: iOS13"))
-        
+        var configuration = Configuration(
+            apiKey: "test-api-key",
+            logger: ConsoleLogger()
+        )
+        configuration.network = NetworkConfiguration(session: session)
         let coreContainer = CoreContainer(
             name: "tests",
-            configuration: .init(
-                apiKey: "test-api-key",
-                logger: ConsoleLogger(),
-                sessionTokenProvider: MockSessionTokenProvider()
-            ),
-            networkConfiguration: networkConfiguration,
+            configuration: configuration,
             urlSessionClient: MockURLSessionClient(session: session),
             deviceLocalDataSource: deviceLocalDataSource,
             uuidGenerator: mockUUIDGenerator,
-            modules: []
+            modules: [],
+            sessionTokenProvider: MockSessionTokenProvider()
         )
         let nablaClient = NablaClient(
             apiKey: "test-api-key",

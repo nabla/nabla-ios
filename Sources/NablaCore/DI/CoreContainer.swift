@@ -32,17 +32,17 @@ public class CoreContainer {
     convenience init(
         name: String,
         configuration: Configuration,
-        networkConfiguration: NetworkConfiguration,
-        modules: [Module]
+        modules: [Module],
+        sessionTokenProvider: SessionTokenProvider
     ) {
         self.init(
             name: name,
             configuration: configuration,
-            networkConfiguration: networkConfiguration,
             urlSessionClient: .init(),
             deviceLocalDataSource: nil,
             uuidGenerator: FoundationUUIDGenerator(),
-            modules: modules
+            modules: modules,
+            sessionTokenProvider: sessionTokenProvider
         )
     }
 
@@ -50,19 +50,18 @@ public class CoreContainer {
     init(
         name: String,
         configuration: Configuration,
-        networkConfiguration: NetworkConfiguration,
         urlSessionClient: URLSessionClient,
         deviceLocalDataSource: DeviceLocalDataSource?,
         uuidGenerator: UUIDGenerator,
-        modules: [Module]
+        modules: [Module],
+        sessionTokenProvider: SessionTokenProvider
     ) {
         self.name = name
-        self.networkConfiguration = networkConfiguration
         self.configuration = configuration
         self.modules = modules
         self.uuidGenerator = uuidGenerator
         
-        environment = EnvironmentImpl(networkConfiguration: networkConfiguration)
+        environment = EnvironmentImpl(networkConfiguration: configuration.network)
 
         let compositeLogger = MutableCompositeLogger(configuration.logger)
         logger = compositeLogger
@@ -98,12 +97,12 @@ public class CoreContainer {
             baseURLProvider: URLProvider(
                 baseURL: environment.serverUrl
             ),
-            session: networkConfiguration.session,
+            session: configuration.network.session,
             requestBehavior: headersRequestBehavior
         )
         authenticator = AuthenticatorImpl(
             httpManager: httpManager,
-            sessionTokenProvider: configuration.sessionTokenProvider
+            sessionTokenProvider: sessionTokenProvider
         )
         apolloStore = Self.makeApolloStore(logger: logger)
         interceptorProvider = HttpInterceptorProvider(
@@ -180,7 +179,6 @@ public class CoreContainer {
 
     private let name: String
     private let configuration: Configuration
-    private let networkConfiguration: NetworkConfiguration
     private let headersRequestBehavior: HeadersRequestBehavior
     private let messagingModule: MessagingModule?
     private let videoCallModule: VideoCallModule?

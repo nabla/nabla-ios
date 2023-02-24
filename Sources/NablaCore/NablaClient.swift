@@ -6,41 +6,11 @@ private enum Constants {
 }
 
 /// You should always call``NablaClient.initialize`` as soon as possible.
-/// Before any interaction with messaging features make sure you
-/// successfully authenticated your user by calling ``NablaClient.shared.authenticate(provider:)``.
+/// Before any interaction with messaging & scheduling features, make sure you
+/// authenticated your user by calling ``NablaClient.shared.setCurrentUser(userId:)``.
 public class NablaClient {
-    // MARK: - Initializer
-
-    /// Create an instance of NablaClient to use.
-    /// - Parameters:
-    ///   - modules: list of modules to be used by the SDK.
-    ///   - configuration: ``Configuration`` containing the APIKey and some defaults you can override.
-    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app.
-    ///   - name: Namespace for your the stored objects.
-    public convenience init(
-        modules: [Module],
-        configuration: Configuration,
-        networkConfiguration: NetworkConfiguration? = nil,
-        name: String
-    ) {
-        let networkConfiguration = networkConfiguration ?? DefaultNetworkConfiguration()
-        let container = CoreContainer(
-            name: name,
-            configuration: configuration,
-            networkConfiguration: networkConfiguration,
-            modules: modules
-        )
-        self.init(apiKey: configuration.apiKey, container: container)
-    }
-    
-    /// Internal use only
-    init(apiKey: String, container: CoreContainer) {
-        self.container = container
-        addHTTPHeader(name: HTTPHeaders.NablaApiKey, value: Self.formatApiKey(apiKey))
-    }
-
     // MARK: - Public
-
+    
     /// Shared instance of NablaClient client to use.
     /// Always call ``NablaClient.initialize`` before accessing it.
     public static var shared: NablaClient {
@@ -49,30 +19,30 @@ public class NablaClient {
         }
         return shared
     }
-
+    
     /// Shared instance initializer, you must call this method before accessing `NablaClient.shared`.
     /// You must call this method only once.
     /// - Parameters:
-    ///   - modules: list of modules to be used by the SDK.
     ///   - configuration: ``Configuration`` containing the APIKey and some defaults you can override.
-    ///   - networkConfiguration: optional network configuration, exposed for internal tests purposes and should not be used in your app.
+    ///   - modules: list of modules to be used by the SDK.
+    ///   - sessionTokenProvider: Responsible to provide server-made authentication tokens.
     public static func initialize(
-        modules: [Module],
         configuration: Configuration,
-        networkConfiguration: NetworkConfiguration? = nil
+        modules: [Module],
+        sessionTokenProvider: SessionTokenProvider
     ) {
         guard _shared == nil else {
             configuration.logger.warning(message: "NablaClient.initialize() should only be called once. Ignoring this call and using the previously created shared instance.")
             return
         }
         _shared = NablaClient(
-            modules: modules,
+            name: Constants.defaultName,
             configuration: configuration,
-            networkConfiguration: networkConfiguration,
-            name: Constants.defaultName
+            modules: modules,
+            sessionTokenProvider: sessionTokenProvider
         )
     }
-
+    
     /// Authenticate the current user.
     /// - Parameters:
     ///   - userId: Identifies the user between sessions, will be passed when calling the ``SessionTokenProvider``.
@@ -134,8 +104,39 @@ public class NablaClient {
         container.gqlClient.addRefetchTriggers(triggers)
     }
     
-    /// Internal use only.
+    /// Do not use, `public` ACL needed to manage dependencies across packages.
     public private(set) var container: CoreContainer
+    
+    // MARK: Initializer
+
+    /// Create an instance of NablaClient to use.
+    /// - Parameters:
+    ///   - name: Namespace for your the stored objects.
+    ///   - configuration: ``Configuration`` containing the APIKey and some defaults you can override.
+    ///   - modules: list of modules to be used by the SDK.
+    ///   - sessionTokenProvider: Responsible to provide server-made authentication tokens.
+    public convenience init(
+        name: String,
+        configuration: Configuration,
+        modules: [Module],
+        sessionTokenProvider: SessionTokenProvider
+    ) {
+        let container = CoreContainer(
+            name: name,
+            configuration: configuration,
+            modules: modules,
+            sessionTokenProvider: sessionTokenProvider
+        )
+        self.init(apiKey: configuration.apiKey, container: container)
+    }
+    
+    // MARK: - Internal
+    
+    /// Internal use only
+    init(apiKey: String, container: CoreContainer) {
+        self.container = container
+        addHTTPHeader(name: HTTPHeaders.NablaApiKey, value: Self.formatApiKey(apiKey))
+    }
 
     // MARK: - Private
     

@@ -10,12 +10,12 @@ class AuthenticatedEndpointsTests: XCTestCase {
     override func setUp() {
         super.setUp()
         nablaClient = NablaClient(
-            modules: [],
+            name: "",
             configuration: .init(
-                apiKey: "",
-                sessionTokenProvider: MockSessionTokenProvider()
+                apiKey: ""
             ),
-            name: ""
+            modules: [],
+            sessionTokenProvider: MockSessionTokenProvider()
         )
         messagingClient = NablaMessagingClient(container: nablaClient.container)
     }
