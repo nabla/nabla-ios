@@ -10,7 +10,8 @@ final class RemoteAppointmentTransformer {
             state: transform(remote.state),
             start: remote.scheduledAt,
             provider: RemoteProviderTransformer.transform(remote.provider.fragments.providerFragment),
-            location: transform(remote.location)
+            location: transform(remote.location),
+            price: remote.price.map { transform($0.fragments.priceFragment) }
         )
     }
     

@@ -88,6 +88,10 @@ extension GQL {
             get { __data["location"] }
             set { __data["location"] = newValue }
           }
+          var price: Price? {
+            get { __data["price"] }
+            set { __data["price"] = newValue }
+          }
 
           struct Fragments: FragmentContainer {
             var __data: DataDict
@@ -243,6 +247,37 @@ extension GQL {
                   @available(*, unavailable, message: "mutate properties of the fragment instead.")
                   set { preconditionFailure() }
                 }
+              }
+            }
+          }
+
+          /// PastAppointments.Datum.Price
+          ///
+          /// Parent Type: `Price`
+          struct Price: GQL.MutableSelectionSet {
+            var __data: DataDict
+            init(data: DataDict) { __data = data }
+
+            static var __parentType: Apollo.ParentType { GQL.Objects.Price }
+
+            var amount: GQL.BigDecimal {
+              get { __data["amount"] }
+              set { __data["amount"] = newValue }
+            }
+            var currencyCode: String {
+              get { __data["currencyCode"] }
+              set { __data["currencyCode"] = newValue }
+            }
+
+            struct Fragments: FragmentContainer {
+              var __data: DataDict
+              init(data: DataDict) { __data = data }
+
+              var priceFragment: PriceFragment {
+                get { _toFragment() }
+                _modify { var f = priceFragment; yield &f; __data = f.__data }
+                @available(*, unavailable, message: "mutate properties of the fragment instead.")
+                set { preconditionFailure() }
               }
             }
           }

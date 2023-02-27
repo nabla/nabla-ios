@@ -6,6 +6,7 @@ public struct Appointment {
     public let start: Date
     public let provider: Provider
     public let location: Location
+    public let price: Price?
     
     public enum State: Equatable {
         case pending(paymentRequirement: PaymentRequirement?)

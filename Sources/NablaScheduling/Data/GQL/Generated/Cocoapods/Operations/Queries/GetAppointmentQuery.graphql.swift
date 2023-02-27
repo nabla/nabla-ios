@@ -72,6 +72,7 @@ extension GQL {
           var provider: Provider { __data["provider"] }
           var state: State { __data["state"] }
           var location: AppointmentFragment.Location { __data["location"] }
+          var price: Price? { __data["price"] }
 
           struct Fragments: FragmentContainer {
             let __data: DataDict
@@ -170,6 +171,26 @@ extension GQL {
 
                 var finalizedAppointmentFragment: FinalizedAppointmentFragment { _toFragment() }
               }
+            }
+          }
+
+          /// Appointment.Appointment.Price
+          ///
+          /// Parent Type: `Price`
+          struct Price: GQL.SelectionSet {
+            let __data: DataDict
+            init(data: DataDict) { __data = data }
+
+            static var __parentType: Apollo.ParentType { GQL.Objects.Price }
+
+            var amount: GQL.BigDecimal { __data["amount"] }
+            var currencyCode: String { __data["currencyCode"] }
+
+            struct Fragments: FragmentContainer {
+              let __data: DataDict
+              init(data: DataDict) { __data = data }
+
+              var priceFragment: PriceFragment { _toFragment() }
             }
           }
         }

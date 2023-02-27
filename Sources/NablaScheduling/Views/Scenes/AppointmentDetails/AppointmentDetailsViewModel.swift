@@ -203,13 +203,19 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
     
     private func price(for appointment: Appointment) -> String? {
         switch appointment.state {
-        case .finalized, .upcoming: return nil
+        case .finalized, .upcoming:
+            guard let price = appointment.price else { return nil }
+            return format(price: price)
         case let .pending(paymentRequirement):
-            guard let price = paymentRequirement?.price else { return nil }
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .currency
-            formatter.currencyCode = price.currenyCode
-            return formatter.string(for: price.amount)
+            guard let price = paymentRequirement?.price ?? appointment.price else { return nil }
+            return format(price: price)
         }
+    }
+    
+    private func format(price: Price) -> String? {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = price.currenyCode
+        return formatter.string(for: price.amount)
     }
 }

@@ -30,6 +30,10 @@ extension GQL {
           __typename
           ...LocationFragment
         }
+        price {
+          __typename
+          ...PriceFragment
+        }
       }
       """ }
 
@@ -43,6 +47,7 @@ extension GQL {
       .field("provider", Provider.self),
       .field("state", State.self),
       .field("location", Location.self),
+      .field("price", Price?.self),
     ] }
 
     var id: GQL.UUID { __data["id"] }
@@ -50,6 +55,7 @@ extension GQL {
     var provider: Provider { __data["provider"] }
     var state: State { __data["state"] }
     var location: Location { __data["location"] }
+    var price: Price? { __data["price"] }
 
     /// Provider
     ///
@@ -317,6 +323,29 @@ extension GQL {
             }
           }
         }
+      }
+    }
+
+    /// Price
+    ///
+    /// Parent Type: `Price`
+    struct Price: GQL.SelectionSet {
+      let __data: DataDict
+      init(data: DataDict) { __data = data }
+
+      static var __parentType: ApolloAPI.ParentType { GQL.Objects.Price }
+      static var __selections: [ApolloAPI.Selection] { [
+        .fragment(PriceFragment.self),
+      ] }
+
+      var amount: GQL.BigDecimal { __data["amount"] }
+      var currencyCode: String { __data["currencyCode"] }
+
+      struct Fragments: FragmentContainer {
+        let __data: DataDict
+        init(data: DataDict) { __data = data }
+
+        var priceFragment: PriceFragment { _toFragment() }
       }
     }
   }

@@ -96,7 +96,8 @@ import XCTest
                 title: "GP",
                 avatarUrl: nil
             ),
-            location: .remote(state == .finalized ? .undefined : .videoCallRoom(.init(url: "", token: "")))
+            location: .remote(state == .finalized ? .undefined : .videoCallRoom(.init(url: "", token: ""))),
+            price: nil
         )
     }
 }
