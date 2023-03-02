@@ -83,6 +83,10 @@
 "confirmation_screen_error_message" = "Failed to schedule appointment. Please try again.";
 "confirmation_screen_error_retry_button" = "Retry";
 
+"confirmation_screen_payment_hook_not_implemented_error_title" = "Error";
+"confirmation_screen_payment_hook_not_implemented_error_message" = "This application is not configured to support paid appointments";
+"confirmation_screen_payment_hook_not_implemented_error_button" = "Cancel";
+
 // ----- Success screen
 
 "success_screen_label" = "Your appointment has been booked!";

@@ -82,6 +82,9 @@
 "confirmation_screen_error_title" = "Une erreur est survenue";
 "confirmation_screen_error_message" = "Impossible de confirmer le rendez-vous. Réessayez.";
 "confirmation_screen_error_retry_button" = "Réessayer";
+"confirmation_screen_payment_hook_not_implemented_error_title" = "Erreur";
+"confirmation_screen_payment_hook_not_implemented_error_message" = "Cette application n'est pas configurée pour prendre en charge les rendez-vous payants";
+"confirmation_screen_payment_hook_not_implemented_error_button" = "Annuler";
 
 // ----- Success screen
 

@@ -155,13 +155,17 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         isConfirming = true
         do {
             try await schedulePendingAppointment(appointment: appointment)
-        } catch {
+        } catch let error as NablaError {
+            // Something failed in the SDK
             logger.warning(message: "Failed to schedule appointment", error: error, extra: ["appointment_id": appointment.id])
             modal = .alert(.error(
                 title: L10n.confirmationScreenErrorTitle,
                 error: error,
                 fallbackMessage: L10n.confirmationScreenErrorMessage
             ))
+        } catch {
+            // Something failed in the host app
+            logger.info(message: "Failed to schedule appointment", error: error, extra: ["appointment_id": appointment.id])
         }
         isConfirming = false
     }

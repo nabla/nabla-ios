@@ -80,6 +80,12 @@ internal enum L10n {
   internal static let confirmationScreenErrorRetryButton = L10n.tr("Localizable", "confirmation_screen_error_retry_button")
   /// Something went wrong
   internal static let confirmationScreenErrorTitle = L10n.tr("Localizable", "confirmation_screen_error_title")
+  /// Cancel
+  internal static let confirmationScreenPaymentHookNotImplementedErrorButton = L10n.tr("Localizable", "confirmation_screen_payment_hook_not_implemented_error_button")
+  /// This application is not configured to support paid appointments
+  internal static let confirmationScreenPaymentHookNotImplementedErrorMessage = L10n.tr("Localizable", "confirmation_screen_payment_hook_not_implemented_error_message")
+  /// Error
+  internal static let confirmationScreenPaymentHookNotImplementedErrorTitle = L10n.tr("Localizable", "confirmation_screen_payment_hook_not_implemented_error_title")
   /// Confirm your appointment
   internal static let confirmationScreenTitle = L10n.tr("Localizable", "confirmation_screen_title")
   /// In-person
