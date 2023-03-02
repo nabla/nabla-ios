@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Scheduling: support for registering a payment step. See doc for details/instructions.
+- Scheduling: Replace `NablaSchedulingViewFactory.presentScheduleAppointmentNavigationController(from:delegate:)` with `NablaSchedulingViewFactory.createScheduleAppointmentNavigationController(delegate:)`.
 
 ### Changed
 

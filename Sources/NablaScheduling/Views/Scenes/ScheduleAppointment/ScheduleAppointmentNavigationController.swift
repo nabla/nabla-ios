@@ -94,14 +94,17 @@ extension ScheduleAppointmentNavigationController: AppointmentConfirmationViewMo
         }
     }
     
-    func appointmentConfirmationViewModel(_: AppointmentConfirmationViewModel, didConfirm _: Appointment) {
-        let destination = factory.createSuccessViewController(delegate: self)
+    func appointmentConfirmationViewModel(_: AppointmentConfirmationViewModel, didConfirm appointment: Appointment) {
+        let destination = factory.createSuccessViewController(
+            appointment: appointment,
+            delegate: self
+        )
         setViewControllers([destination], animated: true)
     }
 }
 
 extension ScheduleAppointmentNavigationController: SuccessViewModelDelegate {
-    func successViewModelDidConfirm(_: SuccessViewModel) {
-        dismiss(animated: true)
+    func successViewModel(_: SuccessViewModel, didConfirm appointment: Appointment) {
+        scheduleAppointmentDelegate?.scheduleAppointmentDidSucceed(with: appointment)
     }
 }

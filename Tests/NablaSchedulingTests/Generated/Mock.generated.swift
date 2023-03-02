@@ -2451,16 +2451,16 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 		return __value
     }
 
-    open func createSuccessViewController(delegate: SuccessViewModelDelegate) -> UIViewController {
-        addInvocation(.m_createSuccessViewController__delegate_delegate(Parameter<SuccessViewModelDelegate>.value(`delegate`)))
-		let perform = methodPerformValue(.m_createSuccessViewController__delegate_delegate(Parameter<SuccessViewModelDelegate>.value(`delegate`))) as? (SuccessViewModelDelegate) -> Void
-		perform?(`delegate`)
+    open func createSuccessViewController(appointment: Appointment, delegate: SuccessViewModelDelegate) -> UIViewController {
+        addInvocation(.m_createSuccessViewController__appointment_appointmentdelegate_delegate(Parameter<Appointment>.value(`appointment`), Parameter<SuccessViewModelDelegate>.value(`delegate`)))
+		let perform = methodPerformValue(.m_createSuccessViewController__appointment_appointmentdelegate_delegate(Parameter<Appointment>.value(`appointment`), Parameter<SuccessViewModelDelegate>.value(`delegate`))) as? (Appointment, SuccessViewModelDelegate) -> Void
+		perform?(`appointment`, `delegate`)
 		var __value: UIViewController
 		do {
-		    __value = try methodReturnValue(.m_createSuccessViewController__delegate_delegate(Parameter<SuccessViewModelDelegate>.value(`delegate`))).casted()
+		    __value = try methodReturnValue(.m_createSuccessViewController__appointment_appointmentdelegate_delegate(Parameter<Appointment>.value(`appointment`), Parameter<SuccessViewModelDelegate>.value(`delegate`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for createSuccessViewController(delegate: SuccessViewModelDelegate). Use given")
-			Failure("Stub return value not specified for createSuccessViewController(delegate: SuccessViewModelDelegate). Use given")
+			onFatalFailure("Stub return value not specified for createSuccessViewController(appointment: Appointment, delegate: SuccessViewModelDelegate). Use given")
+			Failure("Stub return value not specified for createSuccessViewController(appointment: Appointment, delegate: SuccessViewModelDelegate). Use given")
 		}
 		return __value
     }
@@ -2486,7 +2486,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         case m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(Parameter<LocationType?>, Parameter<CategoryPickerViewModelDelegate>)
         case m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(Parameter<LocationType>, Parameter<Category>, Parameter<TimeSlotPickerViewModelDelegate>)
         case m_createAppointmentConfirmationViewController__appointment_appointmentdelegate_delegate(Parameter<Appointment>, Parameter<AppointmentConfirmationViewModelDelegate>)
-        case m_createSuccessViewController__delegate_delegate(Parameter<SuccessViewModelDelegate>)
+        case m_createSuccessViewController__appointment_appointmentdelegate_delegate(Parameter<Appointment>, Parameter<SuccessViewModelDelegate>)
         case m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(Parameter<Appointment>, Parameter<AppointmentCellViewModelDelegate>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
@@ -2515,8 +2515,9 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_createSuccessViewController__delegate_delegate(let lhsDelegate), .m_createSuccessViewController__delegate_delegate(let rhsDelegate)):
+            case (.m_createSuccessViewController__appointment_appointmentdelegate_delegate(let lhsAppointment, let lhsDelegate), .m_createSuccessViewController__appointment_appointmentdelegate_delegate(let rhsAppointment, let rhsDelegate)):
 				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsAppointment, rhs: rhsAppointment, with: matcher), lhsAppointment, rhsAppointment, "appointment"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDelegate, rhs: rhsDelegate, with: matcher), lhsDelegate, rhsDelegate, "delegate"))
 				return Matcher.ComparisonResult(results)
 
@@ -2535,7 +2536,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
             case let .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(p0, p1): return p0.intValue + p1.intValue
             case let .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_createAppointmentConfirmationViewController__appointment_appointmentdelegate_delegate(p0, p1): return p0.intValue + p1.intValue
-            case let .m_createSuccessViewController__delegate_delegate(p0): return p0.intValue
+            case let .m_createSuccessViewController__appointment_appointmentdelegate_delegate(p0, p1): return p0.intValue + p1.intValue
             case let .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(p0, p1): return p0.intValue + p1.intValue
             }
         }
@@ -2545,7 +2546,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
             case .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate: return ".createCategoryPickerViewController(preselectedLocation:delegate:)"
             case .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate: return ".createTimeSlotPickerViewController(location:category:delegate:)"
             case .m_createAppointmentConfirmationViewController__appointment_appointmentdelegate_delegate: return ".createAppointmentConfirmationViewController(appointment:delegate:)"
-            case .m_createSuccessViewController__delegate_delegate: return ".createSuccessViewController(delegate:)"
+            case .m_createSuccessViewController__appointment_appointmentdelegate_delegate: return ".createSuccessViewController(appointment:delegate:)"
             case .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate: return ".createAppointmentCellViewModel(appointment:delegate:)"
             }
         }
@@ -2572,8 +2573,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createAppointmentConfirmationViewController(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
             return Given(method: .m_createAppointmentConfirmationViewController__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func createSuccessViewController(delegate: Parameter<SuccessViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
-            return Given(method: .m_createSuccessViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func createSuccessViewController(appointment: Parameter<Appointment>, delegate: Parameter<SuccessViewModelDelegate>, willReturn: UIViewController...) -> MethodStub {
+            return Given(method: .m_createSuccessViewController__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         @MainActor
 		public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, willReturn: AppointmentCellViewModel...) -> MethodStub {
@@ -2607,9 +2608,9 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
 			willProduce(stubber)
 			return given
         }
-        public static func createSuccessViewController(delegate: Parameter<SuccessViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
+        public static func createSuccessViewController(appointment: Parameter<Appointment>, delegate: Parameter<SuccessViewModelDelegate>, willProduce: (Stubber<UIViewController>) -> Void) -> MethodStub {
             let willReturn: [UIViewController] = []
-			let given: Given = { return Given(method: .m_createSuccessViewController__delegate_delegate(`delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_createSuccessViewController__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (UIViewController).self)
 			willProduce(stubber)
 			return given
@@ -2631,7 +2632,7 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createCategoryPickerViewController(preselectedLocation: Parameter<LocationType?>, delegate: Parameter<CategoryPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createCategoryPickerViewController__preselectedLocation_preselectedLocationdelegate_delegate(`preselectedLocation`, `delegate`))}
         public static func createTimeSlotPickerViewController(location: Parameter<LocationType>, category: Parameter<Category>, delegate: Parameter<TimeSlotPickerViewModelDelegate>) -> Verify { return Verify(method: .m_createTimeSlotPickerViewController__location_locationcategory_categorydelegate_delegate(`location`, `category`, `delegate`))}
         public static func createAppointmentConfirmationViewController(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentConfirmationViewController__appointment_appointmentdelegate_delegate(`appointment`, `delegate`))}
-        public static func createSuccessViewController(delegate: Parameter<SuccessViewModelDelegate>) -> Verify { return Verify(method: .m_createSuccessViewController__delegate_delegate(`delegate`))}
+        public static func createSuccessViewController(appointment: Parameter<Appointment>, delegate: Parameter<SuccessViewModelDelegate>) -> Verify { return Verify(method: .m_createSuccessViewController__appointment_appointmentdelegate_delegate(`appointment`, `delegate`))}
         @MainActor
 		public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>) -> Verify { return Verify(method: .m_createAppointmentCellViewModel__appointment_appointmentdelegate_delegate(`appointment`, `delegate`))}
     }
@@ -2652,8 +2653,8 @@ open class InternalSchedulingViewFactoryMock: InternalSchedulingViewFactory, Moc
         public static func createAppointmentConfirmationViewController(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentConfirmationViewModelDelegate>, perform: @escaping (Appointment, AppointmentConfirmationViewModelDelegate) -> Void) -> Perform {
             return Perform(method: .m_createAppointmentConfirmationViewController__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), performs: perform)
         }
-        public static func createSuccessViewController(delegate: Parameter<SuccessViewModelDelegate>, perform: @escaping (SuccessViewModelDelegate) -> Void) -> Perform {
-            return Perform(method: .m_createSuccessViewController__delegate_delegate(`delegate`), performs: perform)
+        public static func createSuccessViewController(appointment: Parameter<Appointment>, delegate: Parameter<SuccessViewModelDelegate>, perform: @escaping (Appointment, SuccessViewModelDelegate) -> Void) -> Perform {
+            return Perform(method: .m_createSuccessViewController__appointment_appointmentdelegate_delegate(`appointment`, `delegate`), performs: perform)
         }
         @MainActor
 		public static func createAppointmentCellViewModel(appointment: Parameter<Appointment>, delegate: Parameter<AppointmentCellViewModelDelegate>, perform: @escaping (Appointment, AppointmentCellViewModelDelegate) -> Void) -> Perform {

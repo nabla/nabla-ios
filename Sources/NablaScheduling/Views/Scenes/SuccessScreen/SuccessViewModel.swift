@@ -7,7 +7,7 @@ protocol SuccessViewModel: ViewModel {
 }
 
 protocol SuccessViewModelDelegate: AnyObject {
-    func successViewModelDidConfirm(_ viewModel: SuccessViewModel)
+    func successViewModel(_ viewModel: SuccessViewModel, didConfirm appointment: Appointment)
 }
 
 final class SuccessViewModelImpl: SuccessViewModel, ObservableObject {
@@ -16,12 +16,20 @@ final class SuccessViewModelImpl: SuccessViewModel, ObservableObject {
     weak var delegate: SuccessViewModelDelegate?
     
     func userDidTapActionButton() {
-        delegate?.successViewModelDidConfirm(self)
+        delegate?.successViewModel(self, didConfirm: appointment)
     }
     
     // MARK: Init
     
-    init(delegate: SuccessViewModelDelegate) {
+    init(
+        appointment: Appointment,
+        delegate: SuccessViewModelDelegate
+    ) {
+        self.appointment = appointment
         self.delegate = delegate
     }
+    
+    // MARK: - Private
+    
+    private let appointment: Appointment
 }
