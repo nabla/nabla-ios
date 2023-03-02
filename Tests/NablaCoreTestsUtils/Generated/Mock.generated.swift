@@ -403,15 +403,16 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 		perform?(`deviceId`, `userId`)
     }
 
-    open func getSentryConfiguration() -> SentryConfiguration? {
-        addInvocation(.m_getSentryConfiguration)
-		let perform = methodPerformValue(.m_getSentryConfiguration) as? () -> Void
+    open func watchSentryConfiguration() -> AnyPublisher<SentryConfiguration, Never> {
+        addInvocation(.m_watchSentryConfiguration)
+		let perform = methodPerformValue(.m_watchSentryConfiguration) as? () -> Void
 		perform?()
-		var __value: SentryConfiguration? = nil
+		var __value: AnyPublisher<SentryConfiguration, Never>
 		do {
-		    __value = try methodReturnValue(.m_getSentryConfiguration).casted()
+		    __value = try methodReturnValue(.m_watchSentryConfiguration).casted()
 		} catch {
-			// do nothing
+			onFatalFailure("Stub return value not specified for watchSentryConfiguration(). Use given")
+			Failure("Stub return value not specified for watchSentryConfiguration(). Use given")
 		}
 		return __value
     }
@@ -426,7 +427,7 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
     fileprivate enum MethodType {
         case m_getDeviceId__forUserId_userId(Parameter<String>)
         case m_setDeviceId__deviceIdforUserId_userId(Parameter<UUID>, Parameter<String>)
-        case m_getSentryConfiguration
+        case m_watchSentryConfiguration
         case m_setSentryConfiguration__configuration(Parameter<SentryConfiguration>)
         case p_deviceModel_get
         case p_deviceOSVersion_get
@@ -445,7 +446,7 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "forUserId userId"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_getSentryConfiguration, .m_getSentryConfiguration): return .match
+            case (.m_watchSentryConfiguration, .m_watchSentryConfiguration): return .match
 
             case (.m_setSentryConfiguration__configuration(let lhsConfiguration), .m_setSentryConfiguration__configuration(let rhsConfiguration)):
 				var results: [Matcher.ParameterComparisonResult] = []
@@ -462,7 +463,7 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
             switch self {
             case let .m_getDeviceId__forUserId_userId(p0): return p0.intValue
             case let .m_setDeviceId__deviceIdforUserId_userId(p0, p1): return p0.intValue + p1.intValue
-            case .m_getSentryConfiguration: return 0
+            case .m_watchSentryConfiguration: return 0
             case let .m_setSentryConfiguration__configuration(p0): return p0.intValue
             case .p_deviceModel_get: return 0
             case .p_deviceOSVersion_get: return 0
@@ -473,7 +474,7 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
             switch self {
             case .m_getDeviceId__forUserId_userId: return ".getDeviceId(forUserId:)"
             case .m_setDeviceId__deviceIdforUserId_userId: return ".setDeviceId(_:forUserId:)"
-            case .m_getSentryConfiguration: return ".getSentryConfiguration()"
+            case .m_watchSentryConfiguration: return ".watchSentryConfiguration()"
             case .m_setSentryConfiguration__configuration: return ".setSentryConfiguration(_:)"
             case .p_deviceModel_get: return "[get] .deviceModel"
             case .p_deviceOSVersion_get: return "[get] .deviceOSVersion"
@@ -503,8 +504,8 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
         public static func getDeviceId(forUserId userId: Parameter<String>, willReturn: UUID?...) -> MethodStub {
             return Given(method: .m_getDeviceId__forUserId_userId(`userId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func getSentryConfiguration(willReturn: SentryConfiguration?...) -> MethodStub {
-            return Given(method: .m_getSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func watchSentryConfiguration(willReturn: AnyPublisher<SentryConfiguration, Never>...) -> MethodStub {
+            return Given(method: .m_watchSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func getDeviceId(forUserId userId: Parameter<String>, willProduce: (Stubber<UUID?>) -> Void) -> MethodStub {
             let willReturn: [UUID?] = []
@@ -513,10 +514,10 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func getSentryConfiguration(willProduce: (Stubber<SentryConfiguration?>) -> Void) -> MethodStub {
-            let willReturn: [SentryConfiguration?] = []
-			let given: Given = { return Given(method: .m_getSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (SentryConfiguration?).self)
+        public static func watchSentryConfiguration(willProduce: (Stubber<AnyPublisher<SentryConfiguration, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<SentryConfiguration, Never>] = []
+			let given: Given = { return Given(method: .m_watchSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<SentryConfiguration, Never>).self)
 			willProduce(stubber)
 			return given
         }
@@ -527,7 +528,7 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 
         public static func getDeviceId(forUserId userId: Parameter<String>) -> Verify { return Verify(method: .m_getDeviceId__forUserId_userId(`userId`))}
         public static func setDeviceId(_ deviceId: Parameter<UUID>, forUserId userId: Parameter<String>) -> Verify { return Verify(method: .m_setDeviceId__deviceIdforUserId_userId(`deviceId`, `userId`))}
-        public static func getSentryConfiguration() -> Verify { return Verify(method: .m_getSentryConfiguration)}
+        public static func watchSentryConfiguration() -> Verify { return Verify(method: .m_watchSentryConfiguration)}
         public static func setSentryConfiguration(_ configuration: Parameter<SentryConfiguration>) -> Verify { return Verify(method: .m_setSentryConfiguration__configuration(`configuration`))}
         public static var deviceModel: Verify { return Verify(method: .p_deviceModel_get) }
         public static var deviceOSVersion: Verify { return Verify(method: .p_deviceOSVersion_get) }
@@ -544,8 +545,8 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
         public static func setDeviceId(_ deviceId: Parameter<UUID>, forUserId userId: Parameter<String>, perform: @escaping (UUID, String) -> Void) -> Perform {
             return Perform(method: .m_setDeviceId__deviceIdforUserId_userId(`deviceId`, `userId`), performs: perform)
         }
-        public static func getSentryConfiguration(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_getSentryConfiguration, performs: perform)
+        public static func watchSentryConfiguration(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchSentryConfiguration, performs: perform)
         }
         public static func setSentryConfiguration(_ configuration: Parameter<SentryConfiguration>, perform: @escaping (SentryConfiguration) -> Void) -> Perform {
             return Perform(method: .m_setSentryConfiguration__configuration(`configuration`), performs: perform)
@@ -684,21 +685,22 @@ open class DeviceRepositoryMock: DeviceRepository, Mock {
 		return __value
     }
 
-    open func persist(_ configuration: SentryConfiguration) {
-        addInvocation(.m_persist__configuration(Parameter<SentryConfiguration>.value(`configuration`)))
-		let perform = methodPerformValue(.m_persist__configuration(Parameter<SentryConfiguration>.value(`configuration`))) as? (SentryConfiguration) -> Void
+    open func setSentryConfiguration(_ configuration: SentryConfiguration) {
+        addInvocation(.m_setSentryConfiguration__configuration(Parameter<SentryConfiguration>.value(`configuration`)))
+		let perform = methodPerformValue(.m_setSentryConfiguration__configuration(Parameter<SentryConfiguration>.value(`configuration`))) as? (SentryConfiguration) -> Void
 		perform?(`configuration`)
     }
 
-    open func retrieveSentryConfiguration() -> SentryConfiguration? {
-        addInvocation(.m_retrieveSentryConfiguration)
-		let perform = methodPerformValue(.m_retrieveSentryConfiguration) as? () -> Void
+    open func watchSentryConfiguration() -> AnyPublisher<SentryConfiguration, Never> {
+        addInvocation(.m_watchSentryConfiguration)
+		let perform = methodPerformValue(.m_watchSentryConfiguration) as? () -> Void
 		perform?()
-		var __value: SentryConfiguration? = nil
+		var __value: AnyPublisher<SentryConfiguration, Never>
 		do {
-		    __value = try methodReturnValue(.m_retrieveSentryConfiguration).casted()
+		    __value = try methodReturnValue(.m_watchSentryConfiguration).casted()
 		} catch {
-			// do nothing
+			onFatalFailure("Stub return value not specified for watchSentryConfiguration(). Use given")
+			Failure("Stub return value not specified for watchSentryConfiguration(). Use given")
 		}
 		return __value
     }
@@ -706,8 +708,8 @@ open class DeviceRepositoryMock: DeviceRepository, Mock {
 
     fileprivate enum MethodType {
         case m_updateOrRegisterDevice__userId_userIdwithModules_modules(Parameter<String>, Parameter<[Module]>)
-        case m_persist__configuration(Parameter<SentryConfiguration>)
-        case m_retrieveSentryConfiguration
+        case m_setSentryConfiguration__configuration(Parameter<SentryConfiguration>)
+        case m_watchSentryConfiguration
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -717,12 +719,12 @@ open class DeviceRepositoryMock: DeviceRepository, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsModules, rhs: rhsModules, with: matcher), lhsModules, rhsModules, "withModules modules"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_persist__configuration(let lhsConfiguration), .m_persist__configuration(let rhsConfiguration)):
+            case (.m_setSentryConfiguration__configuration(let lhsConfiguration), .m_setSentryConfiguration__configuration(let rhsConfiguration)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConfiguration, rhs: rhsConfiguration, with: matcher), lhsConfiguration, rhsConfiguration, "_ configuration"))
 				return Matcher.ComparisonResult(results)
 
-            case (.m_retrieveSentryConfiguration, .m_retrieveSentryConfiguration): return .match
+            case (.m_watchSentryConfiguration, .m_watchSentryConfiguration): return .match
             default: return .none
             }
         }
@@ -730,15 +732,15 @@ open class DeviceRepositoryMock: DeviceRepository, Mock {
         func intValue() -> Int {
             switch self {
             case let .m_updateOrRegisterDevice__userId_userIdwithModules_modules(p0, p1): return p0.intValue + p1.intValue
-            case let .m_persist__configuration(p0): return p0.intValue
-            case .m_retrieveSentryConfiguration: return 0
+            case let .m_setSentryConfiguration__configuration(p0): return p0.intValue
+            case .m_watchSentryConfiguration: return 0
             }
         }
         func assertionName() -> String {
             switch self {
             case .m_updateOrRegisterDevice__userId_userIdwithModules_modules: return ".updateOrRegisterDevice(userId:withModules:)"
-            case .m_persist__configuration: return ".persist(_:)"
-            case .m_retrieveSentryConfiguration: return ".retrieveSentryConfiguration()"
+            case .m_setSentryConfiguration__configuration: return ".setSentryConfiguration(_:)"
+            case .m_watchSentryConfiguration: return ".watchSentryConfiguration()"
             }
         }
     }
@@ -755,13 +757,13 @@ open class DeviceRepositoryMock: DeviceRepository, Mock {
         public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>, willReturn: SentryConfiguration?...) -> MethodStub {
             return Given(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func retrieveSentryConfiguration(willReturn: SentryConfiguration?...) -> MethodStub {
-            return Given(method: .m_retrieveSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func watchSentryConfiguration(willReturn: AnyPublisher<SentryConfiguration, Never>...) -> MethodStub {
+            return Given(method: .m_watchSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func retrieveSentryConfiguration(willProduce: (Stubber<SentryConfiguration?>) -> Void) -> MethodStub {
-            let willReturn: [SentryConfiguration?] = []
-			let given: Given = { return Given(method: .m_retrieveSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (SentryConfiguration?).self)
+        public static func watchSentryConfiguration(willProduce: (Stubber<AnyPublisher<SentryConfiguration, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<SentryConfiguration, Never>] = []
+			let given: Given = { return Given(method: .m_watchSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<SentryConfiguration, Never>).self)
 			willProduce(stubber)
 			return given
         }
@@ -781,8 +783,8 @@ open class DeviceRepositoryMock: DeviceRepository, Mock {
         fileprivate var method: MethodType
 
         public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>) -> Verify { return Verify(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`))}
-        public static func persist(_ configuration: Parameter<SentryConfiguration>) -> Verify { return Verify(method: .m_persist__configuration(`configuration`))}
-        public static func retrieveSentryConfiguration() -> Verify { return Verify(method: .m_retrieveSentryConfiguration)}
+        public static func setSentryConfiguration(_ configuration: Parameter<SentryConfiguration>) -> Verify { return Verify(method: .m_setSentryConfiguration__configuration(`configuration`))}
+        public static func watchSentryConfiguration() -> Verify { return Verify(method: .m_watchSentryConfiguration)}
     }
 
     public struct Perform {
@@ -792,11 +794,11 @@ open class DeviceRepositoryMock: DeviceRepository, Mock {
         public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>, perform: @escaping (String, [Module]) -> Void) -> Perform {
             return Perform(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`), performs: perform)
         }
-        public static func persist(_ configuration: Parameter<SentryConfiguration>, perform: @escaping (SentryConfiguration) -> Void) -> Perform {
-            return Perform(method: .m_persist__configuration(`configuration`), performs: perform)
+        public static func setSentryConfiguration(_ configuration: Parameter<SentryConfiguration>, perform: @escaping (SentryConfiguration) -> Void) -> Perform {
+            return Perform(method: .m_setSentryConfiguration__configuration(`configuration`), performs: perform)
         }
-        public static func retrieveSentryConfiguration(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_retrieveSentryConfiguration, performs: perform)
+        public static func watchSentryConfiguration(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchSentryConfiguration, performs: perform)
         }
     }
 

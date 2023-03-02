@@ -10,7 +10,7 @@ final class SetCurrentUserInteractorImpl: SetCurrentUserInteractor {
         }
         
         if let previousUser = currentPersistedUser, previousUser.id != userId {
-            logger.error(message: "Trying to authenticating a new user, should clear previous one first by calling `clearCurrentUser`.")
+            logger.error(message: "Trying to authenticate a new user, should clear previous one first by calling `clearCurrentUser`.")
             throw CurrentUserAlreadySetError()
         }
         logger.info(message: "Setting a new current user.")
@@ -21,7 +21,7 @@ final class SetCurrentUserInteractorImpl: SetCurrentUserInteractor {
             do {
                 let sentry = try await deviceRepository.updateOrRegisterDevice(userId: userId, withModules: modules)
                 if let sentry = sentry {
-                    deviceRepository.persist(sentry)
+                    deviceRepository.setSentryConfiguration(sentry)
                     errorReporter.enable(dsn: sentry.dsn, env: sentry.env, sdkVersion: environment.version)
                 }
             } catch {

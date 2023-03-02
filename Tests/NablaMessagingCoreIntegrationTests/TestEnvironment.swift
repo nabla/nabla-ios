@@ -1,3 +1,4 @@
+import Combine
 import DVR
 import Foundation
 @testable import NablaCore
@@ -28,6 +29,9 @@ struct TestEnvironment {
         deviceLocalDataSource.given(.codeVersion(getter: 42))
         deviceLocalDataSource.given(.deviceModel(getter: "Mocked: Simulator"))
         deviceLocalDataSource.given(.deviceOSVersion(getter: "Mocked: iOS13"))
+        deviceLocalDataSource.given(.watchSentryConfiguration(
+            willReturn: Empty().eraseToAnyPublisher()
+        ))
         var configuration = Configuration(
             apiKey: "test-api-key",
             logger: ConsoleLogger()

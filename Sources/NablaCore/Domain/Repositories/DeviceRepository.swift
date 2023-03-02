@@ -3,13 +3,14 @@
 #else
     import Apollo
 #endif
+import Combine
 import Foundation
 
 // sourcery: AutoMockable
 protocol DeviceRepository {
     func updateOrRegisterDevice(userId: String, withModules modules: [Module]) async throws -> SentryConfiguration?
-    func persist(_ configuration: SentryConfiguration)
-    func retrieveSentryConfiguration() -> SentryConfiguration?
+    func setSentryConfiguration(_ configuration: SentryConfiguration)
+    func watchSentryConfiguration() -> AnyPublisher<SentryConfiguration, Never>
 }
 
 final class DeviceRepositoryImpl: DeviceRepository {
@@ -40,12 +41,12 @@ final class DeviceRepositoryImpl: DeviceRepository {
         }
     }
     
-    func persist(_ configuration: SentryConfiguration) {
+    func setSentryConfiguration(_ configuration: SentryConfiguration) {
         deviceLocalDataSource.setSentryConfiguration(configuration)
     }
     
-    func retrieveSentryConfiguration() -> SentryConfiguration? {
-        deviceLocalDataSource.getSentryConfiguration()
+    func watchSentryConfiguration() -> AnyPublisher<SentryConfiguration, Never> {
+        deviceLocalDataSource.watchSentryConfiguration()
     }
 
     // MARK: Init
