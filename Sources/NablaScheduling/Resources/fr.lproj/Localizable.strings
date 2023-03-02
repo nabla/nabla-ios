@@ -14,7 +14,7 @@
 "appointments_screen_finalized_empty_label" = "Pas de rendez-vous passé";
 
 "appointments_screen_cell_join_button_label" = "Rejoindre l'appel";
-"appointments_screen_cell_join_inprogress_button_label" = "Revenir à l'appel";
+"appointments_screen_cell_join_in_progress_button_label" = "Revenir à l'appel";
 
 "appointments_screen_load_list_error_title" = "Une erreur est survenue";
 "appointments_screen_load_list_error_message" = "Impossible d'afficher vos rendez-vous. Réessayez.";

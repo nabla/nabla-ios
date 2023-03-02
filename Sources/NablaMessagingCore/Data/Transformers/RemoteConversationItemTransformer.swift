@@ -15,7 +15,7 @@ final class RemoteConversationItemTransformer {
         return nil
     }
     
-    // AMRK: Init
+    // MARK: Init
     
     init(
         logger: Logger
@@ -287,7 +287,7 @@ final class RemoteConversationItemTransformer {
         if let openStatus = livekitRoomStatus.asLivekitRoomOpenStatus?.fragments.livekitRoomOpenStatusFragment {
             return .open(.init(url: openStatus.url, token: openStatus.token))
         }
-        logger.error(message: "Unknow livekit room status", extra: ["status": livekitRoomStatus])
+        logger.error(message: "Unknown livekit room status", extra: ["status": livekitRoomStatus])
         return .closed
     }
 }

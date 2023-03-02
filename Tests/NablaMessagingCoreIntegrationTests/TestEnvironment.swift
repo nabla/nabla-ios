@@ -70,7 +70,7 @@ struct TestEnvironment {
         return Session(
             outputDirectory: outputDirectory.absoluteString,
             cassetteName: cassetteName,
-            testBundle: NablaMessagingCoreIntegrationTestsPackage.bunble
+            testBundle: NablaMessagingCoreIntegrationTestsPackage.bundle
         )
     }
 }

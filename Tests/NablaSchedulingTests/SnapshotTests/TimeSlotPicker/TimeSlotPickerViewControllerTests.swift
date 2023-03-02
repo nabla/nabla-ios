@@ -52,7 +52,7 @@ import XCTest
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
-    func testTimeSlotPickerViewControllerLoadingWithIems() {
+    func testTimeSlotPickerViewControllerLoadingWithItems() {
         // GIVEN
         let data = makeGroups(openedGroups: [], selectedSlot: nil)
         viewModel.given(.groups(getter: data))

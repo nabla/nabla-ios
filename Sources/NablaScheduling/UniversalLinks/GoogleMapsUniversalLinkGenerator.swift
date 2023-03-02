@@ -3,7 +3,7 @@ import Foundation
 public class GoogleMapsUniversalLinkGenerator: MapAppUniversalLinkGenerator {
     // MARK: - Public
     
-    public let allowOpeningInWebBrower: Bool
+    public let allowOpeningInWebBrowser: Bool
     
     public var displayName: String {
         L10n.universalLinkGoogleMaps
@@ -21,10 +21,10 @@ public class GoogleMapsUniversalLinkGenerator: MapAppUniversalLinkGenerator {
     // MARK: Init
     
     public convenience init(
-        allowOpeningInWebBrower: Bool
+        allowOpeningInWebBrowser: Bool
     ) {
         self.init(
-            allowOpeningInWebBrower: allowOpeningInWebBrower,
+            allowOpeningInWebBrowser: allowOpeningInWebBrowser,
             formatter: FoundationAddressFormatter()
         )
     }
@@ -32,10 +32,10 @@ public class GoogleMapsUniversalLinkGenerator: MapAppUniversalLinkGenerator {
     // MARK: - Internal
     
     init(
-        allowOpeningInWebBrower: Bool,
+        allowOpeningInWebBrowser: Bool,
         formatter: AddressFormatter
     ) {
-        self.allowOpeningInWebBrower = allowOpeningInWebBrower
+        self.allowOpeningInWebBrowser = allowOpeningInWebBrowser
         self.formatter = formatter
     }
     

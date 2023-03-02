@@ -36,7 +36,7 @@ final class NablaSchedulingContainer {
         addressFormatter = FoundationAddressFormatter()
         
         universalLinkGenerator = CompositeUniversalLinkGenerator(generators: [
-            GoogleMapsUniversalLinkGenerator(allowOpeningInWebBrower: false, formatter: addressFormatter),
+            GoogleMapsUniversalLinkGenerator(allowOpeningInWebBrowser: false, formatter: addressFormatter),
             AppleMapsUniversalLinkGenerator(formatter: addressFormatter),
         ])
         

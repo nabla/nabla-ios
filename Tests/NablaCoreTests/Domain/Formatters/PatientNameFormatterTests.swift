@@ -39,7 +39,7 @@ final class PatientNameFormatterTests: XCTestCase {
         XCTAssertEqual(result, "J")
     }
     
-    func testFullnameForSingleWordDisplayName() {
+    func testFullNameForSingleWordDisplayName() {
         // GIVEN
         let sut = PatientNameComponentsFormatter(style: .fullName)
         // WHEN
@@ -48,7 +48,7 @@ final class PatientNameFormatterTests: XCTestCase {
         XCTAssertEqual(result, "John")
     }
     
-    func testFullnameForTwoWordsDisplayName() {
+    func testFullNameForTwoWordsDisplayName() {
         // GIVEN
         let sut = PatientNameComponentsFormatter(style: .fullName)
         // WHEN
@@ -57,7 +57,7 @@ final class PatientNameFormatterTests: XCTestCase {
         XCTAssertEqual(result, "John Smith")
     }
     
-    func testFullnameForThreeWordsDisplayName() {
+    func testFullNameForThreeWordsDisplayName() {
         // GIVEN
         let sut = PatientNameComponentsFormatter(style: .fullName)
         // WHEN
@@ -66,7 +66,7 @@ final class PatientNameFormatterTests: XCTestCase {
         XCTAssertEqual(result, "John Smith Second")
     }
     
-    func testFullnameForLowerCasedDisplayName() {
+    func testFullNameForLowerCasedDisplayName() {
         // GIVEN
         let sut = PatientNameComponentsFormatter(style: .fullName)
         // WHEN

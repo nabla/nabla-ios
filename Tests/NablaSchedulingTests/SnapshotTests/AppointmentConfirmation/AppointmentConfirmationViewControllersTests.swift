@@ -158,7 +158,7 @@ import XCTest
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
-    func testAppointmentConfirmationViewControllerPartialyChecked() {
+    func testAppointmentConfirmationViewControllerPartiallyChecked() {
         // GIVEN
         viewModel.given(.consents(getter: defaultConsents))
         viewModel.given(.agreesWithFirstConsent(getter: true))

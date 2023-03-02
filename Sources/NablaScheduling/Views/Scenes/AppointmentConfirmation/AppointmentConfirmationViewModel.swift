@@ -92,7 +92,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     func userDidTapAppointmentLocation() {
         guard let physicalLocation = appointment.location.asPhysical else { return }
         
-        let actions = universalLinkGenerator.makeUniversalLinks(forAdress: physicalLocation.address)
+        let actions = universalLinkGenerator.makeUniversalLinks(forAddress: physicalLocation.address)
             .compactMap { universalLink -> SheetViewModel<Void>.Action? in
                 .default(
                     title: universalLink.displayName,
@@ -290,7 +290,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     private func format(price: Price) -> String? {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = price.currenyCode
+        formatter.currencyCode = price.currencyCode
         return formatter.string(for: price.amount)
     }
 }

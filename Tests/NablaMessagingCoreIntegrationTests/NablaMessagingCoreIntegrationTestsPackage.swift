@@ -5,7 +5,7 @@ private class BundleFinder {}
 
 enum NablaMessagingCoreIntegrationTestsPackage {
     /// Returns the resource bundle associated with the current Swift module.
-    static var bunble: Bundle = {
+    static var bundle: Bundle = {
         let bundleName = "nabla-ios_NablaMessagingCoreIntegrationTests"
 
         let candidates = [

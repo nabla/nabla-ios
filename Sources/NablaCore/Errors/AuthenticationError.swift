@@ -59,13 +59,13 @@ public class FailedToRefreshTokensError: AuthenticationError {
 }
 
 public class UnknownAuthenticationError: AuthenticationError {
-    public let undelryingError: Error
+    public let underlyingError: Error
     
-    init(undelryingError: Error) {
-        self.undelryingError = undelryingError
+    init(underlyingError: Error) {
+        self.underlyingError = underlyingError
     }
     
     override public func serialize() -> [String: Any] {
-        super.serialize().merging(["undelryingError": undelryingError], uniquingKeysWith: { _, rhs in rhs })
+        super.serialize().merging(["underlyingError": underlyingError], uniquingKeysWith: { _, rhs in rhs })
     }
 }

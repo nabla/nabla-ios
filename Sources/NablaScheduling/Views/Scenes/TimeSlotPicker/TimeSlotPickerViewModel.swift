@@ -173,7 +173,7 @@ final class TimeSlotPickerViewModelImpl: TimeSlotPickerViewModel, ObservableObje
     
     private func createPendingAppointment(timeSlot: AvailabilitySlot) async throws -> Appointment {
         // We might have created the appointment already, and come back to this screen.
-        // In this case, we want to reuse the apointment and not lose it.
+        // In this case, we want to reuse the appointment and not lose it.
         if let pendingAppointment = pendingAppointments[timeSlot.start] {
             return pendingAppointment
         }

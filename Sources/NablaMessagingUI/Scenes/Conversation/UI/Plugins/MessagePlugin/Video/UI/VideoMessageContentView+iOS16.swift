@@ -22,7 +22,7 @@ extension VideoMessageContentView {
                 // If touched, hide the icon
                 container.isHidden = true
             }
-            // But always pretend nothing happend
+            // But always pretend nothing happened
             return nil
         }
         

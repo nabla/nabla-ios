@@ -5,8 +5,8 @@ final class CompositeUniversalLinkGenerator: UniversalLinkGenerator {
     
     var generators: [UniversalLinkGenerator]
     
-    func makeUniversalLinks(forAdress address: Address) -> [UniversalLink] {
-        generators.flatMap { $0.makeUniversalLinks(forAdress: address) }
+    func makeUniversalLinks(forAddress address: Address) -> [UniversalLink] {
+        generators.flatMap { $0.makeUniversalLinks(forAddress: address) }
     }
     
     // MARK: Init

@@ -30,7 +30,7 @@ final class OverlayWindow: UIWindow {
     override func resignKey() {
         // Do not call super. We always deny requests to resign key.
         // We forward every hit by overriding the `hitTest(_:with:)` method.
-        // If you need to explicitely remove the `OverlayWindow`, call `dismiss()` instead.
+        // If you need to explicitly remove the `OverlayWindow`, call `dismiss()` instead.
     }
     
     func dismiss() {

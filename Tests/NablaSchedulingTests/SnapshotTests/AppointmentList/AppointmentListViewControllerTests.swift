@@ -34,7 +34,7 @@ import XCTest
         viewModel.given(.isRefreshing(getter: false))
     }
 
-    func testAppointmentlistViewControllerUpcomingTabWithImminentAppointments() {
+    func testAppointmentListViewControllerUpcomingTabWithImminentAppointments() {
         // GIVEN
         viewModel.given(.selectedSelector(getter: .upcoming))
         viewModel.given(.appointments(getter: [
@@ -47,7 +47,7 @@ import XCTest
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
-    func testAppointmentlistViewControllerUpcomingTabWithFarAppointments() {
+    func testAppointmentListViewControllerUpcomingTabWithFarAppointments() {
         // GIVEN
         viewModel.given(.selectedSelector(getter: .upcoming))
         viewModel.given(.appointments(getter: [
@@ -59,7 +59,7 @@ import XCTest
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
-    func testAppointmentlistViewControllerUpcomingTabWithFarAppointmentsRefreshing() {
+    func testAppointmentListViewControllerUpcomingTabWithFarAppointmentsRefreshing() {
         // GIVEN
         viewModel.given(.isRefreshing(getter: true))
         viewModel.given(.selectedSelector(getter: .upcoming))
@@ -72,7 +72,7 @@ import XCTest
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
-    func testAppointmentlistViewControllerFinalizedTab() {
+    func testAppointmentListViewControllerFinalizedTab() {
         // GIVEN
         viewModel.given(.selectedSelector(getter: .finalized))
         viewModel.given(.appointments(getter: (0 ... 10).map { (index: Int) -> Appointment in

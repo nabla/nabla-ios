@@ -16,7 +16,7 @@ final class PictureInPictureViewController: OverlayViewController {
                 self.expandContainer()
             },
             completion: { _ in
-                self.intialPresentingViewController.present(self.source, animated: false) {
+                self.initialPresentingViewController.present(self.source, animated: false) {
                     self.restoreContentView(context: context)
                     self.window?.dismiss()
                     context.contentView.window?.makeKey()
@@ -28,14 +28,14 @@ final class PictureInPictureViewController: OverlayViewController {
     }
     
     init?(source: PictureInPicturePresentable) {
-        guard let intialPresentingViewController = source.presentingViewController else {
+        guard let initialPresentingViewController = source.presentingViewController else {
             return nil // PictureInPictureViewController only supports modals
         }
         guard source.modalPresentationStyle == .overFullScreen else {
             return nil // PictureInPictureViewController only supports `.overFullScreen` modals
         }
         self.source = source
-        self.intialPresentingViewController = intialPresentingViewController
+        self.initialPresentingViewController = initialPresentingViewController
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -62,7 +62,7 @@ final class PictureInPictureViewController: OverlayViewController {
     }
     
     private let source: PictureInPicturePresentable
-    private let intialPresentingViewController: UIViewController
+    private let initialPresentingViewController: UIViewController
     
     private var context: Context?
     
@@ -99,7 +99,7 @@ final class PictureInPictureViewController: OverlayViewController {
         setUpContainer(context: context)
         
         source.pictureInPictureViewController(self, willMinimize: context.contentView)
-        intialPresentingViewController.dismiss(animated: false)
+        initialPresentingViewController.dismiss(animated: false)
         UIView.animate(
             withDuration: Constants.animationDuration,
             delay: 0,

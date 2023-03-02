@@ -50,14 +50,14 @@ class TransientUUIDTests: XCTestCase {
     func testSetRemoteIdTriggersObserveRemoteId() {
         // GIVEN
         let sut = TransientUUID(localId: UUID(), remoteId: nil)
-        let futurRemoteId = UUID()
-        let expection = expectation(description: "TransientUUID.observeRemoteId should get called")
+        let futureRemoteId = UUID()
+        let expectation = expectation(description: "TransientUUID.observeRemoteId should get called")
         let cancellable = sut.observeRemoteId { remoteId in
-            XCTAssertEqual(remoteId, futurRemoteId)
-            expection.fulfill()
+            XCTAssertEqual(remoteId, futureRemoteId)
+            expectation.fulfill()
         }
         // WHEN
-        sut.set(remoteId: futurRemoteId)
+        sut.set(remoteId: futureRemoteId)
         // THEN
         waitForExpectations(timeout: 0.1)
         XCTAssertNotNil(cancellable)
@@ -69,25 +69,25 @@ class TransientUUIDTests: XCTestCase {
         let sut1 = TransientUUID(localId: localId, remoteId: nil)
         let sut2 = TransientUUID(localId: localId, remoteId: nil)
         
-        let futurRemoteId = UUID()
+        let futureRemoteId = UUID()
         
-        let expection1 = expectation(description: "TransientUUID.observeRemoteId should get called")
+        let expectation1 = expectation(description: "TransientUUID.observeRemoteId should get called")
         let cancellable1 = sut1.observeRemoteId { remoteId in
-            XCTAssertEqual(remoteId, futurRemoteId)
-            expection1.fulfill()
+            XCTAssertEqual(remoteId, futureRemoteId)
+            expectation1.fulfill()
         }
         
-        let expection2 = expectation(description: "TransientUUID.observeRemoteId should get called")
+        let expectation2 = expectation(description: "TransientUUID.observeRemoteId should get called")
         let cancellable2 = sut2.observeRemoteId { remoteId in
-            XCTAssertEqual(remoteId, futurRemoteId)
-            expection2.fulfill()
+            XCTAssertEqual(remoteId, futureRemoteId)
+            expectation2.fulfill()
         }
         // WHEN
-        sut1.set(remoteId: futurRemoteId)
+        sut1.set(remoteId: futureRemoteId)
         // THEN
         waitForExpectations(timeout: 0.1)
-        XCTAssertEqual(sut1.remoteId, futurRemoteId)
-        XCTAssertEqual(sut2.remoteId, futurRemoteId)
+        XCTAssertEqual(sut1.remoteId, futureRemoteId)
+        XCTAssertEqual(sut2.remoteId, futureRemoteId)
         XCTAssertNotNil(cancellable1)
         XCTAssertNotNil(cancellable2)
     }
@@ -97,12 +97,12 @@ class TransientUUIDTests: XCTestCase {
         let localId = UUID()
         let sut1 = TransientUUID(localId: localId, remoteId: nil)
         let sut2 = TransientUUID(localId: localId, remoteId: nil)
-        let futurRemoteId = UUID()
+        let futureRemoteId = UUID()
         // WHEN
-        sut1.set(remoteId: futurRemoteId)
+        sut1.set(remoteId: futureRemoteId)
         // THEN
-        XCTAssertEqual(sut1.remoteId, futurRemoteId)
-        XCTAssertEqual(sut2.remoteId, futurRemoteId)
+        XCTAssertEqual(sut1.remoteId, futureRemoteId)
+        XCTAssertEqual(sut2.remoteId, futureRemoteId)
     }
     
     func testMultipleInstancesWithDifferentLocalIdDontShareRemoteIdObserver() {
@@ -110,24 +110,24 @@ class TransientUUIDTests: XCTestCase {
         let sut1 = TransientUUID(localId: UUID(), remoteId: nil)
         let sut2 = TransientUUID(localId: UUID(), remoteId: nil)
         
-        let futurRemoteId = UUID()
+        let futureRemoteId = UUID()
         
-        let expection1 = expectation(description: "TransientUUID.observeRemoteId should get called")
+        let expectation1 = expectation(description: "TransientUUID.observeRemoteId should get called")
         let cancellable1 = sut1.observeRemoteId { remoteId in
-            XCTAssertEqual(remoteId, futurRemoteId)
-            expection1.fulfill()
+            XCTAssertEqual(remoteId, futureRemoteId)
+            expectation1.fulfill()
         }
         
-        let expection2 = expectation(description: "TransientUUID.observeRemoteId should get called")
-        expection2.isInverted = true
+        let expectation2 = expectation(description: "TransientUUID.observeRemoteId should get called")
+        expectation2.isInverted = true
         let cancellable2 = sut2.observeRemoteId { _ in
-            expection2.fulfill()
+            expectation2.fulfill()
         }
         // WHEN
-        sut1.set(remoteId: futurRemoteId)
+        sut1.set(remoteId: futureRemoteId)
         // THEN
         waitForExpectations(timeout: 0.1)
-        XCTAssertEqual(sut1.remoteId, futurRemoteId)
+        XCTAssertEqual(sut1.remoteId, futureRemoteId)
         XCTAssertNil(sut2.remoteId)
         XCTAssertNotNil(cancellable1)
         XCTAssertNotNil(cancellable2)

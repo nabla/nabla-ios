@@ -13,7 +13,7 @@ final class VideoMessageContentViewTests: XCTestCase {
         sut = .init(frame: .zero)
     }
 
-    // TODO: Fix AVPlayerController rendring inconsistencies
+    // TODO: Fix AVPlayerController rendering inconsistencies
     func skip_testVideoConfigureMe() {
         // GIVEN
         // WHEN
@@ -30,7 +30,7 @@ final class VideoMessageContentViewTests: XCTestCase {
         assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
-    // TODO: Fix AVPlayerController rendring inconsistencies
+    // TODO: Fix AVPlayerController rendering inconsistencies
     func skip_testVideoConfigureProvider() {
         // GIVEN
         // WHEN

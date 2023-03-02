@@ -38,7 +38,7 @@ import XCTest
     func testAppointmentCellDefaultThemeLongTextsWithoutAction() {
         // GIVEN
         viewModel.given(.title(getter: "Some very long title that needs more than one line"))
-        viewModel.given(.subtitle(getter: "The subtitle can also be very long but with an elipsis"))
+        viewModel.given(.subtitle(getter: "The subtitle can also be very long but with an ellipsis"))
         // WHEN
         sut.viewModel = viewModel
         // THEN
@@ -85,7 +85,7 @@ import XCTest
     func testAppointmentCellDefaultThemeLongTextsWithAction() {
         // GIVEN
         viewModel.given(.title(getter: "Some very long title that needs more than one line"))
-        viewModel.given(.subtitle(getter: "The subtitle can alos be very long but with an elipsis"))
+        viewModel.given(.subtitle(getter: "The subtitle can also be very long but with an ellipsis"))
         viewModel.given(.primaryActionTitle(getter: "Action"))
         viewModel.given(.showDisclosureIndicator(getter: true))
         // WHEN

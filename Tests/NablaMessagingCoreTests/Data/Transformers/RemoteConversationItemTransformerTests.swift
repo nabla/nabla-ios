@@ -4,14 +4,14 @@ import XCTest
 
 class RemoteConversationItemTransformerTests: XCTestCase {
     private var sut: RemoteConversationItemTransformer!
-    private var loger: LoggerMock!
+    private var logger: LoggerMock!
 
     override func setUp() {
         super.setUp()
         
-        loger = .init()
+        logger = .init()
         
-        sut = .init(logger: loger)
+        sut = .init(logger: logger)
     }
 
     func testAuthorIsMe() throws {

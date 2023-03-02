@@ -30,7 +30,7 @@ final class GridView<Subview: UIView, Item: Identifiable>: UIView {
     private let columns: Int
     private let configure: (Subview, Int, Item) -> Void
     
-    // MARK: Suviews
+    // MARK: Subviews
     
     private lazy var vstack: UIStackView = {
         let view = UIStackView()
@@ -51,7 +51,7 @@ final class GridView<Subview: UIView, Item: Identifiable>: UIView {
         let nbRows = items.count / columns + (nbRemains > 0 ? 1 : 0)
         
         for rowIndex in 0 ..< nbRows {
-            let row = makeOrRecyleRow(at: rowIndex)
+            let row = makeOrRecycleRow(at: rowIndex)
             row.isHidden = false
             
             for columnIndex in 0 ..< columns {
@@ -72,7 +72,7 @@ final class GridView<Subview: UIView, Item: Identifiable>: UIView {
         }
     }
     
-    private func makeOrRecyleRow(at index: Int) -> UIStackView {
+    private func makeOrRecycleRow(at index: Int) -> UIStackView {
         if let row = vstack.arrangedSubviews.nabla.element(at: index) as? UIStackView {
             return row
         }

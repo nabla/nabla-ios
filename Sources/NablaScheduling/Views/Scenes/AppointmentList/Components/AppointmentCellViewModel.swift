@@ -48,7 +48,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
         switch joinableRemoteLocation {
         case let .videoCallRoom(room):
             if currentVideoCallToken == room.token {
-                return L10n.appointmentsScreenCellJoinInprogressButtonLabel
+                return L10n.appointmentsScreenCellJoinInProgressButtonLabel
             } else {
                 return L10n.appointmentsScreenCellJoinButtonLabel
             }

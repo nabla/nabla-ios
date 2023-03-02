@@ -51,7 +51,7 @@ class TaskHolderTest: XCTestCase {
         let expectation2 = expectation(description: "Queue 2 did complete")
 
         // WHEN
-        queue1.async { // Start immediatly...
+        queue1.async { // Start immediately...
             Task {
                 result1.value = try await sut.run {
                     try await Task.sleep(nanoseconds: 100000000) // ... and wait 100 milliseconds
@@ -64,7 +64,7 @@ class TaskHolderTest: XCTestCase {
         queue2.asyncAfter(deadline: .now() + 0.05) { // Wait 50 milliseconds...
             Task {
                 result2.value = try await sut.run {
-                    2 // ... and return immediatly
+                    2 // ... and return immediately
                 }
                 expectation2.fulfill()
             }

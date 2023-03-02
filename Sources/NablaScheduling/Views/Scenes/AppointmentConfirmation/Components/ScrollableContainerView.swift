@@ -36,7 +36,7 @@ final class ScrollableContainerView: UIView {
     
     // MARK: - Private
     
-    // MARK: Suviews
+    // MARK: Subviews
     
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()

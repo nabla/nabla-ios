@@ -24,7 +24,7 @@ final class CategoryPickerViewController: UIViewController {
     
     @ObservedViewModel private var viewModel: CategoryPickerViewModel
     
-    // MARK: Life cyle
+    // MARK: Life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()

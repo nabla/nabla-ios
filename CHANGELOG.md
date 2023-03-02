@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed typos
+
 
 ## [1.0.0-alpha32] - 2023-02-14
 
@@ -270,7 +272,7 @@ To know more about `NablaTheme`, please visit our documentation: https://docs.na
 ### Fixed
 
 - Fix an issue that could lead to messages having the wrong size in the conversation screen of the Messaging UI module
-- Fix an issue where the spinner when loading more messages in the conversation screen of the Messagging UI module would not be at the correct position
+- Fix an issue where the spinner when loading more messages in the conversation screen of the Messaging UI module would not be at the correct position
 - Remove any color under the avatar picture of a Provider in case the picture has transparency
 
 ## [1.0.0-alpha20] - 2022-10-18

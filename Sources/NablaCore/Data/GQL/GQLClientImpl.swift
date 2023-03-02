@@ -10,7 +10,7 @@ class GQLClientImpl: GQLClient {
     
     public func addRefetchTriggers(_ triggers: [RefetchTrigger]) {
         for trigger in triggers {
-            refetchTrigers[trigger.identifier] = trigger
+            refetchTriggers[trigger.identifier] = trigger
         }
     }
     
@@ -76,7 +76,7 @@ class GQLClientImpl: GQLClient {
             .nabla.resultMap { [logger] result in
                 ApolloResponseParser.parse(result, logger: logger)
             }
-            .retry(Int.max) // Infinitly retry subscription errors
+            .retry(Int.max) // Infinitely retry subscription errors
             .catch { [logger] error in
                 logger.error(message: "Received terminating subscription error", error: error)
                 return Empty<Subscription.Data, Never>()
@@ -106,7 +106,7 @@ class GQLClientImpl: GQLClient {
     
     private lazy var apollo: ApolloClient = makeApolloClient()
     
-    private var refetchTrigers = [String: RefetchTrigger]()
+    private var refetchTriggers = [String: RefetchTrigger]()
     
     private func makeApolloClient() -> ApolloClient {
         let apollo = ApolloClient(

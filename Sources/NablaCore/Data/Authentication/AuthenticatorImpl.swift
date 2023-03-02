@@ -118,7 +118,7 @@ class AuthenticatorImpl: Authenticator {
         } catch let error as AuthenticationError {
             throw error
         } catch {
-            throw UnknownAuthenticationError(undelryingError: error)
+            throw UnknownAuthenticationError(underlyingError: error)
         }
     }
     
@@ -143,7 +143,7 @@ class AuthenticatorImpl: Authenticator {
         } catch let error as AuthenticationError {
             throw error
         } catch {
-            throw UnknownAuthenticationError(undelryingError: error)
+            throw UnknownAuthenticationError(underlyingError: error)
         }
     }
     

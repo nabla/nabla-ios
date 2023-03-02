@@ -3,7 +3,7 @@ import XCTest
 
 final class NablaThemeColorsTests: XCTestCase {
     func testColorsCanBeMutated() throws {
-        // Assign all colors once without changing the values (prevents snapshot tests flakyness).
+        // Assign all colors once without changing the values (prevents snapshot tests flakiness).
         NablaTheme.Colors.Background.base = NablaTheme.Colors.Background.base
         NablaTheme.Colors.Background.underCard = NablaTheme.Colors.Background.base
         

@@ -6,7 +6,7 @@ import UIKit
 ///
 /// This is divided in two sections:
 /// - First are the top level values, those are the primary configurations, used in all of the screens,
-/// updating one inpact all of the app
+/// updating one impacts all of the app
 /// - Then you have the sub structs. Those rely on the top level values but offer a fine tune configuration for each element of
 /// the SDK.
 public enum NablaTheme {

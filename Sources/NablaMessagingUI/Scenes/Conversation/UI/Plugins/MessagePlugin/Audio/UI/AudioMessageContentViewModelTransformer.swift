@@ -5,7 +5,7 @@ class AudioMessageContentViewModelTransformer {
 
     func transform(item _: AudioMessageViewItem) -> AudioMessageContentViewModel {
         AudioMessageContentViewModel(
-            isPlayling: isPlaying,
+            isPlaying: isPlaying,
             duration: durationMapper.map(durationInSeconds: currentTimeSeconds)
         )
     }

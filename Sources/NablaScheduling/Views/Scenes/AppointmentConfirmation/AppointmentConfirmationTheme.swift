@@ -13,11 +13,11 @@ public extension NablaTheme {
         public static var disclaimersTextColor = Colors.Text.base
         /// Font used to display legal disclaimers of the appointment.
         public static var disclaimersFont = Fonts.body
-        /// Color used for displaying the error when an error loading the disclaimers occured.
+        /// Color used for displaying the error when an error loading the disclaimers occurred.
         public static var disclaimersErrorTextColor = Colors.Text.base
-        /// Font used for displaying the error when an error loading the disclaimers occured.
+        /// Font used for displaying the error when an error loading the disclaimers occurred.
         public static var disclaimersErrorFont = Fonts.body
-        /// Style of the retry button when an error loading the disclaimers occured.
+        /// Style of the retry button when an error loading the disclaimers occurred.
         public static var disclaimersErrorRetryButton = Button.accent
         
         /// Style of the checkbox for legal disclaimers.

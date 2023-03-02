@@ -6,5 +6,5 @@ public struct UniversalLink {
 }
 
 public protocol UniversalLinkGenerator {
-    func makeUniversalLinks(forAdress address: Address) -> [UniversalLink]
+    func makeUniversalLinks(forAddress address: Address) -> [UniversalLink]
 }

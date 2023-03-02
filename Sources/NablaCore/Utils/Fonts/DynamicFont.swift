@@ -13,7 +13,7 @@ public protocol DynamicFontProvider {
 }
 
 /**
- The DynamicFont provides an implemementation of DynamicFontProvider depending on a plist resource
+ The DynamicFont provides an implementation of DynamicFontProvider depending on a plist resource
  and/or a default implementation, meaning providing the system preferred font for each font
  */
 public struct DynamicFont: DynamicFontProvider {

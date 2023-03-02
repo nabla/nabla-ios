@@ -3,6 +3,6 @@ import NablaMessagingCore
 import UIKit
 
 struct AudioMessageContentViewModel {
-    let isPlayling: Bool
+    let isPlaying: Bool
     let duration: String
 }

@@ -47,7 +47,7 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
     func userDidTapAppointmentLocation() {
         guard let address = appointment?.location.asPhysical?.address else { return }
         
-        let actions = universalLinkGenerator.makeUniversalLinks(forAdress: address)
+        let actions = universalLinkGenerator.makeUniversalLinks(forAddress: address)
             .compactMap { universalLink -> SheetViewModel<Void>.Action? in
                 .default(
                     title: universalLink.displayName,
@@ -215,7 +215,7 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
     private func format(price: Price) -> String? {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = price.currenyCode
+        formatter.currencyCode = price.currencyCode
         return formatter.string(for: price.amount)
     }
 }

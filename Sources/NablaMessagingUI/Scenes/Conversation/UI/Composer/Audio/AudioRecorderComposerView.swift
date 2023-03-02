@@ -48,15 +48,15 @@ class AudioRecorderComposerView: UIView, AudioRecorderComposerViewContract {
     // MARK: - Private
 
     private lazy var durationLabel: UILabel = makeDurationLabel()
-    private lazy var recordingIndocator: UIView = makeRecordingIndicator()
+    private lazy var recordingIndicator: UIView = makeRecordingIndicator()
 
     private func setUp() {
-        let recordingIndocatorContainer = UIView()
-        recordingIndocatorContainer.addSubview(recordingIndocator)
-        recordingIndocator.nabla.constraintToCenterInSuperView(along: .vertical)
-        recordingIndocator.nabla.pinToSuperView(edges: .nabla.horizontal)
+        let recordingIndicatorContainer = UIView()
+        recordingIndicatorContainer.addSubview(recordingIndicator)
+        recordingIndicator.nabla.constraintToCenterInSuperView(along: .vertical)
+        recordingIndicator.nabla.pinToSuperView(edges: .nabla.horizontal)
 
-        let stackView = UIStackView(arrangedSubviews: [recordingIndocatorContainer, durationLabel])
+        let stackView = UIStackView(arrangedSubviews: [recordingIndicatorContainer, durationLabel])
         stackView.axis = .horizontal
         stackView.spacing = 4
         stackView.distribution = .fillProportionally

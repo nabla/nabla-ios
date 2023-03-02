@@ -1,7 +1,7 @@
 import UIKit
 
 public extension NablaExtension where Base: UIRefreshControl {
-    /// Replacement for `base.begingRefreshing()`.
+    /// Replacement for `base.beginRefreshing()`.
     /// Fixes the color and the animation of the refresh control when being programmatically forced to refresh.
     func beginRefreshing() {
         guard !base.isRefreshing else { return }

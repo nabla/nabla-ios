@@ -1,11 +1,11 @@
 import SnapshotTesting
 import XCTest
 
-/// Exaplanation around `perceptualPrecision` can be found here:
+/// Explanation around `perceptualPrecision` can be found here:
 /// https://github.com/pointfreeco/swift-snapshot-testing/pull/628
 ///
 /// `precision: 0.995` is the recommended value for iOS version changes
-/// `perceptualPrecision: 0.98` is the recommended value for M1 vs Intel rendring changes.
+/// `perceptualPrecision: 0.98` is the recommended value for M1 vs Intel rendering changes.
 
 public extension Dictionary where Key == String, Value == Snapshotting<UIView, UIImage> {
     static func lightAndDarkImages(

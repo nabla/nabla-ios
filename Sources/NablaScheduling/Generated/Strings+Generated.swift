@@ -39,7 +39,7 @@ internal enum L10n {
   /// Join the call
   internal static let appointmentsScreenCellJoinButtonLabel = L10n.tr("Localizable", "appointments_screen_cell_join_button_label")
   /// Return to call
-  internal static let appointmentsScreenCellJoinInprogressButtonLabel = L10n.tr("Localizable", "appointments_screen_cell_join_inprogress_button_label")
+  internal static let appointmentsScreenCellJoinInProgressButtonLabel = L10n.tr("Localizable", "appointments_screen_cell_join_in_progress_button_label")
   /// No past appointments
   internal static let appointmentsScreenFinalizedEmptyLabel = L10n.tr("Localizable", "appointments_screen_finalized_empty_label")
   /// Failed to load the appointments. Please try again.

@@ -14,7 +14,7 @@
 "appointments_screen_finalized_empty_label" = "No past appointments";
 
 "appointments_screen_cell_join_button_label" = "Join the call";
-"appointments_screen_cell_join_inprogress_button_label" = "Return to call";
+"appointments_screen_cell_join_in_progress_button_label" = "Return to call";
 
 "appointments_screen_load_list_error_title" = "Something went wrong";
 "appointments_screen_load_list_error_message" = "Failed to load the appointments. Please try again.";

@@ -232,7 +232,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             }
         }
         
-        logger.error(message: "Unsuported message input", extra: ["type": type(of: localConversationMessage)])
+        logger.error(message: "Unsupported message input", extra: ["type": type(of: localConversationMessage)])
         return nil
     }
     

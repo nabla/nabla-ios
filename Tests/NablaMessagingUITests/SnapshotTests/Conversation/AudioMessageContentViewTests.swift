@@ -21,7 +21,7 @@ final class AudioMessageContentViewTests: XCTestCase {
                 sender: .me(isContiguous: false),
                 footer: nil,
                 replyTo: nil,
-                content: .init(isPlayling: false, duration: "00:10"),
+                content: .init(isPlaying: false, duration: "00:10"),
                 menuElements: []
             )
         )
@@ -37,7 +37,7 @@ final class AudioMessageContentViewTests: XCTestCase {
                 sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
-                content: .init(isPlayling: false, duration: "00:07"),
+                content: .init(isPlaying: false, duration: "00:07"),
                 menuElements: []
             )
         )
@@ -53,7 +53,7 @@ final class AudioMessageContentViewTests: XCTestCase {
                 sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
-                content: .init(isPlayling: false, duration: "00:07"),
+                content: .init(isPlaying: false, duration: "00:07"),
                 menuElements: []
             )
         )

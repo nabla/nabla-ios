@@ -13,7 +13,7 @@ final class ParticipantsCountViewTests: XCTestCase {
         sut = ParticipantsCountView()
     }
     
-    func testCorrectDeisgn() {
+    func testCorrectDesign() {
         // GIVEN
         // WHEN
         sut.text = "3"

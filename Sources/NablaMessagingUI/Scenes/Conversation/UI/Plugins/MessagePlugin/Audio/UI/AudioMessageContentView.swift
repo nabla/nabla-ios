@@ -37,7 +37,7 @@ final class AudioMessageContentView: UIView, MessageContentView {
     func configure(with viewModel: AudioMessageContentViewModel) {
         durationLabel.text = viewModel.duration
 
-        let imageName = viewModel.isPlayling ? Constants.pauseImageName : Constants.playImageName
+        let imageName = viewModel.isPlaying ? Constants.pauseImageName : Constants.playImageName
         playPauseButton.setBackgroundImage(UIImage(systemName: imageName), for: .normal)
     }
     

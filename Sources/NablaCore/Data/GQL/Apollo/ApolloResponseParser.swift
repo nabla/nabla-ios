@@ -54,8 +54,8 @@ enum ApolloResponseParser {
             case .errorResponse, .neitherErrorNorPayloadReceived:
                 return .serverError(message: websocketError.errorDescription)
             }
-        } else if let wserror = error as? WebSocket.WSError {
-            return .networkError(message: wserror.message)
+        } else if let wsError = error as? WebSocket.WSError {
+            return .networkError(message: wsError.message)
         } else if let responseCodeError = error as? ResponseCodeInterceptor.ResponseCodeError {
             switch responseCodeError {
             case let .invalidResponseCode(response, _):

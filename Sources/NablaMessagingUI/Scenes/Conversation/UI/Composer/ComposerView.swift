@@ -103,8 +103,8 @@ final class ComposerView: UIView {
     
     private var hasReachedMaximumHeight: Bool {
         let maximumWidth = textView.frame.width
-        let constraintedSize = CGSize(width: maximumWidth, height: 0)
-        let idealSize = textView.sizeThatFits(constraintedSize)
+        let constrainedSize = CGSize(width: maximumWidth, height: 0)
+        let idealSize = textView.sizeThatFits(constrainedSize)
         return idealSize.height >= Constants.maximumHeight
     }
 

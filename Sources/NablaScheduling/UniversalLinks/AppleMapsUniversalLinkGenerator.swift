@@ -3,7 +3,7 @@ import Foundation
 public class AppleMapsUniversalLinkGenerator: MapAppUniversalLinkGenerator {
     // MARK: - Public
     
-    public var allowOpeningInWebBrower: Bool {
+    public var allowOpeningInWebBrowser: Bool {
         // iOS does not let us know if Apple Maps is installed.
         // Therefore we can't detect when it will use the browser instead
         // and should always support it.

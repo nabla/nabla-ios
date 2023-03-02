@@ -2,7 +2,7 @@ import UIKit
 import VisionKit
 
 public enum DocumentScannerModule {
-    /// ⚠️ Do not change the `modalPresentationStyle` of the returned view controller as it needs to be displayer in fullscreen style.
+    /// ⚠️ Do not change the `modalPresentationStyle` of the returned view controller as it needs to be displayed in fullscreen style.
     public static func makeViewController(delegate: DocumentScannerDelegate) -> UIViewController {
         let viewController = VNDocumentCameraViewController()
         delegateWrapperRetainer = DocumentCameraViewControllerDelegateWrapper(

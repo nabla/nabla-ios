@@ -24,7 +24,7 @@ final class LocationPickerViewController: UIViewController {
     
     @ObservedViewModel private var viewModel: LocationPickerViewModel
     
-    // MARK: Life cyle
+    // MARK: Life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()

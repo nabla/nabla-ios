@@ -5,7 +5,7 @@ class UISpacerView: UIView {
     
     public enum Size {
         case fixed(value: CGFloat) // Uses the exact size
-        case flexible // Can hugg parent but try to be as small as possible
+        case flexible // Can hug parent but try to be as small as possible
         case expands // Tries to be as big as possible
     }
     
