@@ -28,7 +28,7 @@ extension GQL {
           }
         }
         """#,
-        fragments: [AvailabilitySlotFragment.self, AddressFragment.self]
+        fragments: [AvailabilitySlotFragment.self]
       ))
 
     var isPhysical: Bool
@@ -128,75 +128,12 @@ extension GQL {
               var startAt: GQL.DateTime { __data["startAt"] }
               var endAt: GQL.DateTime { __data["endAt"] }
               var provider: AvailabilitySlotFragment.Provider { __data["provider"] }
-              var location: Location { __data["location"] }
 
               struct Fragments: FragmentContainer {
                 let __data: DataDict
                 init(data: DataDict) { __data = data }
 
                 var availabilitySlotFragment: AvailabilitySlotFragment { _toFragment() }
-              }
-
-              /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location
-              ///
-              /// Parent Type: `AvailabilitySlotLocation`
-              struct Location: GQL.SelectionSet {
-                let __data: DataDict
-                init(data: DataDict) { __data = data }
-
-                static var __parentType: Apollo.ParentType { GQL.Unions.AvailabilitySlotLocation }
-
-                var asPhysicalAvailabilitySlotLocation: AsPhysicalAvailabilitySlotLocation? { _asInlineFragment() }
-                var asRemoteAvailabilitySlotLocation: AsRemoteAvailabilitySlotLocation? { _asInlineFragment() }
-
-                /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location.AsPhysicalAvailabilitySlotLocation
-                ///
-                /// Parent Type: `PhysicalAvailabilitySlotLocation`
-                struct AsPhysicalAvailabilitySlotLocation: GQL.InlineFragment {
-                  let __data: DataDict
-                  init(data: DataDict) { __data = data }
-
-                  static var __parentType: Apollo.ParentType { GQL.Objects.PhysicalAvailabilitySlotLocation }
-
-                  var address: Address { __data["address"] }
-
-                  /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location.AsPhysicalAvailabilitySlotLocation.Address
-                  ///
-                  /// Parent Type: `Address`
-                  struct Address: GQL.SelectionSet {
-                    let __data: DataDict
-                    init(data: DataDict) { __data = data }
-
-                    static var __parentType: Apollo.ParentType { GQL.Objects.Address }
-
-                    var id: GQL.UUID { __data["id"] }
-                    var address: String { __data["address"] }
-                    var zipCode: String { __data["zipCode"] }
-                    var city: String { __data["city"] }
-                    var state: String? { __data["state"] }
-                    var country: String? { __data["country"] }
-                    var extraDetails: String? { __data["extraDetails"] }
-
-                    struct Fragments: FragmentContainer {
-                      let __data: DataDict
-                      init(data: DataDict) { __data = data }
-
-                      var addressFragment: AddressFragment { _toFragment() }
-                    }
-                  }
-                }
-
-                /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location.AsRemoteAvailabilitySlotLocation
-                ///
-                /// Parent Type: `RemoteAvailabilitySlotLocation`
-                struct AsRemoteAvailabilitySlotLocation: GQL.InlineFragment {
-                  let __data: DataDict
-                  init(data: DataDict) { __data = data }
-
-                  static var __parentType: Apollo.ParentType { GQL.Objects.RemoteAvailabilitySlotLocation }
-
-                  var `_`: GraphQLEnum<GQL.EmptyObject> { __data["_"] }
-                }
               }
             }
           }

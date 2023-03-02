@@ -7,30 +7,9 @@ enum RemoteAvailabilitySlotsTransformer {
         AvailabilitySlot(
             start: remoteAvailabilitySlot.startAt,
             end: remoteAvailabilitySlot.endAt,
-            providerId: remoteAvailabilitySlot.provider.id,
-            location: transform(remoteAvailabilitySlot.location)
+            providerId: remoteAvailabilitySlot.provider.id
         )
     }
     
     // MARK: - Private
-    
-    private static func transform(_ location: RemoteAvailabilitySlot.Location) -> Location {
-        if let physicalLocation = location.asPhysicalAvailabilitySlotLocation {
-            let address = physicalLocation.address.fragments.addressFragment
-            return .physical(.init(address: .init(
-                id: address.id,
-                address: address.address,
-                zipCode: address.zipCode,
-                city: address.city,
-                state: address.state,
-                country: address.country,
-                extraDetails: address.extraDetails
-            )))
-        } else if location.asRemoteAvailabilitySlotLocation != nil {
-            return .remote(.undefined)
-        } else {
-            assertionFailure("Unknown location type")
-            return .unknown
-        }
-    }
 }

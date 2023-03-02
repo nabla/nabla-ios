@@ -58,8 +58,6 @@ extension GQL {
       case "AppointmentCategoryOutput": return GQL.Objects.AppointmentCategoryOutput
       case "AvailableSlotsPage": return GQL.Objects.AvailableSlotsPage
       case "AvailabilitySlot": return GQL.Objects.AvailabilitySlot
-      case "PhysicalAvailabilitySlotLocation": return GQL.Objects.PhysicalAvailabilitySlotLocation
-      case "RemoteAvailabilitySlotLocation": return GQL.Objects.RemoteAvailabilitySlotLocation
       case "AppointmentsPage": return GQL.Objects.AppointmentsPage
       case "Subscription": return GQL.Objects.Subscription
       case "AppointmentsEventOutput": return GQL.Objects.AppointmentsEventOutput

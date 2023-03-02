@@ -258,7 +258,7 @@ final class RemoteConversationItemTransformer {
         } else if author.asDeletedProvider != nil {
             return .deleted
         } else {
-            logger.error(message: "[Should not get here] Received an unknown author type", extra: ["type": author.__typename])
+            logger.error(message: "Received an unknown author type", extra: ["type": author.__typename])
             return .unknown
         }
     }
@@ -267,12 +267,16 @@ final class RemoteConversationItemTransformer {
 
     private func transform(_ activity: GQL.ConversationActivityFragment) -> ConversationItem? {
         if let providerJoinedActivity = activity.content.asProviderJoinedConversation {
-            let provider = providerJoinedActivity.provider.fragments.maybeProviderFragment
-            return ConversationActivity(
-                id: activity.id,
-                date: activity.activityTime,
-                activity: .providerJoined(RemoteConversationProviderTransformer.transform(maybeProvider: provider))
-            )
+            let fragment = providerJoinedActivity.provider.fragments.maybeProviderFragment
+            if let provider = RemoteConversationProviderTransformer.transform(maybeProvider: fragment) {
+                return ConversationActivity(
+                    id: activity.id,
+                    date: activity.activityTime,
+                    content: .providerJoined(provider)
+                )
+            } else {
+                logger.error(message: "Unknown provider for ProviderJoinedConversation activity", extra: ["provider": fragment.__data])
+            }
         }
         
         return nil

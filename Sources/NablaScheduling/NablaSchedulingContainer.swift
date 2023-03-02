@@ -56,7 +56,8 @@ final class NablaSchedulingContainer {
         
         appointmentRemoteDataSource = AppointmentRemoteDataSourceImpl(
             gqlClient: gqlClient,
-            gqlStore: gqlStore
+            gqlStore: gqlStore,
+            logger: logger
         )
         appointmentRepository = AppointmentRepositoryImpl(
             logger: logger,

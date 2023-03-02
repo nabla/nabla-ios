@@ -17,7 +17,7 @@ public enum Location: Equatable {
     public enum RemoteLocation: Equatable {
         case videoCallRoom(VideoCallRoom)
         case externalCallURL(URL)
-        case undefined
+        case unknown
 
         public struct VideoCallRoom: Equatable {
             public let url: String

@@ -30,7 +30,7 @@ final class RemoteAppointmentTransformer {
             return .remote(
                 remoteLocation.externalCallUrl.flatMap { URL(string: $0) }.map { .externalCallURL($0) }
                     ?? remoteLocation.livekitRoom.flatMap { transform($0.fragments.livekitRoomFragment) }.map { .videoCallRoom($0) }
-                    ?? .undefined
+                    ?? .unknown
             )
         } else if let physicalLocation = location.fragments.locationFragment.asPhysicalAppointmentLocation {
             let address = transform(physicalLocation.address.fragments.addressFragment)

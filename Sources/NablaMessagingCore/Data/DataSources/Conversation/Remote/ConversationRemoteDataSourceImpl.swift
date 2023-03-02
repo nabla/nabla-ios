@@ -7,10 +7,12 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
 
     init(
         gqlClient: GQLClient,
-        gqlStore: GQLStore
+        gqlStore: GQLStore,
+        logger: Logger
     ) {
         self.gqlClient = gqlClient
         self.gqlStore = gqlStore
+        self.logger = logger
     }
     
     // MARK: - Internal
@@ -110,6 +112,7 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
     
     private let gqlClient: GQLClient
     private let gqlStore: GQLStore
+    private let logger: Logger
     
     private func handleConversationsEvent(_ event: RemoteConversationsEvent) async throws {
         if let conversationCreatedEvent = event.asConversationCreatedEvent {
@@ -118,6 +121,8 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
             )
         } else if let conversationDeletedEvent = event.asConversationDeletedEvent {
             try await removeFromCache(conversationId: conversationDeletedEvent.conversationId)
+        } else {
+            logger.warning(message: "Unknown conversations event", extra: ["event": event.__typename])
         }
     }
     

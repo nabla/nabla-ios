@@ -77,16 +77,19 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     init(
         gqlClient: GQLClient,
-        gqlStore: GQLStore
+        gqlStore: GQLStore,
+        logger: Logger
     ) {
         self.gqlClient = gqlClient
         self.gqlStore = gqlStore
+        self.logger = logger
     }
     
     // MARK: - Private
     
     private let gqlClient: GQLClient
     private let gqlStore: GQLStore
+    private let logger: Logger
     
     private enum Constants {
         static let numberOfItems = 50
@@ -248,6 +251,8 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
             Task(priority: .userInitiated) {
                 try await self.remove(appointmentWithId: cancelledEvent.appointmentId)
             }
+        } else {
+            logger.warning(message: "Unknown appointments event", extra: ["event": event.__typename])
         }
     }
     

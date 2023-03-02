@@ -98,7 +98,7 @@ enum ConversationItemsTransformer {
         ConversationActivityViewItem(
             id: activity.id,
             date: activity.date,
-            activity: activity.activity
+            activity: activity.content
         )
     }
 

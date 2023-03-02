@@ -134,10 +134,6 @@ extension GQL {
                 get { __data["provider"] }
                 set { __data["provider"] = newValue }
               }
-              var location: Location {
-                get { __data["location"] }
-                set { __data["location"] = newValue }
-              }
 
               struct Fragments: FragmentContainer {
                 var __data: DataDict
@@ -148,106 +144,6 @@ extension GQL {
                   _modify { var f = availabilitySlotFragment; yield &f; __data = f.__data }
                   @available(*, unavailable, message: "mutate properties of the fragment instead.")
                   set { preconditionFailure() }
-                }
-              }
-
-              /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location
-              ///
-              /// Parent Type: `AvailabilitySlotLocation`
-              struct Location: GQL.MutableSelectionSet {
-                var __data: DataDict
-                init(data: DataDict) { __data = data }
-
-                static var __parentType: ApolloAPI.ParentType { GQL.Unions.AvailabilitySlotLocation }
-
-                var asPhysicalAvailabilitySlotLocation: AsPhysicalAvailabilitySlotLocation? {
-                  get { _asInlineFragment() }
-                  set { if let newData = newValue?.__data._data { __data._data = newData }}
-                }
-                var asRemoteAvailabilitySlotLocation: AsRemoteAvailabilitySlotLocation? {
-                  get { _asInlineFragment() }
-                  set { if let newData = newValue?.__data._data { __data._data = newData }}
-                }
-
-                /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location.AsPhysicalAvailabilitySlotLocation
-                ///
-                /// Parent Type: `PhysicalAvailabilitySlotLocation`
-                struct AsPhysicalAvailabilitySlotLocation: GQL.MutableInlineFragment {
-                  var __data: DataDict
-                  init(data: DataDict) { __data = data }
-
-                  static var __parentType: ApolloAPI.ParentType { GQL.Objects.PhysicalAvailabilitySlotLocation }
-
-                  var address: Address {
-                    get { __data["address"] }
-                    set { __data["address"] = newValue }
-                  }
-
-                  /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location.AsPhysicalAvailabilitySlotLocation.Address
-                  ///
-                  /// Parent Type: `Address`
-                  struct Address: GQL.MutableSelectionSet {
-                    var __data: DataDict
-                    init(data: DataDict) { __data = data }
-
-                    static var __parentType: ApolloAPI.ParentType { GQL.Objects.Address }
-
-                    var id: GQL.UUID {
-                      get { __data["id"] }
-                      set { __data["id"] = newValue }
-                    }
-                    var address: String {
-                      get { __data["address"] }
-                      set { __data["address"] = newValue }
-                    }
-                    var zipCode: String {
-                      get { __data["zipCode"] }
-                      set { __data["zipCode"] = newValue }
-                    }
-                    var city: String {
-                      get { __data["city"] }
-                      set { __data["city"] = newValue }
-                    }
-                    var state: String? {
-                      get { __data["state"] }
-                      set { __data["state"] = newValue }
-                    }
-                    var country: String? {
-                      get { __data["country"] }
-                      set { __data["country"] = newValue }
-                    }
-                    var extraDetails: String? {
-                      get { __data["extraDetails"] }
-                      set { __data["extraDetails"] = newValue }
-                    }
-
-                    struct Fragments: FragmentContainer {
-                      var __data: DataDict
-                      init(data: DataDict) { __data = data }
-
-                      var addressFragment: AddressFragment {
-                        get { _toFragment() }
-                        _modify { var f = addressFragment; yield &f; __data = f.__data }
-                        @available(*, unavailable, message: "mutate properties of the fragment instead.")
-                        set { preconditionFailure() }
-                      }
-                    }
-                  }
-                }
-
-                /// AppointmentCategory.Category.AvailableSlotsV2.Slot.Location.AsRemoteAvailabilitySlotLocation
-                ///
-                /// Parent Type: `RemoteAvailabilitySlotLocation`
-                struct AsRemoteAvailabilitySlotLocation: GQL.MutableInlineFragment {
-                  var __data: DataDict
-                  init(data: DataDict) { __data = data }
-
-                  static var __parentType: ApolloAPI.ParentType { GQL.Objects.RemoteAvailabilitySlotLocation }
-
-                  var `_`: GraphQLEnum<GQL.EmptyObject> {
-                    get { __data["_"] }
-                    set { __data["_"] = newValue }
-                  }
                 }
               }
             }

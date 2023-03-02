@@ -37,7 +37,8 @@ public class MessagingContainer {
         conversationLocalDataSource = ConversationLocalDataSourceImpl()
         conversationRemoteDataSource = ConversationRemoteDataSourceImpl(
             gqlClient: coreContainer.gqlClient,
-            gqlStore: coreContainer.gqlStore
+            gqlStore: coreContainer.gqlStore,
+            logger: coreContainer.logger
         )
         conversationItemLocalDataSource = ConversationItemLocalDataSourceImpl()
         conversationItemRemoteDataSource = ConversationItemRemoteDataSourceImpl(

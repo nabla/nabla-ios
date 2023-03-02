@@ -11,16 +11,14 @@ enum RemoteConversationProviderTransformer {
         )
     }
 
-    static func transform(maybeProvider: GQL.MaybeProviderFragment) -> MaybeProvider {
+    static func transform(maybeProvider: GQL.MaybeProviderFragment) -> MaybeProvider? {
         if maybeProvider.asDeletedProvider != nil {
             return .deletedProvider
         } else if let providerFragment = maybeProvider.asProvider?.fragments.providerFragment {
             let provider = Self.transform(provider: providerFragment)
             return .provider(provider)
         }
-
-        assertionFailure("[Should not get here] Received an unknown provider type \(maybeProvider.__typename)")
-        return .deletedProvider
+        return nil
     }
 
     static func transform(_ system: GQL.SystemMessageFragment) -> SystemProvider {
