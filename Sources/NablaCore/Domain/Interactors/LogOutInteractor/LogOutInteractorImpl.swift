@@ -26,13 +26,15 @@ final class LogOutInteractorImpl: LogOutInteractor {
         authenticator: Authenticator,
         gqlStore: GQLStore,
         scopedKeyValueStore: KeyValueStore,
-        logger: Logger
+        logger: Logger,
+        errorReporter: ErrorReporter
     ) {
         self.userRepository = userRepository
         self.authenticator = authenticator
         self.gqlStore = gqlStore
         self.scopedKeyValueStore = scopedKeyValueStore
         self.logger = logger
+        self.errorReporter = errorReporter
     }
     
     // MARK: - Private
@@ -42,6 +44,7 @@ final class LogOutInteractorImpl: LogOutInteractor {
     private let gqlStore: GQLStore
     private let scopedKeyValueStore: KeyValueStore
     private let logger: Logger
+    private let errorReporter: ErrorReporter
     
     private var extraActions = [() -> Void]()
 }

@@ -121,12 +121,14 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         client: NablaSchedulingClient,
         addressFormatter: AddressFormatter,
         universalLinkGenerator: UniversalLinkGenerator,
+        logger: Logger,
         delegate: AppointmentConfirmationViewModelDelegate
     ) {
         self.appointment = appointment
         self.client = client
         self.addressFormatter = addressFormatter
         self.universalLinkGenerator = universalLinkGenerator
+        self.logger = logger
         self.delegate = delegate
         
         Task {
@@ -141,6 +143,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
     private let client: NablaSchedulingClient
     private let addressFormatter: AddressFormatter
     private let universalLinkGenerator: UniversalLinkGenerator
+    private let logger: Logger
     
     private var providerWatcher: AnyCancellable?
     private var consentsWatcher: AnyCancellable?
@@ -153,6 +156,7 @@ final class AppointmentConfirmationViewModelImpl: AppointmentConfirmationViewMod
         do {
             try await schedulePendingAppointment(appointment: appointment)
         } catch {
+            logger.warning(message: "Failed to schedule appointment", error: error, extra: ["appointment_id": appointment.id])
             modal = .alert(.error(
                 title: L10n.confirmationScreenErrorTitle,
                 error: error,

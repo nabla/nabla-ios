@@ -1,5 +1,6 @@
 import Foundation
 
+// sourcery: AutoMockable
 public protocol ErrorReporter {
     func enable(dsn: String, env: String, sdkVersion: String)
 

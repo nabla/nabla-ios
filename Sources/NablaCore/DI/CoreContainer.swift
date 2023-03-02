@@ -27,7 +27,8 @@ public class CoreContainer {
     // MARK: - Internal
     
     let webSocketTransport: WebSocketTransport
-    let registerDeviceInteractor: RegisterDeviceInteractor
+    let initializeInteractor: InitializeInteractor
+    let setCurrentUserInteractor: SetCurrentUserInteractor
     
     convenience init(
         name: String,
@@ -148,9 +149,7 @@ public class CoreContainer {
         deviceRepository = DeviceRepositoryImpl(
             deviceLocalDataSource: self.deviceLocalDataSource,
             deviceRemoteDataSource: deviceRemoteDataSource,
-            logger: logger,
-            errorReporter: errorReporter,
-            environment: environment
+            logger: logger
         )
         
         userRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
@@ -160,11 +159,23 @@ public class CoreContainer {
             authenticator: authenticator,
             gqlStore: gqlStore,
             scopedKeyValueStore: scopedKeyValueStore,
-            logger: logger
+            logger: logger,
+            errorReporter: errorReporter
         )
-        registerDeviceInteractor = RegisterDeviceInteractorImpl(
-            modules: modules,
-            deviceRepository: deviceRepository
+        initializeInteractor = InitializeInteractorImpl(
+            deviceRepository: deviceRepository,
+            errorReporter: errorReporter,
+            environment: environment,
+            extraHeaders: extraHeaders
+        )
+        setCurrentUserInteractor = SetCurrentUserInteractorImpl(
+            environment: environment,
+            authenticator: authenticator,
+            userRepository: userRepository,
+            deviceRepository: deviceRepository,
+            errorReport: errorReporter,
+            logger: logger,
+            modules: modules
         )
         
         messagingModule = modules.first(as: MessagingModule.self)

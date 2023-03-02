@@ -19,6 +19,14 @@ final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
         try? dangerouslyUnscopedStore.set(deviceId, forKey: generateKeyForDeviceId(forUserId: userId))
     }
     
+    func getSentryConfiguration() -> SentryConfiguration? {
+        try? scopedStore.get(forKey: Keys.sentryConfigurationKey)
+    }
+    
+    func setSentryConfiguration(_ configuration: SentryConfiguration) {
+        try? scopedStore.set(configuration, forKey: Keys.sentryConfigurationKey)
+    }
+    
     var deviceModel: String {
         if let simModelCode = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] {
             return "Simulator \(simModelCode)"
@@ -56,6 +64,7 @@ final class DeviceLocalDataSourceImpl: DeviceLocalDataSource {
     
     private enum Keys {
         static let deviceIdKey = "DeviceLocalDataSourceImpl.deviceIdKey"
+        static let sentryConfigurationKey = "DeviceLocalDataSourceImpl.sentry.configuration"
     }
 
     private let scopedStore: KeyValueStore

@@ -129,6 +129,7 @@ public class NablaSchedulingViewFactoryImpl: NablaSchedulingViewFactory, Interna
             client: client,
             addressFormatter: client.container.addressFormatter,
             universalLinkGenerator: client.container.universalLinkGenerator,
+            logger: client.container.logger,
             delegate: delegate
         )
         return AppointmentConfirmationViewController(viewModel: viewModel)

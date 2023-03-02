@@ -403,10 +403,31 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 		perform?(`deviceId`, `userId`)
     }
 
+    open func getSentryConfiguration() -> SentryConfiguration? {
+        addInvocation(.m_getSentryConfiguration)
+		let perform = methodPerformValue(.m_getSentryConfiguration) as? () -> Void
+		perform?()
+		var __value: SentryConfiguration? = nil
+		do {
+		    __value = try methodReturnValue(.m_getSentryConfiguration).casted()
+		} catch {
+			// do nothing
+		}
+		return __value
+    }
+
+    open func setSentryConfiguration(_ configuration: SentryConfiguration) {
+        addInvocation(.m_setSentryConfiguration__configuration(Parameter<SentryConfiguration>.value(`configuration`)))
+		let perform = methodPerformValue(.m_setSentryConfiguration__configuration(Parameter<SentryConfiguration>.value(`configuration`))) as? (SentryConfiguration) -> Void
+		perform?(`configuration`)
+    }
+
 
     fileprivate enum MethodType {
         case m_getDeviceId__forUserId_userId(Parameter<String>)
         case m_setDeviceId__deviceIdforUserId_userId(Parameter<UUID>, Parameter<String>)
+        case m_getSentryConfiguration
+        case m_setSentryConfiguration__configuration(Parameter<SentryConfiguration>)
         case p_deviceModel_get
         case p_deviceOSVersion_get
         case p_codeVersion_get
@@ -423,6 +444,13 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDeviceid, rhs: rhsDeviceid, with: matcher), lhsDeviceid, rhsDeviceid, "_ deviceId"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "forUserId userId"))
 				return Matcher.ComparisonResult(results)
+
+            case (.m_getSentryConfiguration, .m_getSentryConfiguration): return .match
+
+            case (.m_setSentryConfiguration__configuration(let lhsConfiguration), .m_setSentryConfiguration__configuration(let rhsConfiguration)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConfiguration, rhs: rhsConfiguration, with: matcher), lhsConfiguration, rhsConfiguration, "_ configuration"))
+				return Matcher.ComparisonResult(results)
             case (.p_deviceModel_get,.p_deviceModel_get): return Matcher.ComparisonResult.match
             case (.p_deviceOSVersion_get,.p_deviceOSVersion_get): return Matcher.ComparisonResult.match
             case (.p_codeVersion_get,.p_codeVersion_get): return Matcher.ComparisonResult.match
@@ -434,6 +462,8 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
             switch self {
             case let .m_getDeviceId__forUserId_userId(p0): return p0.intValue
             case let .m_setDeviceId__deviceIdforUserId_userId(p0, p1): return p0.intValue + p1.intValue
+            case .m_getSentryConfiguration: return 0
+            case let .m_setSentryConfiguration__configuration(p0): return p0.intValue
             case .p_deviceModel_get: return 0
             case .p_deviceOSVersion_get: return 0
             case .p_codeVersion_get: return 0
@@ -443,6 +473,8 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
             switch self {
             case .m_getDeviceId__forUserId_userId: return ".getDeviceId(forUserId:)"
             case .m_setDeviceId__deviceIdforUserId_userId: return ".setDeviceId(_:forUserId:)"
+            case .m_getSentryConfiguration: return ".getSentryConfiguration()"
+            case .m_setSentryConfiguration__configuration: return ".setSentryConfiguration(_:)"
             case .p_deviceModel_get: return "[get] .deviceModel"
             case .p_deviceOSVersion_get: return "[get] .deviceOSVersion"
             case .p_codeVersion_get: return "[get] .codeVersion"
@@ -471,10 +503,20 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
         public static func getDeviceId(forUserId userId: Parameter<String>, willReturn: UUID?...) -> MethodStub {
             return Given(method: .m_getDeviceId__forUserId_userId(`userId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func getSentryConfiguration(willReturn: SentryConfiguration?...) -> MethodStub {
+            return Given(method: .m_getSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func getDeviceId(forUserId userId: Parameter<String>, willProduce: (Stubber<UUID?>) -> Void) -> MethodStub {
             let willReturn: [UUID?] = []
 			let given: Given = { return Given(method: .m_getDeviceId__forUserId_userId(`userId`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (UUID?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getSentryConfiguration(willProduce: (Stubber<SentryConfiguration?>) -> Void) -> MethodStub {
+            let willReturn: [SentryConfiguration?] = []
+			let given: Given = { return Given(method: .m_getSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (SentryConfiguration?).self)
 			willProduce(stubber)
 			return given
         }
@@ -485,6 +527,8 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
 
         public static func getDeviceId(forUserId userId: Parameter<String>) -> Verify { return Verify(method: .m_getDeviceId__forUserId_userId(`userId`))}
         public static func setDeviceId(_ deviceId: Parameter<UUID>, forUserId userId: Parameter<String>) -> Verify { return Verify(method: .m_setDeviceId__deviceIdforUserId_userId(`deviceId`, `userId`))}
+        public static func getSentryConfiguration() -> Verify { return Verify(method: .m_getSentryConfiguration)}
+        public static func setSentryConfiguration(_ configuration: Parameter<SentryConfiguration>) -> Verify { return Verify(method: .m_setSentryConfiguration__configuration(`configuration`))}
         public static var deviceModel: Verify { return Verify(method: .p_deviceModel_get) }
         public static var deviceOSVersion: Verify { return Verify(method: .p_deviceOSVersion_get) }
         public static var codeVersion: Verify { return Verify(method: .p_codeVersion_get) }
@@ -499,6 +543,916 @@ open class DeviceLocalDataSourceMock: DeviceLocalDataSource, Mock {
         }
         public static func setDeviceId(_ deviceId: Parameter<UUID>, forUserId userId: Parameter<String>, perform: @escaping (UUID, String) -> Void) -> Perform {
             return Perform(method: .m_setDeviceId__deviceIdforUserId_userId(`deviceId`, `userId`), performs: perform)
+        }
+        public static func getSentryConfiguration(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getSentryConfiguration, performs: perform)
+        }
+        public static func setSentryConfiguration(_ configuration: Parameter<SentryConfiguration>, perform: @escaping (SentryConfiguration) -> Void) -> Perform {
+            return Perform(method: .m_setSentryConfiguration__configuration(`configuration`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - DeviceRepository
+
+open class DeviceRepositoryMock: DeviceRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func updateOrRegisterDevice(userId: String, withModules modules: [Module]) throws -> SentryConfiguration? {
+        addInvocation(.m_updateOrRegisterDevice__userId_userIdwithModules_modules(Parameter<String>.value(`userId`), Parameter<[Module]>.value(`modules`)))
+		let perform = methodPerformValue(.m_updateOrRegisterDevice__userId_userIdwithModules_modules(Parameter<String>.value(`userId`), Parameter<[Module]>.value(`modules`))) as? (String, [Module]) -> Void
+		perform?(`userId`, `modules`)
+		var __value: SentryConfiguration? = nil
+		do {
+		    __value = try methodReturnValue(.m_updateOrRegisterDevice__userId_userIdwithModules_modules(Parameter<String>.value(`userId`), Parameter<[Module]>.value(`modules`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func persist(_ configuration: SentryConfiguration) {
+        addInvocation(.m_persist__configuration(Parameter<SentryConfiguration>.value(`configuration`)))
+		let perform = methodPerformValue(.m_persist__configuration(Parameter<SentryConfiguration>.value(`configuration`))) as? (SentryConfiguration) -> Void
+		perform?(`configuration`)
+    }
+
+    open func retrieveSentryConfiguration() -> SentryConfiguration? {
+        addInvocation(.m_retrieveSentryConfiguration)
+		let perform = methodPerformValue(.m_retrieveSentryConfiguration) as? () -> Void
+		perform?()
+		var __value: SentryConfiguration? = nil
+		do {
+		    __value = try methodReturnValue(.m_retrieveSentryConfiguration).casted()
+		} catch {
+			// do nothing
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_updateOrRegisterDevice__userId_userIdwithModules_modules(Parameter<String>, Parameter<[Module]>)
+        case m_persist__configuration(Parameter<SentryConfiguration>)
+        case m_retrieveSentryConfiguration
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_updateOrRegisterDevice__userId_userIdwithModules_modules(let lhsUserid, let lhsModules), .m_updateOrRegisterDevice__userId_userIdwithModules_modules(let rhsUserid, let rhsModules)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "userId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsModules, rhs: rhsModules, with: matcher), lhsModules, rhsModules, "withModules modules"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_persist__configuration(let lhsConfiguration), .m_persist__configuration(let rhsConfiguration)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsConfiguration, rhs: rhsConfiguration, with: matcher), lhsConfiguration, rhsConfiguration, "_ configuration"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_retrieveSentryConfiguration, .m_retrieveSentryConfiguration): return .match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_updateOrRegisterDevice__userId_userIdwithModules_modules(p0, p1): return p0.intValue + p1.intValue
+            case let .m_persist__configuration(p0): return p0.intValue
+            case .m_retrieveSentryConfiguration: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_updateOrRegisterDevice__userId_userIdwithModules_modules: return ".updateOrRegisterDevice(userId:withModules:)"
+            case .m_persist__configuration: return ".persist(_:)"
+            case .m_retrieveSentryConfiguration: return ".retrieveSentryConfiguration()"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>, willReturn: SentryConfiguration?...) -> MethodStub {
+            return Given(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func retrieveSentryConfiguration(willReturn: SentryConfiguration?...) -> MethodStub {
+            return Given(method: .m_retrieveSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func retrieveSentryConfiguration(willProduce: (Stubber<SentryConfiguration?>) -> Void) -> MethodStub {
+            let willReturn: [SentryConfiguration?] = []
+			let given: Given = { return Given(method: .m_retrieveSentryConfiguration, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (SentryConfiguration?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>, willProduce: (StubberThrows<SentryConfiguration?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (SentryConfiguration?).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>) -> Verify { return Verify(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`))}
+        public static func persist(_ configuration: Parameter<SentryConfiguration>) -> Verify { return Verify(method: .m_persist__configuration(`configuration`))}
+        public static func retrieveSentryConfiguration() -> Verify { return Verify(method: .m_retrieveSentryConfiguration)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func updateOrRegisterDevice(userId: Parameter<String>, withModules modules: Parameter<[Module]>, perform: @escaping (String, [Module]) -> Void) -> Perform {
+            return Perform(method: .m_updateOrRegisterDevice__userId_userIdwithModules_modules(`userId`, `modules`), performs: perform)
+        }
+        public static func persist(_ configuration: Parameter<SentryConfiguration>, perform: @escaping (SentryConfiguration) -> Void) -> Perform {
+            return Perform(method: .m_persist__configuration(`configuration`), performs: perform)
+        }
+        public static func retrieveSentryConfiguration(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_retrieveSentryConfiguration, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - Environment
+
+open class EnvironmentMock: Environment, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+    public var platform: String {
+		get {	invocations.append(.p_platform_get); return __p_platform ?? givenGetterValue(.p_platform_get, "EnvironmentMock - stub value for platform was not defined") }
+	}
+	private var __p_platform: (String)?
+
+    public var languageCode: String {
+		get {	invocations.append(.p_languageCode_get); return __p_languageCode ?? givenGetterValue(.p_languageCode_get, "EnvironmentMock - stub value for languageCode was not defined") }
+	}
+	private var __p_languageCode: (String)?
+
+    public var version: String {
+		get {	invocations.append(.p_version_get); return __p_version ?? givenGetterValue(.p_version_get, "EnvironmentMock - stub value for version was not defined") }
+	}
+	private var __p_version: (String)?
+
+    public var serverUrl: URL {
+		get {	invocations.append(.p_serverUrl_get); return __p_serverUrl ?? givenGetterValue(.p_serverUrl_get, "EnvironmentMock - stub value for serverUrl was not defined") }
+	}
+	private var __p_serverUrl: (URL)?
+
+    public var graphqlHttpUrl: URL {
+		get {	invocations.append(.p_graphqlHttpUrl_get); return __p_graphqlHttpUrl ?? givenGetterValue(.p_graphqlHttpUrl_get, "EnvironmentMock - stub value for graphqlHttpUrl was not defined") }
+	}
+	private var __p_graphqlHttpUrl: (URL)?
+
+    public var graphqlWebSocketUrl: URL {
+		get {	invocations.append(.p_graphqlWebSocketUrl_get); return __p_graphqlWebSocketUrl ?? givenGetterValue(.p_graphqlWebSocketUrl_get, "EnvironmentMock - stub value for graphqlWebSocketUrl was not defined") }
+	}
+	private var __p_graphqlWebSocketUrl: (URL)?
+
+
+
+
+
+
+    fileprivate enum MethodType {
+        case p_platform_get
+        case p_languageCode_get
+        case p_version_get
+        case p_serverUrl_get
+        case p_graphqlHttpUrl_get
+        case p_graphqlWebSocketUrl_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {            case (.p_platform_get,.p_platform_get): return Matcher.ComparisonResult.match
+            case (.p_languageCode_get,.p_languageCode_get): return Matcher.ComparisonResult.match
+            case (.p_version_get,.p_version_get): return Matcher.ComparisonResult.match
+            case (.p_serverUrl_get,.p_serverUrl_get): return Matcher.ComparisonResult.match
+            case (.p_graphqlHttpUrl_get,.p_graphqlHttpUrl_get): return Matcher.ComparisonResult.match
+            case (.p_graphqlWebSocketUrl_get,.p_graphqlWebSocketUrl_get): return Matcher.ComparisonResult.match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .p_platform_get: return 0
+            case .p_languageCode_get: return 0
+            case .p_version_get: return 0
+            case .p_serverUrl_get: return 0
+            case .p_graphqlHttpUrl_get: return 0
+            case .p_graphqlWebSocketUrl_get: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .p_platform_get: return "[get] .platform"
+            case .p_languageCode_get: return "[get] .languageCode"
+            case .p_version_get: return "[get] .version"
+            case .p_serverUrl_get: return "[get] .serverUrl"
+            case .p_graphqlHttpUrl_get: return "[get] .graphqlHttpUrl"
+            case .p_graphqlWebSocketUrl_get: return "[get] .graphqlWebSocketUrl"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func platform(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_platform_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func languageCode(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_languageCode_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func version(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_version_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func serverUrl(getter defaultValue: URL...) -> PropertyStub {
+            return Given(method: .p_serverUrl_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func graphqlHttpUrl(getter defaultValue: URL...) -> PropertyStub {
+            return Given(method: .p_graphqlHttpUrl_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func graphqlWebSocketUrl(getter defaultValue: URL...) -> PropertyStub {
+            return Given(method: .p_graphqlWebSocketUrl_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static var platform: Verify { return Verify(method: .p_platform_get) }
+        public static var languageCode: Verify { return Verify(method: .p_languageCode_get) }
+        public static var version: Verify { return Verify(method: .p_version_get) }
+        public static var serverUrl: Verify { return Verify(method: .p_serverUrl_get) }
+        public static var graphqlHttpUrl: Verify { return Verify(method: .p_graphqlHttpUrl_get) }
+        public static var graphqlWebSocketUrl: Verify { return Verify(method: .p_graphqlWebSocketUrl_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - ErrorReporter
+
+open class ErrorReporterMock: ErrorReporter, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func enable(dsn: String, env: String, sdkVersion: String) {
+        addInvocation(.m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(Parameter<String>.value(`dsn`), Parameter<String>.value(`env`), Parameter<String>.value(`sdkVersion`)))
+		let perform = methodPerformValue(.m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(Parameter<String>.value(`dsn`), Parameter<String>.value(`env`), Parameter<String>.value(`sdkVersion`))) as? (String, String, String) -> Void
+		perform?(`dsn`, `env`, `sdkVersion`)
+    }
+
+    open func disable() {
+        addInvocation(.m_disable)
+		let perform = methodPerformValue(.m_disable) as? () -> Void
+		perform?()
+    }
+
+    open func reportWarning(message: String, error: Error?, extra: [String: Any]) {
+        addInvocation(.m_reportWarning__message_messageerror_errorextra_extra(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`), Parameter<[String: Any]>.value(`extra`)))
+		let perform = methodPerformValue(.m_reportWarning__message_messageerror_errorextra_extra(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`), Parameter<[String: Any]>.value(`extra`))) as? (String, Error?, [String: Any]) -> Void
+		perform?(`message`, `error`, `extra`)
+    }
+
+    open func reportError(message: String, error: Error?, extra: [String: Any]) {
+        addInvocation(.m_reportError__message_messageerror_errorextra_extra(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`), Parameter<[String: Any]>.value(`extra`)))
+		let perform = methodPerformValue(.m_reportError__message_messageerror_errorextra_extra(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`), Parameter<[String: Any]>.value(`extra`))) as? (String, Error?, [String: Any]) -> Void
+		perform?(`message`, `error`, `extra`)
+    }
+
+    open func reportEvent(message: String, extra: [String: Any]) {
+        addInvocation(.m_reportEvent__message_messageextra_extra(Parameter<String>.value(`message`), Parameter<[String: Any]>.value(`extra`)))
+		let perform = methodPerformValue(.m_reportEvent__message_messageextra_extra(Parameter<String>.value(`message`), Parameter<[String: Any]>.value(`extra`))) as? (String, [String: Any]) -> Void
+		perform?(`message`, `extra`)
+    }
+
+    open func log(message: String, extra: [String: Any]?, domain: String?) {
+        addInvocation(.m_log__message_messageextra_extradomain_domain(Parameter<String>.value(`message`), Parameter<[String: Any]?>.value(`extra`), Parameter<String?>.value(`domain`)))
+		let perform = methodPerformValue(.m_log__message_messageextra_extradomain_domain(Parameter<String>.value(`message`), Parameter<[String: Any]?>.value(`extra`), Parameter<String?>.value(`domain`))) as? (String, [String: Any]?, String?) -> Void
+		perform?(`message`, `extra`, `domain`)
+    }
+
+    open func setTag(name: String, value: String) {
+        addInvocation(.m_setTag__name_namevalue_value(Parameter<String>.value(`name`), Parameter<String>.value(`value`)))
+		let perform = methodPerformValue(.m_setTag__name_namevalue_value(Parameter<String>.value(`name`), Parameter<String>.value(`value`))) as? (String, String) -> Void
+		perform?(`name`, `value`)
+    }
+
+    open func setExtra(name: String, value: String) {
+        addInvocation(.m_setExtra__name_namevalue_value(Parameter<String>.value(`name`), Parameter<String>.value(`value`)))
+		let perform = methodPerformValue(.m_setExtra__name_namevalue_value(Parameter<String>.value(`name`), Parameter<String>.value(`value`))) as? (String, String) -> Void
+		perform?(`name`, `value`)
+    }
+
+    open func log(message: String) {
+        addInvocation(.m_log__message_message(Parameter<String>.value(`message`)))
+		let perform = methodPerformValue(.m_log__message_message(Parameter<String>.value(`message`))) as? (String) -> Void
+		perform?(`message`)
+    }
+
+    open func log(message: String, extra: [String: Any]?) {
+        addInvocation(.m_log__message_messageextra_extra(Parameter<String>.value(`message`), Parameter<[String: Any]?>.value(`extra`)))
+		let perform = methodPerformValue(.m_log__message_messageextra_extra(Parameter<String>.value(`message`), Parameter<[String: Any]?>.value(`extra`))) as? (String, [String: Any]?) -> Void
+		perform?(`message`, `extra`)
+    }
+
+    open func log(message: String, domain: String?) {
+        addInvocation(.m_log__message_messagedomain_domain(Parameter<String>.value(`message`), Parameter<String?>.value(`domain`)))
+		let perform = methodPerformValue(.m_log__message_messagedomain_domain(Parameter<String>.value(`message`), Parameter<String?>.value(`domain`))) as? (String, String?) -> Void
+		perform?(`message`, `domain`)
+    }
+
+    open func reportWarning(message: String, error: Error?) {
+        addInvocation(.m_reportWarning__message_messageerror_error(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`)))
+		let perform = methodPerformValue(.m_reportWarning__message_messageerror_error(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`))) as? (String, Error?) -> Void
+		perform?(`message`, `error`)
+    }
+
+    open func reportError(message: String, error: Error?) {
+        addInvocation(.m_reportError__message_messageerror_error(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`)))
+		let perform = methodPerformValue(.m_reportError__message_messageerror_error(Parameter<String>.value(`message`), Parameter<Error?>.value(`error`))) as? (String, Error?) -> Void
+		perform?(`message`, `error`)
+    }
+
+    open func reportEvent(message: String) {
+        addInvocation(.m_reportEvent__message_message(Parameter<String>.value(`message`)))
+		let perform = methodPerformValue(.m_reportEvent__message_message(Parameter<String>.value(`message`))) as? (String) -> Void
+		perform?(`message`)
+    }
+
+
+    fileprivate enum MethodType {
+        case m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(Parameter<String>, Parameter<String>, Parameter<String>)
+        case m_disable
+        case m_reportWarning__message_messageerror_errorextra_extra(Parameter<String>, Parameter<Error?>, Parameter<[String: Any]>)
+        case m_reportError__message_messageerror_errorextra_extra(Parameter<String>, Parameter<Error?>, Parameter<[String: Any]>)
+        case m_reportEvent__message_messageextra_extra(Parameter<String>, Parameter<[String: Any]>)
+        case m_log__message_messageextra_extradomain_domain(Parameter<String>, Parameter<[String: Any]?>, Parameter<String?>)
+        case m_setTag__name_namevalue_value(Parameter<String>, Parameter<String>)
+        case m_setExtra__name_namevalue_value(Parameter<String>, Parameter<String>)
+        case m_log__message_message(Parameter<String>)
+        case m_log__message_messageextra_extra(Parameter<String>, Parameter<[String: Any]?>)
+        case m_log__message_messagedomain_domain(Parameter<String>, Parameter<String?>)
+        case m_reportWarning__message_messageerror_error(Parameter<String>, Parameter<Error?>)
+        case m_reportError__message_messageerror_error(Parameter<String>, Parameter<Error?>)
+        case m_reportEvent__message_message(Parameter<String>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(let lhsDsn, let lhsEnv, let lhsSdkversion), .m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(let rhsDsn, let rhsEnv, let rhsSdkversion)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDsn, rhs: rhsDsn, with: matcher), lhsDsn, rhsDsn, "dsn"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsEnv, rhs: rhsEnv, with: matcher), lhsEnv, rhsEnv, "env"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsSdkversion, rhs: rhsSdkversion, with: matcher), lhsSdkversion, rhsSdkversion, "sdkVersion"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_disable, .m_disable): return .match
+
+            case (.m_reportWarning__message_messageerror_errorextra_extra(let lhsMessage, let lhsError, let lhsExtra), .m_reportWarning__message_messageerror_errorextra_extra(let rhsMessage, let rhsError, let rhsExtra)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsError, rhs: rhsError, with: matcher), lhsError, rhsError, "error"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_reportError__message_messageerror_errorextra_extra(let lhsMessage, let lhsError, let lhsExtra), .m_reportError__message_messageerror_errorextra_extra(let rhsMessage, let rhsError, let rhsExtra)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsError, rhs: rhsError, with: matcher), lhsError, rhsError, "error"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_reportEvent__message_messageextra_extra(let lhsMessage, let lhsExtra), .m_reportEvent__message_messageextra_extra(let rhsMessage, let rhsExtra)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_log__message_messageextra_extradomain_domain(let lhsMessage, let lhsExtra, let lhsDomain), .m_log__message_messageextra_extradomain_domain(let rhsMessage, let rhsExtra, let rhsDomain)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDomain, rhs: rhsDomain, with: matcher), lhsDomain, rhsDomain, "domain"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_setTag__name_namevalue_value(let lhsName, let lhsValue), .m_setTag__name_namevalue_value(let rhsName, let rhsValue)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher), lhsName, rhsName, "name"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher), lhsValue, rhsValue, "value"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_setExtra__name_namevalue_value(let lhsName, let lhsValue), .m_setExtra__name_namevalue_value(let rhsName, let rhsValue)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher), lhsName, rhsName, "name"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher), lhsValue, rhsValue, "value"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_log__message_message(let lhsMessage), .m_log__message_message(let rhsMessage)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_log__message_messageextra_extra(let lhsMessage, let lhsExtra), .m_log__message_messageextra_extra(let rhsMessage, let rhsExtra)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsExtra, rhs: rhsExtra, with: matcher), lhsExtra, rhsExtra, "extra"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_log__message_messagedomain_domain(let lhsMessage, let lhsDomain), .m_log__message_messagedomain_domain(let rhsMessage, let rhsDomain)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDomain, rhs: rhsDomain, with: matcher), lhsDomain, rhsDomain, "domain"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_reportWarning__message_messageerror_error(let lhsMessage, let lhsError), .m_reportWarning__message_messageerror_error(let rhsMessage, let rhsError)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsError, rhs: rhsError, with: matcher), lhsError, rhsError, "error"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_reportError__message_messageerror_error(let lhsMessage, let lhsError), .m_reportError__message_messageerror_error(let rhsMessage, let rhsError)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsError, rhs: rhsError, with: matcher), lhsError, rhsError, "error"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_reportEvent__message_message(let lhsMessage), .m_reportEvent__message_message(let rhsMessage)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher), lhsMessage, rhsMessage, "message"))
+				return Matcher.ComparisonResult(results)
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case .m_disable: return 0
+            case let .m_reportWarning__message_messageerror_errorextra_extra(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_reportError__message_messageerror_errorextra_extra(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_reportEvent__message_messageextra_extra(p0, p1): return p0.intValue + p1.intValue
+            case let .m_log__message_messageextra_extradomain_domain(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_setTag__name_namevalue_value(p0, p1): return p0.intValue + p1.intValue
+            case let .m_setExtra__name_namevalue_value(p0, p1): return p0.intValue + p1.intValue
+            case let .m_log__message_message(p0): return p0.intValue
+            case let .m_log__message_messageextra_extra(p0, p1): return p0.intValue + p1.intValue
+            case let .m_log__message_messagedomain_domain(p0, p1): return p0.intValue + p1.intValue
+            case let .m_reportWarning__message_messageerror_error(p0, p1): return p0.intValue + p1.intValue
+            case let .m_reportError__message_messageerror_error(p0, p1): return p0.intValue + p1.intValue
+            case let .m_reportEvent__message_message(p0): return p0.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_enable__dsn_dsnenv_envsdkVersion_sdkVersion: return ".enable(dsn:env:sdkVersion:)"
+            case .m_disable: return ".disable()"
+            case .m_reportWarning__message_messageerror_errorextra_extra: return ".reportWarning(message:error:extra:)"
+            case .m_reportError__message_messageerror_errorextra_extra: return ".reportError(message:error:extra:)"
+            case .m_reportEvent__message_messageextra_extra: return ".reportEvent(message:extra:)"
+            case .m_log__message_messageextra_extradomain_domain: return ".log(message:extra:domain:)"
+            case .m_setTag__name_namevalue_value: return ".setTag(name:value:)"
+            case .m_setExtra__name_namevalue_value: return ".setExtra(name:value:)"
+            case .m_log__message_message: return ".log(message:)"
+            case .m_log__message_messageextra_extra: return ".log(message:extra:)"
+            case .m_log__message_messagedomain_domain: return ".log(message:domain:)"
+            case .m_reportWarning__message_messageerror_error: return ".reportWarning(message:error:)"
+            case .m_reportError__message_messageerror_error: return ".reportError(message:error:)"
+            case .m_reportEvent__message_message: return ".reportEvent(message:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func enable(dsn: Parameter<String>, env: Parameter<String>, sdkVersion: Parameter<String>) -> Verify { return Verify(method: .m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(`dsn`, `env`, `sdkVersion`))}
+        public static func disable() -> Verify { return Verify(method: .m_disable)}
+        public static func reportWarning(message: Parameter<String>, error: Parameter<Error?>, extra: Parameter<[String: Any]>) -> Verify { return Verify(method: .m_reportWarning__message_messageerror_errorextra_extra(`message`, `error`, `extra`))}
+        public static func reportError(message: Parameter<String>, error: Parameter<Error?>, extra: Parameter<[String: Any]>) -> Verify { return Verify(method: .m_reportError__message_messageerror_errorextra_extra(`message`, `error`, `extra`))}
+        public static func reportEvent(message: Parameter<String>, extra: Parameter<[String: Any]>) -> Verify { return Verify(method: .m_reportEvent__message_messageextra_extra(`message`, `extra`))}
+        public static func log(message: Parameter<String>, extra: Parameter<[String: Any]?>, domain: Parameter<String?>) -> Verify { return Verify(method: .m_log__message_messageextra_extradomain_domain(`message`, `extra`, `domain`))}
+        public static func setTag(name: Parameter<String>, value: Parameter<String>) -> Verify { return Verify(method: .m_setTag__name_namevalue_value(`name`, `value`))}
+        public static func setExtra(name: Parameter<String>, value: Parameter<String>) -> Verify { return Verify(method: .m_setExtra__name_namevalue_value(`name`, `value`))}
+        public static func log(message: Parameter<String>) -> Verify { return Verify(method: .m_log__message_message(`message`))}
+        public static func log(message: Parameter<String>, extra: Parameter<[String: Any]?>) -> Verify { return Verify(method: .m_log__message_messageextra_extra(`message`, `extra`))}
+        public static func log(message: Parameter<String>, domain: Parameter<String?>) -> Verify { return Verify(method: .m_log__message_messagedomain_domain(`message`, `domain`))}
+        public static func reportWarning(message: Parameter<String>, error: Parameter<Error?>) -> Verify { return Verify(method: .m_reportWarning__message_messageerror_error(`message`, `error`))}
+        public static func reportError(message: Parameter<String>, error: Parameter<Error?>) -> Verify { return Verify(method: .m_reportError__message_messageerror_error(`message`, `error`))}
+        public static func reportEvent(message: Parameter<String>) -> Verify { return Verify(method: .m_reportEvent__message_message(`message`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func enable(dsn: Parameter<String>, env: Parameter<String>, sdkVersion: Parameter<String>, perform: @escaping (String, String, String) -> Void) -> Perform {
+            return Perform(method: .m_enable__dsn_dsnenv_envsdkVersion_sdkVersion(`dsn`, `env`, `sdkVersion`), performs: perform)
+        }
+        public static func disable(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_disable, performs: perform)
+        }
+        public static func reportWarning(message: Parameter<String>, error: Parameter<Error?>, extra: Parameter<[String: Any]>, perform: @escaping (String, Error?, [String: Any]) -> Void) -> Perform {
+            return Perform(method: .m_reportWarning__message_messageerror_errorextra_extra(`message`, `error`, `extra`), performs: perform)
+        }
+        public static func reportError(message: Parameter<String>, error: Parameter<Error?>, extra: Parameter<[String: Any]>, perform: @escaping (String, Error?, [String: Any]) -> Void) -> Perform {
+            return Perform(method: .m_reportError__message_messageerror_errorextra_extra(`message`, `error`, `extra`), performs: perform)
+        }
+        public static func reportEvent(message: Parameter<String>, extra: Parameter<[String: Any]>, perform: @escaping (String, [String: Any]) -> Void) -> Perform {
+            return Perform(method: .m_reportEvent__message_messageextra_extra(`message`, `extra`), performs: perform)
+        }
+        public static func log(message: Parameter<String>, extra: Parameter<[String: Any]?>, domain: Parameter<String?>, perform: @escaping (String, [String: Any]?, String?) -> Void) -> Perform {
+            return Perform(method: .m_log__message_messageextra_extradomain_domain(`message`, `extra`, `domain`), performs: perform)
+        }
+        public static func setTag(name: Parameter<String>, value: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
+            return Perform(method: .m_setTag__name_namevalue_value(`name`, `value`), performs: perform)
+        }
+        public static func setExtra(name: Parameter<String>, value: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
+            return Perform(method: .m_setExtra__name_namevalue_value(`name`, `value`), performs: perform)
+        }
+        public static func log(message: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_log__message_message(`message`), performs: perform)
+        }
+        public static func log(message: Parameter<String>, extra: Parameter<[String: Any]?>, perform: @escaping (String, [String: Any]?) -> Void) -> Perform {
+            return Perform(method: .m_log__message_messageextra_extra(`message`, `extra`), performs: perform)
+        }
+        public static func log(message: Parameter<String>, domain: Parameter<String?>, perform: @escaping (String, String?) -> Void) -> Perform {
+            return Perform(method: .m_log__message_messagedomain_domain(`message`, `domain`), performs: perform)
+        }
+        public static func reportWarning(message: Parameter<String>, error: Parameter<Error?>, perform: @escaping (String, Error?) -> Void) -> Perform {
+            return Perform(method: .m_reportWarning__message_messageerror_error(`message`, `error`), performs: perform)
+        }
+        public static func reportError(message: Parameter<String>, error: Parameter<Error?>, perform: @escaping (String, Error?) -> Void) -> Perform {
+            return Perform(method: .m_reportError__message_messageerror_error(`message`, `error`), performs: perform)
+        }
+        public static func reportEvent(message: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_reportEvent__message_message(`message`), performs: perform)
         }
     }
 
@@ -1818,6 +2772,213 @@ open class LoggerMock: Logger, Mock {
         }
         public static func error(message: Parameter<() -> String>, extra: Parameter<[String: Any]>, perform: @escaping (@autoclosure () -> String, [String: Any]) -> Void) -> Perform {
             return Perform(method: .m_error__message_messageextra_extra(`message`, `extra`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - UserRepository
+
+open class UserRepositoryMock: UserRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func getCurrentUser() -> User? {
+        addInvocation(.m_getCurrentUser)
+		let perform = methodPerformValue(.m_getCurrentUser) as? () -> Void
+		perform?()
+		var __value: User? = nil
+		do {
+		    __value = try methodReturnValue(.m_getCurrentUser).casted()
+		} catch {
+			// do nothing
+		}
+		return __value
+    }
+
+    open func setCurrentUser(_ user: User?) {
+        addInvocation(.m_setCurrentUser__user(Parameter<User?>.value(`user`)))
+		let perform = methodPerformValue(.m_setCurrentUser__user(Parameter<User?>.value(`user`))) as? (User?) -> Void
+		perform?(`user`)
+    }
+
+
+    fileprivate enum MethodType {
+        case m_getCurrentUser
+        case m_setCurrentUser__user(Parameter<User?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_getCurrentUser, .m_getCurrentUser): return .match
+
+            case (.m_setCurrentUser__user(let lhsUser), .m_setCurrentUser__user(let rhsUser)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUser, rhs: rhsUser, with: matcher), lhsUser, rhsUser, "_ user"))
+				return Matcher.ComparisonResult(results)
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_getCurrentUser: return 0
+            case let .m_setCurrentUser__user(p0): return p0.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_getCurrentUser: return ".getCurrentUser()"
+            case .m_setCurrentUser__user: return ".setCurrentUser(_:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func getCurrentUser(willReturn: User?...) -> MethodStub {
+            return Given(method: .m_getCurrentUser, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getCurrentUser(willProduce: (Stubber<User?>) -> Void) -> MethodStub {
+            let willReturn: [User?] = []
+			let given: Given = { return Given(method: .m_getCurrentUser, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (User?).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func getCurrentUser() -> Verify { return Verify(method: .m_getCurrentUser)}
+        public static func setCurrentUser(_ user: Parameter<User?>) -> Verify { return Verify(method: .m_setCurrentUser__user(`user`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func getCurrentUser(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getCurrentUser, performs: perform)
+        }
+        public static func setCurrentUser(_ user: Parameter<User?>, perform: @escaping (User?) -> Void) -> Perform {
+            return Perform(method: .m_setCurrentUser__user(`user`), performs: perform)
         }
     }
 

@@ -48,23 +48,7 @@ public class NablaClient {
     ///   - userId: Identifies the user between sessions, will be passed when calling the ``SessionTokenProvider``.
     ///   - provider: ``Tokens`` provider.
     public func setCurrentUser(userId: String) throws {
-        container.authenticator.authenticate(userId: userId)
-        
-        if let previousUser = container.userRepository.getCurrentUser() {
-            if previousUser.id == userId {
-                container.logger.info(message: "Setting the same current user again, ignoring.")
-                return
-            } else {
-                container.logger.error(message: "Trying to authenticating a new user, should clear previous one first by calling `clearCurrentUser`.")
-                throw CurrentUserAlreadySetError()
-            }
-        }
-        container.logger.info(message: "Setting a new current user.")
-        container.userRepository.setCurrentUser(User(id: userId))
-        
-        Task(priority: .background) {
-            await container.registerDeviceInteractor.execute(userId: userId)
-        }
+        try container.setCurrentUserInteractor.execute(userId: userId)
     }
     
     public var currentUserId: String? {
@@ -135,14 +119,10 @@ public class NablaClient {
     /// Internal use only
     init(apiKey: String, container: CoreContainer) {
         self.container = container
-        addHTTPHeader(name: HTTPHeaders.NablaApiKey, value: Self.formatApiKey(apiKey))
+        container.initializeInteractor.execute(apiKey: apiKey)
     }
 
     // MARK: - Private
     
     private static var _shared: NablaClient?
-    
-    private static func formatApiKey(_ apiKey: String) -> String {
-        apiKey.replacingOccurrences(of: "Authorization: Bearer ", with: "")
-    }
 }

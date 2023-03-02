@@ -1,4 +1,8 @@
+import Apollo
 import Foundation
+#if canImport(ApolloWebSocket)
+    import ApolloWebSocket
+#endif
 
 class ErrorReporterLogger: Logger {
     private let errorReporter: ErrorReporter
@@ -27,18 +31,51 @@ class ErrorReporterLogger: Logger {
     }
     
     public func warning(message: @autoclosure () -> String, error: Error?, extra: [String: Any]) {
-        if error is NetworkError {
+        if let error = error, error.isNetworkError {
+            errorReporter.log(message: message(), domain: "network")
             return
         }
-        
         errorReporter.reportWarning(message: message(), error: error, extra: extra)
     }
     
     public func error(message: @autoclosure () -> String, error: Error?, extra: [String: Any]) {
-        if error is NetworkError {
+        if let error = error, error.isNetworkError {
+            errorReporter.log(message: message(), domain: "network")
             return
         }
-        
         errorReporter.reportError(message: message(), error: error, extra: extra)
+    }
+}
+
+private extension Error {
+    var isNetworkError: Bool {
+        if self is NetworkError {
+            return true
+        }
+        if let websocketError = self as? WebSocketError, case .networkError = websocketError.kind {
+            // Websocket network errors
+            return true
+        }
+        
+        if let websocketError = self as? WebSocketError,
+           let underlyingError = websocketError.error as? WebSocket.WSError,
+           underlyingError.type == .outputStreamWriteError || underlyingError.type == .writeTimeoutError {
+            // Websocket transport errors
+            return true
+        }
+        
+        if let nsError = self as NSError?,
+           nsError.code == NSURLErrorNotConnectedToInternet ||
+           nsError.code == NSURLErrorNetworkConnectionLost ||
+           nsError.code == NSURLErrorTimedOut ||
+           nsError.code == NSURLErrorCannotConnectToHost ||
+           nsError.code == NSURLErrorCannotFindHost ||
+           (nsError.domain == "NSPOSIXErrorDomain" && nsError.code == 57) // Special undocumented case: Domain=NSPOSIXErrorDomain Code=57 "Socket is not connected"
+        {
+            // NSURL && NSPOSIXErrorDomain network errors
+            return true
+        }
+        
+        return false
     }
 }

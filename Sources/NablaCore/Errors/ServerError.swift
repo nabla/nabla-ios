@@ -8,4 +8,14 @@ public class ServerError: NablaError {
         self.underlyingError = underlyingError
         self.message = message
     }
+    
+    override public func serialize() -> [String: Any] {
+        super.serialize().merging(
+            [
+                "underlyingError": underlyingError ?? "nil",
+                "message": message ?? "nil",
+            ],
+            uniquingKeysWith: { _, rhs in rhs }
+        )
+    }
 }

@@ -12,6 +12,10 @@ public class ProviderNotFoundError: MessagingError {
         self.message = message
         super.init()
     }
+    
+    override public func serialize() -> [String: Any] {
+        super.serialize().merging(["message": message ?? "nil"], uniquingKeysWith: { _, rhs in rhs })
+    }
 }
 
 public class ProviderMissingPermissionError: MessagingError {
@@ -20,6 +24,10 @@ public class ProviderMissingPermissionError: MessagingError {
     init(message: String?) {
         self.message = message
         super.init()
+    }
+    
+    override public func serialize() -> [String: Any] {
+        super.serialize().merging(["message": message ?? "nil"], uniquingKeysWith: { _, rhs in rhs })
     }
 }
 

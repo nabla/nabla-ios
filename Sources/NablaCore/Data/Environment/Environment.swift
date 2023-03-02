@@ -1,5 +1,6 @@
 import Foundation
 
+// sourcery: AutoMockable
 public protocol Environment {
     var platform: String { get }
     var languageCode: String { get }
