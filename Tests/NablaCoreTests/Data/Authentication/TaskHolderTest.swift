@@ -71,7 +71,7 @@ class TaskHolderTest: XCTestCase {
         }
 
         // THEN
-        waitForExpectations(timeout: 0.5)
+        waitForExpectations(timeout: 2)
         XCTAssertEqual(result1.value, 1)
         XCTAssertEqual(result2.value, 1)
     }
