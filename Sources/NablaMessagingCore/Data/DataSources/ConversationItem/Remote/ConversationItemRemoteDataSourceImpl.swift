@@ -131,6 +131,8 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 item: item,
                 toCacheOfConversationWithId: conversationId
             )
+        } else if event.asSubscriptionReadinessEvent != nil {
+            // Do nothing
         } else {
             logger.warning(message: "Unknown conversation event", extra: ["event": event.__typename])
         }

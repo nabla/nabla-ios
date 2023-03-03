@@ -121,6 +121,8 @@ final class ConversationRemoteDataSourceImpl: ConversationRemoteDataSource {
             )
         } else if let conversationDeletedEvent = event.asConversationDeletedEvent {
             try await removeFromCache(conversationId: conversationDeletedEvent.conversationId)
+        } else if event.asSubscriptionReadinessEvent != nil {
+            // Do nothing
         } else {
             logger.warning(message: "Unknown conversations event", extra: ["event": event.__typename])
         }

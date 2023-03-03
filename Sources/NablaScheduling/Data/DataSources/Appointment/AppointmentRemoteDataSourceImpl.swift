@@ -251,6 +251,8 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
             Task(priority: .userInitiated) {
                 try await self.remove(appointmentWithId: cancelledEvent.appointmentId)
             }
+        } else if event.asSubscriptionReadinessEvent != nil {
+            // Do nothing
         } else {
             logger.warning(message: "Unknown appointments event", extra: ["event": event.__typename])
         }
