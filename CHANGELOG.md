@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Core: `NablaClient.authenticate` is replaced by `NablaClient.setCurrentUser` and `NablaClient.clearCurrentUser`. `SessionTokenProvider` is set during `NablaClient.initialize`.
 - Core: Moved the `SessionTokenProvider` from `Configuration` to `NablaClient.initialize` arguments. Also changed the arguments order of `NablaClient.initialize`.
 - MessagingCore: Renamed `ConversationActivity.Activity` to `ConversationActivity.Content`.
+- Scheduling: Removed `Location.RemoteLocation.unknown` case.
 
 ### Fixed
 

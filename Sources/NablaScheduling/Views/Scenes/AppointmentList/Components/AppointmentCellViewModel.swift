@@ -47,7 +47,8 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     var primaryActionTitle: String? {
         switch joinableRemoteLocation {
         case let .videoCallRoom(room):
-            if currentVideoCallToken == room.token {
+            guard let token = room?.token else { return nil }
+            if currentVideoCallToken == token {
                 return L10n.appointmentsScreenCellJoinInProgressButtonLabel
             } else {
                 return L10n.appointmentsScreenCellJoinButtonLabel
@@ -68,6 +69,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
         case let .externalCallURL(url):
             delegate?.appointmentCellViewModel(self, didTapJoinExternalCallURL: url)
         case let .videoCallRoom(videoCallRoom):
+            guard let videoCallRoom = videoCallRoom else { return }
             delegate?.appointmentCellViewModel(self, didTapJoinVideoCall: videoCallRoom)
         default:
             break

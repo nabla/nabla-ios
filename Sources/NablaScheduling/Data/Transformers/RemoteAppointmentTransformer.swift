@@ -26,12 +26,10 @@ final class RemoteAppointmentTransformer {
     private let logger: Logger
             
     private func transform(_ location: RemoteAppointment.Location) -> Location {
-        if let remoteLocation = location.fragments.locationFragment.asRemoteAppointmentLocation {
-            return .remote(
-                remoteLocation.externalCallUrl.flatMap { URL(string: $0) }.map { .externalCallURL($0) }
-                    ?? remoteLocation.livekitRoom.flatMap { transform($0.fragments.livekitRoomFragment) }.map { .videoCallRoom($0) }
-                    ?? .unknown
-            )
+        if
+            let rawRemoteLocation = location.fragments.locationFragment.asRemoteAppointmentLocation,
+            let remoteLocation = transform(rawRemoteLocation) {
+            return .remote(remoteLocation)
         } else if let physicalLocation = location.fragments.locationFragment.asPhysicalAppointmentLocation {
             let address = transform(physicalLocation.address.fragments.addressFragment)
             return .physical(.init(address: address))
@@ -80,5 +78,18 @@ final class RemoteAppointmentTransformer {
     private func transform(_ livekitRoom: GQL.LivekitRoomFragment) -> Location.RemoteLocation.VideoCallRoom? {
         guard let openStatus = livekitRoom.status.asLivekitRoomOpenStatus?.fragments.livekitRoomOpenStatusFragment else { return nil }
         return .init(url: openStatus.url, token: openStatus.token)
+    }
+    
+    private func transform(_ remoteLocation: GQL.LocationFragment.AsRemoteAppointmentLocation) -> Location.RemoteLocation? {
+        if let livekitRoom = remoteLocation.livekitRoom?.fragments.livekitRoomFragment {
+            return .videoCallRoom(transform(livekitRoom))
+        }
+        if let externalCallUrl = remoteLocation.externalCallUrl, let url = URL(string: externalCallUrl) {
+            return .externalCallURL(url)
+        }
+        let message = "Unknown remote location"
+        logger.error(message: message, extra: ["location": remoteLocation.__typename])
+        assertionFailure(message)
+        return nil
     }
 }

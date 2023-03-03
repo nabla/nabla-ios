@@ -96,7 +96,7 @@ import XCTest
                 title: "GP",
                 avatarUrl: nil
             ),
-            location: .remote(state == .finalized ? .unknown : .videoCallRoom(.init(url: "", token: ""))),
+            location: .remote(state == .finalized ? .videoCallRoom(nil) : .videoCallRoom(.init(url: "", token: ""))),
             price: nil
         )
     }
@@ -121,11 +121,11 @@ extension MockFactory: NablaSchedulingViewFactory {
         fatalError()
     }
     
-    func createScheduleAppointmentNavigationController(delegate: ScheduleAppointmentDelegate) -> UINavigationController {
+    func createScheduleAppointmentNavigationController(delegate _: ScheduleAppointmentDelegate) -> UINavigationController {
         fatalError()
     }
     
-    func presentScheduleAppointmentNavigationController(from presentingViewController: UIViewController, delegate: ScheduleAppointmentDelegate) {
+    func presentScheduleAppointmentNavigationController(from _: UIViewController, delegate _: ScheduleAppointmentDelegate) {
         fatalError()
     }
 }
