@@ -118,6 +118,8 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 item: item,
                 toCacheOfConversationWithId: conversationId
             )
+        } else if let messageUpdatedEvent = event.asMessageUpdatedEvent {
+            logger.info(message: "Message update", extra: ["message": messageUpdatedEvent.message.id])
         } else if let typingEvent = event.asTypingEvent {
             try await update(
                 provider: typingEvent.provider.fragments.providerInConversationFragment,

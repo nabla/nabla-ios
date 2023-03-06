@@ -244,6 +244,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
                 try await self.insert(createdEvent.appointment.fragments.appointmentFragment)
             }
         } else if let updatedEvent = event.asAppointmentUpdatedEvent {
+            logger.info(message: "Appointment update", extra: ["appointment": updatedEvent.appointment.id])
             Task(priority: .userInitiated) {
                 try await self.updateFilteredQueriesAfterAppointmentChange(appointment: updatedEvent.appointment.fragments.appointmentFragment)
             }
