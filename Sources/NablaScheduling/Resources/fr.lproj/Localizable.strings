@@ -24,10 +24,10 @@
 "appointment_details_screen_title" = "Rendez-vous";
 "appointment_details_screen_action_button_label" = "Annuler le rendez-vous";
 
-"appointment_details_screen_cancel_appointment_modal_title" = "Annuler le rendez-vous";
-"appointment_details_screen_cancel_appointment_modal_message" = "Ceci annulera le rendez-vous que vous avez prévu.";
-"appointment_details_screen_cancel_appointment_modal_confirm_button" = "Confirmer l’annulation";
-"appointment_details_screen_cancel_appointment_modal_close_button" = "Conserver le rendez-vous";
+"appointment_details_screen_cancel_appointment_modal_title" = "Annuler le rendez-vous ?";
+"appointment_details_screen_cancel_appointment_modal_message" = "Voulez-vous annuler ce rendez-vous ? Cette action est définitive.";
+"appointment_details_screen_cancel_appointment_modal_confirm_button" = "Oui, annuler le rendez-vous";
+"appointment_details_screen_cancel_appointment_modal_close_button" = "Non, maintenir le rendez-vous";
 
 "appointment_details_screen_watch_appointment_error_title" = "Une erreur est survenue";
 "appointment_details_screen_watch_appointment_error_message" = "Impossible de trouver le rendez-vous. Réessayez.";

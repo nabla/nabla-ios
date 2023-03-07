@@ -24,10 +24,10 @@
 "appointment_details_screen_title" = "Appointment";
 "appointment_details_screen_action_button_label" = "Cancel appointment";
 
-"appointment_details_screen_cancel_appointment_modal_title" = "Cancel appointment";
-"appointment_details_screen_cancel_appointment_modal_message" = "The appointment will be canceled.";
-"appointment_details_screen_cancel_appointment_modal_confirm_button" = "Confirm cancellation";
-"appointment_details_screen_cancel_appointment_modal_close_button" = "Keep appointment";
+"appointment_details_screen_cancel_appointment_modal_title" = "Cancel appointment?";
+"appointment_details_screen_cancel_appointment_modal_message" = "Do you want to cancel this appointment? It cannot be undone.";
+"appointment_details_screen_cancel_appointment_modal_confirm_button" = "Yes, cancel it";
+"appointment_details_screen_cancel_appointment_modal_close_button" = "No, keep it";
 
 "appointment_details_screen_watch_appointment_error_title" = "Something went wrong";
 "appointment_details_screen_watch_appointment_error_message" = "Failed to load the appointment. Please try again.";

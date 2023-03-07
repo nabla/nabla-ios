@@ -176,7 +176,7 @@ final class AppointmentDetailsViewModelImpl: ObservableObject, AppointmentDetail
                 .destructive(title: L10n.appointmentDetailsScreenCancelAppointmentModalConfirmButton) { [weak self] in
                     self?.userDidConfirmCancelAppointment()
                 },
-                .cancel(title: L10n.appointmentDetailsScreenCancelAppointmentModalCloseButton),
+                .default(title: L10n.appointmentDetailsScreenCancelAppointmentModalCloseButton, handler: {}),
             ]
         ))
     }
