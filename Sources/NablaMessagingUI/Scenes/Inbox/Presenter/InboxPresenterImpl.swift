@@ -3,11 +3,11 @@ import NablaCore
 import NablaMessagingCore
 
 public protocol InboxDelegate: AnyObject {
-    func inbox(didCreate conversation: Conversation)
-    func inbox(didSelect conversation: Conversation)
+    @MainActor func inbox(didCreate conversation: Conversation)
+    @MainActor func inbox(didSelect conversation: Conversation)
 }
 
-class InboxPresenterImpl: InboxPresenter {
+@MainActor class InboxPresenterImpl: InboxPresenter {
     // MARK: - Initializer
 
     init(

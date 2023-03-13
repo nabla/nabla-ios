@@ -1,8 +1,8 @@
 import UIKit
 
 public protocol ConversationViewControllerDelegate: AnyObject {
-    func conversationViewControllerShouldEnableTapOnTitleView(_ viewController: UIViewController) -> Bool
-    func conversationViewControllerDidTapTitleView(_ viewController: UIViewController)
+    @MainActor func conversationViewControllerShouldEnableTapOnTitleView(_ viewController: UIViewController) -> Bool
+    @MainActor func conversationViewControllerDidTapTitleView(_ viewController: UIViewController)
 }
 
 public extension ConversationViewControllerDelegate {

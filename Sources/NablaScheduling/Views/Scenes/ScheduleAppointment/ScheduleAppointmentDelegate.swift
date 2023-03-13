@@ -7,9 +7,9 @@ public protocol ScheduleAppointmentDelegate: AnyObject {
     /// Once the payment is done, and your backend did update the appointment, call the `completion` handler.
     /// You can return some `UINavigationController`, but let the SDK handle the presentation and dismissal of this controller.
     /// This method is optional, but you must implement it to support paid appointments.
-    func paymentViewController(for appointment: Appointment, completion: @escaping (Result<Void, Error>) -> Void) -> UIViewController
+    @MainActor func paymentViewController(for appointment: Appointment, completion: @escaping (Result<Void, Error>) -> Void) -> UIViewController
     
-    func scheduleAppointmentDidSucceed(with appointment: Appointment)
+    @MainActor func scheduleAppointmentDidSucceed(with appointment: Appointment)
 }
 
 public extension ScheduleAppointmentDelegate {

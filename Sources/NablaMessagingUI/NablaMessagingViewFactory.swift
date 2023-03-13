@@ -3,7 +3,7 @@ import NablaCore
 import NablaMessagingCore
 import UIKit
 
-public class NablaMessagingViewFactory {
+@MainActor public class NablaMessagingViewFactory {
     // MARK: - Public
     
     public func createConversationListView(

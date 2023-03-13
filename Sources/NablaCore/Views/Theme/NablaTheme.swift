@@ -9,7 +9,7 @@ import UIKit
 /// updating one impacts all of the app
 /// - Then you have the sub structs. Those rely on the top level values but offer a fine tune configuration for each element of
 /// the SDK.
-public enum NablaTheme {
+@MainActor public enum NablaTheme {
     // MARK: - Fonts
     
     public enum Fonts {

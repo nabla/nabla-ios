@@ -3,7 +3,7 @@ import Foundation
 import NablaCore
 
 public protocol AppointmentDetailsDelegate: AnyObject {
-    func appointmentDetailsDidCancelAppointment(_ appointment: Appointment)
+    @MainActor func appointmentDetailsDidCancelAppointment(_ appointment: Appointment)
 }
 
 enum AppointmentDetailsModal {

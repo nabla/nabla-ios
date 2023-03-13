@@ -76,7 +76,8 @@ open class AudioRecorderComposerPresenterMock: AudioRecorderComposerPresenter, M
 		perform?()
     }
 
-    open func start() {
+    @MainActor
+	open func start() {
         addInvocation(.m_start)
 		let perform = methodPerformValue(.m_start) as? () -> Void
 		perform?()
@@ -137,7 +138,8 @@ open class AudioRecorderComposerPresenterMock: AudioRecorderComposerPresenter, M
         public static func userDidRequestStartRecording() -> Verify { return Verify(method: .m_userDidRequestStartRecording)}
         public static func userDidRequestStopRecording() -> Verify { return Verify(method: .m_userDidRequestStopRecording)}
         public static func userDidRequestCancelRecording() -> Verify { return Verify(method: .m_userDidRequestCancelRecording)}
-        public static func start() -> Verify { return Verify(method: .m_start)}
+        @MainActor
+		public static func start() -> Verify { return Verify(method: .m_start)}
     }
 
     public struct Perform {
@@ -153,7 +155,8 @@ open class AudioRecorderComposerPresenterMock: AudioRecorderComposerPresenter, M
         public static func userDidRequestCancelRecording(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidRequestCancelRecording, performs: perform)
         }
-        public static func start(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func start(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_start, performs: perform)
         }
     }
@@ -372,7 +375,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		perform?()
     }
 
-    open func start() {
+    @MainActor
+	open func start() {
         addInvocation(.m_start)
 		let perform = methodPerformValue(.m_start) as? () -> Void
 		perform?()
@@ -546,7 +550,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
 		public static func didTapDocumentLibraryButton() -> Verify { return Verify(method: .m_didTapDocumentLibraryButton)}
         public static func didReachEndOfConversation() -> Verify { return Verify(method: .m_didReachEndOfConversation)}
         public static func retry() -> Verify { return Verify(method: .m_retry)}
-        public static func start() -> Verify { return Verify(method: .m_start)}
+        @MainActor
+		public static func start() -> Verify { return Verify(method: .m_start)}
     }
 
     public struct Perform {
@@ -602,7 +607,8 @@ open class ConversationPresenterMock: ConversationPresenter, Mock {
         public static func retry(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_retry, performs: perform)
         }
-        public static func start(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func start(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_start, performs: perform)
         }
     }
@@ -724,19 +730,22 @@ open class InboxPresenterMock: InboxPresenter, Mock {
 
 
 
-    open func userDidTapCreateConversation() {
+    @MainActor
+	open func userDidTapCreateConversation() {
         addInvocation(.m_userDidTapCreateConversation)
 		let perform = methodPerformValue(.m_userDidTapCreateConversation) as? () -> Void
 		perform?()
     }
 
-    open func userDidSelectConversation(_ conversation: Conversation) {
+    @MainActor
+	open func userDidSelectConversation(_ conversation: Conversation) {
         addInvocation(.m_userDidSelectConversation__conversation(Parameter<Conversation>.value(`conversation`)))
 		let perform = methodPerformValue(.m_userDidSelectConversation__conversation(Parameter<Conversation>.value(`conversation`))) as? (Conversation) -> Void
 		perform?(`conversation`)
     }
 
-    open func start() {
+    @MainActor
+	open func start() {
         addInvocation(.m_start)
 		let perform = methodPerformValue(.m_start) as? () -> Void
 		perform?()
@@ -792,22 +801,28 @@ open class InboxPresenterMock: InboxPresenter, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func userDidTapCreateConversation() -> Verify { return Verify(method: .m_userDidTapCreateConversation)}
-        public static func userDidSelectConversation(_ conversation: Parameter<Conversation>) -> Verify { return Verify(method: .m_userDidSelectConversation__conversation(`conversation`))}
-        public static func start() -> Verify { return Verify(method: .m_start)}
+        @MainActor
+		public static func userDidTapCreateConversation() -> Verify { return Verify(method: .m_userDidTapCreateConversation)}
+        @MainActor
+		public static func userDidSelectConversation(_ conversation: Parameter<Conversation>) -> Verify { return Verify(method: .m_userDidSelectConversation__conversation(`conversation`))}
+        @MainActor
+		public static func start() -> Verify { return Verify(method: .m_start)}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func userDidTapCreateConversation(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func userDidTapCreateConversation(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_userDidTapCreateConversation, performs: perform)
         }
-        public static func userDidSelectConversation(_ conversation: Parameter<Conversation>, perform: @escaping (Conversation) -> Void) -> Perform {
+        @MainActor
+		public static func userDidSelectConversation(_ conversation: Parameter<Conversation>, perform: @escaping (Conversation) -> Void) -> Perform {
             return Perform(method: .m_userDidSelectConversation__conversation(`conversation`), performs: perform)
         }
-        public static func start(perform: @escaping () -> Void) -> Perform {
+        @MainActor
+		public static func start(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_start, performs: perform)
         }
     }

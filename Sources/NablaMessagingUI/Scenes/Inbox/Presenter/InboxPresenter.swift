@@ -3,6 +3,6 @@ import NablaMessagingCore
 
 // sourcery: AutoMockable
 protocol InboxPresenter: Presenter {
-    func userDidTapCreateConversation()
-    func userDidSelectConversation(_ conversation: Conversation)
+    @MainActor func userDidTapCreateConversation()
+    @MainActor func userDidSelectConversation(_ conversation: Conversation)
 }

@@ -1,5 +1,5 @@
 import Foundation
 
 protocol Presenter {
-    func start()
+    @MainActor func start()
 }

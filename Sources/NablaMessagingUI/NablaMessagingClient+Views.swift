@@ -1,7 +1,7 @@
 import NablaMessagingCore
 
 public extension NablaMessagingClient {
-    var views: NablaMessagingViewFactory {
+    @MainActor var views: NablaMessagingViewFactory {
         NablaMessagingViewFactory(client: self)
     }
 }

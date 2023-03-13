@@ -3,8 +3,8 @@ import Foundation
 import NablaCore
 
 public protocol AppointmentListDelegate: AnyObject {
-    func appointmentListDidSelectAppointment(_ appointment: Appointment)
-    func appointmentListDidSelectNewAppointment()
+    @MainActor func appointmentListDidSelectAppointment(_ appointment: Appointment)
+    @MainActor func appointmentListDidSelectNewAppointment()
 }
 
 enum AppointmentsSelector: Int {
