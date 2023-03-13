@@ -133,7 +133,7 @@ extension NablaMessagingClientProtocolMock {
 }
 
 extension NablaMessagingClientProtocolMock {
-    var views: NablaMessagingViewFactory {
+    @MainActor var views: NablaMessagingViewFactory {
         NablaMessagingViewFactory(client: self, logger: LoggerMock(), videoCallClient: nil)
     }
 }
