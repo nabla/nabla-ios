@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+
+## [1.0.0-alpha34] - 2023-03-13
+
+### Added
+
+### Changed
+
+### Fixed
+
 - Core: Fixed an issue preventing the same current user to log in after a log out.
 
 
