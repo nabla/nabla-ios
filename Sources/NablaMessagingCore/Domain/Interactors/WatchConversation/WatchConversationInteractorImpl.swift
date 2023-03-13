@@ -14,7 +14,7 @@ class WatchConversationInteractorImpl: AuthenticatedInteractor, WatchConversatio
 
     func execute(_ conversationId: UUID) -> AnyPublisher<Response<Conversation>, NablaError> {
         guard isAuthenticated else {
-            return Fail(error: MissingAuthenticationProviderError()).eraseToAnyPublisher()
+            return Fail(error: UserIdNotSetError()).eraseToAnyPublisher()
         }
         let transientId = repository.getConversationTransientId(from: conversationId)
         return repository.watchConversation(withId: transientId)

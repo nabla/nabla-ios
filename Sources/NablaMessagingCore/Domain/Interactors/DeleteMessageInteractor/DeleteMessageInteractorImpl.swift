@@ -19,7 +19,7 @@ final class DeleteMessageInteractorImpl: AuthenticatedInteractor, DeleteMessageI
     /// - Throws: ``NablaError``
     func execute(messageId: UUID, conversationId: UUID) async throws {
         guard isAuthenticated else {
-            throw MissingAuthenticationProviderError()
+            throw UserIdNotSetError()
         }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
         try await itemsRepository.deleteMessage(withId: messageId, conversationId: transientId)

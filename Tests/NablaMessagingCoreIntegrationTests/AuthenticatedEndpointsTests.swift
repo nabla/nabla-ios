@@ -31,7 +31,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             case .finished:
                 break
             case let .failure(error):
-                XCTAssert(error is MissingAuthenticationProviderError)
+                XCTAssert(error is UserIdNotSetError)
                 receiveErrorCalled.fulfill()
             }
         } receiveValue: { _ in
@@ -55,7 +55,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             )
             XCTFail("Call should not succeed")
         } catch {
-            XCTAssert(error is MissingAuthenticationProviderError)
+            XCTAssert(error is UserIdNotSetError)
         }
     }
     
@@ -74,7 +74,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             _ = try await messagingClient.markConversationAsSeen(.init())
             XCTFail("Call should not succeed")
         } catch {
-            XCTAssert(error is MissingAuthenticationProviderError)
+            XCTAssert(error is UserIdNotSetError)
         }
     }
     
@@ -83,7 +83,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             _ = try await messagingClient.setIsTyping(true, inConversationWithId: .init())
             XCTFail("Call should not succeed")
         } catch {
-            XCTAssert(error is MissingAuthenticationProviderError)
+            XCTAssert(error is UserIdNotSetError)
         }
     }
     
@@ -96,7 +96,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             )
             XCTFail("Call should not succeed")
         } catch {
-            XCTAssert(error is MissingAuthenticationProviderError)
+            XCTAssert(error is UserIdNotSetError)
         }
     }
     
@@ -105,7 +105,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             _ = try await messagingClient.retrySending(itemWithId: .init(), inConversationWithId: .init())
             XCTFail("Call should not succeed")
         } catch {
-            XCTAssert(error is MissingAuthenticationProviderError)
+            XCTAssert(error is UserIdNotSetError)
         }
     }
     
@@ -114,7 +114,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             _ = try await messagingClient.deleteMessage(withId: .init(), conversationId: .init())
             XCTFail("Call should not succeed")
         } catch {
-            XCTAssert(error is MissingAuthenticationProviderError)
+            XCTAssert(error is UserIdNotSetError)
         }
     }
 }

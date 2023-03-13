@@ -14,7 +14,7 @@ class WatchConversationsInteractorImpl: AuthenticatedInteractor, WatchConversati
     
     func execute() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError> {
         guard isAuthenticated else {
-            return Fail(error: MissingAuthenticationProviderError()).eraseToAnyPublisher()
+            return Fail(error: UserIdNotSetError()).eraseToAnyPublisher()
         }
         return repository.watchConversations()
             .map { $0.asResponse() }

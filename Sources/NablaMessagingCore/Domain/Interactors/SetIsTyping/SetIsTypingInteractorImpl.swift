@@ -14,7 +14,7 @@ final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInter
     /// - Throws: ``NablaError``
     func execute(isTyping: Bool, conversationId: UUID) async throws {
         guard isAuthenticated else {
-            throw MissingAuthenticationProviderError()
+            throw UserIdNotSetError()
         }
         let transientId = repository.getConversationTransientId(from: conversationId)
         try await repository.setIsTyping(isTyping, conversationId: transientId)

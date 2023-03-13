@@ -16,7 +16,7 @@ public class AuthenticationInternalError: NablaError {
     }
 }
 
-public class MissingAuthenticationProviderError: AuthenticationError {}
+public class UserIdNotSetError: AuthenticationError {}
 
 public class AuthenticationProviderFailedToProvideTokensError: AuthenticationError {}
 
