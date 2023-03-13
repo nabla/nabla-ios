@@ -16,13 +16,13 @@ internal enum L10n {
   internal static let appointmentDetailsScreenCancelAppointmentErrorMessage = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_error_message")
   /// Something went wrong
   internal static let appointmentDetailsScreenCancelAppointmentErrorTitle = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_error_title")
-  /// Keep appointment
+  /// No, keep it
   internal static let appointmentDetailsScreenCancelAppointmentModalCloseButton = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_modal_close_button")
-  /// Confirm cancellation
+  /// Yes, cancel it
   internal static let appointmentDetailsScreenCancelAppointmentModalConfirmButton = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_modal_confirm_button")
-  /// The appointment will be canceled.
+  /// Do you want to cancel this appointment? It cannot be undone.
   internal static let appointmentDetailsScreenCancelAppointmentModalMessage = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_modal_message")
-  /// Cancel appointment
+  /// Cancel appointment?
   internal static let appointmentDetailsScreenCancelAppointmentModalTitle = L10n.tr("Localizable", "appointment_details_screen_cancel_appointment_modal_title")
   /// Appointment
   internal static let appointmentDetailsScreenTitle = L10n.tr("Localizable", "appointment_details_screen_title")
