@@ -19,6 +19,6 @@ public extension Calendar {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour], from: date1, to: date2)
         guard let hours = components.hour else { return false }
-        return hours >= 1
+        return abs(hours) >= 1
     }
 }

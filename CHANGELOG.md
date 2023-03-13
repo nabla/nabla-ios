@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- MessagingUI: Fixed an issue in items date grouping where some date separators where missing.
 
 ## [1.0.0-alpha34] - 2023-03-13
 

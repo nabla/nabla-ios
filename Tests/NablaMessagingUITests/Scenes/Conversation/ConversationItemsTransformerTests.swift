@@ -197,8 +197,8 @@ final class ConversationItemsTransformerTests: XCTestCase {
     
     func testTwoNonConsecutiveMessagesUseOneDateSeparatorEach() throws {
         // GIVEN
-        let item1 = TextMessageItem.mock(dateOffset: 0)
-        let item2 = TextMessageItem.mock(dateOffset: 60 * 60)
+        let item1 = TextMessageItem.mock(dateOffset: 60 * 60)
+        let item2 = TextMessageItem.mock(dateOffset: 0)
         // WHEN
         let transformed = transform(items: [item1, item2])
         // THEN
