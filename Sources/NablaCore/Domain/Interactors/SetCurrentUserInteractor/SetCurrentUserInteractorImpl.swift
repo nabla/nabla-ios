@@ -4,7 +4,7 @@ final class SetCurrentUserInteractorImpl: SetCurrentUserInteractor {
     // MARK: - Internal
     
     func execute(userId: String) throws {
-        guard userId != currentInMemoryUser?.id else {
+        guard userId != currentInMemoryUserId else {
             logger.info(message: "Setting the same current user again. Ignoring.")
             return
         }
@@ -14,7 +14,7 @@ final class SetCurrentUserInteractorImpl: SetCurrentUserInteractor {
             throw CurrentUserAlreadySetError()
         }
         logger.info(message: "Setting a new current user.")
-        setCurrentUser(User(id: userId))
+        currentPersistedUser = User(id: userId)
         authenticator.authenticate(userId: userId)
         
         Task {
@@ -63,14 +63,12 @@ final class SetCurrentUserInteractorImpl: SetCurrentUserInteractor {
     /// We differentiate the in-memory user from the persisted one.
     /// This is because on app start, the persisted user might exist but we should not take any action before
     /// `execute(userId:)` is called and the in-memory user is set.
-    private var currentInMemoryUser: User?
+    private var currentInMemoryUserId: String? {
+        authenticator.currentUserId
+    }
+
     private var currentPersistedUser: User? {
         get { userRepository.getCurrentUser() }
         set { userRepository.setCurrentUser(newValue) }
-    }
-    
-    private func setCurrentUser(_ user: User) {
-        currentInMemoryUser = user
-        currentPersistedUser = user
     }
 }

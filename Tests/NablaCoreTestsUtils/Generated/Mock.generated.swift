@@ -52,6 +52,11 @@ open class AuthenticatorMock: Authenticator, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
+    public var currentUserId: String? {
+		get {	invocations.append(.p_currentUserId_get); return __p_currentUserId ?? optionalGivenGetterValue(.p_currentUserId_get, "AuthenticatorMock - stub value for currentUserId was not defined") }
+	}
+	private var __p_currentUserId: (String)?
+
 
 
 
@@ -125,6 +130,7 @@ open class AuthenticatorMock: Authenticator, Mock {
         case m_addObserver__observerselector_selector(Parameter<Any>, Parameter<Selector>)
         case m_removeObserver__observer(Parameter<Any>)
         case m_isSessionInitialized
+        case p_currentUserId_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -151,6 +157,7 @@ open class AuthenticatorMock: Authenticator, Mock {
 				return Matcher.ComparisonResult(results)
 
             case (.m_isSessionInitialized, .m_isSessionInitialized): return .match
+            case (.p_currentUserId_get,.p_currentUserId_get): return Matcher.ComparisonResult.match
             default: return .none
             }
         }
@@ -164,6 +171,7 @@ open class AuthenticatorMock: Authenticator, Mock {
             case let .m_addObserver__observerselector_selector(p0, p1): return p0.intValue + p1.intValue
             case let .m_removeObserver__observer(p0): return p0.intValue
             case .m_isSessionInitialized: return 0
+            case .p_currentUserId_get: return 0
             }
         }
         func assertionName() -> String {
@@ -175,6 +183,7 @@ open class AuthenticatorMock: Authenticator, Mock {
             case .m_addObserver__observerselector_selector: return ".addObserver(_:selector:)"
             case .m_removeObserver__observer: return ".removeObserver(_:)"
             case .m_isSessionInitialized: return ".isSessionInitialized()"
+            case .p_currentUserId_get: return "[get] .currentUserId"
             }
         }
     }
@@ -187,6 +196,9 @@ open class AuthenticatorMock: Authenticator, Mock {
             super.init(products)
         }
 
+        public static func currentUserId(getter defaultValue: String?...) -> PropertyStub {
+            return Given(method: .p_currentUserId_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
         public static func getAccessToken(willReturn: AuthenticationState...) -> MethodStub {
             return Given(method: .m_getAccessToken, products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -223,6 +235,7 @@ open class AuthenticatorMock: Authenticator, Mock {
         public static func addObserver(_ observer: Parameter<Any>, selector: Parameter<Selector>) -> Verify { return Verify(method: .m_addObserver__observerselector_selector(`observer`, `selector`))}
         public static func removeObserver(_ observer: Parameter<Any>) -> Verify { return Verify(method: .m_removeObserver__observer(`observer`))}
         public static func isSessionInitialized() -> Verify { return Verify(method: .m_isSessionInitialized)}
+        public static var currentUserId: Verify { return Verify(method: .p_currentUserId_get) }
     }
 
     public struct Perform {

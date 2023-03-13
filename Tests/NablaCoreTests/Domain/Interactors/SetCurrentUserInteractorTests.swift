@@ -44,6 +44,7 @@ final class SetCurrentUserInteractorTests: XCTestCase {
         let userId = "userId"
         let sentry = SentryConfiguration(dsn: "dsn", env: "env")
         userRepository.given(.getCurrentUser(willReturn: nil))
+        authenticator.given(.currentUserId(getter: nil))
         let expectation = givenUpdateOrRegisterDevice(willReturn: sentry)
         // WHEN
         try sut.execute(userId: userId)
@@ -55,10 +56,11 @@ final class SetCurrentUserInteractorTests: XCTestCase {
         deviceRepository.verify(.setSentryConfiguration(.value(sentry)))
     }
     
-    func testWithTheSamePersistedCurrentUser() throws {
+    func testWithTheSamePersistedCurrentUserButNoInMemoryUser() throws {
         // GIVEN
         let userId = "userId"
         let sentry = SentryConfiguration(dsn: "dsn", env: "env")
+        authenticator.given(.currentUserId(getter: nil))
         userRepository.given(.getCurrentUser(willReturn: User(id: "userId")))
         let expectation = givenUpdateOrRegisterDevice(willReturn: sentry)
         // WHEN
@@ -71,20 +73,21 @@ final class SetCurrentUserInteractorTests: XCTestCase {
         deviceRepository.verify(.setSentryConfiguration(.value(sentry)))
     }
     
-    func testWithTheSamePersistedCurrentUserTwice() throws {
+    func testWithTheSamePersistedAndInMemoryCurrentUser() throws {
         // GIVEN
         let userId = "userId"
         let sentry = SentryConfiguration(dsn: "dsn", env: "env")
+        authenticator.given(.currentUserId(getter: "userId"))
         userRepository.given(.getCurrentUser(willReturn: User(id: "userId")))
         let expectation = givenUpdateOrRegisterDevice(willReturn: sentry)
         // WHEN
         try sut.execute(userId: userId)
         // THEN
         wait(for: [expectation], timeout: 1)
-        authenticator.verify(.authenticate(userId: .any), count: 1)
-        userRepository.verify(.setCurrentUser(.any), count: 1)
-        deviceRepository.verify(.updateOrRegisterDevice(userId: .any, withModules: .any), count: 1)
-        deviceRepository.verify(.setSentryConfiguration(.value(sentry)), count: 1)
+        authenticator.verify(.authenticate(userId: .value(userId)), count: 0)
+        userRepository.verify(.setCurrentUser(.value(User(id: userId))), count: 0)
+        deviceRepository.verify(.updateOrRegisterDevice(userId: .value(userId), withModules: .any), count: 0)
+        deviceRepository.verify(.setSentryConfiguration(.value(sentry)), count: 0)
     }
     
     func testWithSomeOtherPersistedCurrentUser() throws {

@@ -29,7 +29,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
         let cancellable = publisher.sink { completion in
             switch completion {
             case .finished:
-                break
+                receiveCompletionCalled.fulfill()
             case let .failure(error):
                 XCTAssert(error is UserIdNotSetError)
                 receiveErrorCalled.fulfill()

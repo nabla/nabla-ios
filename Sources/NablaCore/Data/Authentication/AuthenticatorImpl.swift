@@ -10,6 +10,10 @@ class AuthenticatorImpl: Authenticator {
 
     // MARK: - Internal
     
+    var currentUserId: String? {
+        session?.userId
+    }
+    
     func authenticate(
         userId: String
     ) {
