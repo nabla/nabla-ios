@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Core: `NablaTheme` is marked `@MainActor`.
+- MessagingUI: Methods of `InboxDelegate` and `ConversationViewControllerDelegate` are marked `@MainActor`.
+- MessagingUI: `NablaClient.shared.messaging.views` is marked `@MainActor`.
+- Scheduling: Methods of `AppointmentDetailsDelegate`, `AppointmentListDelegate` and `ScheduleAppointmentDelegate` are marked `@MainActor`.
+
+Any `@MainActor` member should only be accessed from the `MainActor`. Apple marked `UIView` and `UIViewController` as `@MainActor` so you should not have any change to make to your code. If you are not calling those methods from a `UIView`, a `UIViewController` or SwiftUI, we encourage you to visit the official documentation to update your app.
+
 ### Fixed
 
 - Core: Fixed an issue preventing the same current user to log in after a log out.
