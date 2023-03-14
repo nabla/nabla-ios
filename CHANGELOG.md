@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- MessagingCore: `watchConversations()`, `watchConversation(withId:)` and `watchItems(ofConversationWithId:)` will send some `UserIdNotSetError` if they are active when `clearCurrentUserData()` is called.
+- MessagingUI: Views will display an error if visible on screen when `clearCurrentUserData()` is called.
 - MessagingUI: `NablaClient.shared.messaging.views` is NOT marked `@MainActor`.
 
 ### Fixed

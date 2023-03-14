@@ -22,12 +22,12 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
     // MARK: - Internal
     
     func execute(conversationId: UUID) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError> {
-        guard isAuthenticated else {
-            return Fail(error: UserIdNotSetError()).eraseToAnyPublisher()
-        }
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
-        return itemsRepository
-            .watchConversationItems(ofConversationWithId: transientId)
+        return isAuthenticated
+            .map { [itemsRepository] in
+                itemsRepository.watchConversationItems(ofConversationWithId: transientId)
+            }
+            .switchToLatest()
             .map { [logger, gateKeepers] response -> AnyResponse<PaginatedList<ConversationItem>, NablaError> in
                 if gateKeepers.supportVideoCallActionRequests { return response }
                 return response.mapData { conversationItems in

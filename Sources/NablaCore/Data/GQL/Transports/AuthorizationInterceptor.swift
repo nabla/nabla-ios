@@ -18,7 +18,7 @@ class AuthorizationInterceptor: ApolloInterceptor {
     ) where Operation: GraphQLOperation {
         Task(priority: .userInitiated) {
             do {
-                let state = try await authenticator.getAccessToken()
+                let state = try await authenticator.getAuthenticationState()
                 switch state {
                 case .notAuthenticated:
                     chain.proceedAsync(request: request, response: response, completion: completion)

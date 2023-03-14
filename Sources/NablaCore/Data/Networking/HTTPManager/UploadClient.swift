@@ -43,7 +43,7 @@ public final class UploadClient {
     /// - Throws: ``UploadClientError``
     public func upload(_ data: UploadData) async throws -> UUID {
         do {
-            let auth = try await authenticator.getAccessToken()
+            let auth = try await authenticator.getAuthenticationState()
             
             switch auth {
             case let .authenticated(accessToken: token):

@@ -61,6 +61,20 @@ open class AuthenticatorMock: Authenticator, Mock {
 
 
 
+    open func watchCurrentUserId() -> AnyPublisher<String?, Never> {
+        addInvocation(.m_watchCurrentUserId)
+		let perform = methodPerformValue(.m_watchCurrentUserId) as? () -> Void
+		perform?()
+		var __value: AnyPublisher<String?, Never>
+		do {
+		    __value = try methodReturnValue(.m_watchCurrentUserId).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchCurrentUserId(). Use given")
+			Failure("Stub return value not specified for watchCurrentUserId(). Use given")
+		}
+		return __value
+    }
+
     open func authenticate(userId: String) {
         addInvocation(.m_authenticate__userId_userId(Parameter<String>.value(`userId`)))
 		let perform = methodPerformValue(.m_authenticate__userId_userId(Parameter<String>.value(`userId`))) as? (String) -> Void
@@ -79,61 +93,50 @@ open class AuthenticatorMock: Authenticator, Mock {
 		perform?()
     }
 
-    open func getAccessToken() throws -> AuthenticationState {
-        addInvocation(.m_getAccessToken)
-		let perform = methodPerformValue(.m_getAccessToken) as? () -> Void
+    open func getAuthenticationState() throws -> AuthenticationState {
+        addInvocation(.m_getAuthenticationState)
+		let perform = methodPerformValue(.m_getAuthenticationState) as? () -> Void
 		perform?()
 		var __value: AuthenticationState
 		do {
-		    __value = try methodReturnValue(.m_getAccessToken).casted()
+		    __value = try methodReturnValue(.m_getAuthenticationState).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for getAccessToken(). Use given")
-			Failure("Stub return value not specified for getAccessToken(). Use given")
+			onFatalFailure("Stub return value not specified for getAuthenticationState(). Use given")
+			Failure("Stub return value not specified for getAuthenticationState(). Use given")
 		} catch {
 		    throw error
 		}
 		return __value
     }
 
-    open func addObserver(_ observer: Any, selector: Selector) {
-        addInvocation(.m_addObserver__observerselector_selector(Parameter<Any>.value(`observer`), Parameter<Selector>.value(`selector`)))
-		let perform = methodPerformValue(.m_addObserver__observerselector_selector(Parameter<Any>.value(`observer`), Parameter<Selector>.value(`selector`))) as? (Any, Selector) -> Void
-		perform?(`observer`, `selector`)
-    }
-
-    open func removeObserver(_ observer: Any) {
-        addInvocation(.m_removeObserver__observer(Parameter<Any>.value(`observer`)))
-		let perform = methodPerformValue(.m_removeObserver__observer(Parameter<Any>.value(`observer`))) as? (Any) -> Void
-		perform?(`observer`)
-    }
-
-    open func isSessionInitialized() -> Bool {
-        addInvocation(.m_isSessionInitialized)
-		let perform = methodPerformValue(.m_isSessionInitialized) as? () -> Void
+    open func watchAuthenticationState() -> AnyPublisher<AuthenticationState, Never> {
+        addInvocation(.m_watchAuthenticationState)
+		let perform = methodPerformValue(.m_watchAuthenticationState) as? () -> Void
 		perform?()
-		var __value: Bool
+		var __value: AnyPublisher<AuthenticationState, Never>
 		do {
-		    __value = try methodReturnValue(.m_isSessionInitialized).casted()
+		    __value = try methodReturnValue(.m_watchAuthenticationState).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for isSessionInitialized(). Use given")
-			Failure("Stub return value not specified for isSessionInitialized(). Use given")
+			onFatalFailure("Stub return value not specified for watchAuthenticationState(). Use given")
+			Failure("Stub return value not specified for watchAuthenticationState(). Use given")
 		}
 		return __value
     }
 
 
     fileprivate enum MethodType {
+        case m_watchCurrentUserId
         case m_authenticate__userId_userId(Parameter<String>)
         case m_logOut
         case m_markTokensAsInvalid
-        case m_getAccessToken
-        case m_addObserver__observerselector_selector(Parameter<Any>, Parameter<Selector>)
-        case m_removeObserver__observer(Parameter<Any>)
-        case m_isSessionInitialized
+        case m_getAuthenticationState
+        case m_watchAuthenticationState
         case p_currentUserId_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
+            case (.m_watchCurrentUserId, .m_watchCurrentUserId): return .match
+
             case (.m_authenticate__userId_userId(let lhsUserid), .m_authenticate__userId_userId(let rhsUserid)):
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "userId"))
@@ -143,20 +146,9 @@ open class AuthenticatorMock: Authenticator, Mock {
 
             case (.m_markTokensAsInvalid, .m_markTokensAsInvalid): return .match
 
-            case (.m_getAccessToken, .m_getAccessToken): return .match
+            case (.m_getAuthenticationState, .m_getAuthenticationState): return .match
 
-            case (.m_addObserver__observerselector_selector(let lhsObserver, let lhsSelector), .m_addObserver__observerselector_selector(let rhsObserver, let rhsSelector)):
-				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsObserver, rhs: rhsObserver, with: matcher), lhsObserver, rhsObserver, "_ observer"))
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsSelector, rhs: rhsSelector, with: matcher), lhsSelector, rhsSelector, "selector"))
-				return Matcher.ComparisonResult(results)
-
-            case (.m_removeObserver__observer(let lhsObserver), .m_removeObserver__observer(let rhsObserver)):
-				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsObserver, rhs: rhsObserver, with: matcher), lhsObserver, rhsObserver, "_ observer"))
-				return Matcher.ComparisonResult(results)
-
-            case (.m_isSessionInitialized, .m_isSessionInitialized): return .match
+            case (.m_watchAuthenticationState, .m_watchAuthenticationState): return .match
             case (.p_currentUserId_get,.p_currentUserId_get): return Matcher.ComparisonResult.match
             default: return .none
             }
@@ -164,25 +156,23 @@ open class AuthenticatorMock: Authenticator, Mock {
 
         func intValue() -> Int {
             switch self {
+            case .m_watchCurrentUserId: return 0
             case let .m_authenticate__userId_userId(p0): return p0.intValue
             case .m_logOut: return 0
             case .m_markTokensAsInvalid: return 0
-            case .m_getAccessToken: return 0
-            case let .m_addObserver__observerselector_selector(p0, p1): return p0.intValue + p1.intValue
-            case let .m_removeObserver__observer(p0): return p0.intValue
-            case .m_isSessionInitialized: return 0
+            case .m_getAuthenticationState: return 0
+            case .m_watchAuthenticationState: return 0
             case .p_currentUserId_get: return 0
             }
         }
         func assertionName() -> String {
             switch self {
+            case .m_watchCurrentUserId: return ".watchCurrentUserId()"
             case .m_authenticate__userId_userId: return ".authenticate(userId:)"
             case .m_logOut: return ".logOut()"
             case .m_markTokensAsInvalid: return ".markTokensAsInvalid()"
-            case .m_getAccessToken: return ".getAccessToken()"
-            case .m_addObserver__observerselector_selector: return ".addObserver(_:selector:)"
-            case .m_removeObserver__observer: return ".removeObserver(_:)"
-            case .m_isSessionInitialized: return ".isSessionInitialized()"
+            case .m_getAuthenticationState: return ".getAuthenticationState()"
+            case .m_watchAuthenticationState: return ".watchAuthenticationState()"
             case .p_currentUserId_get: return "[get] .currentUserId"
             }
         }
@@ -200,25 +190,35 @@ open class AuthenticatorMock: Authenticator, Mock {
             return Given(method: .p_currentUserId_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
-        public static func getAccessToken(willReturn: AuthenticationState...) -> MethodStub {
-            return Given(method: .m_getAccessToken, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func watchCurrentUserId(willReturn: AnyPublisher<String?, Never>...) -> MethodStub {
+            return Given(method: .m_watchCurrentUserId, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func isSessionInitialized(willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_isSessionInitialized, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func getAuthenticationState(willReturn: AuthenticationState...) -> MethodStub {
+            return Given(method: .m_getAuthenticationState, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func isSessionInitialized(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_isSessionInitialized, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Bool).self)
+        public static func watchAuthenticationState(willReturn: AnyPublisher<AuthenticationState, Never>...) -> MethodStub {
+            return Given(method: .m_watchAuthenticationState, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchCurrentUserId(willProduce: (Stubber<AnyPublisher<String?, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<String?, Never>] = []
+			let given: Given = { return Given(method: .m_watchCurrentUserId, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<String?, Never>).self)
 			willProduce(stubber)
 			return given
         }
-        public static func getAccessToken(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_getAccessToken, products: willThrow.map({ StubProduct.throw($0) }))
+        public static func watchAuthenticationState(willProduce: (Stubber<AnyPublisher<AuthenticationState, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AuthenticationState, Never>] = []
+			let given: Given = { return Given(method: .m_watchAuthenticationState, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<AuthenticationState, Never>).self)
+			willProduce(stubber)
+			return given
         }
-        public static func getAccessToken(willProduce: (StubberThrows<AuthenticationState>) -> Void) -> MethodStub {
+        public static func getAuthenticationState(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getAuthenticationState, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getAuthenticationState(willProduce: (StubberThrows<AuthenticationState>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_getAccessToken, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let given: Given = { return Given(method: .m_getAuthenticationState, products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (AuthenticationState).self)
 			willProduce(stubber)
 			return given
@@ -228,13 +228,12 @@ open class AuthenticatorMock: Authenticator, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func watchCurrentUserId() -> Verify { return Verify(method: .m_watchCurrentUserId)}
         public static func authenticate(userId: Parameter<String>) -> Verify { return Verify(method: .m_authenticate__userId_userId(`userId`))}
         public static func logOut() -> Verify { return Verify(method: .m_logOut)}
         public static func markTokensAsInvalid() -> Verify { return Verify(method: .m_markTokensAsInvalid)}
-        public static func getAccessToken() -> Verify { return Verify(method: .m_getAccessToken)}
-        public static func addObserver(_ observer: Parameter<Any>, selector: Parameter<Selector>) -> Verify { return Verify(method: .m_addObserver__observerselector_selector(`observer`, `selector`))}
-        public static func removeObserver(_ observer: Parameter<Any>) -> Verify { return Verify(method: .m_removeObserver__observer(`observer`))}
-        public static func isSessionInitialized() -> Verify { return Verify(method: .m_isSessionInitialized)}
+        public static func getAuthenticationState() -> Verify { return Verify(method: .m_getAuthenticationState)}
+        public static func watchAuthenticationState() -> Verify { return Verify(method: .m_watchAuthenticationState)}
         public static var currentUserId: Verify { return Verify(method: .p_currentUserId_get) }
     }
 
@@ -242,6 +241,9 @@ open class AuthenticatorMock: Authenticator, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func watchCurrentUserId(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchCurrentUserId, performs: perform)
+        }
         public static func authenticate(userId: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_authenticate__userId_userId(`userId`), performs: perform)
         }
@@ -251,17 +253,11 @@ open class AuthenticatorMock: Authenticator, Mock {
         public static func markTokensAsInvalid(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_markTokensAsInvalid, performs: perform)
         }
-        public static func getAccessToken(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_getAccessToken, performs: perform)
+        public static func getAuthenticationState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getAuthenticationState, performs: perform)
         }
-        public static func addObserver(_ observer: Parameter<Any>, selector: Parameter<Selector>, perform: @escaping (Any, Selector) -> Void) -> Perform {
-            return Perform(method: .m_addObserver__observerselector_selector(`observer`, `selector`), performs: perform)
-        }
-        public static func removeObserver(_ observer: Parameter<Any>, perform: @escaping (Any) -> Void) -> Perform {
-            return Perform(method: .m_removeObserver__observer(`observer`), performs: perform)
-        }
-        public static func isSessionInitialized(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_isSessionInitialized, performs: perform)
+        public static func watchAuthenticationState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchAuthenticationState, performs: perform)
         }
     }
 

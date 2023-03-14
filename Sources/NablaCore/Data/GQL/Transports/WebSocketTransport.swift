@@ -47,14 +47,16 @@ class WebSocketTransport {
         self.apolloStore = apolloStore
         self.extraHeaders = extraHeaders
         apollo.delegate = self
-        self.authenticator.addObserver(self, selector: #selector(updateAuthenticationHeader))
         self.extraHeaders.addObserver(self, selector: #selector(updateStaticHeaders))
         updateStaticHeaders()
-        updateAuthenticationHeader()
+        
+        accessTokenObserver = authenticator.watchAuthenticationState()
+            .sink { [weak self] authenticationState in
+                self?.updateAuthenticationHeader(state: authenticationState)
+            }
     }
     
     deinit {
-        authenticator.removeObserver(self)
         extraHeaders.removeObserver(self)
     }
     
@@ -67,6 +69,7 @@ class WebSocketTransport {
     private let extraHeaders: ExtraHeaders
     
     private var connectionState = CurrentValueSubject<EventsConnectionState, Never>(.notConnected)
+    private var accessTokenObserver: AnyCancellable?
     
     private func makeApolloTransport() -> ApolloWebSocketTransport {
         let apollo = ApolloWebSocketTransport(
@@ -94,24 +97,16 @@ class WebSocketTransport {
         apollo.updateHeaderValues(extraHeaders.all, reconnectIfConnected: true)
     }
     
-    @objc private func updateAuthenticationHeader() {
-        Task {
-            do {
-                let state = try await authenticator.getAccessToken()
-                switch state {
-                case .notAuthenticated:
-                    // We don't support any unauthenticated subscription
-                    apollo.closeConnection()
-                    connectionState.send(.disconnected(since: Date()))
-                case let .authenticated(accessToken):
-                    connectionState.send(.connecting)
-                    apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"])
-                    apollo.resumeWebSocketConnection(autoReconnect: true)
-                }
-            } catch {
-                apollo.closeConnection()
-                connectionState.send(.disconnected(since: Date()))
-            }
+    private func updateAuthenticationHeader(state: AuthenticationState) {
+        switch state {
+        case .notAuthenticated:
+            // We don't support any unauthenticated subscription
+            apollo.closeConnection()
+            connectionState.send(.disconnected(since: Date()))
+        case let .authenticated(accessToken):
+            connectionState.send(.connecting)
+            apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"])
+            apollo.resumeWebSocketConnection(autoReconnect: true)
         }
     }
 }

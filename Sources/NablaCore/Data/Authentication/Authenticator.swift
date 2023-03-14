@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 public enum AuthenticationState {
@@ -8,13 +9,13 @@ public enum AuthenticationState {
 // sourcery: AutoMockable
 public protocol Authenticator {
     var currentUserId: String? { get }
+    func watchCurrentUserId() -> AnyPublisher<String?, Never>
     
     func authenticate(userId: String)
     func logOut()
     func markTokensAsInvalid()
+    
     /// - Throws: ``AuthenticationError``
-    func getAccessToken() async throws -> AuthenticationState
-    func addObserver(_ observer: Any, selector: Selector)
-    func removeObserver(_ observer: Any)
-    func isSessionInitialized() -> Bool
+    func getAuthenticationState() async throws -> AuthenticationState
+    func watchAuthenticationState() -> AnyPublisher<AuthenticationState, Never>
 }

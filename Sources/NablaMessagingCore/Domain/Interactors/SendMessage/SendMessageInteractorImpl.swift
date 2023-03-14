@@ -22,9 +22,7 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
         replyToMessageId: UUID?,
         conversationId: UUID
     ) async throws {
-        guard isAuthenticated else {
-            throw UserIdNotSetError()
-        }
+        try assertIsAuthenticated()
         guard isMessageValid(message) else {
             throw InvalidMessageError()
         }

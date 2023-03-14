@@ -21,9 +21,7 @@ final class RetrySendingMessageInteractorImpl: AuthenticatedInteractor, RetrySen
         itemId: UUID,
         conversationId: UUID
     ) async throws {
-        guard isAuthenticated else {
-            throw UserIdNotSetError()
-        }
+        try assertIsAuthenticated()
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
         try await itemsRepository.retrySending(itemWithId: itemId, inConversationWithId: transientId)
     }

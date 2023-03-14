@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 class AuthenticatorImpl: Authenticator {
@@ -11,29 +12,36 @@ class AuthenticatorImpl: Authenticator {
     // MARK: - Internal
     
     var currentUserId: String? {
-        session?.userId
+        session.value?.userId
+    }
+    
+    func watchCurrentUserId() -> AnyPublisher<String?, Never> {
+        session
+            .map { $0?.userId }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
     
     func authenticate(
         userId: String
     ) {
-        session = Session(
+        session.value = Session(
             userId: userId,
             tokens: nil
         )
     }
     
     func logOut() {
-        session = nil
+        session.value = nil
     }
     
     func markTokensAsInvalid() {
-        session?.tokens = nil
+        session.value?.tokens = nil
     }
     
-    func getAccessToken() async throws -> AuthenticationState {
+    func getAuthenticationState() async throws -> AuthenticationState {
         try await sharedTask.run {
-            guard let session = self.session else {
+            guard let session = self.session.value else {
                 return .notAuthenticated
             }
             
@@ -42,52 +50,32 @@ class AuthenticatorImpl: Authenticator {
             }
             
             let tokens = try await self.renewSession(session)
-            self.session = session.with(tokens: tokens)
+            self.session.value = session.with(tokens: tokens)
             return .authenticated(accessToken: tokens.accessToken.value)
         }
     }
     
-    func addObserver(_ observer: Any, selector: Selector) {
-        notificationCenter.addObserver(
-            observer,
-            selector: selector,
-            name: Constants.tokenChangedNotification,
-            object: nil
-        )
-    }
-    
-    func removeObserver(_ observer: Any) {
-        notificationCenter.removeObserver(
-            observer,
-            name: Constants.tokenChangedNotification,
-            object: nil
-        )
-    }
-
-    func isSessionInitialized() -> Bool {
-        session != nil
+    func watchAuthenticationState() -> AnyPublisher<AuthenticationState, Never> {
+        session
+            .map { $0?.tokens?.accessToken }
+            .removeDuplicates()
+            .map { accessToken -> AuthenticationState in
+                if let accessToken = accessToken {
+                    return .authenticated(accessToken: accessToken.value)
+                } else {
+                    return .notAuthenticated
+                }
+            }
+            .eraseToAnyPublisher()
     }
 
     // MARK: - Private
     
-    private enum Constants {
-        static let tokenChangedNotification = Notification.Name(rawValue: "tokenChangedNotification")
-    }
-    
-    private let notificationCenter = NotificationCenter()
     private let httpManager: HTTPManager
     private let sessionTokenProvider: SessionTokenProvider
     
     private let sharedTask = TaskHolder<AuthenticationState>()
-    
-    private var session: Session? {
-        didSet { notifyTokensChanged(oldValue: oldValue?.tokens, newValue: session?.tokens) }
-    }
-    
-    private func notifyTokensChanged(oldValue: SessionTokens?, newValue: SessionTokens?) {
-        guard newValue != oldValue else { return }
-        notificationCenter.post(name: Constants.tokenChangedNotification, object: nil)
-    }
+    private let session = CurrentValueSubject<Session?, Never>(nil)
     
     /// - Throws: ``AuthenticationError``
     private func renewSession(_ session: Session) async throws -> SessionTokens {

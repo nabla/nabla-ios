@@ -17,9 +17,7 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
         title: String?,
         providerIds: [UUID]?
     ) async throws -> Conversation {
-        guard isAuthenticated else {
-            throw UserIdNotSetError()
-        }
+        try assertIsAuthenticated()
         return try await repository.createConversation(
             message: message,
             title: title,

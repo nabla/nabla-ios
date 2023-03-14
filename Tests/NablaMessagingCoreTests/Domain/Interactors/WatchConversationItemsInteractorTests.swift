@@ -34,7 +34,7 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
             logger: logger
         )
         
-        authenticator.given(.isSessionInitialized(willReturn: true))
+        authenticator.given(.watchCurrentUserId(willReturn: Just("").eraseToAnyPublisher()))
         conversationsRepository.given(.getConversationTransientId(from: .any, willReturn: .init(remoteId: conversationId)))
     }
 

@@ -13,10 +13,11 @@ class WatchConversationsInteractorImpl: AuthenticatedInteractor, WatchConversati
     // MARK: - WatchConversationsInteractor
     
     func execute() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError> {
-        guard isAuthenticated else {
-            return Fail(error: UserIdNotSetError()).eraseToAnyPublisher()
-        }
-        return repository.watchConversations()
+        isAuthenticated
+            .map { [repository] in
+                repository.watchConversations()
+            }
+            .switchToLatest()
             .map { $0.asResponse() }
             .eraseToAnyPublisher()
     }
