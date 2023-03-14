@@ -4,6 +4,10 @@ import Foundation
 public struct Configuration {
     // MARK: - Public
     
+    public let apiKey: String
+    public let logger: Logger
+    public let enableReporting: Bool
+    
     /// For testing purposes only.
     public var network: NetworkConfiguration = DefaultNetworkConfiguration()
 
@@ -21,10 +25,4 @@ public struct Configuration {
         self.logger = logger
         self.enableReporting = enableReporting
     }
-
-    // MARK: - Internal
-
-    let apiKey: String
-    let logger: Logger
-    let enableReporting: Bool
 }
