@@ -10,7 +10,7 @@ public protocol InboxDelegate: AnyObject {
 @MainActor class InboxPresenterImpl: InboxPresenter {
     // MARK: - Initializer
 
-    init(
+    nonisolated init(
         logger: Logger,
         viewContract: InboxViewContract,
         delegate: InboxDelegate,

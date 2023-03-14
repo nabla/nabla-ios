@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- MessagingUI: `NablaClient.shared.messaging.views` is NOT marked `@MainActor`.
+
 ### Fixed
 
 - MessagingUI: Fixed an issue in items date grouping where some date separators where missing.
@@ -22,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Core: `NablaTheme` is marked `@MainActor`.
 - MessagingUI: Methods of `InboxDelegate` and `ConversationViewControllerDelegate` are marked `@MainActor`.
-- MessagingUI: `NablaClient.shared.messaging.views` is marked `@MainActor`.
+- MessagingUI: `NablaClient.shared.messaging.views` is marked `@MainActor` (Reverted in `1.0.0-alpha35`).
 - Scheduling: Methods of `AppointmentDetailsDelegate`, `AppointmentListDelegate` and `ScheduleAppointmentDelegate` are marked `@MainActor`.
 
 Any `@MainActor` member should only be accessed from the `MainActor`. Apple marked `UIView` and `UIViewController` as `@MainActor` so you should not have any change to make to your code. If you are not calling those methods from a `UIView`, a `UIViewController` or SwiftUI, we encourage you to visit the official documentation to update your app.
