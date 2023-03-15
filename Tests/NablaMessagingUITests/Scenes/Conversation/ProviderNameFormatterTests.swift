@@ -25,7 +25,7 @@ final class ProviderNameFormatterTests: XCTestCase {
 
     // MARK: - Provider
 
-    func test_provider_fullNameWithPrefix_withoutPrefix() {
+    func testProviderFullNameWithPrefixNil() {
         // Given
         let provider = createProvider(
             prefix: nil,
@@ -38,7 +38,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual("\(firstName) \(lastName)", result)
     }
 
-    func test_provider_fullNameWithPrefix_withPrefix() {
+    func testProviderFullNameWithPrefixNonNil() {
         // Given
         let provider = createProvider(
             prefix: prefix,
@@ -51,7 +51,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual("\(prefix) \(firstName) \(lastName)", result)
     }
 
-    func test_provider_abbreviatedNameWithPrefix_withoutPrefix() {
+    func testProviderAbbreviatedNameWithPrefixNil() {
         // Given
         let provider = createProvider(
             prefix: nil,
@@ -64,7 +64,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual("\(firstName) \(lastName)", result)
     }
 
-    func test_provider_abbreviatedNameWithPrefix_withPrefix() {
+    func testProviderAbbreviatedNameWithPrefixNonNil() {
         // Given
         let provider = createProvider(
             prefix: prefix,
@@ -77,7 +77,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual("\(prefix) \(lastName)", result)
     }
 
-    func test_provider_initials() {
+    func testProviderInitials() {
         // Given
         let provider = createProvider(
             prefix: nil,
@@ -90,7 +90,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual("FL", result)
     }
 
-    func test_provider_initials_emptyFirstNameLastName() {
+    func testProviderInitialsEmptyFirstNameLastName() {
         // Given
         let provider = createProvider(
             prefix: nil,
@@ -107,7 +107,7 @@ final class ProviderNameFormatterTests: XCTestCase {
 
     // MARK: case deletedProvider
 
-    func test_maybeProvider_deleted_fullNameWithPrefix() {
+    func testMaybeProviderDeletedFullNameWithPrefix() {
         // Given
         let maybeProvider = MaybeProvider.deletedProvider
         // When
@@ -116,7 +116,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual(NablaMessagingUI.L10n.providerDeletedName, result)
     }
 
-    func test_maybeProvider_deleted_abbreviatedNameWithPrefix() {
+    func testMaybeProviderDeletedAbbreviatedNameWithPrefix() {
         // Given
         let maybeProvider = MaybeProvider.deletedProvider
         // When
@@ -125,7 +125,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual(NablaMessagingUI.L10n.providerDeletedName, result)
     }
 
-    func test_maybeProvider_deleted_initials() {
+    func testMaybeProviderDeletedInitials() {
         // Given
         let maybeProvider = MaybeProvider.deletedProvider
         // When
@@ -136,7 +136,7 @@ final class ProviderNameFormatterTests: XCTestCase {
 
     // MARK: case provider
 
-    func test_maybeProvider_provider_fullNameWithPrefix() {
+    func testMaybeProviderProviderFullNameWithPrefix() {
         // Given
         let provider = createProvider(prefix: prefix, firstName: firstName, lastName: lastName)
         let maybeProvider = MaybeProvider.provider(provider)
@@ -149,7 +149,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         )
     }
 
-    func test_maybeProvider_provider_abbreviatedNameWithPrefix() {
+    func testMaybeProviderProviderAbbreviatedNameWithPrefix() {
         // Given
         let provider = createProvider(prefix: prefix, firstName: firstName, lastName: lastName)
         let maybeProvider = MaybeProvider.provider(provider)
@@ -162,7 +162,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         )
     }
 
-    func test_maybeProvider_provider_initials() {
+    func testMaybeProviderProviderInitials() {
         // Given
         let provider = createProvider(prefix: prefix, firstName: firstName, lastName: lastName)
         let maybeProvider = MaybeProvider.provider(provider)

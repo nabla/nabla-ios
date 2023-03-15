@@ -23,7 +23,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         )
     }
 
-    func test_formatName_initials() {
+    func testFormatNameInitials() {
         // Given
         let provider = createProvider(
             prefix: nil,
@@ -36,7 +36,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual("FL", result)
     }
 
-    func test_formatName_fullNameWithPrefix_withoutPrefix() {
+    func testFormatNameFullNameWithPrefixNil() {
         // Given
         let provider = createProvider(
             prefix: nil,
@@ -49,7 +49,7 @@ final class ProviderNameFormatterTests: XCTestCase {
         XCTAssertEqual("\(firstName) \(lastName)", result)
     }
 
-    func test_formatName_fullNameWithPrefix_withPrefix() {
+    func testFormatNameFullNameWithPrefixNonNil() {
         // Given
         let provider = createProvider(
             prefix: "Dr",

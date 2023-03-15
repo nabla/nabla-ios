@@ -11,7 +11,7 @@ class VideoTrackView: UIView {
     
     var isLoading: Bool {
         get { spinner.isAnimating }
-        set { newValue ? spinner.startAnimating() : spinner.startAnimating() }
+        set { newValue ? spinner.startAnimating() : spinner.stopAnimating() }
     }
     
     var track: VideoTrack? {
