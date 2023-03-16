@@ -24,10 +24,9 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
     func execute(conversationId: UUID) -> AnyPublisher<Response<PaginatedList<ConversationItem>>, NablaError> {
         let transientId = conversationsRepository.getConversationTransientId(from: conversationId)
         return isAuthenticated
-            .map { [itemsRepository] in
+            .nabla.switchToLatest { [itemsRepository] in
                 itemsRepository.watchConversationItems(ofConversationWithId: transientId)
             }
-            .switchToLatest()
             .map { [logger, gateKeepers] response -> AnyResponse<PaginatedList<ConversationItem>, NablaError> in
                 if gateKeepers.supportVideoCallActionRequests { return response }
                 return response.mapData { conversationItems in

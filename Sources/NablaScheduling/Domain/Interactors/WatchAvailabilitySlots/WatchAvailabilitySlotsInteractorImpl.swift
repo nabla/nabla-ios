@@ -7,11 +7,9 @@ final class WatchAvailabilitySlotsInteractorImpl: AuthenticatedInteractor, Watch
     
     func execute(categoryId: UUID, location: LocationType) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
         isAuthenticated
-            .map { [repository] in
+            .nabla.switchToLatest { [repository] in
                 repository.watchAvailabilitySlots(forCategoryWithId: categoryId, location: location)
             }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
     
     // MARK: Init

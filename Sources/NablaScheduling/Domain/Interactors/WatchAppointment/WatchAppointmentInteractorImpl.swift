@@ -7,11 +7,9 @@ final class WatchAppointmentInteractorImpl: AuthenticatedInteractor, WatchAppoin
     
     func execute(id: UUID) -> AnyPublisher<Appointment, NablaError> {
         isAuthenticated
-            .map { [repository] in
+            .nabla.switchToLatest { [repository] in
                 repository.watchAppointment(withId: id)
             }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
     
     // MARK: Init

@@ -32,7 +32,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
             .eraseToAnyPublisher()
         
         let remoteData = conversationId.observeRemoteId()
-            .map { [itemsRemoteDataSource] remoteConversationId -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, NablaError>, NablaError> in
+            .nabla.switchToLatest { [itemsRemoteDataSource] remoteConversationId -> AnyPublisher<AnyResponse<PaginatedList<RemoteConversationItem>, NablaError>, NablaError> in
                 if let remoteConversationId = remoteConversationId {
                     return itemsRemoteDataSource
                         .watchConversationItems(ofConversationWithId: remoteConversationId)
@@ -52,8 +52,6 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
                         .eraseToAnyPublisher()
                 }
             }
-            .nabla.switchToLatest()
-            .eraseToAnyPublisher()
         
         var subscriber: Any? = makeOrReuseConversationEventsSubscription(for: conversationId)
         assert(subscriber != nil) // Silences "Variable `subscriber` was written to, but never read" warning
@@ -553,10 +551,9 @@ private class ConversationItemsSubscriber: Combine.Cancellable {
     private func beginSubscription() {
         subscription = conversationId.observeRemoteId()
             .compactMap { $0 }
-            .map { [itemsRemoteDataSource] remoteId -> AnyPublisher<RemoteConversationEvent, Never> in
+            .nabla.switchToLatest { [itemsRemoteDataSource] remoteId -> AnyPublisher<RemoteConversationEvent, Never> in
                 itemsRemoteDataSource.subscribeToConversationItemsEvents(ofConversationWithId: remoteId)
             }
-            .switchToLatest()
             .nabla.sink()
     }
 }

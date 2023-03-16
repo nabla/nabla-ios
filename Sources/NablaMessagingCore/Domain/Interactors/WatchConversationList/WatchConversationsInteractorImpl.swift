@@ -14,10 +14,9 @@ class WatchConversationsInteractorImpl: AuthenticatedInteractor, WatchConversati
     
     func execute() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError> {
         isAuthenticated
-            .map { [repository] in
+            .nabla.switchToLatest { [repository] in
                 repository.watchConversations()
             }
-            .switchToLatest()
             .map { $0.asResponse() }
             .eraseToAnyPublisher()
     }

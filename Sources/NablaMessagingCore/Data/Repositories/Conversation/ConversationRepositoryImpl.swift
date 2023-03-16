@@ -32,7 +32,7 @@ class ConversationRepositoryImpl: ConversationRepository {
             .setFailureType(to: NablaError.self)
         
         let remoteConversation = conversationId.observeRemoteId()
-            .map { [remoteDataSource] remoteId -> AnyPublisher<AnyResponse<RemoteConversation, NablaError>?, NablaError> in
+            .nabla.switchToLatest { [remoteDataSource] remoteId -> AnyPublisher<AnyResponse<RemoteConversation, NablaError>?, NablaError> in
                 if let remoteId = remoteId {
                     return remoteDataSource.watchConversation(remoteId)
                         .map { response in
@@ -47,7 +47,6 @@ class ConversationRepositoryImpl: ConversationRepository {
                         .eraseToAnyPublisher()
                 }
             }
-            .nabla.switchToLatest()
         
         return Publishers.CombineLatest(localConversation, remoteConversation)
             .map { localConversation, remoteResponse -> AnyResponse<Conversation, NablaError>? in

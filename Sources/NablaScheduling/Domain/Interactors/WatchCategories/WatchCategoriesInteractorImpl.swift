@@ -7,11 +7,9 @@ final class WatchCategoriesInteractorImpl: AuthenticatedInteractor, WatchCategor
     
     func execute() -> AnyPublisher<[Category], NablaError> {
         isAuthenticated
-            .map { [repository] in
+            .nabla.switchToLatest { [repository] in
                 repository.watchCategories()
             }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
     
     // MARK: Init

@@ -15,10 +15,9 @@ class WatchConversationInteractorImpl: AuthenticatedInteractor, WatchConversatio
     func execute(_ conversationId: UUID) -> AnyPublisher<Response<Conversation>, NablaError> {
         let transientId = repository.getConversationTransientId(from: conversationId)
         return isAuthenticated
-            .map { [repository] in
+            .nabla.switchToLatest { [repository] in
                 repository.watchConversation(withId: transientId)
             }
-            .switchToLatest()
             .map { $0.asResponse() }
             .eraseToAnyPublisher()
     }

@@ -114,7 +114,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
         // GIVEN
         let sut = WatchAppointmentsInteractorImpl(authenticator: authenticator, repository: appointmentRepository)
         // WHEN
-        let publisher = sut.execute(state: .upcoming)
+        let publisher = sut.execute(state: .scheduled)
         // THEN
         assertAuthenticationErrorPublisher(publisher)
     }
