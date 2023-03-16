@@ -1829,6 +1829,621 @@ open class AppointmentListViewModelMock: AppointmentListViewModel, Mock {
     }
 }
 
+// MARK: - AppointmentRepository
+
+open class AppointmentRepositoryMock: AppointmentRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func watchAppointments(state: AppointmentStateFilter) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError> {
+        addInvocation(.m_watchAppointments__state_state(Parameter<AppointmentStateFilter>.value(`state`)))
+		let perform = methodPerformValue(.m_watchAppointments__state_state(Parameter<AppointmentStateFilter>.value(`state`))) as? (AppointmentStateFilter) -> Void
+		perform?(`state`)
+		var __value: AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchAppointments__state_state(Parameter<AppointmentStateFilter>.value(`state`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchAppointments(state: AppointmentStateFilter). Use given")
+			Failure("Stub return value not specified for watchAppointments(state: AppointmentStateFilter). Use given")
+		}
+		return __value
+    }
+
+    open func watchAppointment(withId id: UUID) -> AnyPublisher<Appointment, NablaError> {
+        addInvocation(.m_watchAppointment__withId_id(Parameter<UUID>.value(`id`)))
+		let perform = methodPerformValue(.m_watchAppointment__withId_id(Parameter<UUID>.value(`id`))) as? (UUID) -> Void
+		perform?(`id`)
+		var __value: AnyPublisher<Appointment, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchAppointment__withId_id(Parameter<UUID>.value(`id`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchAppointment(withId id: UUID). Use given")
+			Failure("Stub return value not specified for watchAppointment(withId id: UUID). Use given")
+		}
+		return __value
+    }
+
+    open func createPendingAppointment(location: LocationType, categoryId: UUID, providerId: UUID, date: Date) throws -> Appointment {
+        addInvocation(.m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(Parameter<LocationType>.value(`location`), Parameter<UUID>.value(`categoryId`), Parameter<UUID>.value(`providerId`), Parameter<Date>.value(`date`)))
+		let perform = methodPerformValue(.m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(Parameter<LocationType>.value(`location`), Parameter<UUID>.value(`categoryId`), Parameter<UUID>.value(`providerId`), Parameter<Date>.value(`date`))) as? (LocationType, UUID, UUID, Date) -> Void
+		perform?(`location`, `categoryId`, `providerId`, `date`)
+		var __value: Appointment
+		do {
+		    __value = try methodReturnValue(.m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(Parameter<LocationType>.value(`location`), Parameter<UUID>.value(`categoryId`), Parameter<UUID>.value(`providerId`), Parameter<Date>.value(`date`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for createPendingAppointment(location: LocationType, categoryId: UUID, providerId: UUID, date: Date). Use given")
+			Failure("Stub return value not specified for createPendingAppointment(location: LocationType, categoryId: UUID, providerId: UUID, date: Date). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func schedulePendingAppointment(withId: UUID) throws -> Appointment {
+        addInvocation(.m_schedulePendingAppointment__withId_withId(Parameter<UUID>.value(`withId`)))
+		let perform = methodPerformValue(.m_schedulePendingAppointment__withId_withId(Parameter<UUID>.value(`withId`))) as? (UUID) -> Void
+		perform?(`withId`)
+		var __value: Appointment
+		do {
+		    __value = try methodReturnValue(.m_schedulePendingAppointment__withId_withId(Parameter<UUID>.value(`withId`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for schedulePendingAppointment(withId: UUID). Use given")
+			Failure("Stub return value not specified for schedulePendingAppointment(withId: UUID). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func cancelAppointment(withId: UUID) throws {
+        addInvocation(.m_cancelAppointment__withId_withId(Parameter<UUID>.value(`withId`)))
+		let perform = methodPerformValue(.m_cancelAppointment__withId_withId(Parameter<UUID>.value(`withId`))) as? (UUID) -> Void
+		perform?(`withId`)
+		do {
+		    _ = try methodReturnValue(.m_cancelAppointment__withId_withId(Parameter<UUID>.value(`withId`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func getAvailableAppointmentLocations() throws -> Set<LocationType> {
+        addInvocation(.m_getAvailableAppointmentLocations)
+		let perform = methodPerformValue(.m_getAvailableAppointmentLocations) as? () -> Void
+		perform?()
+		var __value: Set<LocationType>
+		do {
+		    __value = try methodReturnValue(.m_getAvailableAppointmentLocations).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for getAvailableAppointmentLocations(). Use given")
+			Failure("Stub return value not specified for getAvailableAppointmentLocations(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_watchAppointments__state_state(Parameter<AppointmentStateFilter>)
+        case m_watchAppointment__withId_id(Parameter<UUID>)
+        case m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(Parameter<LocationType>, Parameter<UUID>, Parameter<UUID>, Parameter<Date>)
+        case m_schedulePendingAppointment__withId_withId(Parameter<UUID>)
+        case m_cancelAppointment__withId_withId(Parameter<UUID>)
+        case m_getAvailableAppointmentLocations
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_watchAppointments__state_state(let lhsState), .m_watchAppointments__state_state(let rhsState)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsState, rhs: rhsState, with: matcher), lhsState, rhsState, "state"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_watchAppointment__withId_id(let lhsId), .m_watchAppointment__withId_id(let rhsId)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsId, rhs: rhsId, with: matcher), lhsId, rhsId, "withId id"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(let lhsLocation, let lhsCategoryid, let lhsProviderid, let lhsDate), .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(let rhsLocation, let rhsCategoryid, let rhsProviderid, let rhsDate)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsLocation, rhs: rhsLocation, with: matcher), lhsLocation, rhsLocation, "location"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCategoryid, rhs: rhsCategoryid, with: matcher), lhsCategoryid, rhsCategoryid, "categoryId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsProviderid, rhs: rhsProviderid, with: matcher), lhsProviderid, rhsProviderid, "providerId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher), lhsDate, rhsDate, "date"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_schedulePendingAppointment__withId_withId(let lhsWithid), .m_schedulePendingAppointment__withId_withId(let rhsWithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsWithid, rhs: rhsWithid, with: matcher), lhsWithid, rhsWithid, "withId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_cancelAppointment__withId_withId(let lhsWithid), .m_cancelAppointment__withId_withId(let rhsWithid)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsWithid, rhs: rhsWithid, with: matcher), lhsWithid, rhsWithid, "withId"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_getAvailableAppointmentLocations, .m_getAvailableAppointmentLocations): return .match
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_watchAppointments__state_state(p0): return p0.intValue
+            case let .m_watchAppointment__withId_id(p0): return p0.intValue
+            case let .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_schedulePendingAppointment__withId_withId(p0): return p0.intValue
+            case let .m_cancelAppointment__withId_withId(p0): return p0.intValue
+            case .m_getAvailableAppointmentLocations: return 0
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_watchAppointments__state_state: return ".watchAppointments(state:)"
+            case .m_watchAppointment__withId_id: return ".watchAppointment(withId:)"
+            case .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date: return ".createPendingAppointment(location:categoryId:providerId:date:)"
+            case .m_schedulePendingAppointment__withId_withId: return ".schedulePendingAppointment(withId:)"
+            case .m_cancelAppointment__withId_withId: return ".cancelAppointment(withId:)"
+            case .m_getAvailableAppointmentLocations: return ".getAvailableAppointmentLocations()"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func watchAppointments(state: Parameter<AppointmentStateFilter>, willReturn: AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchAppointments__state_state(`state`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchAppointment(withId id: Parameter<UUID>, willReturn: AnyPublisher<Appointment, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchAppointment__withId_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createPendingAppointment(location: Parameter<LocationType>, categoryId: Parameter<UUID>, providerId: Parameter<UUID>, date: Parameter<Date>, willReturn: Appointment...) -> MethodStub {
+            return Given(method: .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(`location`, `categoryId`, `providerId`, `date`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func schedulePendingAppointment(withId: Parameter<UUID>, willReturn: Appointment...) -> MethodStub {
+            return Given(method: .m_schedulePendingAppointment__withId_withId(`withId`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getAvailableAppointmentLocations(willReturn: Set<LocationType>...) -> MethodStub {
+            return Given(method: .m_getAvailableAppointmentLocations, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchAppointments(state: Parameter<AppointmentStateFilter>, willProduce: (Stubber<AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchAppointments__state_state(`state`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func watchAppointment(withId id: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<Appointment, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Appointment, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchAppointment__withId_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Appointment, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func createPendingAppointment(location: Parameter<LocationType>, categoryId: Parameter<UUID>, providerId: Parameter<UUID>, date: Parameter<Date>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(`location`, `categoryId`, `providerId`, `date`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createPendingAppointment(location: Parameter<LocationType>, categoryId: Parameter<UUID>, providerId: Parameter<UUID>, date: Parameter<Date>, willProduce: (StubberThrows<Appointment>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(`location`, `categoryId`, `providerId`, `date`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Appointment).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func schedulePendingAppointment(withId: Parameter<UUID>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_schedulePendingAppointment__withId_withId(`withId`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func schedulePendingAppointment(withId: Parameter<UUID>, willProduce: (StubberThrows<Appointment>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_schedulePendingAppointment__withId_withId(`withId`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Appointment).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func cancelAppointment(withId: Parameter<UUID>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_cancelAppointment__withId_withId(`withId`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func cancelAppointment(withId: Parameter<UUID>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_cancelAppointment__withId_withId(`withId`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getAvailableAppointmentLocations(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getAvailableAppointmentLocations, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getAvailableAppointmentLocations(willProduce: (StubberThrows<Set<LocationType>>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getAvailableAppointmentLocations, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Set<LocationType>).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func watchAppointments(state: Parameter<AppointmentStateFilter>) -> Verify { return Verify(method: .m_watchAppointments__state_state(`state`))}
+        public static func watchAppointment(withId id: Parameter<UUID>) -> Verify { return Verify(method: .m_watchAppointment__withId_id(`id`))}
+        public static func createPendingAppointment(location: Parameter<LocationType>, categoryId: Parameter<UUID>, providerId: Parameter<UUID>, date: Parameter<Date>) -> Verify { return Verify(method: .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(`location`, `categoryId`, `providerId`, `date`))}
+        public static func schedulePendingAppointment(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_schedulePendingAppointment__withId_withId(`withId`))}
+        public static func cancelAppointment(withId: Parameter<UUID>) -> Verify { return Verify(method: .m_cancelAppointment__withId_withId(`withId`))}
+        public static func getAvailableAppointmentLocations() -> Verify { return Verify(method: .m_getAvailableAppointmentLocations)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func watchAppointments(state: Parameter<AppointmentStateFilter>, perform: @escaping (AppointmentStateFilter) -> Void) -> Perform {
+            return Perform(method: .m_watchAppointments__state_state(`state`), performs: perform)
+        }
+        public static func watchAppointment(withId id: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_watchAppointment__withId_id(`id`), performs: perform)
+        }
+        public static func createPendingAppointment(location: Parameter<LocationType>, categoryId: Parameter<UUID>, providerId: Parameter<UUID>, date: Parameter<Date>, perform: @escaping (LocationType, UUID, UUID, Date) -> Void) -> Perform {
+            return Perform(method: .m_createPendingAppointment__location_locationcategoryId_categoryIdproviderId_providerIddate_date(`location`, `categoryId`, `providerId`, `date`), performs: perform)
+        }
+        public static func schedulePendingAppointment(withId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_schedulePendingAppointment__withId_withId(`withId`), performs: perform)
+        }
+        public static func cancelAppointment(withId: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_cancelAppointment__withId_withId(`withId`), performs: perform)
+        }
+        public static func getAvailableAppointmentLocations(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getAvailableAppointmentLocations, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - AvailabilitySlotRepository
+
+open class AvailabilitySlotRepositoryMock: AvailabilitySlotRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+    public typealias Category = NablaScheduling.Category
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func watchCategories() -> AnyPublisher<[Category], NablaError> {
+        addInvocation(.m_watchCategories)
+		let perform = methodPerformValue(.m_watchCategories) as? () -> Void
+		perform?()
+		var __value: AnyPublisher<[Category], NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchCategories).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchCategories(). Use given")
+			Failure("Stub return value not specified for watchCategories(). Use given")
+		}
+		return __value
+    }
+
+    open func watchAvailabilitySlots(forCategoryWithId: UUID, location: LocationType) -> AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError> {
+        addInvocation(.m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(Parameter<UUID>.value(`forCategoryWithId`), Parameter<LocationType>.value(`location`)))
+		let perform = methodPerformValue(.m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(Parameter<UUID>.value(`forCategoryWithId`), Parameter<LocationType>.value(`location`))) as? (UUID, LocationType) -> Void
+		perform?(`forCategoryWithId`, `location`)
+		var __value: AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(Parameter<UUID>.value(`forCategoryWithId`), Parameter<LocationType>.value(`location`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchAvailabilitySlots(forCategoryWithId: UUID, location: LocationType). Use given")
+			Failure("Stub return value not specified for watchAvailabilitySlots(forCategoryWithId: UUID, location: LocationType). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_watchCategories
+        case m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(Parameter<UUID>, Parameter<LocationType>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_watchCategories, .m_watchCategories): return .match
+
+            case (.m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(let lhsForcategorywithid, let lhsLocation), .m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(let rhsForcategorywithid, let rhsLocation)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsForcategorywithid, rhs: rhsForcategorywithid, with: matcher), lhsForcategorywithid, rhsForcategorywithid, "forCategoryWithId"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsLocation, rhs: rhsLocation, with: matcher), lhsLocation, rhsLocation, "location"))
+				return Matcher.ComparisonResult(results)
+            default: return .none
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_watchCategories: return 0
+            case let .m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(p0, p1): return p0.intValue + p1.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_watchCategories: return ".watchCategories()"
+            case .m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location: return ".watchAvailabilitySlots(forCategoryWithId:location:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func watchCategories(willReturn: AnyPublisher<[Category], NablaError>...) -> MethodStub {
+            return Given(method: .m_watchCategories, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchAvailabilitySlots(forCategoryWithId: Parameter<UUID>, location: Parameter<LocationType>, willReturn: AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(`forCategoryWithId`, `location`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchCategories(willProduce: (Stubber<AnyPublisher<[Category], NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<[Category], NablaError>] = []
+			let given: Given = { return Given(method: .m_watchCategories, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<[Category], NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func watchAvailabilitySlots(forCategoryWithId: Parameter<UUID>, location: Parameter<LocationType>, willProduce: (Stubber<AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(`forCategoryWithId`, `location`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<PaginatedList<AvailabilitySlot>, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func watchCategories() -> Verify { return Verify(method: .m_watchCategories)}
+        public static func watchAvailabilitySlots(forCategoryWithId: Parameter<UUID>, location: Parameter<LocationType>) -> Verify { return Verify(method: .m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(`forCategoryWithId`, `location`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func watchCategories(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchCategories, performs: perform)
+        }
+        public static func watchAvailabilitySlots(forCategoryWithId: Parameter<UUID>, location: Parameter<LocationType>, perform: @escaping (UUID, LocationType) -> Void) -> Perform {
+            return Perform(method: .m_watchAvailabilitySlots__forCategoryWithId_forCategoryWithIdlocation_location(`forCategoryWithId`, `location`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
 // MARK: - CategoryPickerViewModel
 
 open class CategoryPickerViewModelMock: CategoryPickerViewModel, Mock {
@@ -2274,6 +2889,198 @@ open class ConsentsRemoteDataSourceMock: ConsentsRemoteDataSource, Mock {
 
         public static func watchConsents(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_watchConsents, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - ConsentsRepository
+
+open class ConsentsRepositoryMock: ConsentsRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func watchConsents(location: LocationType) -> AnyPublisher<Consents, NablaError> {
+        addInvocation(.m_watchConsents__location_location(Parameter<LocationType>.value(`location`)))
+		let perform = methodPerformValue(.m_watchConsents__location_location(Parameter<LocationType>.value(`location`))) as? (LocationType) -> Void
+		perform?(`location`)
+		var __value: AnyPublisher<Consents, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchConsents__location_location(Parameter<LocationType>.value(`location`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchConsents(location: LocationType). Use given")
+			Failure("Stub return value not specified for watchConsents(location: LocationType). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_watchConsents__location_location(Parameter<LocationType>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_watchConsents__location_location(let lhsLocation), .m_watchConsents__location_location(let rhsLocation)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsLocation, rhs: rhsLocation, with: matcher), lhsLocation, rhsLocation, "location"))
+				return Matcher.ComparisonResult(results)
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_watchConsents__location_location(p0): return p0.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_watchConsents__location_location: return ".watchConsents(location:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func watchConsents(location: Parameter<LocationType>, willReturn: AnyPublisher<Consents, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchConsents__location_location(`location`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchConsents(location: Parameter<LocationType>, willProduce: (Stubber<AnyPublisher<Consents, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Consents, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchConsents__location_location(`location`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Consents, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func watchConsents(location: Parameter<LocationType>) -> Verify { return Verify(method: .m_watchConsents__location_location(`location`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func watchConsents(location: Parameter<LocationType>, perform: @escaping (LocationType) -> Void) -> Perform {
+            return Perform(method: .m_watchConsents__location_location(`location`), performs: perform)
         }
     }
 
@@ -2994,6 +3801,198 @@ open class LocationPickerViewModelMock: LocationPickerViewModel, Mock {
         }
         public static func onChange(throttle: Parameter<DispatchQueue.SchedulerTimeType.Stride>, perform: @escaping (DispatchQueue.SchedulerTimeType.Stride) -> Void) -> Perform {
             return Perform(method: .m_onChange__throttle_throttle(`throttle`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let fullMatches = matchingCalls(method, file: file, line: line)
+        let success = count.matches(fullMatches)
+        let assertionName = method.method.assertionName()
+        let feedback: String = {
+            guard !success else { return "" }
+            return Utils.closestCallsMessage(
+                for: self.invocations.map { invocation in
+                    matcher.set(file: file, line: line)
+                    defer { matcher.clearFileAndLine() }
+                    return MethodType.compareParameters(lhs: invocation, rhs: method.method, matcher: matcher)
+                },
+                name: assertionName
+            )
+        }()
+        MockyAssert(success, "Expected: \(count) invocations of `\(assertionName)`, but was: \(fullMatches).\(feedback)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        self.queue.sync { invocations.append(call) }
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        matcher.set(file: self.file, line: self.line)
+        defer { matcher.clearFileAndLine() }
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher).isFullMatch }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType, file: StaticString?, line: UInt?) -> [MethodType] {
+        matcher.set(file: file ?? self.file, line: line ?? self.line)
+        defer { matcher.clearFileAndLine() }
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher).isFullMatch }
+    }
+    private func matchingCalls(_ method: Verify, file: StaticString?, line: UInt?) -> Int {
+        return matchingCalls(method.method, file: file, line: line).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleFatalError(message: message, file: file, line: line)
+    }
+}
+
+// MARK: - ProviderRepository
+
+open class ProviderRepositoryMock: ProviderRepository, Mock {
+    public init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        SwiftyMockyTestObserver.setup()
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+
+    private var queue = DispatchQueue(label: "com.swiftymocky.invocations", qos: .userInteractive)
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    /// Clear mock internals. You can specify what to reset (invocations aka verify, givens or performs) or leave it empty to clear all mock internals
+    public func resetMock(_ scopes: MockScope...) {
+        let scopes: [MockScope] = scopes.isEmpty ? [.invocation, .given, .perform] : scopes
+        if scopes.contains(.invocation) { invocations = [] }
+        if scopes.contains(.given) { methodReturnValues = [] }
+        if scopes.contains(.perform) { methodPerformValues = [] }
+    }
+
+
+
+
+
+    open func watchProvider(id: UUID) -> AnyPublisher<Provider, NablaError> {
+        addInvocation(.m_watchProvider__id_id(Parameter<UUID>.value(`id`)))
+		let perform = methodPerformValue(.m_watchProvider__id_id(Parameter<UUID>.value(`id`))) as? (UUID) -> Void
+		perform?(`id`)
+		var __value: AnyPublisher<Provider, NablaError>
+		do {
+		    __value = try methodReturnValue(.m_watchProvider__id_id(Parameter<UUID>.value(`id`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchProvider(id: UUID). Use given")
+			Failure("Stub return value not specified for watchProvider(id: UUID). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_watchProvider__id_id(Parameter<UUID>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
+            switch (lhs, rhs) {
+            case (.m_watchProvider__id_id(let lhsId), .m_watchProvider__id_id(let rhsId)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsId, rhs: rhsId, with: matcher), lhsId, rhsId, "id"))
+				return Matcher.ComparisonResult(results)
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_watchProvider__id_id(p0): return p0.intValue
+            }
+        }
+        func assertionName() -> String {
+            switch self {
+            case .m_watchProvider__id_id: return ".watchProvider(id:)"
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func watchProvider(id: Parameter<UUID>, willReturn: AnyPublisher<Provider, NablaError>...) -> MethodStub {
+            return Given(method: .m_watchProvider__id_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func watchProvider(id: Parameter<UUID>, willProduce: (Stubber<AnyPublisher<Provider, NablaError>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<Provider, NablaError>] = []
+			let given: Given = { return Given(method: .m_watchProvider__id_id(`id`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<Provider, NablaError>).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func watchProvider(id: Parameter<UUID>) -> Verify { return Verify(method: .m_watchProvider__id_id(`id`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func watchProvider(id: Parameter<UUID>, perform: @escaping (UUID) -> Void) -> Perform {
+            return Perform(method: .m_watchProvider__id_id(`id`), performs: perform)
         }
     }
 

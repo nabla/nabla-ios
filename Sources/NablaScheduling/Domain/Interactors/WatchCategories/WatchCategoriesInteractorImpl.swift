@@ -2,19 +2,26 @@ import Combine
 import Foundation
 import NablaCore
 
-final class WatchCategoriesInteractorImpl: WatchCategoriesInteractor {
+final class WatchCategoriesInteractorImpl: AuthenticatedInteractor, WatchCategoriesInteractor {
     // MARK: - Internal
     
     func execute() -> AnyPublisher<[Category], NablaError> {
-        repository.watchCategories()
+        isAuthenticated
+            .map { [repository] in
+                repository.watchCategories()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
     
     // MARK: Init
     
     init(
+        authenticator: Authenticator,
         repository: AvailabilitySlotRepository
     ) {
         self.repository = repository
+        super.init(authenticator: authenticator)
     }
     
     // MARK: - Private

@@ -1,13 +1,10 @@
 import Combine
 import Foundation
-import NablaCore
 
-class AuthenticatedInteractor {
-    init(authenticator: Authenticator) {
-        self.authenticator = authenticator
-    }
+open class AuthenticatedInteractor {
+    // MARK: - Public
 
-    final var isAuthenticated: AnyPublisher<Void, NablaError> {
+    public var isAuthenticated: AnyPublisher<Void, NablaError> {
         authenticator.watchCurrentUserId()
             .removeDuplicates()
             .setFailureType(to: NablaError.self)
@@ -22,10 +19,16 @@ class AuthenticatedInteractor {
     }
     
     /// - Throws: ``NablaError``
-    func assertIsAuthenticated() throws {
+    public func assertIsAuthenticated() throws {
         if authenticator.currentUserId == nil {
             throw UserIdNotSetError()
         }
+    }
+    
+    // MARK: Init
+    
+    public init(authenticator: Authenticator) {
+        self.authenticator = authenticator
     }
 
     // MARK: - Private

@@ -1,7 +1,6 @@
 import Combine
-import NablaCore
+@testable import NablaCore
 import NablaCoreTestsUtils
-@testable import NablaMessagingCore
 import XCTest
 
 final class AuthenticatedInteractorTests: XCTestCase {

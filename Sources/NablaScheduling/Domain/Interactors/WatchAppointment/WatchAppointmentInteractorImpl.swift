@@ -2,19 +2,26 @@ import Combine
 import Foundation
 import NablaCore
 
-final class WatchAppointmentInteractorImpl: WatchAppointmentInteractor {
+final class WatchAppointmentInteractorImpl: AuthenticatedInteractor, WatchAppointmentInteractor {
     // MARK: - Internal
     
     func execute(id: UUID) -> AnyPublisher<Appointment, NablaError> {
-        repository.watchAppointment(withId: id)
+        isAuthenticated
+            .map { [repository] in
+                repository.watchAppointment(withId: id)
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
     
     // MARK: Init
     
     init(
+        authenticator: Authenticator,
         repository: AppointmentRepository
     ) {
         self.repository = repository
+        super.init(authenticator: authenticator)
     }
     
     // MARK: - Private

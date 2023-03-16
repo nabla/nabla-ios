@@ -15,7 +15,7 @@ final class NablaSchedulingContainer {
     let watchCategoriesInteractor: WatchCategoriesInteractor
     let watchAvailabilitySlotsInteractor: WatchAvailabilitySlotsInteractor
     let createPendingAppointmentInteractor: CreatePendingAppointmentInteractor
-    let schedulePendingAppointmentInteractor: SchedulingPendingAppointmentInteractor
+    let schedulePendingAppointmentInteractor: SchedulePendingAppointmentInteractor
     let cancelAppointmentInteractor: CancelAppointmentInteractor
     let watchProviderInteractor: WatchProviderInteractor
     let watchConsentsInteractor: WatchConsentsInteractor
@@ -70,16 +70,46 @@ final class NablaSchedulingContainer {
         )
         availabilitySlotRepository = AvailabilitySlotRepositoryImpl(remoteDataSource: availabilitySlotRemoteDataSource)
         
-        watchAppointmentsInteractor = WatchAppointmentsInteractorImpl(repository: appointmentRepository)
-        watchAppointmentInteractor = WatchAppointmentInteractorImpl(repository: appointmentRepository)
-        watchCategoriesInteractor = WatchCategoriesInteractorImpl(repository: availabilitySlotRepository)
-        watchAvailabilitySlotsInteractor = WatchAvailabilitySlotsInteractorImpl(repository: availabilitySlotRepository)
-        createPendingAppointmentInteractor = CreatePendingAppointmentInteractorImpl(repository: appointmentRepository)
-        schedulePendingAppointmentInteractor = SchedulingPendingAppointmentInteractorImpl(repository: appointmentRepository)
-        cancelAppointmentInteractor = CancelAppointmentInteractorImpl(repository: appointmentRepository)
-        watchProviderInteractor = WatchProviderInteractorImpl(repository: providerRepository)
-        watchConsentsInteractor = WatchConsentsInteractorImpl(repository: consentsRepository)
-        getAvailableLocationsInteractor = GetAvailableLocationsInteractorImpl(repository: appointmentRepository)
+        watchAppointmentsInteractor = WatchAppointmentsInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: appointmentRepository
+        )
+        watchAppointmentInteractor = WatchAppointmentInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: appointmentRepository
+        )
+        watchCategoriesInteractor = WatchCategoriesInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: availabilitySlotRepository
+        )
+        watchAvailabilitySlotsInteractor = WatchAvailabilitySlotsInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: availabilitySlotRepository
+        )
+        createPendingAppointmentInteractor = CreatePendingAppointmentInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: appointmentRepository
+        )
+        schedulePendingAppointmentInteractor = SchedulePendingAppointmentInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: appointmentRepository
+        )
+        cancelAppointmentInteractor = CancelAppointmentInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: appointmentRepository
+        )
+        watchProviderInteractor = WatchProviderInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: providerRepository
+        )
+        watchConsentsInteractor = WatchConsentsInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: consentsRepository
+        )
+        getAvailableLocationsInteractor = GetAvailableLocationsInteractorImpl(
+            authenticator: coreContainer.authenticator,
+            repository: appointmentRepository
+        )
     }
     
     // MARK: - Private

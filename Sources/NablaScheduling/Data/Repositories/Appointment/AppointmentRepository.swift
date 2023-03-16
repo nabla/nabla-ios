@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import NablaCore
 
+// sourcery: AutoMockable
 protocol AppointmentRepository {
     func watchAppointments(state: AppointmentStateFilter) -> AnyPublisher<AnyResponse<PaginatedList<Appointment>, NablaError>, NablaError>
     func watchAppointment(withId id: UUID) -> AnyPublisher<Appointment, NablaError>

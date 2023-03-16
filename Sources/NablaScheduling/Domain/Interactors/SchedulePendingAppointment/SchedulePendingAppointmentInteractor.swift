@@ -1,6 +1,6 @@
 import Combine
 import Foundation
 
-protocol SchedulingPendingAppointmentInteractor {
+protocol SchedulePendingAppointmentInteractor {
     func execute(appointmentId: UUID) async throws -> Appointment
 }
