@@ -7,10 +7,10 @@
 
 "appointments_screen_title" = "Appointments";
 "appointments_screen_action_button_label" = "Schedule an appointment";
-"appointments_screen_selector_upcoming_label" = "Scheduled";
+"appointments_screen_selector_scheduled_label" = "Scheduled";
 "appointments_screen_selector_finalized_label" = "Past";
 
-"appointments_screen_upcoming_empty_label" = "No appointments scheduled";
+"appointments_screen_scheduled_empty_label" = "No appointments scheduled";
 "appointments_screen_finalized_empty_label" = "No past appointments";
 
 "appointments_screen_cell_join_button_label" = "Join the call";

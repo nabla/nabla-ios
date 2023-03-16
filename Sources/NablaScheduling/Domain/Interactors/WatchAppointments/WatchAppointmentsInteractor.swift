@@ -3,7 +3,7 @@ import Foundation
 import NablaCore
 
 enum AppointmentStateFilter {
-    case upcoming
+    case scheduled
     case finalized
 }
 

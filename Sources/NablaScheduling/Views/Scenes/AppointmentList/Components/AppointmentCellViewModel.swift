@@ -41,7 +41,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     }
     
     var enabled: Bool {
-        appointment.state == .upcoming
+        appointment.state == .scheduled
     }
     
     var primaryActionTitle: String? {
@@ -61,7 +61,7 @@ final class AppointmentCellViewModelImpl: AppointmentCellViewModel, ObservableOb
     }
     
     var showDisclosureIndicator: Bool {
-        appointment.state == .upcoming
+        appointment.state == .scheduled
     }
     
     func userDidTapPrimaryActionButton() {

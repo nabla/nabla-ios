@@ -20,7 +20,7 @@ extension GQL {
             ...PendingAppointmentFragment
           }
           ... on UpcomingAppointment {
-            ...UpcomingAppointmentFragment
+            ...ScheduledAppointmentFragment
           }
           ... on FinalizedAppointment {
             ...FinalizedAppointmentFragment
@@ -133,14 +133,14 @@ extension GQL {
 
         static var __parentType: Apollo.ParentType { GQL.Objects.UpcomingAppointment }
         static var __selections: [Apollo.Selection] { [
-          .fragment(UpcomingAppointmentFragment.self),
+          .fragment(ScheduledAppointmentFragment.self),
         ] }
 
         struct Fragments: FragmentContainer {
           let __data: DataDict
           init(data: DataDict) { __data = data }
 
-          var upcomingAppointmentFragment: UpcomingAppointmentFragment { _toFragment() }
+          var scheduledAppointmentFragment: ScheduledAppointmentFragment { _toFragment() }
         }
       }
 

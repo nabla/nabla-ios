@@ -67,7 +67,7 @@ final class AppointmentListViewController: UIViewController {
     
     private lazy var segmentedControl: UISegmentedControl = {
         let control = UISegmentedControl(items: [
-            L10n.appointmentsScreenSelectorUpcomingLabel,
+            L10n.appointmentsScreenSelectorScheduledLabel,
             L10n.appointmentsScreenSelectorFinalizedLabel,
         ])
         control.addTarget(self, action: #selector(segmentedControlValueChangedHandler), for: .valueChanged)
@@ -152,7 +152,7 @@ final class AppointmentListViewController: UIViewController {
     
     @objc private func segmentedControlValueChangedHandler(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
-        case 0: viewModel.selectedSelector = .upcoming
+        case 0: viewModel.selectedSelector = .scheduled
         case 1: viewModel.selectedSelector = .finalized
         default: logger.error(
                 message: "Unknown selectedSegmentIndex",
@@ -208,8 +208,8 @@ final class AppointmentListViewController: UIViewController {
     private func updateSelector() {
         segmentedControl.selectedSegmentIndex = viewModel.selectedSelector.rawValue
         switch viewModel.selectedSelector {
-        case .upcoming:
-            emptyView.text = L10n.appointmentsScreenUpcomingEmptyLabel
+        case .scheduled:
+            emptyView.text = L10n.appointmentsScreenScheduledEmptyLabel
         case .finalized:
             emptyView.text = L10n.appointmentsScreenFinalizedEmptyLabel
         }

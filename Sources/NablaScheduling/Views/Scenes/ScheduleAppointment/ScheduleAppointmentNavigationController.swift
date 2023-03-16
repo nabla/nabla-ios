@@ -90,7 +90,7 @@ extension ScheduleAppointmentNavigationController: AppointmentConfirmationViewMo
     private func isPaymentRequired(for appointment: Appointment) -> Bool {
         switch appointment.state {
         case let .pending(paymentRequirement): return paymentRequirement != nil
-        case .finalized, .upcoming: return false
+        case .finalized, .scheduled: return false
         }
     }
     

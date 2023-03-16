@@ -46,14 +46,14 @@ internal enum L10n {
   internal static let appointmentsScreenLoadListErrorMessage = L10n.tr("Localizable", "appointments_screen_load_list_error_message")
   /// Something went wrong
   internal static let appointmentsScreenLoadListErrorTitle = L10n.tr("Localizable", "appointments_screen_load_list_error_title")
+  /// No appointments scheduled
+  internal static let appointmentsScreenScheduledEmptyLabel = L10n.tr("Localizable", "appointments_screen_scheduled_empty_label")
   /// Past
   internal static let appointmentsScreenSelectorFinalizedLabel = L10n.tr("Localizable", "appointments_screen_selector_finalized_label")
   /// Scheduled
-  internal static let appointmentsScreenSelectorUpcomingLabel = L10n.tr("Localizable", "appointments_screen_selector_upcoming_label")
+  internal static let appointmentsScreenSelectorScheduledLabel = L10n.tr("Localizable", "appointments_screen_selector_scheduled_label")
   /// Appointments
   internal static let appointmentsScreenTitle = L10n.tr("Localizable", "appointments_screen_title")
-  /// No appointments scheduled
-  internal static let appointmentsScreenUpcomingEmptyLabel = L10n.tr("Localizable", "appointments_screen_upcoming_empty_label")
   /// No categories available
   internal static let categoryPickerScreenEmptyLabel = L10n.tr("Localizable", "category_picker_screen_empty_label")
   /// Failed to display the categories. Please try again.

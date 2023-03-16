@@ -21,7 +21,7 @@ extension GQL {
           }
         }
         """#,
-        fragments: [AppointmentFragment.self, ProviderFragment.self, PendingAppointmentFragment.self, PriceFragment.self, UpcomingAppointmentFragment.self, FinalizedAppointmentFragment.self, LocationFragment.self, AddressFragment.self, LivekitRoomFragment.self, LivekitRoomOpenStatusFragment.self, LivekitRoomClosedStatusFragment.self]
+        fragments: [AppointmentFragment.self, ProviderFragment.self, PendingAppointmentFragment.self, PriceFragment.self, ScheduledAppointmentFragment.self, FinalizedAppointmentFragment.self, LocationFragment.self, AddressFragment.self, LivekitRoomFragment.self, LivekitRoomOpenStatusFragment.self, LivekitRoomClosedStatusFragment.self]
       ))
 
     var page: OpaqueCursorPage
@@ -156,7 +156,7 @@ extension GQL {
                 let __data: DataDict
                 init(data: DataDict) { __data = data }
 
-                var upcomingAppointmentFragment: UpcomingAppointmentFragment { _toFragment() }
+                var scheduledAppointmentFragment: ScheduledAppointmentFragment { _toFragment() }
               }
             }
 

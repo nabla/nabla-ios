@@ -55,10 +55,10 @@ extension GQL {
       case "AppointmentConfirmationConsentsOutput": return GQL.Objects.AppointmentConfirmationConsentsOutput
       case "AppointmentOutput": return GQL.Objects.AppointmentOutput
       case "AppointmentAvailableLocationsOutput": return GQL.Objects.AppointmentAvailableLocationsOutput
+      case "AppointmentsPage": return GQL.Objects.AppointmentsPage
       case "AppointmentCategoryOutput": return GQL.Objects.AppointmentCategoryOutput
       case "AvailableSlotsPage": return GQL.Objects.AvailableSlotsPage
       case "AvailabilitySlot": return GQL.Objects.AvailabilitySlot
-      case "AppointmentsPage": return GQL.Objects.AppointmentsPage
       case "Subscription": return GQL.Objects.Subscription
       case "AppointmentsEventOutput": return GQL.Objects.AppointmentsEventOutput
       case "SubscriptionReadinessEvent": return GQL.Objects.SubscriptionReadinessEvent

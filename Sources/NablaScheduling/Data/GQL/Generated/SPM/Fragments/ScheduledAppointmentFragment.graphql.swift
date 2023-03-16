@@ -4,9 +4,9 @@
 @_exported import ApolloAPI
 
 extension GQL {
-  struct UpcomingAppointmentFragment: GQL.SelectionSet, Fragment {
+  struct ScheduledAppointmentFragment: GQL.SelectionSet, Fragment {
     static var fragmentDefinition: StaticString { """
-      fragment UpcomingAppointmentFragment on UpcomingAppointment {
+      fragment ScheduledAppointmentFragment on UpcomingAppointment {
         __typename
       }
       """ }

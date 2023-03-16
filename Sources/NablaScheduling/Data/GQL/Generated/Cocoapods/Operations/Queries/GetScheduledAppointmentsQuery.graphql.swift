@@ -1,15 +1,15 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-@_exported import ApolloAPI
+@_exported import Apollo
 
 extension GQL {
-  class GetUpcomingAppointmentsQuery: GraphQLQuery {
-    static let operationName: String = "GetUpcomingAppointments"
-    static let document: ApolloAPI.DocumentType = .notPersisted(
+  class GetScheduledAppointmentsQuery: GraphQLQuery {
+    static let operationName: String = "GetScheduledAppointments"
+    static let document: Apollo.DocumentType = .notPersisted(
       definition: .init(
         #"""
-        query GetUpcomingAppointments($page: OpaqueCursorPage!) {
+        query GetScheduledAppointments($page: OpaqueCursorPage!) {
           upcomingAppointments(page: $page) {
             __typename
             hasMore
@@ -21,7 +21,7 @@ extension GQL {
           }
         }
         """#,
-        fragments: [AppointmentFragment.self, ProviderFragment.self, PendingAppointmentFragment.self, PriceFragment.self, UpcomingAppointmentFragment.self, FinalizedAppointmentFragment.self, LocationFragment.self, AddressFragment.self, LivekitRoomFragment.self, LivekitRoomOpenStatusFragment.self, LivekitRoomClosedStatusFragment.self]
+        fragments: [AppointmentFragment.self, ProviderFragment.self, PendingAppointmentFragment.self, PriceFragment.self, ScheduledAppointmentFragment.self, FinalizedAppointmentFragment.self, LocationFragment.self, AddressFragment.self, LivekitRoomFragment.self, LivekitRoomOpenStatusFragment.self, LivekitRoomClosedStatusFragment.self]
       ))
 
     var page: OpaqueCursorPage
@@ -36,8 +36,8 @@ extension GQL {
       let __data: DataDict
       init(data: DataDict) { __data = data }
 
-      static var __parentType: ApolloAPI.ParentType { GQL.Objects.Query }
-      static var __selections: [ApolloAPI.Selection] { [
+      static var __parentType: Apollo.ParentType { GQL.Objects.Query }
+      static var __selections: [Apollo.Selection] { [
         .field("upcomingAppointments", UpcomingAppointments.self, arguments: ["page": .variable("page")]),
       ] }
 
@@ -50,8 +50,8 @@ extension GQL {
         let __data: DataDict
         init(data: DataDict) { __data = data }
 
-        static var __parentType: ApolloAPI.ParentType { GQL.Objects.AppointmentsPage }
-        static var __selections: [ApolloAPI.Selection] { [
+        static var __parentType: Apollo.ParentType { GQL.Objects.AppointmentsPage }
+        static var __selections: [Apollo.Selection] { [
           .field("hasMore", Bool.self),
           .field("nextCursor", String?.self),
           .field("data", [Datum].self),
@@ -68,8 +68,8 @@ extension GQL {
           let __data: DataDict
           init(data: DataDict) { __data = data }
 
-          static var __parentType: ApolloAPI.ParentType { GQL.Objects.Appointment }
-          static var __selections: [ApolloAPI.Selection] { [
+          static var __parentType: Apollo.ParentType { GQL.Objects.Appointment }
+          static var __selections: [Apollo.Selection] { [
             .fragment(AppointmentFragment.self),
           ] }
 
@@ -94,7 +94,7 @@ extension GQL {
             let __data: DataDict
             init(data: DataDict) { __data = data }
 
-            static var __parentType: ApolloAPI.ParentType { GQL.Objects.Provider }
+            static var __parentType: Apollo.ParentType { GQL.Objects.Provider }
 
             var id: GQL.UUID { __data["id"] }
             var prefix: String? { __data["prefix"] }
@@ -118,7 +118,7 @@ extension GQL {
             let __data: DataDict
             init(data: DataDict) { __data = data }
 
-            static var __parentType: ApolloAPI.ParentType { GQL.Unions.AppointmentState }
+            static var __parentType: Apollo.ParentType { GQL.Unions.AppointmentState }
 
             var asPendingAppointment: AsPendingAppointment? { _asInlineFragment() }
             var asUpcomingAppointment: AsUpcomingAppointment? { _asInlineFragment() }
@@ -131,7 +131,7 @@ extension GQL {
               let __data: DataDict
               init(data: DataDict) { __data = data }
 
-              static var __parentType: ApolloAPI.ParentType { GQL.Objects.PendingAppointment }
+              static var __parentType: Apollo.ParentType { GQL.Objects.PendingAppointment }
 
               var schedulingPaymentRequirement: PendingAppointmentFragment.SchedulingPaymentRequirement? { __data["schedulingPaymentRequirement"] }
 
@@ -150,13 +150,13 @@ extension GQL {
               let __data: DataDict
               init(data: DataDict) { __data = data }
 
-              static var __parentType: ApolloAPI.ParentType { GQL.Objects.UpcomingAppointment }
+              static var __parentType: Apollo.ParentType { GQL.Objects.UpcomingAppointment }
 
               struct Fragments: FragmentContainer {
                 let __data: DataDict
                 init(data: DataDict) { __data = data }
 
-                var upcomingAppointmentFragment: UpcomingAppointmentFragment { _toFragment() }
+                var scheduledAppointmentFragment: ScheduledAppointmentFragment { _toFragment() }
               }
             }
 
@@ -167,7 +167,7 @@ extension GQL {
               let __data: DataDict
               init(data: DataDict) { __data = data }
 
-              static var __parentType: ApolloAPI.ParentType { GQL.Objects.FinalizedAppointment }
+              static var __parentType: Apollo.ParentType { GQL.Objects.FinalizedAppointment }
 
               var `_`: GraphQLEnum<GQL.EmptyObject> { __data["_"] }
 
@@ -187,7 +187,7 @@ extension GQL {
             let __data: DataDict
             init(data: DataDict) { __data = data }
 
-            static var __parentType: ApolloAPI.ParentType { GQL.Objects.Price }
+            static var __parentType: Apollo.ParentType { GQL.Objects.Price }
 
             var amount: GQL.BigDecimal { __data["amount"] }
             var currencyCode: String { __data["currencyCode"] }

@@ -34,38 +34,38 @@ import XCTest
         viewModel.given(.isRefreshing(getter: false))
     }
 
-    func testAppointmentListViewControllerUpcomingTabWithImminentAppointments() {
+    func testAppointmentListViewControllerScheduledTabWithImminentAppointments() {
         // GIVEN
-        viewModel.given(.selectedSelector(getter: .upcoming))
+        viewModel.given(.selectedSelector(getter: .scheduled))
         viewModel.given(.appointments(getter: [
-            makeAppointment(state: .upcoming, date: .nabla.now()),
-            makeAppointment(state: .upcoming, date: .nabla.now().adding(minutes: 9)),
-            makeAppointment(state: .upcoming, date: .nabla.now().adding(minutes: -9)),
+            makeAppointment(state: .scheduled, date: .nabla.now()),
+            makeAppointment(state: .scheduled, date: .nabla.now().adding(minutes: 9)),
+            makeAppointment(state: .scheduled, date: .nabla.now().adding(minutes: -9)),
         ]))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
-    func testAppointmentListViewControllerUpcomingTabWithFarAppointments() {
+    func testAppointmentListViewControllerScheduledTabWithFarAppointments() {
         // GIVEN
-        viewModel.given(.selectedSelector(getter: .upcoming))
+        viewModel.given(.selectedSelector(getter: .scheduled))
         viewModel.given(.appointments(getter: [
-            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 1979286455)), // 2032
-            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 906285296)), // 1998
+            makeAppointment(state: .scheduled, date: .init(timeIntervalSince1970: 1979286455)), // 2032
+            makeAppointment(state: .scheduled, date: .init(timeIntervalSince1970: 906285296)), // 1998
         ]))
         // WHEN
         // THEN
         assertSnapshots(matching: navigationController, as: .lightAndDarkImages())
     }
     
-    func testAppointmentListViewControllerUpcomingTabWithFarAppointmentsRefreshing() {
+    func testAppointmentListViewControllerScheduledTabWithFarAppointmentsRefreshing() {
         // GIVEN
         viewModel.given(.isRefreshing(getter: true))
-        viewModel.given(.selectedSelector(getter: .upcoming))
+        viewModel.given(.selectedSelector(getter: .scheduled))
         viewModel.given(.appointments(getter: [
-            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 1979286455)), // 2032
-            makeAppointment(state: .upcoming, date: .init(timeIntervalSince1970: 906285296)), // 1998
+            makeAppointment(state: .scheduled, date: .init(timeIntervalSince1970: 1979286455)), // 2032
+            makeAppointment(state: .scheduled, date: .init(timeIntervalSince1970: 906285296)), // 1998
         ]))
         // WHEN
         // THEN

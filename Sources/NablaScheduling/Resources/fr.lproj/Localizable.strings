@@ -7,10 +7,10 @@
 
 "appointments_screen_title" = "Rendez-vous";
 "appointments_screen_action_button_label" = "Prendre rendez-vous";
-"appointments_screen_selector_upcoming_label" = "Prévus";
+"appointments_screen_selector_scheduled_label" = "Prévus";
 "appointments_screen_selector_finalized_label" = "Passés";
 
-"appointments_screen_upcoming_empty_label" = "Pas de rendez-vous prévu";
+"appointments_screen_scheduled_empty_label" = "Pas de rendez-vous prévu";
 "appointments_screen_finalized_empty_label" = "Pas de rendez-vous passé";
 
 "appointments_screen_cell_join_button_label" = "Rejoindre l'appel";

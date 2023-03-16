@@ -4,7 +4,7 @@
 @_exported import Apollo
 
 extension GQL {
-  class GetUpcomingAppointmentsLocalCacheMutation: LocalCacheMutation {
+  class GetScheduledAppointmentsLocalCacheMutation: LocalCacheMutation {
     static let operationType: GraphQLOperationType = .query
 
     var page: OpaqueCursorPage
@@ -214,9 +214,9 @@ extension GQL {
                 var __data: DataDict
                 init(data: DataDict) { __data = data }
 
-                var upcomingAppointmentFragment: UpcomingAppointmentFragment {
+                var scheduledAppointmentFragment: ScheduledAppointmentFragment {
                   get { _toFragment() }
-                  _modify { var f = upcomingAppointmentFragment; yield &f; __data = f.__data }
+                  _modify { var f = scheduledAppointmentFragment; yield &f; __data = f.__data }
                   @available(*, unavailable, message: "mutate properties of the fragment instead.")
                   set { preconditionFailure() }
                 }

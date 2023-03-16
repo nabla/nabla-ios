@@ -10,7 +10,7 @@ public struct Appointment {
     
     public enum State: Equatable {
         case pending(paymentRequirement: PaymentRequirement?)
-        case upcoming
+        case scheduled
         case finalized
     }
     

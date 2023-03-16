@@ -6,7 +6,7 @@ fragment PendingAppointmentFragment on PendingAppointment {
     }
 }
 
-fragment UpcomingAppointmentFragment on UpcomingAppointment {
+fragment ScheduledAppointmentFragment on UpcomingAppointment {
     __typename
 }
 
@@ -25,7 +25,7 @@ fragment AppointmentFragment on Appointment {
             ...PendingAppointmentFragment
         }
         ... on UpcomingAppointment {
-            ...UpcomingAppointmentFragment
+            ...ScheduledAppointmentFragment
         }
         ... on FinalizedAppointment {
             ...FinalizedAppointmentFragment

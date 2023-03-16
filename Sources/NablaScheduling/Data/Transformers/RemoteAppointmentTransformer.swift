@@ -42,7 +42,7 @@ final class RemoteAppointmentTransformer {
     
     private func transform(_ state: RemoteAppointment.State) -> Appointment.State {
         if state.asUpcomingAppointment != nil {
-            return .upcoming
+            return .scheduled
         } else if state.asFinalizedAppointment != nil {
             return .finalized
         } else if let pendingAppointment = state.asPendingAppointment?.fragments.pendingAppointmentFragment {

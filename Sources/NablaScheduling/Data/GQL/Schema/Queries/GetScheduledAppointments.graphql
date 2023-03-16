@@ -1,4 +1,4 @@
-query GetUpcomingAppointments($page: OpaqueCursorPage!) {
+query GetScheduledAppointments($page: OpaqueCursorPage!) {
     upcomingAppointments(page: $page) {
         hasMore
         nextCursor
@@ -8,7 +8,7 @@ query GetUpcomingAppointments($page: OpaqueCursorPage!) {
     }
 }
 
-query GetUpcomingAppointmentsLocalCacheMutation($page: OpaqueCursorPage!) @apollo_client_ios_localCacheMutation {
+query GetScheduledAppointmentsLocalCacheMutation($page: OpaqueCursorPage!) @apollo_client_ios_localCacheMutation {
     upcomingAppointments(page: $page) {
         hasMore
         nextCursor

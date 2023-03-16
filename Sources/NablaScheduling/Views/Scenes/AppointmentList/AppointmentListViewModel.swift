@@ -8,7 +8,7 @@ public protocol AppointmentListDelegate: AnyObject {
 }
 
 enum AppointmentsSelector: Int {
-    case upcoming = 0
+    case scheduled = 0
     case finalized = 1
 }
 
@@ -48,28 +48,28 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     
     weak var delegate: AppointmentListDelegate?
     
-    @Published var selectedSelector: AppointmentsSelector = .upcoming
+    @Published var selectedSelector: AppointmentsSelector = .scheduled
     @Published var alert: AlertViewModel?
     @Published var videoCallRoom: Location.RemoteLocation.VideoCallRoom?
     @Published var externalCallURL: URL?
 
     var isLoading: Bool {
         switch selectedSelector {
-        case .upcoming: return isLoadingUpcomingAppointments
+        case .scheduled: return isLoadingScheduledAppointments
         case .finalized: return isLoadingFinalizedAppointments
         }
     }
     
     var isRefreshing: Bool {
         switch selectedSelector {
-        case .upcoming: return isRefreshingUpcomingAppointments
+        case .scheduled: return isRefreshingScheduledAppointments
         case .finalized: return isRefreshingFinalizedAppointments
         }
     }
     
     var appointments: [Appointment] {
         switch selectedSelector {
-        case .upcoming: return upcomingAppointments.elements
+        case .scheduled: return scheduledAppointments.elements
         case .finalized: return finalizedAppointments.elements
         }
     }
@@ -87,7 +87,7 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     func userDidSelectAppointment(atIndex index: Int) {
         let appointment: Appointment?
         switch selectedSelector {
-        case .upcoming: appointment = upcomingAppointments.elements.nabla.element(at: index)
+        case .scheduled: appointment = scheduledAppointments.elements.nabla.element(at: index)
         case .finalized: appointment = finalizedAppointments.elements.nabla.element(at: index)
         }
         guard let selectedAppointment = appointment else {
@@ -109,7 +109,7 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
         self.logger = logger
         
         Task {
-            await watchUpcomingAppointments()
+            await watchScheduledAppointments()
             await watchFinalizedAppointments()
         }
     }
@@ -123,28 +123,28 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     private let client: NablaSchedulingClient
     private let logger: Logger
     
-    @Published private var upcomingAppointments: PaginatedList<Appointment> = .empty
+    @Published private var scheduledAppointments: PaginatedList<Appointment> = .empty
     @Published private var finalizedAppointments: PaginatedList<Appointment> = .empty
-    @Published private var isLoadingUpcomingAppointments = false
+    @Published private var isLoadingScheduledAppointments = false
     @Published private var isLoadingFinalizedAppointments = false
-    @Published private var isRefreshingUpcomingAppointments = false
+    @Published private var isRefreshingScheduledAppointments = false
     @Published private var isRefreshingFinalizedAppointments = false
     
-    private var isLoadingMoreUpcomingAppointments = false
+    private var isLoadingMoreScheduledAppointments = false
     private var isLoadingMoreFinalizedAppointments = false
     
-    private var upcomingAppointmentsWatcher: AnyCancellable?
+    private var scheduledAppointmentsWatcher: AnyCancellable?
     private var finalizedAppointmentsWatcher: AnyCancellable?
     
-    private func watchUpcomingAppointments() {
-        isLoadingUpcomingAppointments = true
+    private func watchScheduledAppointments() {
+        isLoadingScheduledAppointments = true
         
-        upcomingAppointmentsWatcher = client.watchAppointments(state: .upcoming)
+        scheduledAppointmentsWatcher = client.watchAppointments(state: .scheduled)
             .nabla.drive(
                 receiveValue: { [weak self] response in
-                    self?.upcomingAppointments = response.data
-                    self?.isLoadingUpcomingAppointments = false
-                    self?.isRefreshingUpcomingAppointments = response.refreshingState.isRefreshing
+                    self?.scheduledAppointments = response.data
+                    self?.isLoadingScheduledAppointments = false
+                    self?.isRefreshingScheduledAppointments = response.refreshingState.isRefreshing
                 },
                 receiveError: { [weak self] error in
                     self?.alert = .error(
@@ -152,8 +152,8 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
                         error: error,
                         fallbackMessage: L10n.appointmentsScreenLoadListErrorMessage
                     )
-                    self?.isLoadingUpcomingAppointments = false
-                    self?.isRefreshingUpcomingAppointments = false
+                    self?.isLoadingScheduledAppointments = false
+                    self?.isRefreshingScheduledAppointments = false
                 }
             )
     }
@@ -183,10 +183,10 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
     private func loadMoreAppointments() async {
         do {
             switch selectedSelector {
-            case .upcoming:
-                guard !isLoadingMoreUpcomingAppointments else { return }
-                isLoadingMoreUpcomingAppointments = true
-                try await upcomingAppointments.loadMore?()
+            case .scheduled:
+                guard !isLoadingMoreScheduledAppointments else { return }
+                isLoadingMoreScheduledAppointments = true
+                try await scheduledAppointments.loadMore?()
             case .finalized:
                 guard !isLoadingMoreFinalizedAppointments else { return }
                 isLoadingMoreFinalizedAppointments = true
@@ -200,8 +200,8 @@ final class AppointmentListViewModelImpl: AppointmentListViewModel, ObservableOb
             )
         }
         switch selectedSelector {
-        case .upcoming:
-            isLoadingMoreUpcomingAppointments = false
+        case .scheduled:
+            isLoadingMoreScheduledAppointments = false
         case .finalized:
             isLoadingMoreFinalizedAppointments = false
         }
