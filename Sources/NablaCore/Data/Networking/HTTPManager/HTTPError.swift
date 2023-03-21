@@ -7,7 +7,7 @@ public enum HTTPError: Error {
     case noSelf
     
     public enum TransportError: Error {
-        case unreachableService
+        case unreachableService(Error?)
         case cancelled
         case generic(Error?)
         case noResponse

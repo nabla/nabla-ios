@@ -38,7 +38,7 @@ extension URLSession {
             if nsError.code == NSURLErrorCancelled {
                 return .transportError(.cancelled)
             } else {
-                return .transportError(.unreachableService)
+                return .transportError(.unreachableService(error))
             }
         }
         return .transportError(.generic(error))
