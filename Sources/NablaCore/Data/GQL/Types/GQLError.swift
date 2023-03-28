@@ -15,6 +15,6 @@ public enum GQLError: Error {
     public enum CacheError: Error {
         case entityNotCached
         case normalizationFailed(object: Any)
-        case unexpectedError
+        case unexpectedError(Error)
     }
 }

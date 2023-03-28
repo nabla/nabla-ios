@@ -82,6 +82,6 @@ class GQLStoreImpl: GQLStore {
             return cacheError
         }
         // TODO: @tgy Handle each Apollo errors individually
-        return .unexpectedError
+        return .unexpectedError(error)
     }
 }
