@@ -14,7 +14,7 @@ extension GQL {
     init(
       deviceModel: String,
       os: GraphQLEnum<DeviceOs>,
-      osVersion: String,
+      osVersion: GraphQLNullable<String> = nil,
       codeVersion: Int,
       sdkModules: [GraphQLEnum<SdkModule>]
     ) {
@@ -37,7 +37,7 @@ extension GQL {
       set { __data["os"] = newValue }
     }
 
-    var osVersion: String {
+    var osVersion: GraphQLNullable<String> {
       get { __data["osVersion"] }
       set { __data["osVersion"] = newValue }
     }

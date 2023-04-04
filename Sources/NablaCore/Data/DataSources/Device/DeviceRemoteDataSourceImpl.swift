@@ -29,7 +29,7 @@ final class DeviceRemoteDataSourceImpl: DeviceRemoteDataSource {
         GQL.DeviceInput(
             deviceModel: installation.deviceModel,
             os: .case(.ios),
-            osVersion: installation.deviceOSVersion,
+            osVersion: .some(installation.deviceOSVersion),
             codeVersion: installation.codeVersion,
             sdkModules: installation.modules
         )

@@ -7,6 +7,7 @@ extension GQL {
   enum DeviceOs: String, EnumType {
     case android = "ANDROID"
     case ios = "IOS"
+    case web = "WEB"
   }
 
 }
