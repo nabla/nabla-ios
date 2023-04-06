@@ -17,6 +17,7 @@ extension NablaMessagingClientProtocolMock {
                 subtitle: conversation.subtitle,
                 inboxPreviewTitle: conversation.inboxPreviewTitle,
                 lastMessagePreview: conversation.lastMessagePreview,
+                lastMessage: conversation.lastMessage,
                 lastModified: conversation.lastModified,
                 patientUnreadMessageCount: conversation.patientUnreadMessageCount,
                 pictureUrl: nil,

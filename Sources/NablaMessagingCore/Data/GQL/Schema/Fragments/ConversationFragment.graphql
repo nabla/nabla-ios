@@ -3,6 +3,9 @@ fragment ConversationFragment on Conversation @apollo_client_ios_localCacheMutat
     title
     subtitle
     lastMessagePreview
+    lastMessage {
+        ...MessageFragment
+    }
     unreadMessageCount
     inboxPreviewTitle
     updatedAt

@@ -9,12 +9,14 @@ class ConversationRepositoryImpl: ConversationRepository {
         remoteDataSource: ConversationRemoteDataSource,
         localDataSource: ConversationLocalDataSource,
         fileUploadDataSource: FileUploadRemoteDataSource,
-        uuidGenerator: UUIDGenerator
+        uuidGenerator: UUIDGenerator,
+        conversationItemTransformer: RemoteConversationItemTransformer
     ) {
         self.remoteDataSource = remoteDataSource
         self.localDataSource = localDataSource
         self.fileUploadDataSource = fileUploadDataSource
         self.uuidGenerator = uuidGenerator
+        self.conversationItemTransformer = conversationItemTransformer
     }
 
     // MARK: - Internal
@@ -52,7 +54,10 @@ class ConversationRepositoryImpl: ConversationRepository {
             .map { localConversation, remoteResponse -> AnyResponse<Conversation, NablaError>? in
                 if let remoteResponse = remoteResponse {
                     return remoteResponse.mapData { remoteConversation in
-                        ConversationTransformer.transform(fragment: remoteConversation)
+                        ConversationTransformer.transform(
+                            fragment: remoteConversation,
+                            conversationItemTransformer: self.conversationItemTransformer
+                        )
                     }
                 } else if let localConversation = localConversation {
                     return AnyResponse(
@@ -74,7 +79,12 @@ class ConversationRepositoryImpl: ConversationRepository {
             .map { response in
                 response.map(
                     data: { paginatedList in
-                        paginatedList.map(ConversationTransformer.transform(fragment:))
+                        paginatedList.map { fragment in
+                            ConversationTransformer.transform(
+                                fragment: fragment,
+                                conversationItemTransformer: self.conversationItemTransformer
+                            )
+                        }
                     },
                     error: GQLErrorTransformer.transform(gqlError:)
                 )
@@ -100,7 +110,10 @@ class ConversationRepositoryImpl: ConversationRepository {
         let input = try await prepareInitialMessage(message)
         do {
             let conversation = try await remoteDataSource.createConversation(message: input, title: title, providerIds: providerIds)
-            return ConversationTransformer.transform(fragment: conversation)
+            return ConversationTransformer.transform(
+                fragment: conversation,
+                conversationItemTransformer: conversationItemTransformer
+            )
         } catch let error as GQLError {
             switch error {
             case let .entityNotFound(message):
@@ -155,6 +168,7 @@ class ConversationRepositoryImpl: ConversationRepository {
     private let remoteDataSource: ConversationRemoteDataSource
     private let localDataSource: ConversationLocalDataSource
     private let fileUploadDataSource: FileUploadRemoteDataSource
+    private let conversationItemTransformer: RemoteConversationItemTransformer
 
     private weak var conversationsEventsSubscription: AnyCancellable?
     

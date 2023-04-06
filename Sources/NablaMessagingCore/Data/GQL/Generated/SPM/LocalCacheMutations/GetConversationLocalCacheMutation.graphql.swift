@@ -74,6 +74,10 @@ extension GQL {
             get { __data["lastMessagePreview"] }
             set { __data["lastMessagePreview"] = newValue }
           }
+          var lastMessage: LastMessage? {
+            get { __data["lastMessage"] }
+            set { __data["lastMessage"] = newValue }
+          }
           var unreadMessageCount: Int {
             get { __data["unreadMessageCount"] }
             set { __data["unreadMessageCount"] = newValue }
@@ -108,6 +112,96 @@ extension GQL {
               _modify { var f = conversationFragment; yield &f; __data = f.__data }
               @available(*, unavailable, message: "mutate properties of the fragment instead.")
               set { preconditionFailure() }
+            }
+          }
+
+          /// Conversation.Conversation.LastMessage
+          ///
+          /// Parent Type: `Message`
+          struct LastMessage: GQL.MutableSelectionSet {
+            var __data: DataDict
+            init(data: DataDict) { __data = data }
+
+            static var __parentType: ApolloAPI.ParentType { GQL.Objects.Message }
+
+            var id: GQL.UUID {
+              get { __data["id"] }
+              set { __data["id"] = newValue }
+            }
+            var clientId: GQL.UUID? {
+              get { __data["clientId"] }
+              set { __data["clientId"] = newValue }
+            }
+            var createdAt: GQL.DateTime {
+              get { __data["createdAt"] }
+              set { __data["createdAt"] = newValue }
+            }
+            var author: MessageFragment.Author {
+              get { __data["author"] }
+              set { __data["author"] = newValue }
+            }
+            var content: MessageFragment.Content {
+              get { __data["content"] }
+              set { __data["content"] = newValue }
+            }
+            var replyTo: ReplyTo? {
+              get { __data["replyTo"] }
+              set { __data["replyTo"] = newValue }
+            }
+
+            struct Fragments: FragmentContainer {
+              var __data: DataDict
+              init(data: DataDict) { __data = data }
+
+              var messageFragment: MessageFragment {
+                get { _toFragment() }
+                _modify { var f = messageFragment; yield &f; __data = f.__data }
+                @available(*, unavailable, message: "mutate properties of the fragment instead.")
+                set { preconditionFailure() }
+              }
+            }
+
+            /// Conversation.Conversation.LastMessage.ReplyTo
+            ///
+            /// Parent Type: `Message`
+            struct ReplyTo: GQL.MutableSelectionSet {
+              var __data: DataDict
+              init(data: DataDict) { __data = data }
+
+              static var __parentType: ApolloAPI.ParentType { GQL.Objects.Message }
+
+              var id: GQL.UUID {
+                get { __data["id"] }
+                set { __data["id"] = newValue }
+              }
+              var clientId: GQL.UUID? {
+                get { __data["clientId"] }
+                set { __data["clientId"] = newValue }
+              }
+              var createdAt: GQL.DateTime {
+                get { __data["createdAt"] }
+                set { __data["createdAt"] = newValue }
+              }
+              var author: ReplyMessageFragment.Author {
+                get { __data["author"] }
+                set { __data["author"] = newValue }
+              }
+              var content: ReplyMessageFragment.Content {
+                get { __data["content"] }
+                set { __data["content"] = newValue }
+              }
+
+              struct Fragments: FragmentContainer {
+                var __data: DataDict
+                init(data: DataDict) { __data = data }
+
+                var replyMessageFragment: ReplyMessageFragment {
+                  get { _toFragment() }
+                  _modify { var f = replyMessageFragment; yield &f; __data = f.__data }
+                  @available(*, unavailable, message: "mutate properties of the fragment instead.")
+                  set { preconditionFailure() }
+                }
+              }
             }
           }
 

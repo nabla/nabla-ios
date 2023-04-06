@@ -6,6 +6,7 @@ public struct Conversation {
     public let subtitle: String?
     public let inboxPreviewTitle: String
     public let lastMessagePreview: String?
+    public let lastMessage: ConversationMessage?
     public let lastModified: Date
     public let patientUnreadMessageCount: Int
     public let pictureUrl: URL?

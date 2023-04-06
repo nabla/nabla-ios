@@ -13,6 +13,7 @@ public extension Conversation {
             subtitle: "Subtitle \(conversationCount)",
             inboxPreviewTitle: "PreviewTitle \(conversationCount)",
             lastMessagePreview: "MessagePreview \(conversationCount)",
+            lastMessage: nil,
             lastModified: .init(timeIntervalSinceReferenceDate: 0),
             patientUnreadMessageCount: 0,
             pictureUrl: pictureUrl,

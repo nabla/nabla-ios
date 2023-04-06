@@ -15,21 +15,7 @@ final class RemoteConversationItemTransformer {
         return nil
     }
     
-    // MARK: Init
-    
-    init(
-        logger: Logger
-    ) {
-        self.logger = logger
-    }
-
-    // MARK: - Private
-    
-    private let logger: Logger
-    
-    // MARK: Message
-    
-    private func transform(_ message: GQL.MessageFragment) -> ConversationItem? {
+    func transform(_ message: GQL.MessageFragment) -> ConversationItem? {
         let messageContentFragment = message.content.fragments.messageContentFragment
         let replyToFragment = message.replyTo?.fragments.replyMessageFragment
         if let textContent = messageContentFragment.asTextMessageContent?.fragments.textMessageContentFragment {
@@ -141,6 +127,20 @@ final class RemoteConversationItemTransformer {
         logger.error(message: "Unknown message content", extra: ["content": String(describing: message.content)])
         return nil
     }
+    
+    // MARK: Init
+    
+    init(
+        logger: Logger
+    ) {
+        self.logger = logger
+    }
+
+    // MARK: - Private
+    
+    private let logger: Logger
+    
+    // MARK: Message
 
     private func transform(_ replyTo: GQL.ReplyMessageFragment?) -> ConversationMessage? {
         guard let replyTo = replyTo else { return nil }

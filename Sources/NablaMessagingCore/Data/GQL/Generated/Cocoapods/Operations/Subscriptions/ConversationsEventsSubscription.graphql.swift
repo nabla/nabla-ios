@@ -36,7 +36,7 @@ extension GQL {
           }
         }
         """#,
-        fragments: [ConversationFragment.self, EphemeralUrlFragment.self, ProviderInConversationFragment.self, ProviderFragment.self]
+        fragments: [ConversationFragment.self, MessageFragment.self, MessageAuthorFragment.self, ProviderFragment.self, EphemeralUrlFragment.self, PatientFragment.self, SystemMessageFragment.self, MessageContentFragment.self, TextMessageContentFragment.self, ImageMessageContentFragment.self, VideoMessageContentFragment.self, DocumentMessageContentFragment.self, AudioMessageContentFragment.self, LivekitRoomMessageContentFragment.self, LivekitRoomFragment.self, LivekitRoomOpenStatusFragment.self, LivekitRoomClosedStatusFragment.self, ReplyMessageFragment.self, ProviderInConversationFragment.self]
       ))
 
     init() {}
@@ -131,6 +131,7 @@ extension GQL {
               var title: String? { __data["title"] }
               var subtitle: String? { __data["subtitle"] }
               var lastMessagePreview: String? { __data["lastMessagePreview"] }
+              var lastMessage: LastMessage? { __data["lastMessage"] }
               var unreadMessageCount: Int { __data["unreadMessageCount"] }
               var inboxPreviewTitle: String { __data["inboxPreviewTitle"] }
               var updatedAt: GQL.DateTime { __data["updatedAt"] }
@@ -143,6 +144,53 @@ extension GQL {
                 init(data: DataDict) { __data = data }
 
                 var conversationFragment: ConversationFragment { _toFragment() }
+              }
+
+              /// Conversations.Event.AsConversationCreatedEvent.Conversation.LastMessage
+              ///
+              /// Parent Type: `Message`
+              struct LastMessage: GQL.SelectionSet {
+                let __data: DataDict
+                init(data: DataDict) { __data = data }
+
+                static var __parentType: Apollo.ParentType { GQL.Objects.Message }
+
+                var id: GQL.UUID { __data["id"] }
+                var clientId: GQL.UUID? { __data["clientId"] }
+                var createdAt: GQL.DateTime { __data["createdAt"] }
+                var author: MessageFragment.Author { __data["author"] }
+                var content: MessageFragment.Content { __data["content"] }
+                var replyTo: ReplyTo? { __data["replyTo"] }
+
+                struct Fragments: FragmentContainer {
+                  let __data: DataDict
+                  init(data: DataDict) { __data = data }
+
+                  var messageFragment: MessageFragment { _toFragment() }
+                }
+
+                /// Conversations.Event.AsConversationCreatedEvent.Conversation.LastMessage.ReplyTo
+                ///
+                /// Parent Type: `Message`
+                struct ReplyTo: GQL.SelectionSet {
+                  let __data: DataDict
+                  init(data: DataDict) { __data = data }
+
+                  static var __parentType: Apollo.ParentType { GQL.Objects.Message }
+
+                  var id: GQL.UUID { __data["id"] }
+                  var clientId: GQL.UUID? { __data["clientId"] }
+                  var createdAt: GQL.DateTime { __data["createdAt"] }
+                  var author: ReplyMessageFragment.Author { __data["author"] }
+                  var content: ReplyMessageFragment.Content { __data["content"] }
+
+                  struct Fragments: FragmentContainer {
+                    let __data: DataDict
+                    init(data: DataDict) { __data = data }
+
+                    var replyMessageFragment: ReplyMessageFragment { _toFragment() }
+                  }
+                }
               }
 
               /// Conversations.Event.AsConversationCreatedEvent.Conversation.PictureUrl
@@ -262,6 +310,7 @@ extension GQL {
               var title: String? { __data["title"] }
               var subtitle: String? { __data["subtitle"] }
               var lastMessagePreview: String? { __data["lastMessagePreview"] }
+              var lastMessage: LastMessage? { __data["lastMessage"] }
               var unreadMessageCount: Int { __data["unreadMessageCount"] }
               var inboxPreviewTitle: String { __data["inboxPreviewTitle"] }
               var updatedAt: GQL.DateTime { __data["updatedAt"] }
@@ -274,6 +323,53 @@ extension GQL {
                 init(data: DataDict) { __data = data }
 
                 var conversationFragment: ConversationFragment { _toFragment() }
+              }
+
+              /// Conversations.Event.AsConversationUpdatedEvent.Conversation.LastMessage
+              ///
+              /// Parent Type: `Message`
+              struct LastMessage: GQL.SelectionSet {
+                let __data: DataDict
+                init(data: DataDict) { __data = data }
+
+                static var __parentType: Apollo.ParentType { GQL.Objects.Message }
+
+                var id: GQL.UUID { __data["id"] }
+                var clientId: GQL.UUID? { __data["clientId"] }
+                var createdAt: GQL.DateTime { __data["createdAt"] }
+                var author: MessageFragment.Author { __data["author"] }
+                var content: MessageFragment.Content { __data["content"] }
+                var replyTo: ReplyTo? { __data["replyTo"] }
+
+                struct Fragments: FragmentContainer {
+                  let __data: DataDict
+                  init(data: DataDict) { __data = data }
+
+                  var messageFragment: MessageFragment { _toFragment() }
+                }
+
+                /// Conversations.Event.AsConversationUpdatedEvent.Conversation.LastMessage.ReplyTo
+                ///
+                /// Parent Type: `Message`
+                struct ReplyTo: GQL.SelectionSet {
+                  let __data: DataDict
+                  init(data: DataDict) { __data = data }
+
+                  static var __parentType: Apollo.ParentType { GQL.Objects.Message }
+
+                  var id: GQL.UUID { __data["id"] }
+                  var clientId: GQL.UUID? { __data["clientId"] }
+                  var createdAt: GQL.DateTime { __data["createdAt"] }
+                  var author: ReplyMessageFragment.Author { __data["author"] }
+                  var content: ReplyMessageFragment.Content { __data["content"] }
+
+                  struct Fragments: FragmentContainer {
+                    let __data: DataDict
+                    init(data: DataDict) { __data = data }
+
+                    var replyMessageFragment: ReplyMessageFragment { _toFragment() }
+                  }
+                }
               }
 
               /// Conversations.Event.AsConversationUpdatedEvent.Conversation.PictureUrl

@@ -52,7 +52,8 @@ public class MessagingContainer {
             remoteDataSource: conversationRemoteDataSource,
             localDataSource: conversationLocalDataSource,
             fileUploadDataSource: fileUploadRemoteDataSource,
-            uuidGenerator: coreContainer.uuidGenerator
+            uuidGenerator: coreContainer.uuidGenerator,
+            conversationItemTransformer: RemoteConversationItemTransformer(logger: logger)
         )
         conversationItemRepository = ConversationItemRepositoryImpl(
             itemsRemoteDataSource: conversationItemRemoteDataSource,

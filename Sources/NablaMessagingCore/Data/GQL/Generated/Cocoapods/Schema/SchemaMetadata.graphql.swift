@@ -34,14 +34,12 @@ extension GQL {
       case "Mutation": return GQL.Objects.Mutation
       case "CreateConversationOutput": return GQL.Objects.CreateConversationOutput
       case "Conversation": return GQL.Objects.Conversation
-      case "EphemeralUrl": return GQL.Objects.EphemeralUrl
-      case "ProviderInConversation": return GQL.Objects.ProviderInConversation
-      case "Provider": return GQL.Objects.Provider
-      case "SendMessageOutput": return GQL.Objects.SendMessageOutput
       case "Message": return GQL.Objects.Message
       case "System": return GQL.Objects.System
       case "Patient": return GQL.Objects.Patient
+      case "Provider": return GQL.Objects.Provider
       case "DeletedProvider": return GQL.Objects.DeletedProvider
+      case "EphemeralUrl": return GQL.Objects.EphemeralUrl
       case "ImageFileUpload": return GQL.Objects.ImageFileUpload
       case "VideoFileUpload": return GQL.Objects.VideoFileUpload
       case "DocumentFileUpload": return GQL.Objects.DocumentFileUpload
@@ -56,6 +54,8 @@ extension GQL {
       case "LivekitRoom": return GQL.Objects.LivekitRoom
       case "LivekitRoomOpenStatus": return GQL.Objects.LivekitRoomOpenStatus
       case "LivekitRoomClosedStatus": return GQL.Objects.LivekitRoomClosedStatus
+      case "ProviderInConversation": return GQL.Objects.ProviderInConversation
+      case "SendMessageOutput": return GQL.Objects.SendMessageOutput
       case "DeleteMessageOutput": return GQL.Objects.DeleteMessageOutput
       case "SetTypingOutput": return GQL.Objects.SetTypingOutput
       case "MarkConversationAsSeenOutput": return GQL.Objects.MarkConversationAsSeenOutput
