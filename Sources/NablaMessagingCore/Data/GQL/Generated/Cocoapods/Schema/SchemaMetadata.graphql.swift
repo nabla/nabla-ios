@@ -51,6 +51,7 @@ extension GQL {
       case "DeletedMessageContent": return GQL.Objects.DeletedMessageContent
       case "AudioMessageContent": return GQL.Objects.AudioMessageContent
       case "LivekitRoomMessageContent": return GQL.Objects.LivekitRoomMessageContent
+      case "QuestionsSetFormMessageContent": return GQL.Objects.QuestionsSetFormMessageContent
       case "LivekitRoom": return GQL.Objects.LivekitRoom
       case "LivekitRoomOpenStatus": return GQL.Objects.LivekitRoomOpenStatus
       case "LivekitRoomClosedStatus": return GQL.Objects.LivekitRoomClosedStatus

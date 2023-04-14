@@ -13,7 +13,8 @@ extension GQL.Unions {
       GQL.Objects.DocumentMessageContent.self,
       GQL.Objects.DeletedMessageContent.self,
       GQL.Objects.AudioMessageContent.self,
-      GQL.Objects.LivekitRoomMessageContent.self
+      GQL.Objects.LivekitRoomMessageContent.self,
+      GQL.Objects.QuestionsSetFormMessageContent.self
     ]
   )
 }
