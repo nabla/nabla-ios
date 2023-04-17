@@ -1,0 +1,98 @@
+// ----- Map universal links
+
+"universal_link_google_maps" = "Google Maps";
+"universal_link_apple_maps" = "Apple Maps";
+
+// ----- Appointment list screen
+
+"appointments_screen_title" = "Consultas";
+"appointments_screen_action_button_label" = "Marque uma consulta";
+"appointments_screen_selector_scheduled_label" = "Agendadas";
+"appointments_screen_selector_finalized_label" = "Passadas";
+
+"appointments_screen_scheduled_empty_label" = "Nenhuma consulta agendada";
+"appointments_screen_finalized_empty_label" = "Nenhuma consulta anterior";
+
+"appointments_screen_cell_join_button_label" = "Participar da chamada";
+"appointments_screen_cell_join_in_progress_button_label" = "Retornar à chamada";
+
+"appointments_screen_load_list_error_title" = "Ocorreu um erro";
+"appointments_screen_load_list_error_message" = "Ocorreu um erro ao carregar as consultas. Tente novamente.";
+
+// ----- Appointment details screen
+
+"appointment_details_screen_title" = "Consulta";
+"appointment_details_screen_action_button_label" = "Cancelar consulta";
+
+"appointment_details_screen_cancel_appointment_modal_title" = "Cancelar consulta?";
+"appointment_details_screen_cancel_appointment_modal_message" = "Deseja cancelar esta consulta? Esta ação é final.";
+"appointment_details_screen_cancel_appointment_modal_confirm_button" = "Sim, cancele a consulta";
+"appointment_details_screen_cancel_appointment_modal_close_button" = "Não, mantenha a consulta";
+
+"appointment_details_screen_watch_appointment_error_title" = "Ocorreu um erro";
+"appointment_details_screen_watch_appointment_error_message" = "Falha ao carregar a consulta. Tente novamente.";
+
+"appointment_details_screen_cancel_appointment_error_title" = "Ocorreu um erro";
+"appointment_details_screen_cancel_appointment_error_message" = "Falha ao carregar a consulta. Tente novamente.";
+
+// ----- Location picker screen
+
+"location_picker_screen_title" = "Selecione um local";
+
+"location_picker_remote_location_name" = "Teleconsulta";
+"location_picker_physical_location_name" = "Consulta presencial";
+
+"location_picker_screen_empty_label" = "Nenhum local disponível";
+
+"location_picker_screen_error_title" = "Ocorreu um erro";
+"location_picker_screen_error_message" = "Falha ao mostrar os locais. Tente novamente.";
+
+// ----- Category picker screen
+
+"category_picker_screen_title" = "Selecione uma categoria";
+
+"category_picker_screen_remote_location_disclaimer" = "A consulta será via internet.";
+"category_picker_screen_physical_location_disclaimer" = "A consulta será presencial.";
+
+"category_picker_screen_empty_label" = "Nenhuma categoria disponível";
+
+"category_picker_screen_error_title" = "Ocorreu um erro";
+"category_picker_screen_error_message" = "Falha ao mostrar os locais. Tente novamente.";
+
+// ----- Time slots screen
+
+"time_slots_screen_title" = "Selecione uma data";
+"time_slots_screen_action_button_label" = "Confirmar";
+
+"time_slots_picker_screen_group_subtitle_format" = "%d disponibilidades";
+
+"time_slots_picker_screen_empty_label" = "Nenhuma disponibilidade";
+
+"time_slots_picker_screen_error_title" = "Ocorreu um erro";
+"time_slots_picker_screen_error_message" = "Falha ao mostrar as disponibilidades. Tente novamente.";
+
+// ----- Confirmation screen
+
+"confirmation_screen_title" = "Confirme sua consulta";
+"confirmation_screen_consultation_disclaimer" = "Eu aceito realisar uma consulta por vídeo.";
+"confirmation_screen_data_disclaimer" = "Eu aceito a política de tratamento de dados.";
+"confirmation_screen_action_button_label_free_appointment" = "Confirmar o pagamento";
+"confirmation_screen_action_button_label_paid_appointment" = "Ir para o pagamento";
+
+"confirmation_screen_error_title" = "Ocorreu um erro";
+"confirmation_screen_error_message" = "Falha ao agendar a consulta. Tente novamente.";
+"confirmation_screen_error_retry_button" = "Tentar novamente";
+
+"confirmation_screen_payment_hook_not_implemented_error_title" = "Erro";
+"confirmation_screen_payment_hook_not_implemented_error_message" = "Este applicativo não está configurado para aceitar consultas pagas.";
+"confirmation_screen_payment_hook_not_implemented_error_button" = "Cancelar";
+
+// ----- Success screen
+
+"success_screen_label" = "Sua consulta foi agendada!";
+"success_screen_button" = "OK";
+
+// ----- Appointment details view
+
+"appointment_details_view_remote_location_label" = "Teleconsulta";
+"appointment_details_view_physical_location_label" = "Consulta presencial";

@@ -1,0 +1,9 @@
+"permissions_denied_error_message" = "São necessárias permissões para acessar o microfone e a câmera para teleconsultas.";
+"permissions_denied_error_action" = "Ir para Configurações";
+
+"failed_to_connect_error_message" = "Falha na conexão da chamada. Por favor, tente novamente mais tarde.";
+"failed_to_connect_error_action" = "Tentar novamente";
+
+"not_available_on_simulator_error_title" = "Indisponível";
+"not_available_on_simulator_error_message" = "A câmera não pode ser usada a partir do simulador. Por favor, use um dispositivo real em vez disso.";
+"not_available_on_simulator_error_action" = "OK";

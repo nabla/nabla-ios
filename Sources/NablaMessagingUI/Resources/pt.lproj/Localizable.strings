@@ -1,0 +1,59 @@
+// Conversation List
+"conversation_list_empty_state_label" = "Sem conversas";
+"conversation_list_last_message_yesterday" = "Ontem";
+"conversation_list_button_retry" = "Tentar novamente";
+"conversation_list_load_error_label" = "Ocorreu um erro ao carregar as conversas, por favor tente novamente.";
+
+// Inbox
+"inbox_title" = "Bate-papo médico";
+"inbox_error_alert_title" = "Erro";
+"inbox_error_alert_cancel_action_title" = "Cancelar";
+"inbox_error_failed_to_create_conversation_message" = "Falha ao criar a conversa: %@";
+
+// Conversation
+"conversation_composer_placeholder" = "Digite a sua mensagem";
+"conversation_action_copy_message" = "Copiar";
+"conversation_action_delete_message" = "Excluir";
+"conversation_action_reply_to" = "Responder a";
+"conversation_deleted_message" = "Mensagem excluída";
+"conversation_message_deleted_sender" = "Excluído";
+"conversation_message_system_sender" = "Sistema";
+"conversation_message_unknown_sender" = "Usuário desconhecido";
+"conversation_add_media_camera" = "Câmera";
+"conversation_add_media_library" = "Fotos e Vídeos";
+"conversation_add_media_scan_document" = "Digitalizar documento";
+"conversation_add_media_scan_document_filename" = "%@ scan.pdf";
+"conversation_add_media_document" = "Documento";
+"conversation_add_media_cancel" = "Cancelar";
+"conversation_load_error_label" = "Ocorreu um erro ao carregar as mensagens, por favor tente novamente.";
+"conversation_load_more_error_title" = "Erro";
+"conversation_load_more_error_message" = "Ocorreu um erro ao carregar mais mensagens.";
+"conversation_load_more_error_alert_action" = "OK";
+"conversation_delete_message_error_title" = "Erro";
+"conversation_delete_message_error_message" = "Ocorreu um erro ao excluir a mensagem, por favor tente novamente.";
+"conversation_delete_message_error_alert_action" = "OK";
+"conversation_message_status_sending" = "Enviando...";
+"conversation_message_status_sent" = "Enviada";
+"conversation_message_status_failed" = "Falha no envio, toque para tentar novamente...";
+"conversation_date_separator_date_time" = "%@ às %@";
+"conversation_date_separator_date_today" = "Hoje";
+"conversation_date_separator_date_yesterday" = "Ontem";
+"conversation_provider_joined" = "%@ entrou na conversa";
+"conversation_reply_to_author" = "Respondendo para %@";
+"conversation_reply_to_author_you" = "você";
+"conversation_reply_to_author_deleted_provider" = "[Profissional excluído]";
+"conversation_reply_to_author_unknown_author" = "desconhecido";
+"conversation_reply_to_preview_picture" = "Foto";
+"conversation_reply_to_preview_audio" = "Áudio";
+"conversation_reply_to_preview_document" = "Documento";
+"conversation_reply_to_preview_video" = "Vídeo";
+"conversation_reply_to_preview_unknown" = "Pré-visualização";
+
+// Provider
+"provider_deleted_name" = "[Profissional excluído]";
+
+// Video Call Action Request
+"video_call_action_request_title" = "Consulta de vídeo";
+"video_call_action_request_button_default" = "Participar da chamada";
+"video_call_action_request_button_in_progress" = "Voltar à chamada";
+"video_call_action_request_button_closed" = "Fim";
