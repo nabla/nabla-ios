@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.1.0] - 2023-04-18
+
+### Added
+
+- Global: Added portuguese localization.
 - Messaging core: Added new `lastMessage` property on `Conversation` that gives access to the whole message and not just its preview.
 
 ### Changed

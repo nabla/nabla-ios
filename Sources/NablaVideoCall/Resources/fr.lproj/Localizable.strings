@@ -7,4 +7,3 @@
 "not_available_on_simulator_error_title" = "Indisponible";
 "not_available_on_simulator_error_message" = "Le simulateur ne supporte pas l'utilisation de la camera. Veuillez utiliser un appareil physique.";
 "not_available_on_simulator_error_action" = "Ok";
-
