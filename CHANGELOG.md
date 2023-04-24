@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 
+## [1.1.1] - 2023-04-24
+
+### Added
+
+### Changed
+
+### Fixed
+
+- Messaging core: Fix a race condition where auto replies would break  websocket connection and prevent new events to be handled live.
+
 ## [1.1.0] - 2023-04-18
 
 ### Added
