@@ -121,10 +121,7 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
         } else if let messageUpdatedEvent = event.asMessageUpdatedEvent {
             logger.info(message: "Message update", extra: ["message": messageUpdatedEvent.message.id])
         } else if let typingEvent = event.asTypingEvent {
-            try await update(
-                provider: typingEvent.provider.fragments.providerInConversationFragment,
-                inCacheOfConversationWithId: conversationId
-            )
+            logger.info(message: "Typing event", extra: ["provider": typingEvent.provider.provider.id])
         } else if let conversationActivityCreated = event.asConversationActivityCreated {
             let item = GQL.ConversationItemFragment(
                 conversationActivity: conversationActivityCreated.activity.fragments.conversationActivityFragment
@@ -149,18 +146,6 @@ class ConversationItemRemoteDataSourceImpl: ConversationItemRemoteDataSource {
                 )
                 if !isAlreadyInConversation {
                     cache.conversation.conversation.items.data.append(.init(data: item.__data))
-                }
-            }
-        )
-    }
-    
-    private func update(provider: GQL.ProviderInConversationFragment, inCacheOfConversationWithId conversationId: UUID) async throws {
-        try await gqlStore.updateCache(
-            cacheMutation: GQL.GetConversationLocalCacheMutation(id: conversationId),
-            body: { cache in
-                let isAlreadyInConversation = cache.conversation.conversation.fragments.conversationFragment.providers.contains(where: { $0.fragments.providerInConversationFragment.id == provider.id })
-                if !isAlreadyInConversation {
-                    cache.conversation.conversation.fragments.conversationFragment.providers.append(.init(data: provider.__data))
                 }
             }
         )
