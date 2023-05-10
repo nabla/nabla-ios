@@ -91,26 +91,14 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     private let gqlStore: GQLStore
     private let logger: Logger
     
-    private enum Constants {
-        static let numberOfItems = 50
-    }
-    
     private enum Queries {
-        static var getScheduledAppointmentsLocalCacheMutation: GQL.GetScheduledAppointmentsLocalCacheMutation {
-            GQL.GetScheduledAppointmentsLocalCacheMutation(page: .init(cursor: .none, numberOfItems: .some(Constants.numberOfItems)))
-        }
-        
         // TODO: Refactor backend to use the same query for both and avoid code duplicate
         static var getScheduledAppointmentsRootQuery: GQL.GetScheduledAppointmentsQuery {
             getScheduledAppointmentsQuery(cursor: nil)
         }
 
         static func getScheduledAppointmentsQuery(cursor: String?) -> GQL.GetScheduledAppointmentsQuery {
-            GQL.GetScheduledAppointmentsQuery(page: .init(cursor: cursor.nabla.asGQLNullable(), numberOfItems: .some(Constants.numberOfItems)))
-        }
-        
-        static var getFinalizedAppointmentsLocalCacheMutation: GQL.GetFinalizedAppointmentsLocalCacheMutation {
-            GQL.GetFinalizedAppointmentsLocalCacheMutation(page: .init(cursor: .none, numberOfItems: .some(Constants.numberOfItems)))
+            GQL.GetScheduledAppointmentsQuery(page: .init(cursor: cursor, numberOfItems: 50))
         }
 
         static var getFinalizedAppointmentsRootQuery: GQL.GetFinalizedAppointmentsQuery {
@@ -118,7 +106,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         }
 
         static func getFinalizedAppointmentsQuery(cursor: String?) -> GQL.GetFinalizedAppointmentsQuery {
-            GQL.GetFinalizedAppointmentsQuery(page: .init(cursor: cursor.nabla.asGQLNullable(), numberOfItems: .some(Constants.numberOfItems)))
+            GQL.GetFinalizedAppointmentsQuery(page: .init(cursor: cursor, numberOfItems: 50))
         }
     }
     
@@ -185,8 +173,9 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         )
         
         try await gqlStore.updateCache(
-            cacheMutation: Queries.getScheduledAppointmentsLocalCacheMutation,
-            body: { cache in
+            for: Queries.getScheduledAppointmentsRootQuery,
+            onlyIfExists: true,
+            body: { (cache: inout GQL.GetScheduledAppointmentsQuery.Data) in
                 Self.append(response, to: &cache)
             }
         )
@@ -199,17 +188,15 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         )
         
         try await gqlStore.updateCache(
-            cacheMutation: Queries.getFinalizedAppointmentsLocalCacheMutation,
-            body: { cache in
+            for: Queries.getFinalizedAppointmentsRootQuery,
+            onlyIfExists: true,
+            body: { (cache: inout GQL.GetFinalizedAppointmentsQuery.Data) in
                 Self.append(response, to: &cache)
             }
         )
     }
     
-    private static func append(
-        _ response: GQL.GetScheduledAppointmentsQuery.Data,
-        to cache: inout GQL.GetScheduledAppointmentsLocalCacheMutation.Data
-    ) {
+    private static func append(_ response: GQL.GetScheduledAppointmentsQuery.Data, to cache: inout GQL.GetScheduledAppointmentsQuery.Data) {
         cache.upcomingAppointments.hasMore = response.upcomingAppointments.hasMore
         cache.upcomingAppointments.nextCursor = response.upcomingAppointments.nextCursor
         
@@ -217,15 +204,12 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         
         for newAppointment in response.upcomingAppointments.data {
             guard !existingAppointments.contains(newAppointment.fragments.appointmentFragment.id) else { continue }
-            cache.upcomingAppointments.data.append(.init(data: newAppointment.__data))
+            cache.upcomingAppointments.data.append(newAppointment)
             cache.upcomingAppointments.data = cache.upcomingAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: <)
         }
     }
     
-    private static func append(
-        _ response: GQL.GetFinalizedAppointmentsQuery.Data,
-        to cache: inout GQL.GetFinalizedAppointmentsLocalCacheMutation.Data
-    ) {
+    private static func append(_ response: GQL.GetFinalizedAppointmentsQuery.Data, to cache: inout GQL.GetFinalizedAppointmentsQuery.Data) {
         cache.pastAppointments.hasMore = response.pastAppointments.hasMore
         cache.pastAppointments.nextCursor = response.pastAppointments.nextCursor
         
@@ -233,7 +217,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
         
         for newAppointment in response.pastAppointments.data {
             guard !existingAppointments.contains(newAppointment.fragments.appointmentFragment.id) else { continue }
-            cache.pastAppointments.data.append(.init(data: newAppointment.__data))
+            cache.pastAppointments.data.append(newAppointment)
             cache.pastAppointments.data = cache.pastAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: >)
         }
     }
@@ -244,7 +228,7 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
                 try await self.insert(createdEvent.appointment.fragments.appointmentFragment)
             }
         } else if let updatedEvent = event.asAppointmentUpdatedEvent {
-            logger.info(message: "Appointment update", extra: ["appointment": updatedEvent.appointment.id])
+            logger.info(message: "Appointment update", extra: ["appointment": updatedEvent.appointment.fragments.appointmentFragment.id])
             Task(priority: .userInitiated) {
                 try await self.updateFilteredQueriesAfterAppointmentChange(appointment: updatedEvent.appointment.fragments.appointmentFragment)
             }
@@ -269,8 +253,9 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     private func insertScheduledAppointment(_ appointment: RemoteAppointment) async throws {
         try await gqlStore.updateCache(
-            cacheMutation: Queries.getScheduledAppointmentsLocalCacheMutation
-        ) { cache in
+            for: Queries.getScheduledAppointmentsRootQuery,
+            onlyIfExists: true
+        ) { (cache: inout GQL.GetScheduledAppointmentsQuery.Data) in
             guard !cache.upcomingAppointments.data.lazy.map(\.fragments.appointmentFragment.id).contains(appointment.id) else { return }
             cache.upcomingAppointments.data.append(.init(fragment: appointment))
             cache.upcomingAppointments.data = cache.upcomingAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: <)
@@ -279,8 +264,9 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     private func insertFinalizedAppointment(_ appointment: RemoteAppointment) async throws {
         try await gqlStore.updateCache(
-            cacheMutation: Queries.getFinalizedAppointmentsLocalCacheMutation
-        ) { cache in
+            for: Queries.getFinalizedAppointmentsRootQuery,
+            onlyIfExists: true
+        ) { (cache: inout GQL.GetFinalizedAppointmentsQuery.Data) in
             guard !cache.pastAppointments.data.lazy.map(\.fragments.appointmentFragment.id).contains(appointment.id) else { return }
             cache.pastAppointments.data.append(.init(fragment: appointment))
             cache.pastAppointments.data = cache.pastAppointments.data.nabla.sorted(\.fragments.appointmentFragment.scheduledAt, using: >)
@@ -294,28 +280,30 @@ final class AppointmentRemoteDataSourceImpl: AppointmentRemoteDataSource {
     
     private func remove(appointmentWithId appointmentId: UUID) async throws {
         try await gqlStore.updateCache(
-            cacheMutation: Queries.getScheduledAppointmentsLocalCacheMutation
-        ) { cache in
+            for: Queries.getScheduledAppointmentsRootQuery,
+            onlyIfExists: true
+        ) { (cache: inout GQL.GetScheduledAppointmentsQuery.Data) in
             guard let index = cache.upcomingAppointments.data.firstIndex(where: { $0.fragments.appointmentFragment.id == appointmentId }) else { return }
             cache.upcomingAppointments.data.remove(at: index)
         }
         try await gqlStore.updateCache(
-            cacheMutation: Queries.getFinalizedAppointmentsLocalCacheMutation
-        ) { cache in
+            for: Queries.getFinalizedAppointmentsRootQuery,
+            onlyIfExists: true
+        ) { (cache: inout GQL.GetFinalizedAppointmentsQuery.Data) in
             guard let index = cache.pastAppointments.data.firstIndex(where: { $0.fragments.appointmentFragment.id == appointmentId }) else { return }
             cache.pastAppointments.data.remove(at: index)
         }
     }
 }
 
-private extension GQL.GetScheduledAppointmentsLocalCacheMutation.Data.UpcomingAppointments.Datum {
+private extension GQL.GetScheduledAppointmentsQuery.Data.UpcomingAppointment.Datum {
     init(fragment: RemoteAppointment) {
-        self.init(data: fragment.__data)
+        self.init(unsafeResultMap: fragment.resultMap)
     }
 }
 
-private extension GQL.GetFinalizedAppointmentsLocalCacheMutation.Data.PastAppointments.Datum {
+private extension GQL.GetFinalizedAppointmentsQuery.Data.PastAppointment.Datum {
     init(fragment: RemoteAppointment) {
-        self.init(data: fragment.__data)
+        self.init(unsafeResultMap: fragment.resultMap)
     }
 }

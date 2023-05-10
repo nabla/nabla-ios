@@ -2,9 +2,50 @@
   "name" : "testCreateConversationThenConversationIsReturned.cassette",
   "interactions" : [
     {
+      "recorded_at" : 1683194477.2125249,
+      "request" : {
+        "headers" : {
+          "Accept-Language" : "en",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxN2ZkNTdkYy1mNTNkLTQwZGUtYjdhMC05ZjhhNDk2Y2E5ZGMiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODMxOTQ2NzYsInNlc3Npb25fdXVpZCI6IjE2MTZhNzEyLTczYWEtNGY2OS04MTdjLTc1ZWNlZGNhOTdmOCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.JtfW71syrRX0LqCgWMrwiOz8zjMObc1BuNeuj-fNeIg",
+          "apollographql-client-version" : "14.2-21501",
+          "X-APOLLO-OPERATION-NAME" : "GetConversations",
+          "X-Nabla-SDK-Version" : "1.1.1",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "X-APOLLO-OPERATION-TYPE" : "query",
+          "X-Nabla-API-Key" : "test-api-key",
+          "X-Nabla-SDK-Platform" : "ios",
+          "Content-Type" : "application\/json"
+        },
+        "body" : {
+          "Tests-Request-Index" : 0,
+          "query" : "query GetConversations($page: OpaqueCursorPage!) {\n  conversations(page: $page) {\n    __typename\n    conversations {\n      __typename\n      ...ConversationFragment\n    }\n    nextCursor\n    hasMore\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  lastMessage {\n    __typename\n    ...MessageFragment\n  }\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment MessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n  replyTo {\n    __typename\n    ...ReplyMessageFragment\n  }\n}\nfragment MessageAuthorFragment on MessageAuthor {\n  __typename\n  ... on Provider {\n    __typename\n    ...ProviderFragment\n  }\n  ... on Patient {\n    __typename\n    ...PatientFragment\n  }\n  ... on System {\n    __typename\n    ...SystemMessageFragment\n  }\n  ... on DeletedProvider {\n    __typename\n    empty: _\n  }\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment PatientFragment on Patient {\n  __typename\n  id\n  isMe\n  displayName\n}\nfragment SystemMessageFragment on System {\n  __typename\n  avatar {\n    __typename\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n  }\n  name\n}\nfragment MessageContentFragment on MessageContent {\n  __typename\n  ... on TextMessageContent {\n    __typename\n    ...TextMessageContentFragment\n  }\n  ... on ImageMessageContent {\n    __typename\n    ...ImageMessageContentFragment\n  }\n  ... on VideoMessageContent {\n    __typename\n    ...VideoMessageContentFragment\n  }\n  ... on DocumentMessageContent {\n    __typename\n    ...DocumentMessageContentFragment\n  }\n  ... on AudioMessageContent {\n    __typename\n    ...AudioMessageContentFragment\n  }\n  ... on DeletedMessageContent {\n    __typename\n    empty: _\n  }\n  ... on LivekitRoomMessageContent {\n    __typename\n    ...LivekitRoomMessageContentFragment\n  }\n}\nfragment TextMessageContentFragment on TextMessageContent {\n  __typename\n  text\n}\nfragment ImageMessageContentFragment on ImageMessageContent {\n  __typename\n  imageFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment VideoMessageContentFragment on VideoMessageContent {\n  __typename\n  videoFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment DocumentMessageContentFragment on DocumentMessageContent {\n  __typename\n  documentFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    thumbnail {\n      __typename\n      url {\n        __typename\n        url\n      }\n    }\n  }\n}\nfragment AudioMessageContentFragment on AudioMessageContent {\n  __typename\n  audioFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n    fileName\n    mimeType\n    durationMs\n  }\n}\nfragment LivekitRoomMessageContentFragment on LivekitRoomMessageContent {\n  __typename\n  livekitRoom {\n    __typename\n    ...LivekitRoomFragment\n  }\n}\nfragment LivekitRoomFragment on LivekitRoom {\n  __typename\n  uuid\n  status {\n    __typename\n    ... on LivekitRoomOpenStatus {\n      __typename\n      ...LivekitRoomOpenStatusFragment\n    }\n    ... on LivekitRoomClosedStatus {\n      __typename\n      ...LivekitRoomClosedStatusFragment\n    }\n  }\n}\nfragment LivekitRoomOpenStatusFragment on LivekitRoomOpenStatus {\n  __typename\n  url\n  token\n}\nfragment LivekitRoomClosedStatusFragment on LivekitRoomClosedStatus {\n  __typename\n  _\n}\nfragment ReplyMessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}",
+          "operationName" : "GetConversations",
+          "variables" : {
+            "page" : {
+              "numberOfItems" : 50
+            }
+          }
+        },
+        "method" : "POST",
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated"
+      },
       "response" : {
-        "status" : 200,
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "status" : 200,
+        "headers" : {
+          "X-Request-ID" : "2e527738-0600-4bf5-9c2b-1d3d0c6c4230",
+          "Connection" : "keep-alive",
+          "X-Trace-ID" : "2e527738-0600-4bf5-9c2b-1d3d0c6c4230",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Content-Length" : "1632",
+          "Date" : "Thu, 04 May 2023 10:01:17 GMT",
+          "x-nabla-cloudregion" : "EU_WEST1",
+          "Server" : "ktor-server-core\/1.6.2",
+          "Vary" : "Origin",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "X-Nabla-Minimum-Code-Version" : "398"
+        },
         "body" : {
           "data" : {
             "conversations" : {
@@ -12,9 +53,9 @@
               "__typename" : "ConversationsOutput",
               "conversations" : [
                 {
-                  "id" : "50af113f-f7e4-45f4-bf49-70d64b2b5043",
+                  "id" : "c99f91a8-88a3-43fc-acb4-f240ebf2eeeb",
                   "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2023-04-04T15:15:25.567+02:00",
+                  "updatedAt" : "2023-05-04T12:00:55.697+02:00",
                   "subtitle" : null,
                   "inboxPreviewTitle" : "Ask us anything",
                   "pictureUrl" : null,
@@ -28,17 +69,17 @@
                     "author" : {
                       "isMe" : true,
                       "__typename" : "Patient",
-                      "id" : "268fd745-b8c7-4599-b03e-57e5180510e2",
-                      "displayName" : "Benoit Patient"
+                      "id" : "17fd57dc-f53d-40de-b7a0-9f8a496ca9dc",
+                      "displayName" : "tgy_localhost"
                     },
                     "content" : {
                       "text" : "Hello",
                       "__typename" : "TextMessageContent"
                     },
-                    "id" : "428a1489-8b1d-412d-964a-ddbec98e6783",
-                    "clientId" : "597af448-ee3d-4323-8495-1d5115ffaa03",
+                    "id" : "45ef8f7a-6cdb-4535-88ca-b1625afe68f7",
+                    "clientId" : "157c934b-6199-4b2b-9a83-5b06e76c04be",
                     "replyTo" : null,
-                    "createdAt" : "2023-04-04T15:15:25.567+02:00",
+                    "createdAt" : "2023-05-04T12:00:55.697+02:00",
                     "__typename" : "Message"
                   },
                   "__typename" : "Conversation"
@@ -47,70 +88,45 @@
               "nextCursor" : "50"
             }
           }
-        },
-        "headers" : {
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "X-Request-ID" : "e7fe4073-80af-45ac-8071-16c381178835",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "Content-Length" : "1633",
-          "X-Trace-ID" : "e7fe4073-80af-45ac-8071-16c381178835",
-          "Date" : "Tue, 04 Apr 2023 13:15:50 GMT",
-          "Connection" : "keep-alive",
-          "Server" : "ktor-server-core\/1.6.2",
-          "x-nabla-cloudregion" : "EU_WEST1",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "Vary" : "Origin",
-          "Content-Type" : "application\/json; charset=UTF-8"
-        }
-      },
-      "recorded_at" : 1680614150.8064098,
-      "request" : {
-        "headers" : {
-          "X-Nabla-API-Key" : "test-api-key",
-          "Content-Type" : "application\/json",
-          "Accept-Language" : "en",
-          "X-APOLLO-OPERATION-NAME" : "GetConversations",
-          "X-Nabla-SDK-Platform" : "ios",
-          "X-Nabla-SDK-Version" : "1.0.0",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "apollographql-client-version" : "14.2-21501",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjhmZDc0NS1iOGM3LTQ1OTktYjAzZS01N2U1MTgwNTEwZTIiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODA2MTQzNTEsInNlc3Npb25fdXVpZCI6Ijc1YzliYjljLTIxMTctNDZlNi05MTliLWUyMTIzOWEzMzEzYiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.pr7umWKoLn4YsMGLOzGp_4VAyrRozDZ1TNG0gc_z1gc",
-          "X-APOLLO-OPERATION-TYPE" : "query"
-        },
-        "method" : "POST",
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "body" : {
-          "variables" : {
-            "page" : {
-              "numberOfItems" : 50
-            }
-          },
-          "query" : "query GetConversations($page: OpaqueCursorPage!) {\n  conversations(page: $page) {\n    __typename\n    conversations {\n      __typename\n      ...ConversationFragment\n    }\n    nextCursor\n    hasMore\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  lastMessage {\n    __typename\n    ...MessageFragment\n  }\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment MessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n  replyTo {\n    __typename\n    ...ReplyMessageFragment\n  }\n}\nfragment MessageAuthorFragment on MessageAuthor {\n  __typename\n  ... on Provider {\n    ...ProviderFragment\n  }\n  ... on Patient {\n    ...PatientFragment\n  }\n  ... on System {\n    ...SystemMessageFragment\n  }\n  ... on DeletedProvider {\n    empty: _\n  }\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment PatientFragment on Patient {\n  __typename\n  id\n  isMe\n  displayName\n}\nfragment SystemMessageFragment on System {\n  __typename\n  avatar {\n    __typename\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n  }\n  name\n}\nfragment MessageContentFragment on MessageContent {\n  __typename\n  ... on TextMessageContent {\n    ...TextMessageContentFragment\n  }\n  ... on ImageMessageContent {\n    ...ImageMessageContentFragment\n  }\n  ... on VideoMessageContent {\n    ...VideoMessageContentFragment\n  }\n  ... on DocumentMessageContent {\n    ...DocumentMessageContentFragment\n  }\n  ... on AudioMessageContent {\n    ...AudioMessageContentFragment\n  }\n  ... on DeletedMessageContent {\n    empty: _\n  }\n  ... on LivekitRoomMessageContent {\n    ...LivekitRoomMessageContentFragment\n  }\n}\nfragment TextMessageContentFragment on TextMessageContent {\n  __typename\n  text\n}\nfragment ImageMessageContentFragment on ImageMessageContent {\n  __typename\n  imageFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment VideoMessageContentFragment on VideoMessageContent {\n  __typename\n  videoFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment DocumentMessageContentFragment on DocumentMessageContent {\n  __typename\n  documentFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    thumbnail {\n      __typename\n      url {\n        __typename\n        url\n      }\n    }\n  }\n}\nfragment AudioMessageContentFragment on AudioMessageContent {\n  __typename\n  audioFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n    fileName\n    mimeType\n    durationMs\n  }\n}\nfragment LivekitRoomMessageContentFragment on LivekitRoomMessageContent {\n  __typename\n  livekitRoom {\n    __typename\n    ...LivekitRoomFragment\n  }\n}\nfragment LivekitRoomFragment on LivekitRoom {\n  __typename\n  uuid\n  status {\n    __typename\n    ... on LivekitRoomOpenStatus {\n      ...LivekitRoomOpenStatusFragment\n    }\n    ... on LivekitRoomClosedStatus {\n      ...LivekitRoomClosedStatusFragment\n    }\n  }\n}\nfragment LivekitRoomOpenStatusFragment on LivekitRoomOpenStatus {\n  __typename\n  url\n  token\n}\nfragment LivekitRoomClosedStatusFragment on LivekitRoomClosedStatus {\n  __typename\n  _\n}\nfragment ReplyMessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}",
-          "operationName" : "GetConversations",
-          "Tests-Request-Index" : 0
         }
       }
     },
     {
-      "request" : {
-        "method" : "POST",
+      "response" : {
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "headers" : {
-          "X-Nabla-SDK-Version" : "1.0.0",
-          "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "X-Nabla-API-Key" : "test-api-key",
-          "X-APOLLO-OPERATION-NAME" : "registerOrUpdateDevice",
-          "Content-Type" : "application\/json",
-          "apollographql-client-version" : "14.2-21501",
-          "X-Nabla-SDK-Platform" : "ios",
-          "Accept-Language" : "en",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjhmZDc0NS1iOGM3LTQ1OTktYjAzZS01N2U1MTgwNTEwZTIiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODA2MTQzNTEsInNlc3Npb25fdXVpZCI6Ijc1YzliYjljLTIxMTctNDZlNi05MTliLWUyMTIzOWEzMzEzYiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.pr7umWKoLn4YsMGLOzGp_4VAyrRozDZ1TNG0gc_z1gc",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios"
+          "Date" : "Thu, 04 May 2023 10:01:17 GMT",
+          "Connection" : "keep-alive",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
+          "Server" : "ktor-server-core\/1.6.2",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "Content-Length" : "395",
+          "Vary" : "Origin",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "X-Request-ID" : "af904ab6-4791-453b-a541-2a69e2cbee98",
+          "x-nabla-cloudregion" : "EU_WEST1",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "X-Trace-ID" : "af904ab6-4791-453b-a541-2a69e2cbee98"
         },
+        "status" : 200,
+        "body" : {
+          "data" : {
+            "registerOrUpdateDevice" : {
+              "deviceId" : "e4c71f64-bfaf-4af9-a73d-7c279bfa761a",
+              "sentry" : {
+                "env" : "dev",
+                "dsn" : "https:\/\/077cdf8f56664d2d89f5de3b58d4a4b7@sentry-relay.nabla.com\/4504525115293696",
+                "__typename" : "Sentry"
+              },
+              "__typename" : "UpdateDeviceOutput"
+            }
+          }
+        }
+      },
+      "recorded_at" : 1683194477.253953,
+      "request" : {
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "body" : {
-          "Tests-Request-Index" : 0,
-          "query" : "mutation registerOrUpdateDevice($deviceId: UUID, $input: DeviceInput!) {\n  registerOrUpdateDevice(deviceId: $deviceId, device: $input) {\n    __typename\n    deviceId\n    sentry {\n      __typename\n      env\n      dsn\n    }\n  }\n}",
-          "operationName" : "registerOrUpdateDevice",
           "variables" : {
             "input" : {
               "codeVersion" : 42,
@@ -120,84 +136,37 @@
               "sdkModules" : [
 
               ]
-            }
-          }
-        }
-      },
-      "response" : {
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "headers" : {
-          "x-nabla-cloudregion" : "EU_WEST1",
-          "Connection" : "keep-alive",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "Vary" : "Origin",
-          "X-Request-ID" : "b69ba090-bc10-451e-b6e9-a8910ee81d97",
-          "X-Trace-ID" : "b69ba090-bc10-451e-b6e9-a8910ee81d97",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "Date" : "Tue, 04 Apr 2023 13:15:50 GMT",
-          "Server" : "ktor-server-core\/1.6.2",
-          "Content-Length" : "395",
-          "Content-Type" : "application\/json; charset=UTF-8"
-        },
-        "body" : {
-          "data" : {
-            "registerOrUpdateDevice" : {
-              "deviceId" : "7d0b5028-2244-44fc-ab3f-40c7dcbb788a",
-              "sentry" : {
-                "env" : "dev",
-                "dsn" : "https:\/\/077cdf8f56664d2d89f5de3b58d4a4b7@sentry-relay.nabla.com\/4504525115293696",
-                "__typename" : "Sentry"
-              },
-              "__typename" : "UpdateDeviceOutput"
-            }
-          }
-        },
-        "status" : 200
-      },
-      "recorded_at" : 1680614150.864728
-    },
-    {
-      "request" : {
-        "body" : {
-          "variables" : {
-            "initialMessage" : {
-              "content" : {
-                "textInput" : {
-                  "text" : "Hello"
-                }
-              },
-              "clientId" : "F6AEF251-602C-4F16-A851-297F0CCD7F87"
-            }
+            },
+            "deviceId" : null
           },
-          "query" : "mutation CreateConversation($title: String, $providerIds: [UUID!], $initialMessage: SendMessageInput) {\n  createConversation(\n    title: $title\n    providerIds: $providerIds\n    initialMessage: $initialMessage\n  ) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  lastMessage {\n    __typename\n    ...MessageFragment\n  }\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment MessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n  replyTo {\n    __typename\n    ...ReplyMessageFragment\n  }\n}\nfragment MessageAuthorFragment on MessageAuthor {\n  __typename\n  ... on Provider {\n    ...ProviderFragment\n  }\n  ... on Patient {\n    ...PatientFragment\n  }\n  ... on System {\n    ...SystemMessageFragment\n  }\n  ... on DeletedProvider {\n    empty: _\n  }\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment PatientFragment on Patient {\n  __typename\n  id\n  isMe\n  displayName\n}\nfragment SystemMessageFragment on System {\n  __typename\n  avatar {\n    __typename\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n  }\n  name\n}\nfragment MessageContentFragment on MessageContent {\n  __typename\n  ... on TextMessageContent {\n    ...TextMessageContentFragment\n  }\n  ... on ImageMessageContent {\n    ...ImageMessageContentFragment\n  }\n  ... on VideoMessageContent {\n    ...VideoMessageContentFragment\n  }\n  ... on DocumentMessageContent {\n    ...DocumentMessageContentFragment\n  }\n  ... on AudioMessageContent {\n    ...AudioMessageContentFragment\n  }\n  ... on DeletedMessageContent {\n    empty: _\n  }\n  ... on LivekitRoomMessageContent {\n    ...LivekitRoomMessageContentFragment\n  }\n}\nfragment TextMessageContentFragment on TextMessageContent {\n  __typename\n  text\n}\nfragment ImageMessageContentFragment on ImageMessageContent {\n  __typename\n  imageFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment VideoMessageContentFragment on VideoMessageContent {\n  __typename\n  videoFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment DocumentMessageContentFragment on DocumentMessageContent {\n  __typename\n  documentFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    thumbnail {\n      __typename\n      url {\n        __typename\n        url\n      }\n    }\n  }\n}\nfragment AudioMessageContentFragment on AudioMessageContent {\n  __typename\n  audioFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n    fileName\n    mimeType\n    durationMs\n  }\n}\nfragment LivekitRoomMessageContentFragment on LivekitRoomMessageContent {\n  __typename\n  livekitRoom {\n    __typename\n    ...LivekitRoomFragment\n  }\n}\nfragment LivekitRoomFragment on LivekitRoom {\n  __typename\n  uuid\n  status {\n    __typename\n    ... on LivekitRoomOpenStatus {\n      ...LivekitRoomOpenStatusFragment\n    }\n    ... on LivekitRoomClosedStatus {\n      ...LivekitRoomClosedStatusFragment\n    }\n  }\n}\nfragment LivekitRoomOpenStatusFragment on LivekitRoomOpenStatus {\n  __typename\n  url\n  token\n}\nfragment LivekitRoomClosedStatusFragment on LivekitRoomClosedStatus {\n  __typename\n  _\n}\nfragment ReplyMessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}",
-          "operationName" : "CreateConversation",
+          "query" : "mutation registerOrUpdateDevice($deviceId: UUID, $input: DeviceInput!) {\n  registerOrUpdateDevice(deviceId: $deviceId, device: $input) {\n    __typename\n    deviceId\n    sentry {\n      __typename\n      env\n      dsn\n    }\n  }\n}",
+          "operationName" : "registerOrUpdateDevice",
           "Tests-Request-Index" : 0
         },
         "headers" : {
-          "X-Nabla-API-Key" : "test-api-key",
-          "X-Nabla-SDK-Platform" : "ios",
-          "X-APOLLO-OPERATION-TYPE" : "mutation",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "X-Nabla-SDK-Version" : "1.0.0",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjhmZDc0NS1iOGM3LTQ1OTktYjAzZS01N2U1MTgwNTEwZTIiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODA2MTQzNTEsInNlc3Npb25fdXVpZCI6Ijc1YzliYjljLTIxMTctNDZlNi05MTliLWUyMTIzOWEzMzEzYiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.pr7umWKoLn4YsMGLOzGp_4VAyrRozDZ1TNG0gc_z1gc",
-          "apollographql-client-version" : "14.2-21501",
           "Accept-Language" : "en",
+          "X-Nabla-SDK-Platform" : "ios",
+          "apollographql-client-version" : "14.2-21501",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
           "Content-Type" : "application\/json",
-          "X-APOLLO-OPERATION-NAME" : "CreateConversation"
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "X-APOLLO-OPERATION-NAME" : "registerOrUpdateDevice",
+          "X-Nabla-SDK-Version" : "1.1.1",
+          "X-Nabla-API-Key" : "test-api-key",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxN2ZkNTdkYy1mNTNkLTQwZGUtYjdhMC05ZjhhNDk2Y2E5ZGMiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODMxOTQ2NzYsInNlc3Npb25fdXVpZCI6IjE2MTZhNzEyLTczYWEtNGY2OS04MTdjLTc1ZWNlZGNhOTdmOCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.JtfW71syrRX0LqCgWMrwiOz8zjMObc1BuNeuj-fNeIg"
         },
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "method" : "POST"
-      },
-      "recorded_at" : 1680614150.9327121,
+      }
+    },
+    {
       "response" : {
         "body" : {
           "data" : {
             "createConversation" : {
               "conversation" : {
-                "id" : "00678ad9-c28c-4f22-a23d-393e4db61968",
+                "id" : "2adc6b4e-e47b-43cf-a974-f8548c71c795",
                 "lastMessagePreview" : "You: Hello",
-                "updatedAt" : "2023-04-04T15:15:50.873+02:00",
+                "updatedAt" : "2023-05-04T12:01:17.268+02:00",
                 "subtitle" : null,
                 "inboxPreviewTitle" : "Ask us anything",
                 "pictureUrl" : null,
@@ -211,17 +180,17 @@
                   "author" : {
                     "isMe" : true,
                     "__typename" : "Patient",
-                    "id" : "268fd745-b8c7-4599-b03e-57e5180510e2",
-                    "displayName" : "Benoit Patient"
+                    "id" : "17fd57dc-f53d-40de-b7a0-9f8a496ca9dc",
+                    "displayName" : "tgy_localhost"
                   },
                   "content" : {
                     "text" : "Hello",
                     "__typename" : "TextMessageContent"
                   },
-                  "id" : "1d951a20-243a-4fba-b0e7-6fdb8c9451c1",
-                  "clientId" : "f6aef251-602c-4f16-a851-297f0ccd7f87",
+                  "id" : "6b0e2b09-f2fd-4f1e-b006-4fb2cfe1c1ea",
+                  "clientId" : "78069512-1617-42eb-9e4a-c1114b1da90d",
                   "replyTo" : null,
-                  "createdAt" : "2023-04-04T15:15:50.873+02:00",
+                  "createdAt" : "2023-05-04T12:01:17.268+02:00",
                   "__typename" : "Message"
                 },
                 "__typename" : "Conversation"
@@ -230,41 +199,100 @@
             }
           }
         },
-        "status" : 200,
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
         "headers" : {
           "Connection" : "keep-alive",
-          "Content-Type" : "application\/json; charset=UTF-8",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "Content-Length" : "1428",
-          "X-Request-ID" : "8f409908-8135-4fa0-85c8-00cb26d12ef9",
-          "X-Trace-ID" : "8f409908-8135-4fa0-85c8-00cb26d12ef9",
-          "Date" : "Tue, 04 Apr 2023 13:15:50 GMT",
           "x-nabla-cloudregion" : "EU_WEST1",
+          "Date" : "Thu, 04 May 2023 10:01:17 GMT",
           "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
           "Server" : "ktor-server-core\/1.6.2",
-          "Vary" : "Origin"
+          "X-Request-ID" : "f3f34fb7-2801-4aff-bf3b-01d8b8507121",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "X-Trace-ID" : "f3f34fb7-2801-4aff-bf3b-01d8b8507121",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "Vary" : "Origin",
+          "Content-Length" : "1427"
+        },
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "status" : 200
+      },
+      "recorded_at" : 1683194477.353936,
+      "request" : {
+        "method" : "POST",
+        "headers" : {
+          "X-APOLLO-OPERATION-NAME" : "CreateConversation",
+          "X-Nabla-SDK-Version" : "1.1.1",
+          "Accept-Language" : "en",
+          "X-Nabla-API-Key" : "test-api-key",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxN2ZkNTdkYy1mNTNkLTQwZGUtYjdhMC05ZjhhNDk2Y2E5ZGMiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODMxOTQ2NzYsInNlc3Npb25fdXVpZCI6IjE2MTZhNzEyLTczYWEtNGY2OS04MTdjLTc1ZWNlZGNhOTdmOCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.JtfW71syrRX0LqCgWMrwiOz8zjMObc1BuNeuj-fNeIg",
+          "X-APOLLO-OPERATION-TYPE" : "mutation",
+          "Content-Type" : "application\/json",
+          "X-Nabla-SDK-Platform" : "ios",
+          "apollographql-client-version" : "14.2-21501",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios"
+        },
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "body" : {
+          "Tests-Request-Index" : 0,
+          "query" : "mutation CreateConversation($title: String, $providerIds: [UUID!], $initialMessage: SendMessageInput) {\n  createConversation(\n    title: $title\n    providerIds: $providerIds\n    initialMessage: $initialMessage\n  ) {\n    __typename\n    conversation {\n      __typename\n      ...ConversationFragment\n    }\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  lastMessage {\n    __typename\n    ...MessageFragment\n  }\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment MessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n  replyTo {\n    __typename\n    ...ReplyMessageFragment\n  }\n}\nfragment MessageAuthorFragment on MessageAuthor {\n  __typename\n  ... on Provider {\n    __typename\n    ...ProviderFragment\n  }\n  ... on Patient {\n    __typename\n    ...PatientFragment\n  }\n  ... on System {\n    __typename\n    ...SystemMessageFragment\n  }\n  ... on DeletedProvider {\n    __typename\n    empty: _\n  }\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment PatientFragment on Patient {\n  __typename\n  id\n  isMe\n  displayName\n}\nfragment SystemMessageFragment on System {\n  __typename\n  avatar {\n    __typename\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n  }\n  name\n}\nfragment MessageContentFragment on MessageContent {\n  __typename\n  ... on TextMessageContent {\n    __typename\n    ...TextMessageContentFragment\n  }\n  ... on ImageMessageContent {\n    __typename\n    ...ImageMessageContentFragment\n  }\n  ... on VideoMessageContent {\n    __typename\n    ...VideoMessageContentFragment\n  }\n  ... on DocumentMessageContent {\n    __typename\n    ...DocumentMessageContentFragment\n  }\n  ... on AudioMessageContent {\n    __typename\n    ...AudioMessageContentFragment\n  }\n  ... on DeletedMessageContent {\n    __typename\n    empty: _\n  }\n  ... on LivekitRoomMessageContent {\n    __typename\n    ...LivekitRoomMessageContentFragment\n  }\n}\nfragment TextMessageContentFragment on TextMessageContent {\n  __typename\n  text\n}\nfragment ImageMessageContentFragment on ImageMessageContent {\n  __typename\n  imageFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment VideoMessageContentFragment on VideoMessageContent {\n  __typename\n  videoFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment DocumentMessageContentFragment on DocumentMessageContent {\n  __typename\n  documentFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    thumbnail {\n      __typename\n      url {\n        __typename\n        url\n      }\n    }\n  }\n}\nfragment AudioMessageContentFragment on AudioMessageContent {\n  __typename\n  audioFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n    fileName\n    mimeType\n    durationMs\n  }\n}\nfragment LivekitRoomMessageContentFragment on LivekitRoomMessageContent {\n  __typename\n  livekitRoom {\n    __typename\n    ...LivekitRoomFragment\n  }\n}\nfragment LivekitRoomFragment on LivekitRoom {\n  __typename\n  uuid\n  status {\n    __typename\n    ... on LivekitRoomOpenStatus {\n      __typename\n      ...LivekitRoomOpenStatusFragment\n    }\n    ... on LivekitRoomClosedStatus {\n      __typename\n      ...LivekitRoomClosedStatusFragment\n    }\n  }\n}\nfragment LivekitRoomOpenStatusFragment on LivekitRoomOpenStatus {\n  __typename\n  url\n  token\n}\nfragment LivekitRoomClosedStatusFragment on LivekitRoomClosedStatus {\n  __typename\n  _\n}\nfragment ReplyMessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}",
+          "operationName" : "CreateConversation",
+          "variables" : {
+            "initialMessage" : {
+              "content" : {
+                "textInput" : {
+                  "text" : "Hello"
+                }
+              },
+              "clientId" : "78069512-1617-42EB-9E4A-C1114B1DA90D"
+            },
+            "title" : null,
+            "providerIds" : null
+          }
         }
       }
     },
     {
+      "request" : {
+        "headers" : {
+          "Accept-Language" : "en",
+          "X-Nabla-API-Key" : "test-api-key",
+          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
+          "apollographql-client-version" : "14.2-21501",
+          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxN2ZkNTdkYy1mNTNkLTQwZGUtYjdhMC05ZjhhNDk2Y2E5ZGMiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODMxOTQ2NzYsInNlc3Npb25fdXVpZCI6IjE2MTZhNzEyLTczYWEtNGY2OS04MTdjLTc1ZWNlZGNhOTdmOCIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.JtfW71syrRX0LqCgWMrwiOz8zjMObc1BuNeuj-fNeIg",
+          "X-APOLLO-OPERATION-TYPE" : "query",
+          "X-APOLLO-OPERATION-NAME" : "GetConversations",
+          "X-Nabla-SDK-Version" : "1.1.1",
+          "Content-Type" : "application\/json",
+          "X-Nabla-SDK-Platform" : "ios"
+        },
+        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
+        "method" : "POST",
+        "body" : {
+          "variables" : {
+            "page" : {
+              "numberOfItems" : 50
+            }
+          },
+          "query" : "query GetConversations($page: OpaqueCursorPage!) {\n  conversations(page: $page) {\n    __typename\n    conversations {\n      __typename\n      ...ConversationFragment\n    }\n    nextCursor\n    hasMore\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  lastMessage {\n    __typename\n    ...MessageFragment\n  }\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment MessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n  replyTo {\n    __typename\n    ...ReplyMessageFragment\n  }\n}\nfragment MessageAuthorFragment on MessageAuthor {\n  __typename\n  ... on Provider {\n    __typename\n    ...ProviderFragment\n  }\n  ... on Patient {\n    __typename\n    ...PatientFragment\n  }\n  ... on System {\n    __typename\n    ...SystemMessageFragment\n  }\n  ... on DeletedProvider {\n    __typename\n    empty: _\n  }\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment PatientFragment on Patient {\n  __typename\n  id\n  isMe\n  displayName\n}\nfragment SystemMessageFragment on System {\n  __typename\n  avatar {\n    __typename\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n  }\n  name\n}\nfragment MessageContentFragment on MessageContent {\n  __typename\n  ... on TextMessageContent {\n    __typename\n    ...TextMessageContentFragment\n  }\n  ... on ImageMessageContent {\n    __typename\n    ...ImageMessageContentFragment\n  }\n  ... on VideoMessageContent {\n    __typename\n    ...VideoMessageContentFragment\n  }\n  ... on DocumentMessageContent {\n    __typename\n    ...DocumentMessageContentFragment\n  }\n  ... on AudioMessageContent {\n    __typename\n    ...AudioMessageContentFragment\n  }\n  ... on DeletedMessageContent {\n    __typename\n    empty: _\n  }\n  ... on LivekitRoomMessageContent {\n    __typename\n    ...LivekitRoomMessageContentFragment\n  }\n}\nfragment TextMessageContentFragment on TextMessageContent {\n  __typename\n  text\n}\nfragment ImageMessageContentFragment on ImageMessageContent {\n  __typename\n  imageFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment VideoMessageContentFragment on VideoMessageContent {\n  __typename\n  videoFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment DocumentMessageContentFragment on DocumentMessageContent {\n  __typename\n  documentFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    thumbnail {\n      __typename\n      url {\n        __typename\n        url\n      }\n    }\n  }\n}\nfragment AudioMessageContentFragment on AudioMessageContent {\n  __typename\n  audioFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n    fileName\n    mimeType\n    durationMs\n  }\n}\nfragment LivekitRoomMessageContentFragment on LivekitRoomMessageContent {\n  __typename\n  livekitRoom {\n    __typename\n    ...LivekitRoomFragment\n  }\n}\nfragment LivekitRoomFragment on LivekitRoom {\n  __typename\n  uuid\n  status {\n    __typename\n    ... on LivekitRoomOpenStatus {\n      __typename\n      ...LivekitRoomOpenStatusFragment\n    }\n    ... on LivekitRoomClosedStatus {\n      __typename\n      ...LivekitRoomClosedStatusFragment\n    }\n  }\n}\nfragment LivekitRoomOpenStatusFragment on LivekitRoomOpenStatus {\n  __typename\n  url\n  token\n}\nfragment LivekitRoomClosedStatusFragment on LivekitRoomClosedStatus {\n  __typename\n  _\n}\nfragment ReplyMessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}",
+          "operationName" : "GetConversations",
+          "Tests-Request-Index" : 1
+        }
+      },
       "response" : {
         "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "status" : 200,
         "headers" : {
-          "X-Request-ID" : "d7cda55f-817f-422e-a4f8-11d7e3ff2437",
-          "X-Nabla-Minimum-iOS-Code-Version" : "0",
-          "X-Nabla-Minimum-Android-Code-Version" : "0",
           "Vary" : "Origin",
-          "x-nabla-cloudregion" : "EU_WEST1",
-          "X-Trace-ID" : "d7cda55f-817f-422e-a4f8-11d7e3ff2437",
-          "Content-Length" : "3051",
-          "X-Nabla-Minimum-Code-Version" : "398",
-          "Date" : "Tue, 04 Apr 2023 13:15:50 GMT",
-          "Server" : "ktor-server-core\/1.6.2",
+          "Content-Length" : "3049",
+          "X-Nabla-Minimum-iOS-Code-Version" : "0",
           "Connection" : "keep-alive",
-          "Content-Type" : "application\/json; charset=UTF-8"
+          "X-Trace-ID" : "d96fef13-c137-48bb-9da8-47875beecbed",
+          "X-Nabla-Minimum-Android-Code-Version" : "0",
+          "Server" : "ktor-server-core\/1.6.2",
+          "Date" : "Thu, 04 May 2023 10:01:17 GMT",
+          "X-Nabla-Minimum-Code-Version" : "398",
+          "Content-Type" : "application\/json; charset=UTF-8",
+          "X-Request-ID" : "d96fef13-c137-48bb-9da8-47875beecbed",
+          "x-nabla-cloudregion" : "EU_WEST1"
         },
         "body" : {
           "data" : {
@@ -273,9 +301,9 @@
               "__typename" : "ConversationsOutput",
               "conversations" : [
                 {
-                  "id" : "00678ad9-c28c-4f22-a23d-393e4db61968",
+                  "id" : "2adc6b4e-e47b-43cf-a974-f8548c71c795",
                   "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2023-04-04T15:15:50.873+02:00",
+                  "updatedAt" : "2023-05-04T12:01:17.268+02:00",
                   "subtitle" : null,
                   "inboxPreviewTitle" : "Ask us anything",
                   "pictureUrl" : null,
@@ -289,25 +317,25 @@
                     "author" : {
                       "isMe" : true,
                       "__typename" : "Patient",
-                      "id" : "268fd745-b8c7-4599-b03e-57e5180510e2",
-                      "displayName" : "Benoit Patient"
+                      "id" : "17fd57dc-f53d-40de-b7a0-9f8a496ca9dc",
+                      "displayName" : "tgy_localhost"
                     },
                     "content" : {
                       "text" : "Hello",
                       "__typename" : "TextMessageContent"
                     },
-                    "id" : "1d951a20-243a-4fba-b0e7-6fdb8c9451c1",
-                    "clientId" : "f6aef251-602c-4f16-a851-297f0ccd7f87",
+                    "id" : "6b0e2b09-f2fd-4f1e-b006-4fb2cfe1c1ea",
+                    "clientId" : "78069512-1617-42eb-9e4a-c1114b1da90d",
                     "replyTo" : null,
-                    "createdAt" : "2023-04-04T15:15:50.873+02:00",
+                    "createdAt" : "2023-05-04T12:01:17.268+02:00",
                     "__typename" : "Message"
                   },
                   "__typename" : "Conversation"
                 },
                 {
-                  "id" : "50af113f-f7e4-45f4-bf49-70d64b2b5043",
+                  "id" : "c99f91a8-88a3-43fc-acb4-f240ebf2eeeb",
                   "lastMessagePreview" : "You: Hello",
-                  "updatedAt" : "2023-04-04T15:15:25.567+02:00",
+                  "updatedAt" : "2023-05-04T12:00:55.697+02:00",
                   "subtitle" : null,
                   "inboxPreviewTitle" : "Ask us anything",
                   "pictureUrl" : null,
@@ -321,17 +349,17 @@
                     "author" : {
                       "isMe" : true,
                       "__typename" : "Patient",
-                      "id" : "268fd745-b8c7-4599-b03e-57e5180510e2",
-                      "displayName" : "Benoit Patient"
+                      "id" : "17fd57dc-f53d-40de-b7a0-9f8a496ca9dc",
+                      "displayName" : "tgy_localhost"
                     },
                     "content" : {
                       "text" : "Hello",
                       "__typename" : "TextMessageContent"
                     },
-                    "id" : "428a1489-8b1d-412d-964a-ddbec98e6783",
-                    "clientId" : "597af448-ee3d-4323-8495-1d5115ffaa03",
+                    "id" : "45ef8f7a-6cdb-4535-88ca-b1625afe68f7",
+                    "clientId" : "157c934b-6199-4b2b-9a83-5b06e76c04be",
                     "replyTo" : null,
-                    "createdAt" : "2023-04-04T15:15:25.567+02:00",
+                    "createdAt" : "2023-05-04T12:00:55.697+02:00",
                     "__typename" : "Message"
                   },
                   "__typename" : "Conversation"
@@ -340,35 +368,10 @@
               "nextCursor" : "50"
             }
           }
-        }
+        },
+        "status" : 200
       },
-      "recorded_at" : 1680614150.9675388,
-      "request" : {
-        "headers" : {
-          "Content-Type" : "application\/json",
-          "apollographql-client-version" : "14.2-21501",
-          "X-Nabla-SDK-Platform" : "ios",
-          "Accept-Language" : "en",
-          "X-Nabla-SDK-Version" : "1.0.0",
-          "X-Nabla-Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNjhmZDc0NS1iOGM3LTQ1OTktYjAzZS01N2U1MTgwNTEwZTIiLCJzZXNzaW9uX2xvZ2luX21ldGhvZCI6Im9uZV90aW1lX3Rva2VuIiwiaXNzIjoiZGV2OnBhdGllbnQ6bmFibGEiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2ODA2MTQzNTEsInNlc3Npb25fdXVpZCI6Ijc1YzliYjljLTIxMTctNDZlNi05MTliLWUyMTIzOWEzMzEzYiIsIm9yZ2FuaXphdGlvblN0cmluZ0lkIjoibmFibGEifQ.pr7umWKoLn4YsMGLOzGp_4VAyrRozDZ1TNG0gc_z1gc",
-          "X-Nabla-API-Key" : "test-api-key",
-          "X-APOLLO-OPERATION-NAME" : "GetConversations",
-          "apollographql-client-name" : "com.apple.dt.xctest.tool-apollo-ios",
-          "X-APOLLO-OPERATION-TYPE" : "query"
-        },
-        "body" : {
-          "variables" : {
-            "page" : {
-              "numberOfItems" : 50
-            }
-          },
-          "query" : "query GetConversations($page: OpaqueCursorPage!) {\n  conversations(page: $page) {\n    __typename\n    conversations {\n      __typename\n      ...ConversationFragment\n    }\n    nextCursor\n    hasMore\n  }\n}\nfragment ConversationFragment on Conversation {\n  __typename\n  id\n  title\n  subtitle\n  lastMessagePreview\n  lastMessage {\n    __typename\n    ...MessageFragment\n  }\n  unreadMessageCount\n  inboxPreviewTitle\n  updatedAt\n  pictureUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  providers {\n    __typename\n    ...ProviderInConversationFragment\n  }\n  isLocked\n}\nfragment MessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n  replyTo {\n    __typename\n    ...ReplyMessageFragment\n  }\n}\nfragment MessageAuthorFragment on MessageAuthor {\n  __typename\n  ... on Provider {\n    ...ProviderFragment\n  }\n  ... on Patient {\n    ...PatientFragment\n  }\n  ... on System {\n    ...SystemMessageFragment\n  }\n  ... on DeletedProvider {\n    empty: _\n  }\n}\nfragment ProviderFragment on Provider {\n  __typename\n  id\n  avatarUrl {\n    __typename\n    ...EphemeralUrlFragment\n  }\n  prefix\n  firstName\n  lastName\n}\nfragment EphemeralUrlFragment on EphemeralUrl {\n  __typename\n  expiresAt\n  url\n}\nfragment PatientFragment on Patient {\n  __typename\n  id\n  isMe\n  displayName\n}\nfragment SystemMessageFragment on System {\n  __typename\n  avatar {\n    __typename\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n  }\n  name\n}\nfragment MessageContentFragment on MessageContent {\n  __typename\n  ... on TextMessageContent {\n    ...TextMessageContentFragment\n  }\n  ... on ImageMessageContent {\n    ...ImageMessageContentFragment\n  }\n  ... on VideoMessageContent {\n    ...VideoMessageContentFragment\n  }\n  ... on DocumentMessageContent {\n    ...DocumentMessageContentFragment\n  }\n  ... on AudioMessageContent {\n    ...AudioMessageContentFragment\n  }\n  ... on DeletedMessageContent {\n    empty: _\n  }\n  ... on LivekitRoomMessageContent {\n    ...LivekitRoomMessageContentFragment\n  }\n}\nfragment TextMessageContentFragment on TextMessageContent {\n  __typename\n  text\n}\nfragment ImageMessageContentFragment on ImageMessageContent {\n  __typename\n  imageFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment VideoMessageContentFragment on VideoMessageContent {\n  __typename\n  videoFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    width\n    height\n  }\n}\nfragment DocumentMessageContentFragment on DocumentMessageContent {\n  __typename\n  documentFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      url\n    }\n    fileName\n    mimeType\n    thumbnail {\n      __typename\n      url {\n        __typename\n        url\n      }\n    }\n  }\n}\nfragment AudioMessageContentFragment on AudioMessageContent {\n  __typename\n  audioFileUpload {\n    __typename\n    id\n    url {\n      __typename\n      ...EphemeralUrlFragment\n    }\n    fileName\n    mimeType\n    durationMs\n  }\n}\nfragment LivekitRoomMessageContentFragment on LivekitRoomMessageContent {\n  __typename\n  livekitRoom {\n    __typename\n    ...LivekitRoomFragment\n  }\n}\nfragment LivekitRoomFragment on LivekitRoom {\n  __typename\n  uuid\n  status {\n    __typename\n    ... on LivekitRoomOpenStatus {\n      ...LivekitRoomOpenStatusFragment\n    }\n    ... on LivekitRoomClosedStatus {\n      ...LivekitRoomClosedStatusFragment\n    }\n  }\n}\nfragment LivekitRoomOpenStatusFragment on LivekitRoomOpenStatus {\n  __typename\n  url\n  token\n}\nfragment LivekitRoomClosedStatusFragment on LivekitRoomClosedStatus {\n  __typename\n  _\n}\nfragment ReplyMessageFragment on Message {\n  __typename\n  id\n  clientId\n  createdAt\n  author {\n    __typename\n    ...MessageAuthorFragment\n  }\n  content {\n    __typename\n    ...MessageContentFragment\n  }\n}\nfragment ProviderInConversationFragment on ProviderInConversation {\n  __typename\n  id\n  provider {\n    __typename\n    ...ProviderFragment\n  }\n  typingAt\n  seenUntil\n}",
-          "operationName" : "GetConversations",
-          "Tests-Request-Index" : 1
-        },
-        "url" : "http:\/\/localhost:8080\/v1\/patient\/graphql\/sdk\/authenticated",
-        "method" : "POST"
-      }
+      "recorded_at" : 1683194477.391582
     }
   ]
 }

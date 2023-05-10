@@ -156,7 +156,7 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private var conversationEventsSubscriptions = [UUID: Weak<ConversationItemsSubscriber>]()
     private var conversationsBeingCreated = [UUID: Task<Void, Error>]()
     
-    private func makeOrReuseConversationEventsSubscription(for conversationId: TransientUUID) -> Combine.Cancellable {
+    private func makeOrReuseConversationEventsSubscription(for conversationId: TransientUUID) -> Cancellable {
         // Always store and find subscriptions by `localId` because it is immutable and non-null
         if let subscription = conversationEventsSubscriptions[conversationId.localId]?.value {
             return subscription
@@ -173,17 +173,17 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
     private func makeSendInput(for localConversationMessage: LocalConversationMessage) -> GQL.SendMessageInput? {
         if let textMessage = localConversationMessage as? LocalTextMessageItem {
             return .init(
-                content: .init(textInput: .some(.init(text: textMessage.content))),
+                content: .init(textInput: .init(text: textMessage.content)),
                 clientId: textMessage.clientId,
-                replyToMessageId: textMessage.replyToUuid.nabla.asGQLNullable()
+                replyToMessageId: textMessage.replyToUuid
             )
         }
         if let imageMessage = localConversationMessage as? LocalImageMessageItem {
             if let fileUploadUUID = imageMessage.content.uploadUuid {
                 return .init(
-                    content: .init(imageInput: .some(.init(upload: .init(uuid: fileUploadUUID)))),
+                    content: .init(imageInput: .init(upload: .init(uuid: fileUploadUUID))),
                     clientId: imageMessage.clientId,
-                    replyToMessageId: imageMessage.replyToUuid.nabla.asGQLNullable()
+                    replyToMessageId: imageMessage.replyToUuid
                 )
             } else {
                 logger.error(message: "Sending an image requires an `uploadUuid`")
@@ -194,9 +194,9 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         if let documentMessage = localConversationMessage as? LocalDocumentMessageItem {
             if let fileUploadUUID = documentMessage.content.uploadUuid {
                 return .init(
-                    content: .init(documentInput: .some(.init(upload: .init(uuid: fileUploadUUID)))),
+                    content: .init(documentInput: .init(upload: .init(uuid: fileUploadUUID))),
                     clientId: documentMessage.clientId,
-                    replyToMessageId: documentMessage.replyToUuid.nabla.asGQLNullable()
+                    replyToMessageId: documentMessage.replyToUuid
                 )
             } else {
                 logger.error(message: "Sending a document requires an `uploadUuid`")
@@ -207,9 +207,9 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         if let audioMessage = localConversationMessage as? LocalAudioMessageItem {
             if let fileUploadUUID = audioMessage.content.uploadUuid {
                 return .init(
-                    content: .init(audioInput: .some(.init(upload: .init(uuid: fileUploadUUID)))),
+                    content: .init(audioInput: .init(upload: .init(uuid: fileUploadUUID))),
                     clientId: audioMessage.clientId,
-                    replyToMessageId: audioMessage.replyToUuid.nabla.asGQLNullable()
+                    replyToMessageId: audioMessage.replyToUuid
                 )
             } else {
                 logger.error(message: "Sending an audio file requires an `uploadUuid`")
@@ -220,9 +220,9 @@ class ConversationItemRepositoryImpl: ConversationItemRepository {
         if let videoMessage = localConversationMessage as? LocalVideoMessageItem {
             if let fileUploadUUID = videoMessage.content.uploadUuid {
                 return .init(
-                    content: .init(videoInput: .some(.init(upload: .init(uuid: fileUploadUUID)))),
+                    content: .init(videoInput: .init(upload: .init(uuid: fileUploadUUID))),
                     clientId: videoMessage.clientId,
-                    replyToMessageId: videoMessage.replyToUuid.nabla.asGQLNullable()
+                    replyToMessageId: videoMessage.replyToUuid
                 )
             } else {
                 logger.error(message: "Sending a video file requires an `uploadUuid`")
@@ -524,7 +524,7 @@ private struct Weak<T: AnyObject> {
     weak var value: T?
 }
 
-private class ConversationItemsSubscriber: Combine.Cancellable {
+private class ConversationItemsSubscriber: Cancellable {
     func cancel() {
         subscription?.cancel()
     }

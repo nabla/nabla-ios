@@ -78,17 +78,16 @@ class WebSocketTransport {
                 protocol: .graphql_ws
             ),
             store: apolloStore,
-            config: .init(
-                clientName: environment.platform,
-                clientVersion: environment.version,
-                reconnect: true,
-                reconnectionInterval: 1,
-                allowSendingDuplicates: true,
-                connectOnInit: false,
-                connectingPayload: [:],
-                requestBodyCreator: ApolloRequestBodyCreator(),
-                operationMessageIdCreator: ApolloSequencedOperationMessageIdCreator()
-            )
+            clientName: environment.platform,
+            clientVersion: environment.version,
+            sendOperationIdentifiers: false,
+            reconnect: true,
+            reconnectionInterval: 1.0,
+            allowSendingDuplicates: true,
+            connectOnInit: false,
+            connectingPayload: [:],
+            requestBodyCreator: ApolloRequestBodyCreator(),
+            operationMessageIdCreator: ApolloSequencedOperationMessageIdCreator()
         )
         return apollo
     }

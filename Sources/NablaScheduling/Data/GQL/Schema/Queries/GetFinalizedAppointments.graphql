@@ -7,13 +7,3 @@ query GetFinalizedAppointments($page: OpaqueCursorPage!) {
         }
     }
 }
-
-query GetFinalizedAppointmentsLocalCacheMutation($page: OpaqueCursorPage!) @apollo_client_ios_localCacheMutation {
-    pastAppointments(page: $page) {
-        hasMore
-        nextCursor
-        data {
-            ...AppointmentFragment
-        }
-    }
-}

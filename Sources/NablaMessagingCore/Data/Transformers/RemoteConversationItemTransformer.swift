@@ -275,7 +275,7 @@ final class RemoteConversationItemTransformer {
                     content: .providerJoined(provider)
                 )
             } else {
-                logger.error(message: "Unknown provider for ProviderJoinedConversation activity", extra: ["provider": fragment.__data])
+                logger.error(message: "Unknown provider for ProviderJoinedConversation activity", extra: ["provider": fragment.resultMap])
             }
         }
         

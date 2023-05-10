@@ -38,46 +38,38 @@ struct SwiftScript: ParsableCommand {
             CodegenLogger.log("File structure: \(fileStructure)")
             
             let packageFolder = fileStructure.rootFolderURL
-                .childFolderURL(folderName: "Sources")
-                .childFolderURL(folderName: packageName)
+                .apollo.childFolderURL(folderName: "Sources")
+                .apollo.childFolderURL(folderName: packageName)
             
             let gqlFolder = packageFolder
-                .childFolderURL(folderName: "Data")
-                .childFolderURL(folderName: "GQL")
+                .apollo.childFolderURL(folderName: "Data")
+                .apollo.childFolderURL(folderName: "GQL")
             
             let folderForInputs = gqlFolder
-                .childFolderURL(folderName: "Schema")
+                .apollo.childFolderURL(folderName: "Schema")
 
-            let folderForSPMOutputs = gqlFolder
-                .childFolderURL(folderName: "Generated")
-                .childFolderURL(folderName: "SPM")
+            let folderForOutputs = gqlFolder
+                .apollo.childFolderURL(folderName: "Generated")
+
+            let authenticatedOutputFormat = ApolloCodegenOptions.OutputFormat.multipleFiles(
+                inFolderAtURL: folderForOutputs
+            )
             
-            let folderForCocoapodsOutputs = gqlFolder
-                .childFolderURL(folderName: "Generated")
-                .childFolderURL(folderName: "Cocoapods")
+            try? FileManager.default.removeItem(at: folderForOutputs)
 
-            let build = { (folder: URL, cocoapods: Bool) throws in
-                try ApolloCodegen.build(
-                    with: .init(
-                        schemaName: "GQL",
-                        input: .init(
-                            schemaPath: fileStructure.xplatformSchemaFolderUrl.appendingPathComponent("patient-sdk.graphql").path,
-                            operationSearchPaths: ["\(folderForInputs.path)/**/*.graphql"]
-                        ),
-                        output: .init(
-                            schemaTypes: .init(
-                                path: folder.path,
-                                moduleType: .embeddedInTarget(name: packageName)
-                            )
-                        ),
-                        options: .init(
-                            cocoapodsCompatibleImportStatements: cocoapods
-                        )
-                    )
-                )
-            }
-            try build(folderForSPMOutputs, false)
-            try build(folderForCocoapodsOutputs, true)
+            let authenticatedCodegenOptions = ApolloCodegenOptions(
+                includes: "\(folderForInputs.path)/**/*.graphql",
+                mergeInFieldsFromFragmentSpreads: false,
+                modifier: .internal, // Does not work, see extra command in build.sh
+                namespace: "GQL",
+                outputFormat: authenticatedOutputFormat,
+                customScalarFormat: .passthroughWithPrefix("GQL."),
+                urlToSchemaFile: fileStructure.xplatformSchemaFolderUrl.appendingPathComponent("patient-sdk.graphql")
+            )
+
+            try ApolloCodegen.run(from: fileStructure.codegenFolderUrl,
+                                  with: fileStructure.cliFolderURL,
+                                  options: authenticatedCodegenOptions)
         }
     }
 }

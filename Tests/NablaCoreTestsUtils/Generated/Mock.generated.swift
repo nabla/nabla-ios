@@ -1951,17 +1951,75 @@ open class GQLStoreMock: GQLStore, Mock {
 
 
 
-    open func updateCache<CacheMutation: LocalCacheMutation>(cacheMutation: CacheMutation, body: @escaping (inout CacheMutation.Data) throws -> Void) throws {
-        addInvocation(.m_updateCache__cacheMutation_cacheMutationbody_body(Parameter<CacheMutation>.value(`cacheMutation`).wrapAsGeneric(), Parameter<(inout CacheMutation.Data) throws -> Void>.value(`body`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_updateCache__cacheMutation_cacheMutationbody_body(Parameter<CacheMutation>.value(`cacheMutation`).wrapAsGeneric(), Parameter<(inout CacheMutation.Data) throws -> Void>.value(`body`).wrapAsGeneric())) as? (CacheMutation, @escaping (inout CacheMutation.Data) throws -> Void) -> Void
-		perform?(`cacheMutation`, `body`)
+    open func createCache<Query: GQLQuery>(for query: Query, data: Query.Data) throws {
+        addInvocation(.m_createCache__for_querydata_data(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Query.Data>.value(`data`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_createCache__for_querydata_data(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Query.Data>.value(`data`).wrapAsGeneric())) as? (Query, Query.Data) -> Void
+		perform?(`query`, `data`)
 		do {
-		    _ = try methodReturnValue(.m_updateCache__cacheMutation_cacheMutationbody_body(Parameter<CacheMutation>.value(`cacheMutation`).wrapAsGeneric(), Parameter<(inout CacheMutation.Data) throws -> Void>.value(`body`).wrapAsGeneric())).casted() as Void
+		    _ = try methodReturnValue(.m_createCache__for_querydata_data(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Query.Data>.value(`data`).wrapAsGeneric())).casted() as Void
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
 		    throw error
 		}
+    }
+
+    open func updateCache<Query: GQLQuery>(for query: Query, onlyIfExists: Bool, body: @escaping (inout Query.Data) throws -> Void) throws {
+        addInvocation(.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Query.Data) throws -> Void>.value(`body`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Query.Data) throws -> Void>.value(`body`).wrapAsGeneric())) as? (Query, Bool, @escaping (inout Query.Data) throws -> Void) -> Void
+		perform?(`query`, `onlyIfExists`, `body`)
+		do {
+		    _ = try methodReturnValue(.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<Query>.value(`query`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Query.Data) throws -> Void>.value(`body`).wrapAsGeneric())).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func updateCache<Fragment: GQLFragment>(of fragment: Fragment, onlyIfExists: Bool, body: @escaping (inout Fragment) throws -> Void) throws {
+        addInvocation(.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<Fragment>.value(`fragment`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Fragment) throws -> Void>.value(`body`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<Fragment>.value(`fragment`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Fragment) throws -> Void>.value(`body`).wrapAsGeneric())) as? (Fragment, Bool, @escaping (inout Fragment) throws -> Void) -> Void
+		perform?(`fragment`, `onlyIfExists`, `body`)
+		do {
+		    _ = try methodReturnValue(.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<Fragment>.value(`fragment`).wrapAsGeneric(), Parameter<Bool>.value(`onlyIfExists`), Parameter<(inout Fragment) throws -> Void>.value(`body`).wrapAsGeneric())).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func cacheExists<Query: GQLQuery>(for query: Query) throws -> Bool {
+        addInvocation(.m_cacheExists__for_query(Parameter<Query>.value(`query`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_cacheExists__for_query(Parameter<Query>.value(`query`).wrapAsGeneric())) as? (Query) -> Void
+		perform?(`query`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_cacheExists__for_query(Parameter<Query>.value(`query`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for cacheExists<Query: GQLQuery>(for query: Query). Use given")
+			Failure("Stub return value not specified for cacheExists<Query: GQLQuery>(for query: Query). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func cacheExists<Fragment: GQLFragment>(of fragment: Fragment) throws -> Bool {
+        addInvocation(.m_cacheExists__of_fragment(Parameter<Fragment>.value(`fragment`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_cacheExists__of_fragment(Parameter<Fragment>.value(`fragment`).wrapAsGeneric())) as? (Fragment) -> Void
+		perform?(`fragment`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_cacheExists__of_fragment(Parameter<Fragment>.value(`fragment`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for cacheExists<Fragment: GQLFragment>(of fragment: Fragment). Use given")
+			Failure("Stub return value not specified for cacheExists<Fragment: GQLFragment>(of fragment: Fragment). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
     }
 
     open func clearCache() throws {
@@ -1979,15 +2037,43 @@ open class GQLStoreMock: GQLStore, Mock {
 
 
     fileprivate enum MethodType {
-        case m_updateCache__cacheMutation_cacheMutationbody_body(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
+        case m_createCache__for_querydata_data(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
+        case m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(Parameter<GenericAttribute>, Parameter<Bool>, Parameter<GenericAttribute>)
+        case m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(Parameter<GenericAttribute>, Parameter<Bool>, Parameter<GenericAttribute>)
+        case m_cacheExists__for_query(Parameter<GenericAttribute>)
+        case m_cacheExists__of_fragment(Parameter<GenericAttribute>)
         case m_clearCache
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_updateCache__cacheMutation_cacheMutationbody_body(let lhsCachemutation, let lhsBody), .m_updateCache__cacheMutation_cacheMutationbody_body(let rhsCachemutation, let rhsBody)):
+            case (.m_createCache__for_querydata_data(let lhsQuery, let lhsData), .m_createCache__for_querydata_data(let rhsQuery, let rhsData)):
 				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsCachemutation, rhs: rhsCachemutation, with: matcher), lhsCachemutation, rhsCachemutation, "cacheMutation"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "for query"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsData, rhs: rhsData, with: matcher), lhsData, rhsData, "data"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(let lhsQuery, let lhsOnlyifexists, let lhsBody), .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(let rhsQuery, let rhsOnlyifexists, let rhsBody)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "for query"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsOnlyifexists, rhs: rhsOnlyifexists, with: matcher), lhsOnlyifexists, rhsOnlyifexists, "onlyIfExists"))
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsBody, rhs: rhsBody, with: matcher), lhsBody, rhsBody, "body"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(let lhsFragment, let lhsOnlyifexists, let lhsBody), .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(let rhsFragment, let rhsOnlyifexists, let rhsBody)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsFragment, rhs: rhsFragment, with: matcher), lhsFragment, rhsFragment, "of fragment"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsOnlyifexists, rhs: rhsOnlyifexists, with: matcher), lhsOnlyifexists, rhsOnlyifexists, "onlyIfExists"))
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsBody, rhs: rhsBody, with: matcher), lhsBody, rhsBody, "body"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_cacheExists__for_query(let lhsQuery), .m_cacheExists__for_query(let rhsQuery)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsQuery, rhs: rhsQuery, with: matcher), lhsQuery, rhsQuery, "for query"))
+				return Matcher.ComparisonResult(results)
+
+            case (.m_cacheExists__of_fragment(let lhsFragment), .m_cacheExists__of_fragment(let rhsFragment)):
+				var results: [Matcher.ParameterComparisonResult] = []
+				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsFragment, rhs: rhsFragment, with: matcher), lhsFragment, rhsFragment, "of fragment"))
 				return Matcher.ComparisonResult(results)
 
             case (.m_clearCache, .m_clearCache): return .match
@@ -1997,13 +2083,21 @@ open class GQLStoreMock: GQLStore, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_updateCache__cacheMutation_cacheMutationbody_body(p0, p1): return p0.intValue + p1.intValue
+            case let .m_createCache__for_querydata_data(p0, p1): return p0.intValue + p1.intValue
+            case let .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_cacheExists__for_query(p0): return p0.intValue
+            case let .m_cacheExists__of_fragment(p0): return p0.intValue
             case .m_clearCache: return 0
             }
         }
         func assertionName() -> String {
             switch self {
-            case .m_updateCache__cacheMutation_cacheMutationbody_body: return ".updateCache(cacheMutation:body:)"
+            case .m_createCache__for_querydata_data: return ".createCache(for:data:)"
+            case .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body: return ".updateCache(for:onlyIfExists:body:)"
+            case .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body: return ".updateCache(of:onlyIfExists:body:)"
+            case .m_cacheExists__for_query: return ".cacheExists(for:)"
+            case .m_cacheExists__of_fragment: return ".cacheExists(of:)"
             case .m_clearCache: return ".clearCache()"
             }
         }
@@ -2018,13 +2112,59 @@ open class GQLStoreMock: GQLStore, Mock {
         }
 
 
-        public static func updateCache<CacheMutation:LocalCacheMutation>(cacheMutation: Parameter<CacheMutation>, body: Parameter<(inout CacheMutation.Data) throws -> Void>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_updateCache__cacheMutation_cacheMutationbody_body(`cacheMutation`.wrapAsGeneric(), `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        public static func cacheExists<Query: GQLQuery>(for query: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func updateCache<CacheMutation: LocalCacheMutation>(cacheMutation: Parameter<CacheMutation>, body: Parameter<(inout CacheMutation.Data) throws -> Void>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func cacheExists<Fragment: GQLFragment>(of fragment: Parameter<Fragment>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createCache<Query:GQLQuery>(for query: Parameter<Query>, data: Parameter<Query.Data>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createCache<Query: GQLQuery>(for query: Parameter<Query>, data: Parameter<Query.Data>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_updateCache__cacheMutation_cacheMutationbody_body(`cacheMutation`.wrapAsGeneric(), `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let given: Given = { return Given(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func updateCache<Query:GQLQuery>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func updateCache<Query: GQLQuery>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func updateCache<Fragment:GQLFragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func updateCache<Fragment: GQLFragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func cacheExists<Query:GQLQuery>(for query: Parameter<Query>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func cacheExists<Query: GQLQuery>(for query: Parameter<Query>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func cacheExists<Fragment:GQLFragment>(of fragment: Parameter<Fragment>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func cacheExists<Fragment: GQLFragment>(of fragment: Parameter<Fragment>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
@@ -2043,7 +2183,11 @@ open class GQLStoreMock: GQLStore, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func updateCache<CacheMutation>(cacheMutation: Parameter<CacheMutation>, body: Parameter<(inout CacheMutation.Data) throws -> Void>) -> Verify where CacheMutation:LocalCacheMutation { return Verify(method: .m_updateCache__cacheMutation_cacheMutationbody_body(`cacheMutation`.wrapAsGeneric(), `body`.wrapAsGeneric()))}
+        public static func createCache<Query>(for query: Parameter<Query>, data: Parameter<Query.Data>) -> Verify where Query:GQLQuery { return Verify(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()))}
+        public static func updateCache<Query>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>) -> Verify where Query:GQLQuery { return Verify(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()))}
+        public static func updateCache<Fragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>) -> Verify where Fragment:GQLFragment { return Verify(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()))}
+        public static func cacheExists<Query>(for query: Parameter<Query>) -> Verify where Query:GQLQuery { return Verify(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()))}
+        public static func cacheExists<Fragment>(of fragment: Parameter<Fragment>) -> Verify where Fragment:GQLFragment { return Verify(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()))}
         public static func clearCache() -> Verify { return Verify(method: .m_clearCache)}
     }
 
@@ -2051,8 +2195,20 @@ open class GQLStoreMock: GQLStore, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func updateCache<CacheMutation>(cacheMutation: Parameter<CacheMutation>, body: Parameter<(inout CacheMutation.Data) throws -> Void>, perform: @escaping (CacheMutation, @escaping (inout CacheMutation.Data) throws -> Void) -> Void) -> Perform where CacheMutation:LocalCacheMutation {
-            return Perform(method: .m_updateCache__cacheMutation_cacheMutationbody_body(`cacheMutation`.wrapAsGeneric(), `body`.wrapAsGeneric()), performs: perform)
+        public static func createCache<Query>(for query: Parameter<Query>, data: Parameter<Query.Data>, perform: @escaping (Query, Query.Data) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_createCache__for_querydata_data(`query`.wrapAsGeneric(), `data`.wrapAsGeneric()), performs: perform)
+        }
+        public static func updateCache<Query>(for query: Parameter<Query>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Query.Data) throws -> Void>, perform: @escaping (Query, Bool, @escaping (inout Query.Data) throws -> Void) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_updateCache__for_queryonlyIfExists_onlyIfExistsbody_body(`query`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), performs: perform)
+        }
+        public static func updateCache<Fragment>(of fragment: Parameter<Fragment>, onlyIfExists: Parameter<Bool>, body: Parameter<(inout Fragment) throws -> Void>, perform: @escaping (Fragment, Bool, @escaping (inout Fragment) throws -> Void) -> Void) -> Perform where Fragment:GQLFragment {
+            return Perform(method: .m_updateCache__of_fragmentonlyIfExists_onlyIfExistsbody_body(`fragment`.wrapAsGeneric(), `onlyIfExists`, `body`.wrapAsGeneric()), performs: perform)
+        }
+        public static func cacheExists<Query>(for query: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform where Query:GQLQuery {
+            return Perform(method: .m_cacheExists__for_query(`query`.wrapAsGeneric()), performs: perform)
+        }
+        public static func cacheExists<Fragment>(of fragment: Parameter<Fragment>, perform: @escaping (Fragment) -> Void) -> Perform where Fragment:GQLFragment {
+            return Perform(method: .m_cacheExists__of_fragment(`fragment`.wrapAsGeneric()), performs: perform)
         }
         public static func clearCache(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_clearCache, performs: perform)

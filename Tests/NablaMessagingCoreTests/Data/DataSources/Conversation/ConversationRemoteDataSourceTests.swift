@@ -34,11 +34,7 @@ class ConversationRemoteDataSourceTests: XCTestCase {
             gqlStore: mockGqlStore,
             logger: mockLogger
         )
-        mockGqlClient.given(
-            .perform(
-                mutation: .any(GQL.MaskAsSeenMutation.self),
-                willReturn: .init(data: .init([:], variables: nil))
-            ))
+        mockGqlClient.given(.perform(mutation: .any(GQL.MaskAsSeenMutation.self), willReturn: .init(unsafeResultMap: [:])))
         // WHEN
         _ = try await sut.markConversationAsSeen(conversationId: conversationId)
         // THEN

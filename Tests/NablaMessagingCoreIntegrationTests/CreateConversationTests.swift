@@ -15,7 +15,7 @@ class CreateConversationTests: XCTestCase {
         
         // swiftlint:disable force_unwrapping
         env.mockUUIDGenerator.values = [
-            UUID(uuidString: "597AF448-EE3D-4323-8495-1D5115FFAA03")!,
+            UUID(uuidString: "157C934B-6199-4B2B-9A83-5B06E76C04BE")!,
         ]
         env.session.beginRecording()
         _ = try await env.messagingClient.createConversation(withMessage: .text(content: "Hello"), title: nil, providerIds: nil)
@@ -31,7 +31,7 @@ class CreateConversationTests: XCTestCase {
         let env = try await TestEnvironment.make()
         // swiftlint:disable force_unwrapping
         env.mockUUIDGenerator.values = [
-            UUID(uuidString: "F6AEF251-602C-4F16-A851-297F0CCD7F87")!,
+            UUID(uuidString: "78069512-1617-42EB-9E4A-C1114B1DA90D")!,
         ]
         env.session.beginRecording()
         

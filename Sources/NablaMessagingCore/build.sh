@@ -31,4 +31,4 @@ cd ../../ApolloCodegen
 run_cached apollo-codegen "${input_output_files[*]}" \
   /usr/bin/xcrun --sdk macosx swift run ApolloCodegen generate NablaMessagingCore
 cd "$DIRNAME"
-find ./Data/GQL/Generated -type f -exec sed -i "" "s/public //" {} +
+sed -i "" "s/public//" Data/GQL/Generated/*.swift

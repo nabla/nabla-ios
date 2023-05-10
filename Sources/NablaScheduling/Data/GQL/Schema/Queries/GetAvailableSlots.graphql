@@ -12,18 +12,3 @@ query GetAvailableSlots($isPhysical: Boolean!, $categoryId: UUID!, $page: Opaque
         }
     }
 }
-
-query GetAvailableSlotsLocalCacheMutation($isPhysical: Boolean!, $categoryId: UUID!, $page: OpaqueCursorPage!) @apollo_client_ios_localCacheMutation {
-    appointmentCategory(id: $categoryId) {
-        category {
-            id
-            availableSlotsV2(isPhysical: $isPhysical, page: $page) {
-                hasMore
-                nextCursor
-                slots {
-                    ...AvailabilitySlotFragment
-                }
-            }
-        }
-    }
-}

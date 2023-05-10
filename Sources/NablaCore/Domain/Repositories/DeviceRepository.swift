@@ -1,8 +1,3 @@
-#if canImport(ApolloAPI)
-    import ApolloAPI
-#else
-    import Apollo
-#endif
 import Combine
 import Foundation
 
@@ -67,16 +62,16 @@ final class DeviceRepositoryImpl: DeviceRepository {
     private let deviceRemoteDataSource: DeviceRemoteDataSource
     private let logger: Logger
 
-    private func serialize(_ module: Module) -> GraphQLEnum<GQL.SdkModule> {
+    private func serialize(_ module: Module) -> GQL.SdkModule {
         if module is MessagingModule {
-            return .case(.messaging)
+            return .messaging
         }
         if module is VideoCallModule {
-            return .case(.videoCall)
+            return .videoCall
         }
         if module is SchedulingModule {
-            return .case(.videoCallScheduling)
+            return .videoCallScheduling
         }
-        return .unknown(String(reflecting: module))
+        return .__unknown(String(reflecting: module))
     }
 }

@@ -113,6 +113,7 @@ class GQLClientImpl: GQLClient {
             networkTransport: transport.apollo,
             store: apolloStore
         )
+        apollo.cacheKeyForObject = Normalization.cacheKey(for:)
         return apollo
     }
 }

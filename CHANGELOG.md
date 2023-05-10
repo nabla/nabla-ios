@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Core: Reverted Apollo library to version `0.51.2`. Fixes cache issue preventing the loading of older conversation messages.
+
 
 ## [1.1.1] - 2023-04-24
 

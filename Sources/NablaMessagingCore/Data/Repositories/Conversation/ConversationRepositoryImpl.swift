@@ -191,31 +191,31 @@ class ConversationRepositoryImpl: ConversationRepository {
         switch message {
         case let .text(content):
             return GQL.SendMessageInput(
-                content: .init(textInput: .some(.init(text: content))),
+                content: .init(textInput: .init(text: content)),
                 clientId: clientId
             )
         case let .image(content):
             let uuid = try await upload(media: content)
             return .init(
-                content: .init(imageInput: .some(.init(upload: .init(uuid: uuid)))),
+                content: .init(imageInput: .init(upload: .init(uuid: uuid))),
                 clientId: clientId
             )
         case let .video(content):
             let uuid = try await upload(media: content)
             return .init(
-                content: .init(videoInput: .some(.init(upload: .init(uuid: uuid)))),
+                content: .init(videoInput: .init(upload: .init(uuid: uuid))),
                 clientId: clientId
             )
         case let .document(content):
             let uuid = try await upload(media: content)
             return .init(
-                content: .init(documentInput: .some(.init(upload: .init(uuid: uuid)))),
+                content: .init(documentInput: .init(upload: .init(uuid: uuid))),
                 clientId: clientId
             )
         case let .audio(content):
             let uuid = try await upload(media: content)
             return .init(
-                content: .init(audioInput: .some(.init(upload: .init(uuid: uuid)))),
+                content: .init(audioInput: .init(upload: .init(uuid: uuid))),
                 clientId: clientId
             )
         }

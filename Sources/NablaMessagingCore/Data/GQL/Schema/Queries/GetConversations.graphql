@@ -7,13 +7,3 @@ query GetConversations($page: OpaqueCursorPage!) {
         hasMore
     }
 }
-
-query GetConversationsLocalCacheMutation($page: OpaqueCursorPage!) @apollo_client_ios_localCacheMutation {
-    conversations(page: $page) {
-        conversations {
-            ...ConversationFragment
-        }
-        nextCursor
-        hasMore
-    }
-}

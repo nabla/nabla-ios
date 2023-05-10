@@ -20,10 +20,9 @@ Pod::Spec.new do |spec|
   spec.swift_versions     = '5.0'
   spec.source             = { :git => "https://github.com/nabla/nabla-ios.git", :tag => "#{spec.version}" }
   spec.source_files       = ["Sources/#{spec.name}/**/*.swift"]
-  spec.exclude_files      = "Sources/#{spec.name}/Data/GQL/Generated/SPM"
   spec.resource_bundles   = {"#{spec.name}Resources" => "Sources/#{spec.name}/Resources/**/*"}
 
-  spec.dependency           'Apollo/WebSocket', '~> 1.0.7'
-  spec.dependency           'Apollo/SQLite', '~> 1.0.7'
+  spec.dependency           'Apollo/WebSocket', '~> 0.51.2'
+  spec.dependency           'Apollo/SQLite', '~> 0.51.2'
   spec.dependency           'Sentry', '~> 8.1.0'
 end

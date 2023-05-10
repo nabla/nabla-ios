@@ -1,8 +1,3 @@
-#if canImport(ApolloAPI)
-    import ApolloAPI
-#else
-    import Apollo
-#endif
 import Foundation
 
 struct Installation {
@@ -10,7 +5,7 @@ struct Installation {
     let deviceModel: String
     let deviceOSVersion: String
     let codeVersion: Int
-    let modules: [GraphQLEnum<GQL.SdkModule>]
+    let modules: [GQL.SdkModule]
 }
 
 protocol DeviceRemoteDataSource {

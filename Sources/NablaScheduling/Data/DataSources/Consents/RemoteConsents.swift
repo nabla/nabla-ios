@@ -1,3 +1,3 @@
 import Foundation
 
-typealias RemoteConsents = GQL.GetAppointmentConfirmationConsentsQuery.Data.AppointmentConfirmationConsents
+typealias RemoteConsents = GQL.GetAppointmentConfirmationConsentsQuery.Data.AppointmentConfirmationConsent
