@@ -16,6 +16,6 @@ extension GQL.UUID: Apollo.JSONDecodable, Apollo.JSONEncodable {
     }
     
     public var jsonValue: JSONValue {
-        uuidString
+        uuidString.lowercased()
     }
 }

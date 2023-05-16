@@ -6,8 +6,8 @@ enum Normalization {
         guard let rawId = object["id"] as? String else { return nil }
         
         // If `id` is uuid, that's enough
-        if let uuid = UUID(uuidString: rawId) {
-            return uuid.uuidString
+        if let uuid = GQL.UUID(uuidString: rawId) {
+            return uuid.jsonValue as? String
         }
         
         // Otherwise, mix `id` and `__typename`
