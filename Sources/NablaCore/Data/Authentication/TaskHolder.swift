@@ -9,9 +9,14 @@ actor TaskHolder<T> {
             return try await current.value
         }
         let task = Task {
-            let value = try await operation()
-            current = nil
-            return value
+            do {
+                let value = try await operation()
+                current = nil
+                return value
+            } catch {
+                current = nil
+                throw error
+            }
         }
         current = task
         return try await task.value

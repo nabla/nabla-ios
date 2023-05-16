@@ -73,7 +73,16 @@ extension IApolloClient {
     
     func subscribe<S: GraphQLSubscription>(subscription: S) -> AnyPublisher<GraphQLResult<S.Data>, Error> {
         ApolloPublisher { resultHandler in
-            let subscriber = self.subscribe(subscription: subscription, resultHandler: resultHandler)
+            let subscriber = self.subscribe(subscription: subscription) { result in
+                switch result {
+                case let .success(response):
+                    resultHandler(.success(response))
+                case let .failure(error):
+                    if !error.isNetworkError {
+                        resultHandler(.failure(error))
+                    }
+                }
+            }
             return AnyCancellable {
                 subscriber.cancel()
             }

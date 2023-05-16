@@ -69,19 +69,15 @@ class GQLClientImpl: GQLClient {
     }
     
     public func subscribe<Subscription: GQLSubscription>(subscription: Subscription) -> AnyPublisher<Subscription.Data, Never> {
-        apollo.subscribe(subscription: subscription)
-            .mapError { [logger] error in
-                ApolloResponseParser.parse(error, logger: logger)
+        authenticator.watchAuthenticationState()
+            .nabla.switchToLatest { [weak self] state -> AnyPublisher<Subscription.Data, Never> in
+                let empty = Empty<Subscription.Data, Never>().eraseToAnyPublisher()
+                guard let self = self else { return empty }
+                switch state {
+                case .notAuthenticated: return empty
+                case .authenticated: return self.makeInfiniteSubscription(subscription: subscription)
+                }
             }
-            .nabla.resultMap { [logger] result in
-                ApolloResponseParser.parse(result, logger: logger)
-            }
-            .retry(Int.max) // Infinitely retry subscription errors
-            .catch { [logger] error in
-                logger.error(message: "Received terminating subscription error", error: error)
-                return Empty<Subscription.Data, Never>()
-            }
-            .eraseToAnyPublisher()
     }
     
     // MARK: - Internal
@@ -91,10 +87,12 @@ class GQLClientImpl: GQLClient {
     init(
         transport: CombinedTransport,
         apolloStore: ApolloStore,
+        authenticator: Authenticator,
         logger: Logger
     ) {
         self.transport = transport
         self.apolloStore = apolloStore
+        self.authenticator = authenticator
         self.logger = logger
     }
     
@@ -102,6 +100,7 @@ class GQLClientImpl: GQLClient {
     
     private let transport: CombinedTransport
     private let apolloStore: ApolloStore
+    private let authenticator: Authenticator
     private var logger: Logger
     
     private lazy var apollo: ApolloClient = makeApolloClient()
@@ -115,6 +114,22 @@ class GQLClientImpl: GQLClient {
         )
         apollo.cacheKeyForObject = Normalization.cacheKey(for:)
         return apollo
+    }
+    
+    private func makeInfiniteSubscription<Subscription: GQLSubscription>(subscription: Subscription) -> AnyPublisher<Subscription.Data, Never> {
+        apollo.subscribe(subscription: subscription)
+            .mapError { [logger] error in
+                ApolloResponseParser.parse(error, logger: logger)
+            }
+            .nabla.resultMap { [logger] result in
+                ApolloResponseParser.parse(result, logger: logger)
+            }
+            .retry(Int.max) // Infinitely retry subscription errors
+            .catch { [logger] error in
+                logger.error(message: "Received terminating subscription error", error: error)
+                return Empty<Subscription.Data, Never>()
+            }
+            .eraseToAnyPublisher()
     }
 }
 

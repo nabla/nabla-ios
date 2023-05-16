@@ -12,8 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Core: Improve live updates stability. Under bad network conditions, some websocket subscription would not reconnect as expected.
 - Core: Fixed watchers emitting new values when the observed object don't change.
-
 
 ## [1.1.2] - 2023-05-10
 

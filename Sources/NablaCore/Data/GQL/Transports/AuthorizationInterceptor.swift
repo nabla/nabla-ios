@@ -25,7 +25,7 @@ class AuthorizationInterceptor: ApolloInterceptor {
                 case let .authenticated(accessToken):
                     request.addHeader(name: HTTPHeaders.NablaAuthorization, value: "Bearer \(accessToken)")
                     chain.proceedAsync(request: request, response: response, completion: { [authenticator] result in
-                        if case let .failure(error) = result, AuthorizationInterceptor.isAuthenticationError(error) {
+                        if case let .failure(error) = result, error.isAuthenticationError {
                             authenticator.markTokensAsInvalid()
                         }
                         
@@ -41,14 +41,4 @@ class AuthorizationInterceptor: ApolloInterceptor {
     // MARK: - Private
     
     private let authenticator: Authenticator
-    
-    private static func isAuthenticationError(_ error: Error) -> Bool {
-        if let responseCodeError = error as? Apollo.ResponseCodeInterceptor.ResponseCodeError,
-           case let .invalidResponseCode(response, _) = responseCodeError,
-           response?.statusCode == 401 {
-            return true
-        }
-        
-        return false
-    }
 }

@@ -53,7 +53,7 @@ public class ConsoleLogger: Logger {
         }
         
         if !extra.isEmpty {
-            serialized = " - \(serialize(extra: extra))"
+            serialized += " - \(serialize(extra: extra))"
         }
         
         os_log(type, "%{public}@", serialized)

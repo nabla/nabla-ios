@@ -75,6 +75,22 @@ class TaskHolderTest: XCTestCase {
         XCTAssertEqual(result1.value, 1)
         XCTAssertEqual(result2.value, 1)
     }
+    
+    func testTaskIsReleasedAfterFailure() async {
+        // GIVEN
+        let sut = TaskHolder<Int>()
+        
+        // WHEN
+        let result1 = try? await sut.run {
+            throw DummyError.foo
+        }
+        let result2 = try? await sut.run {
+            42
+        }
+        // THEN
+        XCTAssertEqual(result1, nil)
+        XCTAssertEqual(result2, 42)
+    }
 }
 
 private final class Reference<T> {
@@ -83,4 +99,8 @@ private final class Reference<T> {
     init(value: T) {
         self.value = value
     }
+}
+
+private enum DummyError: Error {
+    case foo
 }

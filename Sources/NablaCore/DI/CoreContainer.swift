@@ -135,6 +135,7 @@ public class CoreContainer {
         gqlClient = GQLClientImpl(
             transport: combinedTransport,
             apolloStore: apolloStore,
+            authenticator: authenticator,
             logger: logger
         )
         gqlClient.addRefetchTriggers([ReachabilityRefetchTrigger(environment: environment)])

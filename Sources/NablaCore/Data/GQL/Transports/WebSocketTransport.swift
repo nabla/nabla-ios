@@ -100,12 +100,18 @@ class WebSocketTransport {
         switch state {
         case .notAuthenticated:
             // We don't support any unauthenticated subscription
+            logger.info(message: "Closing websocket connection due to missing authentication")
             apollo.closeConnection()
             connectionState.send(.disconnected(since: Date()))
         case let .authenticated(accessToken):
-            connectionState.send(.connecting)
-            apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"])
-            apollo.resumeWebSocketConnection(autoReconnect: true)
+            apollo.updateHeaderValues([HTTPHeaders.NablaAuthorization: "Bearer \(accessToken)"], reconnectIfConnected: false)
+            if apollo.isConnected() {
+                logger.info(message: "Tokens changed but websocket is still connected.")
+            } else {
+                logger.info(message: "Resuming websocket with new tokens")
+                apollo.resumeWebSocketConnection(autoReconnect: true)
+                connectionState.send(.connecting)
+            }
         }
     }
 }
@@ -129,20 +135,11 @@ extension WebSocketTransport: ApolloWebSocketTransportDelegate {
             extra = [:]
         }
         logger.info(message: "Websocket did disconnect", extra: extra)
-        if let error = error, isAuthError(error) {
+        if let error = error, error.isAuthenticationError {
             logger.warning(message: "Websocket closing connection after authentication error", extra: extra)
-            apollo.closeConnection()
-            connectionState.send(.disconnected(since: Date()))
+            authenticator.markTokensAsInvalid()
         } else {
             connectionState.send(.connecting)
         }
-    }
-    
-    private func isAuthError(_ error: Error) -> Bool {
-        guard
-            let websocketError = error as? WebSocketError,
-            let wsError = websocketError.error as? WebSocket.WSError
-        else { return false }
-        return wsError.code == 401
     }
 }
