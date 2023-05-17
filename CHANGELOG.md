@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Fixed
+
+
+## [1.1.3] - 2023-05-17
+
+### Added
+
+### Changed
+
 - Core: Calling `NablaClient.setCurrentUser(userId:)` when the app starts is no longer required when `NablaClient.currentUserId` returns a non-null value.
 - Core: The `SessionTokenProvider` might be called immediately after `NablaClient.initialize()` is called.
 
