@@ -7,22 +7,22 @@ final class WatchAppointmentInteractorImpl: AuthenticatedInteractor, WatchAppoin
     
     func execute(id: UUID) -> AnyPublisher<Appointment, NablaError> {
         isAuthenticated
-            .nabla.switchToLatest { [repository] in
-                repository.watchAppointment(withId: id)
+            .nabla.switchToLatest { [appointmentRepository] in
+                appointmentRepository.watchAppointment(withId: id)
             }
     }
     
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: AppointmentRepository
+        userRepository: UserRepository,
+        appointmentRepository: AppointmentRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.appointmentRepository = appointmentRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: AppointmentRepository
+    private let appointmentRepository: AppointmentRepository
 }

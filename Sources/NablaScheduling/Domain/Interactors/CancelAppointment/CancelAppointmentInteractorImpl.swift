@@ -7,20 +7,20 @@ final class CancelAppointmentInteractorImpl: AuthenticatedInteractor, CancelAppo
     /// - Throws: ``NablaError``
     func execute(appointmentId: UUID) async throws {
         try assertIsAuthenticated()
-        return try await repository.cancelAppointment(withId: appointmentId)
+        return try await appointmentRepository.cancelAppointment(withId: appointmentId)
     }
     
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: AppointmentRepository
+        userRepository: UserRepository,
+        appointmentRepository: AppointmentRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.appointmentRepository = appointmentRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: AppointmentRepository
+    private let appointmentRepository: AppointmentRepository
 }

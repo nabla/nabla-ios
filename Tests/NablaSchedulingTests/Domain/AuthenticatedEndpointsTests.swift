@@ -5,7 +5,7 @@ import NablaCoreTestsUtils
 import XCTest
 
 class AuthenticatedEndpointsTests: XCTestCase {
-    private var authenticator: AuthenticatorMock!
+    private var userRepository: UserRepositoryMock!
     private var appointmentRepository: AppointmentRepositoryMock!
     private var availabilitySlotRepository: AvailabilitySlotRepositoryMock!
     private var consentsRepository: ConsentsRepositoryMock!
@@ -13,14 +13,14 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        authenticator = .init()
+        userRepository = .init()
         appointmentRepository = .init()
         availabilitySlotRepository = .init()
         consentsRepository = .init()
         providerRepository = .init()
         
-        authenticator.given(.currentUserId(getter: nil))
-        authenticator.given(.watchCurrentUserId(willReturn: Just(nil).eraseToAnyPublisher()))
+        userRepository.given(.getCurrentUser(willReturn: nil))
+        userRepository.given(.watchCurrentUser(willReturn: Just(nil).eraseToAnyPublisher()))
     }
     
     private func assertAuthenticationErrorPublisher<T, E: Error>(_ publisher: AnyPublisher<T, E>) {
@@ -46,7 +46,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testCancelAppointmentFailsWhenNotAuthenticated() async {
         // GIVEN
-        let sut = CancelAppointmentInteractorImpl(authenticator: authenticator, repository: appointmentRepository)
+        let sut = CancelAppointmentInteractorImpl(
+            userRepository: userRepository,
+            appointmentRepository: appointmentRepository
+        )
         // WHEN
         do {
             try await sut.execute(appointmentId: .init())
@@ -59,7 +62,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testCreatePendingAppointmentFailsWhenNotAuthenticated() async {
         // GIVEN
-        let sut = CreatePendingAppointmentInteractorImpl(authenticator: authenticator, repository: appointmentRepository)
+        let sut = CreatePendingAppointmentInteractorImpl(
+            userRepository: userRepository,
+            appointmentRepository: appointmentRepository
+        )
         // WHEN
         do {
             _ = try await sut.execute(
@@ -77,7 +83,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testGetAvailableLocationsFailsWhenNotAuthenticated() async {
         // GIVEN
-        let sut = GetAvailableLocationsInteractorImpl(authenticator: authenticator, repository: appointmentRepository)
+        let sut = GetAvailableLocationsInteractorImpl(
+            userRepository: userRepository,
+            appointmentRepository: appointmentRepository
+        )
         // WHEN
         do {
             _ = try await sut.execute()
@@ -90,7 +99,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testSchedulingPendingAppointmentFailsWhenNotAuthenticated() async {
         // GIVEN
-        let sut = SchedulePendingAppointmentInteractorImpl(authenticator: authenticator, repository: appointmentRepository)
+        let sut = SchedulePendingAppointmentInteractorImpl(
+            userRepository: userRepository,
+            appointmentRepository: appointmentRepository
+        )
         // WHEN
         do {
             _ = try await sut.execute(appointmentId: .init())
@@ -103,7 +115,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testWatchAppointmentFailsWhenNotAuthenticated() {
         // GIVEN
-        let sut = WatchAppointmentInteractorImpl(authenticator: authenticator, repository: appointmentRepository)
+        let sut = WatchAppointmentInteractorImpl(
+            userRepository: userRepository,
+            appointmentRepository: appointmentRepository
+        )
         // WHEN
         let publisher = sut.execute(id: .init())
         // THEN
@@ -112,7 +127,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testWatchAppointmentsFailsWhenNotAuthenticated() {
         // GIVEN
-        let sut = WatchAppointmentsInteractorImpl(authenticator: authenticator, repository: appointmentRepository)
+        let sut = WatchAppointmentsInteractorImpl(
+            userRepository: userRepository,
+            appointmentRepository: appointmentRepository
+        )
         // WHEN
         let publisher = sut.execute(state: .scheduled)
         // THEN
@@ -121,7 +139,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testAvailabilitySlotsFailsWhenNotAuthenticated() {
         // GIVEN
-        let sut = WatchAvailabilitySlotsInteractorImpl(authenticator: authenticator, repository: availabilitySlotRepository)
+        let sut = WatchAvailabilitySlotsInteractorImpl(
+            userRepository: userRepository,
+            availabilitySlotRepository: availabilitySlotRepository
+        )
         // WHEN
         let publisher = sut.execute(categoryId: .init(), location: .remote)
         // THEN
@@ -130,7 +151,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testWatchCategoriesFailsWhenNotAuthenticated() {
         // GIVEN
-        let sut = WatchCategoriesInteractorImpl(authenticator: authenticator, repository: availabilitySlotRepository)
+        let sut = WatchCategoriesInteractorImpl(
+            userRepository: userRepository,
+            availabilitySlotRepository: availabilitySlotRepository
+        )
         // WHEN
         let publisher = sut.execute()
         // THEN
@@ -139,7 +163,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testWatchConsentsFailsWhenNotAuthenticated() {
         // GIVEN
-        let sut = WatchConsentsInteractorImpl(authenticator: authenticator, repository: consentsRepository)
+        let sut = WatchConsentsInteractorImpl(
+            userRepository: userRepository,
+            consentsRepository: consentsRepository
+        )
         // WHEN
         let publisher = sut.execute(location: .remote)
         // THEN
@@ -148,7 +175,10 @@ class AuthenticatedEndpointsTests: XCTestCase {
     
     func testWatchProviderFailsWhenNotAuthenticated() {
         // GIVEN
-        let sut = WatchProviderInteractorImpl(authenticator: authenticator, repository: providerRepository)
+        let sut = WatchProviderInteractorImpl(
+            userRepository: userRepository,
+            providerRepository: providerRepository
+        )
         // WHEN
         let publisher = sut.execute(providerId: .init())
         // THEN

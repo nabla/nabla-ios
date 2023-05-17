@@ -6,7 +6,7 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
     // MARK: - Initializer
 
     init(
-        authenticator: Authenticator,
+        userRepository: UserRepository,
         itemsRepository: ConversationItemRepository,
         conversationsRepository: ConversationRepository,
         gateKeepers: GateKeepers,
@@ -16,7 +16,7 @@ class WatchConversationItemsInteractorImpl: AuthenticatedInteractor, WatchConver
         self.conversationsRepository = conversationsRepository
         self.gateKeepers = gateKeepers
         self.logger = logger
-        super.init(authenticator: authenticator)
+        super.init(userRepository: userRepository)
     }
 
     // MARK: - Internal

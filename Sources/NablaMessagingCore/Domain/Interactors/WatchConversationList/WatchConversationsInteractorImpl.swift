@@ -5,17 +5,20 @@ import NablaCore
 class WatchConversationsInteractorImpl: AuthenticatedInteractor, WatchConversationsInteractor {
     // MARK: - Initializer
 
-    init(authenticator: Authenticator, repository: ConversationRepository) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+    init(
+        userRepository: UserRepository,
+        conversationRepository: ConversationRepository
+    ) {
+        self.conversationRepository = conversationRepository
+        super.init(userRepository: userRepository)
     }
 
     // MARK: - WatchConversationsInteractor
     
     func execute() -> AnyPublisher<Response<PaginatedList<Conversation>>, NablaError> {
         isAuthenticated
-            .nabla.switchToLatest { [repository] in
-                repository.watchConversations()
+            .nabla.switchToLatest { [conversationRepository] in
+                conversationRepository.watchConversations()
             }
             .map { $0.asResponse() }
             .eraseToAnyPublisher()
@@ -23,5 +26,5 @@ class WatchConversationsInteractorImpl: AuthenticatedInteractor, WatchConversati
     
     // MARK: - private
     
-    private let repository: ConversationRepository
+    private let conversationRepository: ConversationRepository
 }

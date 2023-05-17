@@ -20,7 +20,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
         messagingClient = NablaMessagingClient(container: nablaClient.container)
     }
     
-    private func assertAuthenticationErrorPublisher<T, E: Error>(_ publisher: AnyPublisher<T, E>) {
+    private func assertAuthenticationErrorPublisher<T, E: Error>(_ publisher: AnyPublisher<T, E>, file: StaticString = #filePath, line: UInt = #line) {
         let receiveErrorCalled = expectation(description: "receiveCompletion called with error")
         let receiveCompletionCalled = expectation(description: "receiveCompletion called with finished")
         receiveCompletionCalled.isInverted = true
@@ -38,7 +38,7 @@ class AuthenticatedEndpointsTests: XCTestCase {
             receiveValueCalled.fulfill()
         }
         waitForExpectations(timeout: 0.5)
-        XCTAssertNotNil(cancellable)
+        XCTAssertNotNil(cancellable, file: file, line: line)
     }
     
     func testWatchConversationsFailsWhenNotAuthenticated() {

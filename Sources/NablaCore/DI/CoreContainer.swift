@@ -79,6 +79,13 @@ public class CoreContainer {
             logger: logger
         )
         
+        userLocalDataSource = UserLocalDataSourceImpl(
+            logger: logger,
+            store: scopedKeyValueStore
+        )
+        
+        userRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
+        
         compositeLogger.addLogger(logger: ErrorReporterLogger(
             errorReporter: errorReporter,
             publicApiKey: configuration.apiKey,
@@ -103,7 +110,8 @@ public class CoreContainer {
         )
         authenticator = AuthenticatorImpl(
             httpManager: httpManager,
-            sessionTokenProvider: sessionTokenProvider
+            sessionTokenProvider: sessionTokenProvider,
+            userRepository: userRepository
         )
         apolloStore = Self.makeApolloStore(logger: logger)
         interceptorProvider = HttpInterceptorProvider(
@@ -141,19 +149,12 @@ public class CoreContainer {
         gqlClient.addRefetchTriggers([ReachabilityRefetchTrigger(environment: environment)])
         gqlStore = GQLStoreImpl(apolloStore: apolloStore)
         
-        userLocalDataSource = UserLocalDataSourceImpl(
-            logger: logger,
-            store: scopedKeyValueStore
-        )
-        
         deviceRemoteDataSource = DeviceRemoteDataSourceImpl(gqlClient: gqlClient)
         deviceRepository = DeviceRepositoryImpl(
             deviceLocalDataSource: self.deviceLocalDataSource,
             deviceRemoteDataSource: deviceRemoteDataSource,
             logger: logger
         )
-        
-        userRepository = UserRepositoryImpl(localDataSource: userLocalDataSource)
         
         logOutInteractor = LogOutInteractorImpl(
             userRepository: userRepository,
@@ -165,18 +166,16 @@ public class CoreContainer {
         )
         initializeInteractor = InitializeInteractorImpl(
             deviceRepository: deviceRepository,
+            userRepository: userRepository,
             errorReporter: errorReporter,
             environment: environment,
-            extraHeaders: extraHeaders
-        )
-        setCurrentUserInteractor = SetCurrentUserInteractorImpl(
-            environment: environment,
-            authenticator: authenticator,
-            userRepository: userRepository,
-            deviceRepository: deviceRepository,
-            errorReport: errorReporter,
+            extraHeaders: extraHeaders,
             logger: logger,
             modules: modules
+        )
+        setCurrentUserInteractor = SetCurrentUserInteractorImpl(
+            userRepository: userRepository,
+            logger: logger
         )
         
         messagingModule = modules.first(as: MessagingModule.self)

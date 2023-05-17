@@ -5,13 +5,13 @@ final class SendMessageInteractorImpl: AuthenticatedInteractor, SendMessageInter
     // MARK: - Initializer
 
     init(
-        authenticator: Authenticator,
+        userRepository: UserRepository,
         itemsRepository: ConversationItemRepository,
         conversationsRepository: ConversationRepository
     ) {
         self.itemsRepository = itemsRepository
         self.conversationsRepository = conversationsRepository
-        super.init(authenticator: authenticator)
+        super.init(userRepository: userRepository)
     }
 
     // MARK: - SendMessageInteractor

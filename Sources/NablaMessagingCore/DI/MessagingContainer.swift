@@ -69,46 +69,46 @@ public class MessagingContainer {
             repository: conversationRepository
         )
         createConversationInteractor = CreateConversationInteractorImpl(
-            authenticator: coreContainer.authenticator,
-            repository: conversationRepository
+            userRepository: coreContainer.userRepository,
+            conversationRepository: conversationRepository
         )
         watchConversationsInteractor = WatchConversationsInteractorImpl(
-            authenticator: coreContainer.authenticator,
-            repository: conversationRepository
+            userRepository: coreContainer.userRepository,
+            conversationRepository: conversationRepository
         )
         watchConversationInteractor = WatchConversationInteractorImpl(
-            authenticator: coreContainer.authenticator,
-            repository: conversationRepository
+            userRepository: coreContainer.userRepository,
+            conversationRepository: conversationRepository
         )
         watchConversationItemsInteractor = WatchConversationItemsInteractorImpl(
-            authenticator: coreContainer.authenticator,
+            userRepository: coreContainer.userRepository,
             itemsRepository: conversationItemRepository,
             conversationsRepository: conversationRepository,
             gateKeepers: gateKeepers,
             logger: logger
         )
         sendMessageInteractor = SendMessageInteractorImpl(
-            authenticator: coreContainer.authenticator,
+            userRepository: coreContainer.userRepository,
             itemsRepository: conversationItemRepository,
             conversationsRepository: conversationRepository
         )
         retrySendingMessageInteractor = RetrySendingMessageInteractorImpl(
-            authenticator: coreContainer.authenticator,
+            userRepository: coreContainer.userRepository,
             itemsRepository: conversationItemRepository,
             conversationsRepository: conversationRepository
         )
         deleteMessageInteractor = DeleteMessageInteractorImpl(
-            authenticator: coreContainer.authenticator,
+            userRepository: coreContainer.userRepository,
             itemsRepository: conversationItemRepository,
             conversationsRepository: conversationRepository
         )
         setIsTypingInteractor = SetIsTypingInteractorImpl(
-            authenticator: coreContainer.authenticator,
-            repository: conversationRepository
+            userRepository: coreContainer.userRepository,
+            conversationRepository: conversationRepository
         )
         markConversationAsSeenInteractor = MarkConversationAsSeenInteractorImpl(
-            authenticator: coreContainer.authenticator,
-            repository: conversationRepository
+            userRepository: coreContainer.userRepository,
+            conversationRepository: conversationRepository
         )
     }
 

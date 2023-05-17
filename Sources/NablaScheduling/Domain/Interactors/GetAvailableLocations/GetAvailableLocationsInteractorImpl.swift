@@ -7,20 +7,20 @@ final class GetAvailableLocationsInteractorImpl: AuthenticatedInteractor, GetAva
     /// - Throws: ``NablaError``
     func execute() async throws -> Set<LocationType> {
         try assertIsAuthenticated()
-        return try await repository.getAvailableAppointmentLocations()
+        return try await appointmentRepository.getAvailableAppointmentLocations()
     }
     
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: AppointmentRepository
+        userRepository: UserRepository,
+        appointmentRepository: AppointmentRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.appointmentRepository = appointmentRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: AppointmentRepository
+    private let appointmentRepository: AppointmentRepository
 }

@@ -1,23 +1,19 @@
+import Combine
 import Foundation
 
 class UserLocalDataSourceImpl: UserLocalDataSource {
     // MARK: - Internal
     
     func getCurrentUser() -> LocalUser? {
-        do {
-            return try store.get(forKey: Constants.currentUserStoreKey)
-        } catch {
-            logger.error(message: "Failed to retrieve current user", error: error)
-            return nil
-        }
+        currentUser.value
     }
     
     func setCurrentUser(_ user: LocalUser?) {
-        do {
-            try store.set(user, forKey: Constants.currentUserStoreKey)
-        } catch {
-            logger.error(message: "Failed to save current user", error: error)
-        }
+        currentUser.send(user)
+    }
+    
+    func watchCurrentUser() -> AnyPublisher<LocalUser?, Never> {
+        currentUser.eraseToAnyPublisher()
     }
     
     init(
@@ -26,6 +22,13 @@ class UserLocalDataSourceImpl: UserLocalDataSource {
     ) {
         self.logger = logger
         self.store = store
+        do {
+            currentUser = .init(try store.get(forKey: Constants.currentUserStoreKey))
+        } catch {
+            logger.error(message: "Failed to retrieve current user", error: error)
+            currentUser = .init(nil)
+        }
+        synchronizeCurrentUser()
     }
     
     // MARK: - Private
@@ -35,6 +38,18 @@ class UserLocalDataSourceImpl: UserLocalDataSource {
     }
     
     private let logger: Logger
-    
     private let store: KeyValueStore
+    private let currentUser: CurrentValueSubject<LocalUser?, Never>
+    
+    private var currentUserObserver: Cancellable?
+    
+    private func synchronizeCurrentUser() {
+        currentUserObserver = currentUser.sink { [store, logger] user in
+            do {
+                try store.set(user, forKey: Constants.currentUserStoreKey)
+            } catch {
+                logger.error(message: "Failed to save current user", error: error)
+            }
+        }
+    }
 }

@@ -6,19 +6,19 @@ import XCTest
 final class AuthenticatedInteractorTests: XCTestCase {
     private var sut: DummyInteractor!
     
-    private var authenticator: AuthenticatorMock!
+    private var userRepository: UserRepositoryMock!
 
     override func setUp() {
         super.setUp()
         
-        authenticator = .init()
+        userRepository = .init()
         
-        sut = .init(authenticator: authenticator)
+        sut = .init(userRepository: userRepository)
     }
 
     func testExecuteAsyncWhileAuthenticated() async throws {
         // GIVEN
-        authenticator.given(.currentUserId(getter: "user-id"))
+        userRepository.given(.getCurrentUser(willReturn: User(id: .init())))
         // WHEN
         let result = try await sut.executeAsync()
         // THEN
@@ -27,7 +27,7 @@ final class AuthenticatedInteractorTests: XCTestCase {
     
     func testExecuteAsyncWhileNotAuthenticated() async throws {
         // GIVEN
-        authenticator.given(.currentUserId(getter: nil))
+        userRepository.given(.getCurrentUser(willReturn: nil))
         // WHEN
         do {
             _ = try await sut.executeAsync()
@@ -40,8 +40,8 @@ final class AuthenticatedInteractorTests: XCTestCase {
     
     func testExecutePublisherWhileAuthenticated() async throws {
         // GIVEN
-        let currentUserId = CurrentValueSubject<String?, Never>("user-id")
-        authenticator.given(.watchCurrentUserId(willReturn: currentUserId.eraseToAnyPublisher()))
+        let currentUser = CurrentValueSubject<User?, Never>(User(id: .init()))
+        userRepository.given(.watchCurrentUser(willReturn: currentUser.eraseToAnyPublisher()))
         let didReceiveValue = expectation(description: "Did receive error")
         // WHEN
         let cancellable = sut.executePublisher()
@@ -58,8 +58,8 @@ final class AuthenticatedInteractorTests: XCTestCase {
     
     func testExecutePublisherWhileNotAuthenticated() async throws {
         // GIVEN
-        let currentUserId = CurrentValueSubject<String?, Never>(nil)
-        authenticator.given(.watchCurrentUserId(willReturn: currentUserId.eraseToAnyPublisher()))
+        let currentUser = CurrentValueSubject<User?, Never>(nil)
+        userRepository.given(.watchCurrentUser(willReturn: currentUser.eraseToAnyPublisher()))
         let didReceiveError = expectation(description: "Did receive error")
         // WHEN
         let cancellable = sut.executePublisher()
@@ -81,8 +81,8 @@ final class AuthenticatedInteractorTests: XCTestCase {
     
     func testExecutePublisherWithTransientAuthentication() async throws {
         // GIVEN
-        let currentUserId = CurrentValueSubject<String?, Never>("user-id")
-        authenticator.given(.watchCurrentUserId(willReturn: currentUserId.eraseToAnyPublisher()))
+        let currentUser = CurrentValueSubject<User?, Never>(User(id: .init()))
+        userRepository.given(.watchCurrentUser(willReturn: currentUser.eraseToAnyPublisher()))
         let didReceiveValue = expectation(description: "Did receive error")
         let didReceiveFailure = expectation(description: "Did receive failure")
         let cancellable = sut.executePublisher()
@@ -99,7 +99,7 @@ final class AuthenticatedInteractorTests: XCTestCase {
                 didReceiveValue.fulfill()
             }
         // WHEN
-        currentUserId.send(nil)
+        currentUser.send(nil)
         // THEN
         wait(for: [didReceiveValue, didReceiveFailure], timeout: 0.5)
         XCTAssertNotNil(cancellable)

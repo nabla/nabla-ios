@@ -7,22 +7,22 @@ final class WatchCategoriesInteractorImpl: AuthenticatedInteractor, WatchCategor
     
     func execute() -> AnyPublisher<[Category], NablaError> {
         isAuthenticated
-            .nabla.switchToLatest { [repository] in
-                repository.watchCategories()
+            .nabla.switchToLatest { [availabilitySlotRepository] in
+                availabilitySlotRepository.watchCategories()
             }
     }
     
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: AvailabilitySlotRepository
+        userRepository: UserRepository,
+        availabilitySlotRepository: AvailabilitySlotRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.availabilitySlotRepository = availabilitySlotRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: AvailabilitySlotRepository
+    private let availabilitySlotRepository: AvailabilitySlotRepository
 }

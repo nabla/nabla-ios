@@ -4,9 +4,12 @@ import NablaCore
 final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInteractor {
     // MARK: - Initializer
 
-    init(authenticator: Authenticator, repository: ConversationRepository) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+    init(
+        userRepository: UserRepository,
+        conversationRepository: ConversationRepository
+    ) {
+        self.conversationRepository = conversationRepository
+        super.init(userRepository: userRepository)
     }
 
     // MARK: - SetIsTypingInteractor
@@ -14,11 +17,11 @@ final class SetIsTypingInteractorImpl: AuthenticatedInteractor, SetIsTypingInter
     /// - Throws: ``NablaError``
     func execute(isTyping: Bool, conversationId: UUID) async throws {
         try assertIsAuthenticated()
-        let transientId = repository.getConversationTransientId(from: conversationId)
-        try await repository.setIsTyping(isTyping, conversationId: transientId)
+        let transientId = conversationRepository.getConversationTransientId(from: conversationId)
+        try await conversationRepository.setIsTyping(isTyping, conversationId: transientId)
     }
     
     // MARK: - Private
     
-    private let repository: ConversationRepository
+    private let conversationRepository: ConversationRepository
 }

@@ -5,7 +5,8 @@ open class AuthenticatedInteractor {
     // MARK: - Public
 
     public var isAuthenticated: AnyPublisher<Void, NablaError> {
-        authenticator.watchCurrentUserId()
+        userRepository.watchCurrentUser()
+            .map { $0?.id }
             .removeDuplicates()
             .setFailureType(to: NablaError.self)
             .nabla.resultMap { userId in
@@ -20,18 +21,18 @@ open class AuthenticatedInteractor {
     
     /// - Throws: ``NablaError``
     public func assertIsAuthenticated() throws {
-        if authenticator.currentUserId == nil {
+        if userRepository.getCurrentUser() == nil {
             throw UserIdNotSetError()
         }
     }
     
     // MARK: Init
     
-    public init(authenticator: Authenticator) {
-        self.authenticator = authenticator
+    public init(userRepository: UserRepository) {
+        self.userRepository = userRepository
     }
 
     // MARK: - Private
 
-    private let authenticator: Authenticator
+    private let userRepository: UserRepository
 }

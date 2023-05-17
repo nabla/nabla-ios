@@ -1,5 +1,5 @@
 import Combine
-import NablaCore
+@testable import NablaCore
 import NablaCoreTestsUtils
 @testable import NablaMessagingCore
 import NablaMessagingCoreTestsUtils
@@ -11,7 +11,7 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
     
     let conversationId = UUID()
     
-    private var authenticator: AuthenticatorMock!
+    private var userRepository: UserRepositoryMock!
     private var itemsRepository: ConversationItemRepositoryMock!
     private var conversationsRepository: ConversationRepositoryMock!
     private var logger: LoggerMock!
@@ -20,21 +20,21 @@ final class WatchConversationItemsInteractorTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        authenticator = .init()
+        userRepository = .init()
         itemsRepository = .init()
         conversationsRepository = .init()
         logger = .init()
         gateKeepers = .init()
         
         sut = WatchConversationItemsInteractorImpl(
-            authenticator: authenticator,
+            userRepository: userRepository,
             itemsRepository: itemsRepository,
             conversationsRepository: conversationsRepository,
             gateKeepers: gateKeepers,
             logger: logger
         )
         
-        authenticator.given(.watchCurrentUserId(willReturn: Just("").eraseToAnyPublisher()))
+        userRepository.given(.watchCurrentUser(willReturn: Just(User(id: .init())).eraseToAnyPublisher()))
         conversationsRepository.given(.getConversationTransientId(from: .any, willReturn: .init(remoteId: conversationId)))
     }
 

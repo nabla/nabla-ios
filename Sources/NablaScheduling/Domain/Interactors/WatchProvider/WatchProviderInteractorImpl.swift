@@ -7,22 +7,22 @@ final class WatchProviderInteractorImpl: AuthenticatedInteractor, WatchProviderI
 
     func execute(providerId: UUID) -> AnyPublisher<Provider, NablaError> {
         isAuthenticated
-            .nabla.switchToLatest { [repository] in
-                repository.watchProvider(id: providerId)
+            .nabla.switchToLatest { [providerRepository] in
+                providerRepository.watchProvider(id: providerId)
             }
     }
     
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: ProviderRepository
+        userRepository: UserRepository,
+        providerRepository: ProviderRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.providerRepository = providerRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: ProviderRepository
+    private let providerRepository: ProviderRepository
 }

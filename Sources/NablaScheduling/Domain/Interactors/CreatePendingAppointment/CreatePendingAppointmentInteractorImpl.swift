@@ -7,7 +7,7 @@ final class CreatePendingAppointmentInteractorImpl: AuthenticatedInteractor, Cre
     /// - Throws: ``NablaError``
     func execute(location: LocationType, categoryId: UUID, providerId: UUID, date: Date) async throws -> Appointment {
         try assertIsAuthenticated()
-        return try await repository.createPendingAppointment(
+        return try await appointmentRepository.createPendingAppointment(
             location: location,
             categoryId: categoryId,
             providerId: providerId,
@@ -18,14 +18,14 @@ final class CreatePendingAppointmentInteractorImpl: AuthenticatedInteractor, Cre
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: AppointmentRepository
+        userRepository: UserRepository,
+        appointmentRepository: AppointmentRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.appointmentRepository = appointmentRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: AppointmentRepository
+    private let appointmentRepository: AppointmentRepository
 }

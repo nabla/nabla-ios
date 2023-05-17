@@ -8,10 +8,6 @@ public enum AuthenticationState {
 
 // sourcery: AutoMockable
 public protocol Authenticator {
-    var currentUserId: String? { get }
-    func watchCurrentUserId() -> AnyPublisher<String?, Never>
-    
-    func authenticate(userId: String)
     func logOut()
     func markTokensAsInvalid()
     

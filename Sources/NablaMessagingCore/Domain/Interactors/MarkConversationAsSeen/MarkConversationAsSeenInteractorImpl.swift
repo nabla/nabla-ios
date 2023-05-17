@@ -4,9 +4,12 @@ import NablaCore
 final class MarkConversationAsSeenInteractorImpl: AuthenticatedInteractor, MarkConversationAsSeenInteractor {
     // MARK: - Initializer
 
-    init(authenticator: Authenticator, repository: ConversationRepository) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+    init(
+        userRepository: UserRepository,
+        conversationRepository: ConversationRepository
+    ) {
+        self.conversationRepository = conversationRepository
+        super.init(userRepository: userRepository)
     }
 
     // MARK: - MarkConversationAsSeenInteractor
@@ -14,11 +17,11 @@ final class MarkConversationAsSeenInteractorImpl: AuthenticatedInteractor, MarkC
     /// - Throws: ``NablaError``
     func execute(conversationId: UUID) async throws {
         try assertIsAuthenticated()
-        let transientId = repository.getConversationTransientId(from: conversationId)
-        try await repository.markConversationAsSeen(conversationId: transientId)
+        let transientId = conversationRepository.getConversationTransientId(from: conversationId)
+        try await conversationRepository.markConversationAsSeen(conversationId: transientId)
     }
     
     // MARK: - Private
     
-    private let repository: ConversationRepository
+    private let conversationRepository: ConversationRepository
 }

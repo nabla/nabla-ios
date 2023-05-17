@@ -52,34 +52,9 @@ open class AuthenticatorMock: Authenticator, Mock {
         if scopes.contains(.perform) { methodPerformValues = [] }
     }
 
-    public var currentUserId: String? {
-		get {	invocations.append(.p_currentUserId_get); return __p_currentUserId ?? optionalGivenGetterValue(.p_currentUserId_get, "AuthenticatorMock - stub value for currentUserId was not defined") }
-	}
-	private var __p_currentUserId: (String)?
 
 
 
-
-
-    open func watchCurrentUserId() -> AnyPublisher<String?, Never> {
-        addInvocation(.m_watchCurrentUserId)
-		let perform = methodPerformValue(.m_watchCurrentUserId) as? () -> Void
-		perform?()
-		var __value: AnyPublisher<String?, Never>
-		do {
-		    __value = try methodReturnValue(.m_watchCurrentUserId).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for watchCurrentUserId(). Use given")
-			Failure("Stub return value not specified for watchCurrentUserId(). Use given")
-		}
-		return __value
-    }
-
-    open func authenticate(userId: String) {
-        addInvocation(.m_authenticate__userId_userId(Parameter<String>.value(`userId`)))
-		let perform = methodPerformValue(.m_authenticate__userId_userId(Parameter<String>.value(`userId`))) as? (String) -> Void
-		perform?(`userId`)
-    }
 
     open func logOut() {
         addInvocation(.m_logOut)
@@ -125,23 +100,13 @@ open class AuthenticatorMock: Authenticator, Mock {
 
 
     fileprivate enum MethodType {
-        case m_watchCurrentUserId
-        case m_authenticate__userId_userId(Parameter<String>)
         case m_logOut
         case m_markTokensAsInvalid
         case m_getAuthenticationState
         case m_watchAuthenticationState
-        case p_currentUserId_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
-            case (.m_watchCurrentUserId, .m_watchCurrentUserId): return .match
-
-            case (.m_authenticate__userId_userId(let lhsUserid), .m_authenticate__userId_userId(let rhsUserid)):
-				var results: [Matcher.ParameterComparisonResult] = []
-				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUserid, rhs: rhsUserid, with: matcher), lhsUserid, rhsUserid, "userId"))
-				return Matcher.ComparisonResult(results)
-
             case (.m_logOut, .m_logOut): return .match
 
             case (.m_markTokensAsInvalid, .m_markTokensAsInvalid): return .match
@@ -149,31 +114,24 @@ open class AuthenticatorMock: Authenticator, Mock {
             case (.m_getAuthenticationState, .m_getAuthenticationState): return .match
 
             case (.m_watchAuthenticationState, .m_watchAuthenticationState): return .match
-            case (.p_currentUserId_get,.p_currentUserId_get): return Matcher.ComparisonResult.match
             default: return .none
             }
         }
 
         func intValue() -> Int {
             switch self {
-            case .m_watchCurrentUserId: return 0
-            case let .m_authenticate__userId_userId(p0): return p0.intValue
             case .m_logOut: return 0
             case .m_markTokensAsInvalid: return 0
             case .m_getAuthenticationState: return 0
             case .m_watchAuthenticationState: return 0
-            case .p_currentUserId_get: return 0
             }
         }
         func assertionName() -> String {
             switch self {
-            case .m_watchCurrentUserId: return ".watchCurrentUserId()"
-            case .m_authenticate__userId_userId: return ".authenticate(userId:)"
             case .m_logOut: return ".logOut()"
             case .m_markTokensAsInvalid: return ".markTokensAsInvalid()"
             case .m_getAuthenticationState: return ".getAuthenticationState()"
             case .m_watchAuthenticationState: return ".watchAuthenticationState()"
-            case .p_currentUserId_get: return "[get] .currentUserId"
             }
         }
     }
@@ -186,25 +144,12 @@ open class AuthenticatorMock: Authenticator, Mock {
             super.init(products)
         }
 
-        public static func currentUserId(getter defaultValue: String?...) -> PropertyStub {
-            return Given(method: .p_currentUserId_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
 
-        public static func watchCurrentUserId(willReturn: AnyPublisher<String?, Never>...) -> MethodStub {
-            return Given(method: .m_watchCurrentUserId, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
         public static func getAuthenticationState(willReturn: AuthenticationState...) -> MethodStub {
             return Given(method: .m_getAuthenticationState, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func watchAuthenticationState(willReturn: AnyPublisher<AuthenticationState, Never>...) -> MethodStub {
             return Given(method: .m_watchAuthenticationState, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func watchCurrentUserId(willProduce: (Stubber<AnyPublisher<String?, Never>>) -> Void) -> MethodStub {
-            let willReturn: [AnyPublisher<String?, Never>] = []
-			let given: Given = { return Given(method: .m_watchCurrentUserId, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AnyPublisher<String?, Never>).self)
-			willProduce(stubber)
-			return given
         }
         public static func watchAuthenticationState(willProduce: (Stubber<AnyPublisher<AuthenticationState, Never>>) -> Void) -> MethodStub {
             let willReturn: [AnyPublisher<AuthenticationState, Never>] = []
@@ -228,25 +173,16 @@ open class AuthenticatorMock: Authenticator, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func watchCurrentUserId() -> Verify { return Verify(method: .m_watchCurrentUserId)}
-        public static func authenticate(userId: Parameter<String>) -> Verify { return Verify(method: .m_authenticate__userId_userId(`userId`))}
         public static func logOut() -> Verify { return Verify(method: .m_logOut)}
         public static func markTokensAsInvalid() -> Verify { return Verify(method: .m_markTokensAsInvalid)}
         public static func getAuthenticationState() -> Verify { return Verify(method: .m_getAuthenticationState)}
         public static func watchAuthenticationState() -> Verify { return Verify(method: .m_watchAuthenticationState)}
-        public static var currentUserId: Verify { return Verify(method: .p_currentUserId_get) }
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func watchCurrentUserId(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_watchCurrentUserId, performs: perform)
-        }
-        public static func authenticate(userId: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
-            return Perform(method: .m_authenticate__userId_userId(`userId`), performs: perform)
-        }
         public static func logOut(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_logOut, performs: perform)
         }
@@ -3078,10 +3014,25 @@ open class UserRepositoryMock: UserRepository, Mock {
 		perform?(`user`)
     }
 
+    open func watchCurrentUser() -> AnyPublisher<User?, Never> {
+        addInvocation(.m_watchCurrentUser)
+		let perform = methodPerformValue(.m_watchCurrentUser) as? () -> Void
+		perform?()
+		var __value: AnyPublisher<User?, Never>
+		do {
+		    __value = try methodReturnValue(.m_watchCurrentUser).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for watchCurrentUser(). Use given")
+			Failure("Stub return value not specified for watchCurrentUser(). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_getCurrentUser
         case m_setCurrentUser__user(Parameter<User?>)
+        case m_watchCurrentUser
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Matcher.ComparisonResult {
             switch (lhs, rhs) {
@@ -3091,6 +3042,8 @@ open class UserRepositoryMock: UserRepository, Mock {
 				var results: [Matcher.ParameterComparisonResult] = []
 				results.append(Matcher.ParameterComparisonResult(Parameter.compare(lhs: lhsUser, rhs: rhsUser, with: matcher), lhsUser, rhsUser, "_ user"))
 				return Matcher.ComparisonResult(results)
+
+            case (.m_watchCurrentUser, .m_watchCurrentUser): return .match
             default: return .none
             }
         }
@@ -3099,12 +3052,14 @@ open class UserRepositoryMock: UserRepository, Mock {
             switch self {
             case .m_getCurrentUser: return 0
             case let .m_setCurrentUser__user(p0): return p0.intValue
+            case .m_watchCurrentUser: return 0
             }
         }
         func assertionName() -> String {
             switch self {
             case .m_getCurrentUser: return ".getCurrentUser()"
             case .m_setCurrentUser__user: return ".setCurrentUser(_:)"
+            case .m_watchCurrentUser: return ".watchCurrentUser()"
             }
         }
     }
@@ -3121,10 +3076,20 @@ open class UserRepositoryMock: UserRepository, Mock {
         public static func getCurrentUser(willReturn: User?...) -> MethodStub {
             return Given(method: .m_getCurrentUser, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func watchCurrentUser(willReturn: AnyPublisher<User?, Never>...) -> MethodStub {
+            return Given(method: .m_watchCurrentUser, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func getCurrentUser(willProduce: (Stubber<User?>) -> Void) -> MethodStub {
             let willReturn: [User?] = []
 			let given: Given = { return Given(method: .m_getCurrentUser, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (User?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func watchCurrentUser(willProduce: (Stubber<AnyPublisher<User?, Never>>) -> Void) -> MethodStub {
+            let willReturn: [AnyPublisher<User?, Never>] = []
+			let given: Given = { return Given(method: .m_watchCurrentUser, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AnyPublisher<User?, Never>).self)
 			willProduce(stubber)
 			return given
         }
@@ -3135,6 +3100,7 @@ open class UserRepositoryMock: UserRepository, Mock {
 
         public static func getCurrentUser() -> Verify { return Verify(method: .m_getCurrentUser)}
         public static func setCurrentUser(_ user: Parameter<User?>) -> Verify { return Verify(method: .m_setCurrentUser__user(`user`))}
+        public static func watchCurrentUser() -> Verify { return Verify(method: .m_watchCurrentUser)}
     }
 
     public struct Perform {
@@ -3146,6 +3112,9 @@ open class UserRepositoryMock: UserRepository, Mock {
         }
         public static func setCurrentUser(_ user: Parameter<User?>, perform: @escaping (User?) -> Void) -> Perform {
             return Perform(method: .m_setCurrentUser__user(`user`), performs: perform)
+        }
+        public static func watchCurrentUser(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_watchCurrentUser, performs: perform)
         }
     }
 

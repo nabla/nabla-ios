@@ -4,9 +4,12 @@ import NablaCore
 final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateConversationInteractor {
     // MARK: - Initializer
 
-    init(authenticator: Authenticator, repository: ConversationRepository) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+    init(
+        userRepository: UserRepository,
+        conversationRepository: ConversationRepository
+    ) {
+        self.conversationRepository = conversationRepository
+        super.init(userRepository: userRepository)
     }
 
     // MARK: - Internal
@@ -18,7 +21,7 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
         providerIds: [UUID]?
     ) async throws -> Conversation {
         try assertIsAuthenticated()
-        return try await repository.createConversation(
+        return try await conversationRepository.createConversation(
             message: message,
             title: title,
             providerIds: providerIds
@@ -27,5 +30,5 @@ final class CreateConversationInteractorImpl: AuthenticatedInteractor, CreateCon
     
     // MARK: - Private
     
-    private let repository: ConversationRepository
+    private let conversationRepository: ConversationRepository
 }

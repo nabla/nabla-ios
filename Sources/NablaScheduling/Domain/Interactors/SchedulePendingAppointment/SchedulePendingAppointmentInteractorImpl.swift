@@ -7,20 +7,20 @@ final class SchedulePendingAppointmentInteractorImpl: AuthenticatedInteractor, S
     
     func execute(appointmentId: UUID) async throws -> Appointment {
         try assertIsAuthenticated()
-        return try await repository.schedulePendingAppointment(withId: appointmentId)
+        return try await appointmentRepository.schedulePendingAppointment(withId: appointmentId)
     }
     
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: AppointmentRepository
+        userRepository: UserRepository,
+        appointmentRepository: AppointmentRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.appointmentRepository = appointmentRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: AppointmentRepository
+    private let appointmentRepository: AppointmentRepository
 }

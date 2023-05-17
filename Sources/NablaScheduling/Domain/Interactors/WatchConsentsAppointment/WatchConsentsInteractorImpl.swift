@@ -7,22 +7,22 @@ final class WatchConsentsInteractorImpl: AuthenticatedInteractor, WatchConsentsI
 
     func execute(location: LocationType) -> AnyPublisher<Consents, NablaCore.NablaError> {
         isAuthenticated
-            .nabla.switchToLatest { [repository] in
-                repository.watchConsents(location: location)
+            .nabla.switchToLatest { [consentsRepository] in
+                consentsRepository.watchConsents(location: location)
             }
     }
     
     // MARK: Init
     
     init(
-        authenticator: Authenticator,
-        repository: ConsentsRepository
+        userRepository: UserRepository,
+        consentsRepository: ConsentsRepository
     ) {
-        self.repository = repository
-        super.init(authenticator: authenticator)
+        self.consentsRepository = consentsRepository
+        super.init(userRepository: userRepository)
     }
     
     // MARK: - Private
     
-    private let repository: ConsentsRepository
+    private let consentsRepository: ConsentsRepository
 }

@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 class UserRepositoryImpl: UserRepository {
@@ -11,25 +12,40 @@ class UserRepositoryImpl: UserRepository {
     
     func getCurrentUser() -> User? {
         guard let user = localDataSource.getCurrentUser() else { return nil }
-        return transform(user)
+        return Self.transform(user)
     }
     
     func setCurrentUser(_ user: User?) {
-        guard let user = user else { return }
-        localDataSource.setCurrentUser(transform(user))
+        if let user = user {
+            localDataSource.setCurrentUser(Self.transform(user))
+        } else {
+            localDataSource.setCurrentUser(nil)
+        }
+    }
+    
+    func watchCurrentUser() -> AnyPublisher<User?, Never> {
+        localDataSource.watchCurrentUser()
+            .map { user in
+                if let user = user {
+                    return Self.transform(user)
+                } else {
+                    return nil
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Private
     
     private let localDataSource: UserLocalDataSource
     
-    private func transform(_ user: User) -> LocalUser {
+    private static func transform(_ user: User) -> LocalUser {
         LocalUser(
             id: user.id
         )
     }
     
-    private func transform(_ user: LocalUser) -> User {
+    private static func transform(_ user: LocalUser) -> User {
         User(
             id: user.id
         )

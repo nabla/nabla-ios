@@ -4,60 +4,51 @@ import Foundation
 class AuthenticatorImpl: Authenticator {
     // MARK: - Initialiazer
 
-    init(httpManager: HTTPManager, sessionTokenProvider: SessionTokenProvider) {
+    init(
+        httpManager: HTTPManager,
+        sessionTokenProvider: SessionTokenProvider,
+        userRepository: UserRepository
+    ) {
         self.httpManager = httpManager
         self.sessionTokenProvider = sessionTokenProvider
+        self.userRepository = userRepository
     }
 
     // MARK: - Internal
     
-    var currentUserId: String? {
-        session.value?.userId
-    }
-    
-    func watchCurrentUserId() -> AnyPublisher<String?, Never> {
-        session
-            .map { $0?.userId }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-    
-    func authenticate(
-        userId: String
-    ) {
-        session.value = Session(
-            userId: userId,
-            tokens: nil
-        )
-    }
-    
     func logOut() {
-        session.value = nil
+        tokens.value = nil
     }
     
     func markTokensAsInvalid() {
-        session.value?.tokens = nil
+        tokens.value = nil
     }
     
     func getAuthenticationState() async throws -> AuthenticationState {
         try await sharedTask.run {
-            guard let session = self.session.value else {
+            guard let user = self.userRepository.getCurrentUser() else {
                 return .notAuthenticated
             }
             
-            if let tokens = session.tokens, !tokens.accessToken.isExpired {
-                return .authenticated(accessToken: tokens.accessToken.value)
+            guard let currentTokens = self.tokens.value else {
+                let newTokens = try await self.requireTokensFromHostApp(userId: user.id)
+                self.tokens.send(newTokens)
+                return .authenticated(accessToken: newTokens.accessToken.value)
             }
             
-            let tokens = try await self.renewSession(session)
-            self.session.value = session.with(tokens: tokens)
-            return .authenticated(accessToken: tokens.accessToken.value)
+            if !currentTokens.accessToken.isExpired {
+                return .authenticated(accessToken: currentTokens.accessToken.value)
+            }
+            
+            let newTokens = try await self.renewTokens(userId: user.id, tokens: currentTokens)
+            self.tokens.send(newTokens)
+            return .authenticated(accessToken: newTokens.accessToken.value)
         }
     }
     
     func watchAuthenticationState() -> AnyPublisher<AuthenticationState, Never> {
-        session
-            .map { $0?.tokens?.accessToken }
+        tokens
+            .map { $0?.accessToken }
             .removeDuplicates()
             .map { accessToken -> AuthenticationState in
                 if let accessToken = accessToken {
@@ -73,22 +64,23 @@ class AuthenticatorImpl: Authenticator {
     
     private let httpManager: HTTPManager
     private let sessionTokenProvider: SessionTokenProvider
+    private let userRepository: UserRepository
     
     private let sharedTask = TaskHolder<AuthenticationState>()
-    private let session = CurrentValueSubject<Session?, Never>(nil)
+    private let tokens = CurrentValueSubject<SessionTokens?, Never>(nil)
     
     /// - Throws: ``AuthenticationError``
-    private func renewSession(_ session: Session) async throws -> SessionTokens {
-        if let tokens = session.tokens, !tokens.refreshToken.isExpired {
-            return try await fetchTokens(refreshToken: tokens.refreshToken)
+    private func renewTokens(userId: String, tokens: SessionTokens) async throws -> SessionTokens {
+        if !tokens.refreshToken.isExpired {
+            return try await refreshAccessToken(refreshToken: tokens.refreshToken)
         }
-        return try await requireTokens(session: session)
+        return try await requireTokensFromHostApp(userId: userId)
     }
     
     /// - Throws: ``AuthenticationError``
-    private func requireTokens(session: Session) async throws -> SessionTokens {
+    private func requireTokensFromHostApp(userId: String) async throws -> SessionTokens {
         let authTokens = await withCheckedContinuation { (continuation: CheckedContinuation<AuthTokens?, Never>) in
-            sessionTokenProvider.provideTokens(forUserId: session.userId) { authTokens in
+            sessionTokenProvider.provideTokens(forUserId: userId) { authTokens in
                 continuation.resume(returning: authTokens)
             }
         }
@@ -103,7 +95,7 @@ class AuthenticatorImpl: Authenticator {
             if refreshToken.isExpired {
                 throw AuthenticationProviderDidProvideExpiredTokensError()
             } else if accessToken.isExpired {
-                return try await fetchTokens(refreshToken: refreshToken)
+                return try await refreshAccessToken(refreshToken: refreshToken)
             } else {
                 return SessionTokens(accessToken: accessToken, refreshToken: refreshToken)
             }
@@ -115,7 +107,7 @@ class AuthenticatorImpl: Authenticator {
     }
     
     /// - Throws: ``AuthenticationError``
-    private func fetchTokens(refreshToken: Token) async throws -> SessionTokens {
+    private func refreshAccessToken(refreshToken: Token) async throws -> SessionTokens {
         let request = RefreshTokenEndpoint.request(refreshToken: refreshToken.value)
         do {
             let response = try await httpManager.fetch(RefreshTokenEndpoint.Response.self, associatedTo: request)

@@ -7,13 +7,10 @@ class UserLocalDataSourceTests: XCTestCase {
     private var logger: LoggerMock!
     private var store: KeyValueStoreMock!
     
-    private var sut: UserLocalDataSourceImpl!
-    
     override func setUp() {
         super.setUp()
         logger = LoggerMock()
         store = KeyValueStoreMock()
-        sut = UserLocalDataSourceImpl(logger: logger, store: store)
         
         Matcher.default.register(LocalUser?.self) { lhs, rhs in
             lhs?.id == rhs?.id
@@ -24,6 +21,7 @@ class UserLocalDataSourceTests: XCTestCase {
 
     func testCurrentUserKeyIsUnchanged() {
         // GIVEN
+        let sut = UserLocalDataSourceImpl(logger: logger, store: store)
         // WHEN
         _ = sut.getCurrentUser()
         sut.setCurrentUser(nil)
@@ -38,6 +36,7 @@ class UserLocalDataSourceTests: XCTestCase {
         // GIVEN
         let user = LocalUser.mock()
         Given(store, .get(forKey: .any, willReturn: user))
+        let sut = UserLocalDataSourceImpl(logger: logger, store: store)
         // WHEN
         let result = sut.getCurrentUser()
         // THEN
@@ -48,6 +47,7 @@ class UserLocalDataSourceTests: XCTestCase {
     func testReturnsNilIfNoUserStored() {
         // GIVEN
         Given(store, .get(forKey: .any, willReturn: nil as LocalUser?))
+        let sut = UserLocalDataSourceImpl(logger: logger, store: store)
         // WHEN
         let result = sut.getCurrentUser()
         // THEN
@@ -57,6 +57,7 @@ class UserLocalDataSourceTests: XCTestCase {
     func testReturnsNilAndLogsErrorWhenStoreThrows() {
         // GIVEN
         Given(store, .get(forKey: .any, willThrow: TestError.somethingFailed))
+        let sut = UserLocalDataSourceImpl(logger: logger, store: store)
         // WHEN
         let result = sut.getCurrentUser()
         // THEN
@@ -69,6 +70,7 @@ class UserLocalDataSourceTests: XCTestCase {
     func testStoresCurrentUser() {
         // GIVEN
         let user = LocalUser.mock()
+        let sut = UserLocalDataSourceImpl(logger: logger, store: store)
         // WHEN
         sut.setCurrentUser(user)
         // THEN
@@ -77,6 +79,7 @@ class UserLocalDataSourceTests: XCTestCase {
     
     func testStoresNil() {
         // GIVEN
+        let sut = UserLocalDataSourceImpl(logger: logger, store: store)
         // WHEN
         sut.setCurrentUser(nil)
         // THEN
@@ -86,6 +89,7 @@ class UserLocalDataSourceTests: XCTestCase {
     func testLogsErrorWhenStoreThrows() {
         // GIVEN
         Given(store, .set(.any(LocalUser?.self), forKey: .any, willThrow: TestError.somethingFailed))
+        let sut = UserLocalDataSourceImpl(logger: logger, store: store)
         // WHEN
         sut.setCurrentUser(nil)
         // THEN
