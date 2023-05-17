@@ -109,7 +109,7 @@ class GQLClientImpl: GQLClient {
     
     private func makeApolloClient() -> ApolloClient {
         let apollo = ApolloClient(
-            networkTransport: transport.apollo,
+            networkTransport: transport,
             store: apolloStore
         )
         apollo.cacheKeyForObject = Normalization.cacheKey(for:)

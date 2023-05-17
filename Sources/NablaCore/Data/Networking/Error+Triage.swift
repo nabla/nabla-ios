@@ -20,12 +20,22 @@ extension Error {
         return false
     }
     
+    var isInternalServerError: Bool {
+        if let wsError = self as? WebSocket.WSError {
+            return wsError.code == 500 || wsError.message.contains("HTTP_INTERNAL_SERVER_ERROR")
+        }
+        if let websocketError = self as? WebSocketError, let underlyingError = websocketError.error {
+            return underlyingError.isInternalServerError
+        }
+        return false
+    }
+    
     var isNetworkError: Bool {
         if self is NetworkError {
             return true
         }
         if let websocketError = self as? WebSocketError, case .networkError = websocketError.kind {
-            return !websocketError.isAuthenticationError
+            return !websocketError.isAuthenticationError && !websocketError.isInternalServerError
         }
         
         if let websocketError = self as? WebSocketError,

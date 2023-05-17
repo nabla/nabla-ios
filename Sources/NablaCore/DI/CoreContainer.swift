@@ -26,7 +26,7 @@ public class CoreContainer {
     
     // MARK: - Internal
     
-    let webSocketTransport: WebSocketTransport
+    let combinedTransport: CombinedTransport
     let initializeInteractor: InitializeInteractor
     let setCurrentUserInteractor: SetCurrentUserInteractor
     
@@ -121,20 +121,14 @@ public class CoreContainer {
             apolloStore: apolloStore,
             urlSessionClient: urlSessionClient
         )
-        httpTransport = .init(
-            environment: environment,
-            interceptorProvider: interceptorProvider
-        )
-        webSocketTransport = .init(
-            environment: environment,
-            authenticator: authenticator,
-            apolloStore: apolloStore,
-            logger: logger,
-            extraHeaders: extraHeaders
-        )
         combinedTransport = .init(
-            httpTransport: httpTransport,
-            webSocketTransport: webSocketTransport
+            userRepository: userRepository,
+            apolloStore: apolloStore,
+            environment: environment,
+            interceptorProvider: interceptorProvider,
+            authenticator: authenticator,
+            extraHeaders: extraHeaders,
+            logger: logger
         )
         uploadClient = .init(
             httpManager: httpManager,
@@ -195,8 +189,6 @@ public class CoreContainer {
     private let videoCallModule: VideoCallModule?
     private let schedulingModule: SchedulingModule?
     private let interceptorProvider: InterceptorProvider
-    private let httpTransport: HttpTransport
-    private let combinedTransport: CombinedTransport
     private let apolloStore: ApolloStore
     private let userLocalDataSource: UserLocalDataSource
     private let scopedKeyValueStore: KeyValueStore

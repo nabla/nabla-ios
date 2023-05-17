@@ -69,7 +69,7 @@ public class NablaClient {
     /// The state will get updated when calling ``NablaClient.authenticate(userId:provider:)``.
     ///
     public func watchEventsConnectionState() -> AnyPublisher<EventsConnectionState, Never> {
-        container.webSocketTransport.observeConnectionState()
+        container.combinedTransport.observeConnectionState()
     }
 
     /// Add default HTTP Headers to calls. This is for internal usage and you should probably never call it.
