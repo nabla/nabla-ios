@@ -32,25 +32,21 @@ final class SentryErrorReporter: ErrorReporter {
     }
     
     func reportWarning(message: String, error: Error?, extra: [String: Any]) {
-        logger.debug(message: "ErrorReporter report warning: \(message)")
         let event = makeEvent(level: .warning, message: message, error: error, extra: extra)
         hub?.capture(event: event)
     }
 
     func reportError(message: String, error: Error?, extra: [String: Any]) {
-        logger.debug(message: "ErrorReporter report error: \(message)")
         let event = makeEvent(level: .error, message: message, error: error, extra: extra)
         hub?.capture(event: event)
     }
 
     func reportEvent(message: String, extra: [String: Any]) {
-        logger.debug(message: "ErrorReporter report event (message: \(message))")
         let event = makeEvent(level: .info, message: message, error: nil, extra: extra)
         hub?.capture(event: event)
     }
 
     func log(message: String, extra: [String: Any]?, domain: String?) {
-        logger.debug(message: "ErrorReporter log message \(message)")
         let breadcrumb = Breadcrumb()
         breadcrumb.message = message
         breadcrumb.level = .info

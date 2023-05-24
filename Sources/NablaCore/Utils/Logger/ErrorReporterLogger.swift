@@ -18,12 +18,12 @@ class ErrorReporterLogger: Logger {
         errorReporter.setTag(name: "OSVersion", value: OSVersion)
     }
 
-    public func debug(message _: @autoclosure () -> String, error _: Error?, extra _: [String: Any]) {
-        // No-op
+    public func debug(message: @autoclosure () -> String, error _: Error?, extra: [String: Any]) {
+        errorReporter.log(message: message(), extra: extra)
     }
     
-    public func info(message _: @autoclosure () -> String, error _: Error?, extra _: [String: Any]) {
-        // No-op
+    public func info(message: @autoclosure () -> String, error _: Error?, extra: [String: Any]) {
+        errorReporter.log(message: message(), extra: extra)
     }
     
     public func warning(message: @autoclosure () -> String, error: Error?, extra: [String: Any]) {

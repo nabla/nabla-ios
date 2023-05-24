@@ -6,7 +6,7 @@ final class SetCurrentUserInteractorImpl: SetCurrentUserInteractor {
     func execute(userId: String) throws {
         if let previousUser = userRepository.getCurrentUser() {
             if previousUser.id == userId {
-                logger.error(message: "User already authenticated.")
+                logger.info(message: "User already authenticated.")
                 return
             } else {
                 logger.error(message: "Trying to authenticate a new user, you must clear the previous one first by calling `clearCurrentUser()`.")

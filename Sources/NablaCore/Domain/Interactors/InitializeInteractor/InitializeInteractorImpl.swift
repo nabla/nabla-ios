@@ -9,6 +9,7 @@ final class InitializeInteractorImpl: InitializeInteractor {
         
         sentryConfigurationObserver = deviceRepository
             .watchSentryConfiguration()
+            .removeDuplicates()
             .sink(receiveValue: { [errorReporter, environment] configuration in
                 errorReporter.enable(dsn: configuration.dsn, env: configuration.env, sdkVersion: environment.version)
             })
