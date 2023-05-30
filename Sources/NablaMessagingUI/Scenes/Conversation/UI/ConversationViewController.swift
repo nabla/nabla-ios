@@ -180,6 +180,16 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     // TODO: @tgy - Don't retain modules
     private lazy var imagePickerModule = ImagePickerModule(delegate: self)
     
+    private lazy var tapGesture: UIGestureRecognizer = {
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureHandler))
+        recognizer.cancelsTouchesInView = false
+        return recognizer
+    }()
+    
+    @objc private func tapGestureHandler() {
+        view.endEditing(true)
+    }
+    
     private func initialize() {
         hidesBottomBarWhenPushed = true
         
@@ -191,6 +201,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             ?? UINavigationBarAppearance()
         scrollEdgeAppearance.configureWithDefaultBackground()
         navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
+        
+        collectionView.addGestureRecognizer(tapGesture)
     }
     
     private func setUp() {
