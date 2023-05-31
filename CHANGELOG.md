@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Fixed
+
+
+## [1.1.4] - 2023-05-30
+
+### Added
+
+### Changed
+
 - Messaging UI: Users can tap any where on the conversation screen to close the keyboard.
 
 ### Fixed

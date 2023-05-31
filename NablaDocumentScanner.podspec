@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name               = "NablaDocumentScanner"
-  spec.version            = "1.1.3"
+  spec.version            = "1.1.4"
   spec.summary            = "#{spec.name} iOS SDK"
 
   spec.description        = <<-DESC
