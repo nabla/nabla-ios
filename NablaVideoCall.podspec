@@ -23,5 +23,5 @@ Pod::Spec.new do |spec|
   spec.resource_bundles   = {"NablaVideoCallResources" => "Sources/#{spec.name}/Resources/**/*"}
 
   spec.dependency           'NablaCore', "#{spec.version}"
-  spec.dependency           'LiveKitClient', '~> 1.0.8'
+  spec.dependency           'LiveKitClient', '~> 1.0.13'
 end

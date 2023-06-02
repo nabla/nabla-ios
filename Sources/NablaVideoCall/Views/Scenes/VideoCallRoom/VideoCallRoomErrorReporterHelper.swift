@@ -54,13 +54,17 @@ extension VideoCallRoomErrorReporterHelper: RoomDelegate {
     func room(_ room: Room, didUpdate connectionState: ConnectionState, oldValue _: ConnectionState) {
         logState(connectionState.asLog(), roomId: room.name)
         if case let .disconnected(reason: reason) = connectionState {
+            guard let reason = reason else {
+                errorReporter.reportEvent(message: "Call ended without reason")
+                return
+            }
             switch reason {
             case .user:
                 errorReporter.reportEvent(message: "Call ended from user")
             case let .networkError(error):
                 errorReporter.reportError(message: "Disconnected with network error", error: error)
-            case .none:
-                errorReporter.reportEvent(message: "Call ended without error")
+            case .unknown, .duplicateIdentity, .serverShutdown, .participantRemoved, .roomDeleted, .stateMismatch, .joinFailure:
+                errorReporter.reportEvent(message: "Call ended with reason \(reason)")
             }
         }
     }
