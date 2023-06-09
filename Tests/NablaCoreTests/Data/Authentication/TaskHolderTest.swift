@@ -40,6 +40,14 @@ class TaskHolderTest: XCTestCase {
         XCTAssertEqual(result2, 2)
     }
     
+    /**
+     The test tries to reproduce a race condition where `TaskHolder.run` would be called in the middle of a previous `TaskHolder.run` execution.
+     To do this use two `DispatchQueue` and schedule them to reproduce it.
+
+     Sadly, there is no guarantee that `asyncAfter` will run exactly when asked, in practice it will run "as soon as possible after the expected dead line". Hence in some random cases, some extra latency make the `DispatchQueues` execute without reproducing the race condition.
+
+     There used to be a 50ms window to reproduce it. With the new delay values, the window is 500m long.
+     */
     func testFirstTaskIsSharedWhileItRunsFromDifferentThreads() {
         // GIVEN
         let sut = TaskHolder<Int>()
@@ -54,14 +62,14 @@ class TaskHolderTest: XCTestCase {
         queue1.async { // Start immediately...
             Task {
                 result1.value = try await sut.run {
-                    try await Task.sleep(nanoseconds: 100000000) // ... and wait 100 milliseconds
+                    try await Task.sleep(nanoseconds: 1000000000) // ... and wait 1000 milliseconds
                     return 1
                 }
                 expectation1.fulfill()
             }
         }
 
-        queue2.asyncAfter(deadline: .now() + 0.05) { // Wait 50 milliseconds...
+        queue2.asyncAfter(deadline: .now() + 0.5) { // Wait 500 milliseconds...
             Task {
                 result2.value = try await sut.run {
                     2 // ... and return immediately
