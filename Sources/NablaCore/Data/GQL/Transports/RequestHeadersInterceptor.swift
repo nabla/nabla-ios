@@ -20,8 +20,6 @@ class RequestHeadersInterceptor: ApolloInterceptor {
         response: Apollo.HTTPResponse<Operation>?,
         completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void
     ) where Operation: GraphQLOperation {
-        request.addHeader(name: HTTPHeaders.Platform, value: environment.platform)
-        request.addHeader(name: HTTPHeaders.Version, value: environment.version)
         for (name, value) in extraHeaders.all {
             request.addHeader(name: name, value: value)
         }

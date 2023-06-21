@@ -5,6 +5,8 @@ final class InitializeInteractorImpl: InitializeInteractor {
     // MARK: - Internal
     
     func execute(apiKey: String) {
+        extraHeaders.set(environment.platform, for: HTTPHeaders.Platform)
+        extraHeaders.set(environment.version, for: HTTPHeaders.Version)
         extraHeaders.set(formatApiKey(apiKey), for: HTTPHeaders.NablaApiKey)
         
         sentryConfigurationObserver = deviceRepository
