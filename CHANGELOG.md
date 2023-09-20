@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Core: Allow minor version updates from Sentry version `8.1`. Run `pod update Sentry` to resolve any version conflict.
 - VideoCall: Bumped the `Livekit` dependency to `1.0.13` to address breaking change introduced in their library.
 
 ### Fixed

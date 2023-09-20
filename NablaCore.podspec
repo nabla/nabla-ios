@@ -22,7 +22,7 @@ Pod::Spec.new do |spec|
   spec.source_files       = ["Sources/#{spec.name}/**/*.swift"]
   spec.resource_bundles   = {"#{spec.name}Resources" => "Sources/#{spec.name}/Resources/**/*"}
 
-  spec.dependency           'Apollo/WebSocket', '~> 0.51.2'
-  spec.dependency           'Apollo/SQLite', '~> 0.51.2'
-  spec.dependency           'Sentry', '~> 8.1.0'
+  spec.dependency           'Apollo/WebSocket', '~> 0.51'
+  spec.dependency           'Apollo/SQLite', '~> 0.51'
+  spec.dependency           'Sentry', '~> 8.1'
 end
