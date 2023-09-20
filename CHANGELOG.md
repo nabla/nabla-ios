@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Messaging: Added a new `Conversation.isLocalOnly` boolean to indicate local conversations that haven't been sent to the server yet (because they haven't had any message yet).
+
 ### Changed
 
 - Core: Allow minor version updates from Sentry version `8.1`. Run `pod update Sentry` to resolve any version conflict.

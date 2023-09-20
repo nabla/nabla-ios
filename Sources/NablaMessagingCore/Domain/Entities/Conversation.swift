@@ -12,4 +12,5 @@ public struct Conversation {
     public let pictureUrl: URL?
     public let providers: [ProviderInConversation]
     public let isLocked: Bool
+    public let isLocalOnly: Bool
 }

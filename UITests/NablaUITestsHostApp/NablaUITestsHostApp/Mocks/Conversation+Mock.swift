@@ -18,7 +18,8 @@ extension Conversation {
             patientUnreadMessageCount: 0,
             pictureUrl: nil,
             providers: [],
-            isLocked: false
+            isLocked: false,
+            isLocalOnly: false
         )
     }
     

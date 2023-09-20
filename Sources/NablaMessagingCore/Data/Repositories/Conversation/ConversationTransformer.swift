@@ -36,7 +36,8 @@ enum ConversationTransformer {
             patientUnreadMessageCount: fragment.unreadMessageCount,
             pictureUrl: URL(string: fragment.pictureUrl?.fragments.ephemeralUrlFragment.url),
             providers: transform(providers: fragment.providers),
-            isLocked: fragment.isLocked
+            isLocked: fragment.isLocked,
+            isLocalOnly: false
         )
     }
     
@@ -52,7 +53,8 @@ enum ConversationTransformer {
             patientUnreadMessageCount: 0,
             pictureUrl: nil,
             providers: [],
-            isLocked: false
+            isLocked: false,
+            isLocalOnly: conversation.remoteId == nil
         )
     }
     

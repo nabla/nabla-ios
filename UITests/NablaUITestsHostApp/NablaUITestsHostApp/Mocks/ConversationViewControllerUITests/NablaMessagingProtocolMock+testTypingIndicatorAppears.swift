@@ -28,7 +28,8 @@ extension NablaMessagingClientProtocolMock {
                         seenUntil: Date()
                     ),
                 ],
-                isLocked: false
+                isLocked: false,
+                isLocalOnly: false
             )
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

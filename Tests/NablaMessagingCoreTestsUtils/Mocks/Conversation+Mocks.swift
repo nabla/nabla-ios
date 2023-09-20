@@ -18,7 +18,8 @@ public extension Conversation {
             patientUnreadMessageCount: 0,
             pictureUrl: pictureUrl,
             providers: providers,
-            isLocked: false
+            isLocked: false,
+            isLocalOnly: false
         )
     }
     
