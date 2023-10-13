@@ -207,7 +207,7 @@ import Foundation
      static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("_", type: .nonNull(.scalar(EmptyObject.self))),
+        GraphQLField("_", type: .scalar(EmptyObject.self)),
       ]
     }
 
@@ -217,7 +217,7 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(`_`: EmptyObject) {
+     init(`_`: EmptyObject? = nil) {
       self.init(unsafeResultMap: ["__typename": "FinalizedAppointment", "_": `_`])
     }
 
@@ -230,9 +230,9 @@ import Foundation
       }
     }
 
-     var `_`: EmptyObject {
+     var `_`: EmptyObject? {
       get {
-        return resultMap["_"]! as! EmptyObject
+        return resultMap["_"] as? EmptyObject
       }
       set {
         resultMap.updateValue(newValue, forKey: "_")
@@ -441,7 +441,7 @@ import Foundation
         return State(unsafeResultMap: ["__typename": "UpcomingAppointment"])
       }
 
-       static func makeFinalizedAppointment(`_`: EmptyObject) -> State {
+       static func makeFinalizedAppointment(`_`: EmptyObject? = nil) -> State {
         return State(unsafeResultMap: ["__typename": "FinalizedAppointment", "_": `_`])
       }
 
@@ -614,7 +614,7 @@ import Foundation
           self.resultMap = unsafeResultMap
         }
 
-         init(`_`: EmptyObject) {
+         init(`_`: EmptyObject? = nil) {
           self.init(unsafeResultMap: ["__typename": "FinalizedAppointment", "_": `_`])
         }
 

@@ -191,7 +191,7 @@ import Foundation
             self.resultMap = unsafeResultMap
           }
 
-           static func makeDeletedProvider(`_`: EmptyObject) -> Provider {
+           static func makeDeletedProvider(`_`: EmptyObject? = nil) -> Provider {
             return Provider(unsafeResultMap: ["__typename": "DeletedProvider", "_": `_`])
           }
 

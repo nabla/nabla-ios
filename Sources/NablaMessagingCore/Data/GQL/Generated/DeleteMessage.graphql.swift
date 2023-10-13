@@ -187,7 +187,7 @@ import Foundation
               return Content(unsafeResultMap: ["__typename": "TextMessageContent", "text": text])
             }
 
-             static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
+             static func makeDeletedMessageContent(empty: EmptyObject? = nil) -> Content {
               return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
             }
 

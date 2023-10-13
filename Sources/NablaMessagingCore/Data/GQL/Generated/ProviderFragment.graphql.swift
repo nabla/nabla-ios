@@ -193,7 +193,7 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     static func makeDeletedProvider(`_`: EmptyObject) -> MaybeProviderFragment {
+     static func makeDeletedProvider(`_`: EmptyObject? = nil) -> MaybeProviderFragment {
       return MaybeProviderFragment(unsafeResultMap: ["__typename": "DeletedProvider", "_": `_`])
     }
 
@@ -288,7 +288,7 @@ import Foundation
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("_", type: .nonNull(.scalar(EmptyObject.self))),
+          GraphQLField("_", type: .scalar(EmptyObject.self)),
         ]
       }
 
@@ -298,7 +298,7 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
-       init(`_`: EmptyObject) {
+       init(`_`: EmptyObject? = nil) {
         self.init(unsafeResultMap: ["__typename": "DeletedProvider", "_": `_`])
       }
 
@@ -311,9 +311,9 @@ import Foundation
         }
       }
 
-       var `_`: EmptyObject {
+       var `_`: EmptyObject? {
         get {
-          return resultMap["_"]! as! EmptyObject
+          return resultMap["_"] as? EmptyObject
         }
         set {
           resultMap.updateValue(newValue, forKey: "_")

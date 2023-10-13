@@ -123,7 +123,7 @@ import Foundation
         return Author(unsafeResultMap: ["__typename": "Patient", "id": id, "isMe": isMe, "displayName": displayName])
       }
 
-       static func makeDeletedProvider(empty: EmptyObject) -> Author {
+       static func makeDeletedProvider(empty: EmptyObject? = nil) -> Author {
         return Author(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
       }
 
@@ -183,7 +183,7 @@ import Foundation
         return Content(unsafeResultMap: ["__typename": "TextMessageContent", "text": text])
       }
 
-       static func makeDeletedMessageContent(empty: EmptyObject) -> Content {
+       static func makeDeletedMessageContent(empty: EmptyObject? = nil) -> Content {
         return Content(unsafeResultMap: ["__typename": "DeletedMessageContent", "empty": empty])
       }
 

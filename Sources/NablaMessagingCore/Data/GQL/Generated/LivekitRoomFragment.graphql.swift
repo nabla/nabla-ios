@@ -80,7 +80,7 @@ import Foundation
      static var selections: [GraphQLSelection] {
       return [
         GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("_", type: .nonNull(.scalar(EmptyObject.self))),
+        GraphQLField("_", type: .scalar(EmptyObject.self)),
       ]
     }
 
@@ -90,7 +90,7 @@ import Foundation
       self.resultMap = unsafeResultMap
     }
 
-     init(`_`: EmptyObject) {
+     init(`_`: EmptyObject? = nil) {
       self.init(unsafeResultMap: ["__typename": "LivekitRoomClosedStatus", "_": `_`])
     }
 
@@ -103,9 +103,9 @@ import Foundation
       }
     }
 
-     var `_`: EmptyObject {
+     var `_`: EmptyObject? {
       get {
-        return resultMap["_"]! as! EmptyObject
+        return resultMap["_"] as? EmptyObject
       }
       set {
         resultMap.updateValue(newValue, forKey: "_")
@@ -205,7 +205,7 @@ import Foundation
         return Status(unsafeResultMap: ["__typename": "LivekitRoomOpenStatus", "url": url, "token": token])
       }
 
-       static func makeLivekitRoomClosedStatus(`_`: EmptyObject) -> Status {
+       static func makeLivekitRoomClosedStatus(`_`: EmptyObject? = nil) -> Status {
         return Status(unsafeResultMap: ["__typename": "LivekitRoomClosedStatus", "_": `_`])
       }
 
@@ -314,7 +314,7 @@ import Foundation
           self.resultMap = unsafeResultMap
         }
 
-         init(`_`: EmptyObject) {
+         init(`_`: EmptyObject? = nil) {
           self.init(unsafeResultMap: ["__typename": "LivekitRoomClosedStatus", "_": `_`])
         }
 

@@ -54,7 +54,7 @@ import Foundation
       return MessageAuthorFragment(unsafeResultMap: ["__typename": "Patient", "id": id, "isMe": isMe, "displayName": displayName])
     }
 
-     static func makeDeletedProvider(empty: EmptyObject) -> MessageAuthorFragment {
+     static func makeDeletedProvider(empty: EmptyObject? = nil) -> MessageAuthorFragment {
       return MessageAuthorFragment(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
     }
 
@@ -281,7 +281,7 @@ import Foundation
         return [
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-          GraphQLField("_", alias: "empty", type: .nonNull(.scalar(EmptyObject.self))),
+          GraphQLField("_", alias: "empty", type: .scalar(EmptyObject.self)),
         ]
       }
 
@@ -291,7 +291,7 @@ import Foundation
         self.resultMap = unsafeResultMap
       }
 
-       init(empty: EmptyObject) {
+       init(empty: EmptyObject? = nil) {
         self.init(unsafeResultMap: ["__typename": "DeletedProvider", "empty": empty])
       }
 
@@ -304,9 +304,9 @@ import Foundation
         }
       }
 
-       var empty: EmptyObject {
+       var empty: EmptyObject? {
         get {
-          return resultMap["empty"]! as! EmptyObject
+          return resultMap["empty"] as? EmptyObject
         }
         set {
           resultMap.updateValue(newValue, forKey: "empty")
