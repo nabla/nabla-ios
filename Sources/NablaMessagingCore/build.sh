@@ -24,7 +24,7 @@ mint run -m ../../Mintfile swiftgen config run --config "$DIRNAME"/swiftgen.yml
 # This should be kept in sync with the files in ApolloCodegen/Sources/ApolloCodegen/main.swift
 input_output_files=(
   "$DIRNAME/Data/GQL/Schema"
-  "$DIRNAME/../../../../graphql/patient/patient-sdk.graphql"
+  "$DIRNAME/../../../../graphql/care-platform/patient-sdk.graphql"
 )
 
 cd ../../ApolloCodegen
